@@ -17,6 +17,16 @@ A change to how a puzzle is made must leave every puzzle in `src/site.fixture.js
 solves, times and half-done grids on itsutsu.com are kept by the puzzle's kind, size, level and seed, and a
 change that alters one is a new major version, never a fix.
 
+## House rules, shared by every package of the family
+
+- Open an issue first for anything bigger than a typo, so that we can agree on the shape before you spend time on it.
+- No runtime dependencies. Every function that plays or checks a game is pure: it returns new values and never changes what it was given.
+- Tests sit beside the code they test. A rule you change has a test that would have caught it.
+- Words a player reads come in English and Japanese. If you cannot write the Japanese, say so in the pull request and someone will.
+- Option values and names are kebab case.
+- Art and sound are CC0 or public domain only, checked at the source, and credited in the README. No GPL or LGPL code.
+- Needs Node 22 or later. A change a user would notice gets a line in `CHANGELOG.md`.
+
 ## Releasing
 
 A version tag (`v1.2.3`, the same as `package.json`'s version) runs
