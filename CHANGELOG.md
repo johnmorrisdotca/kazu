@@ -1,6 +1,12 @@
 # Changelog
 
-## 1.0.0 — 2026-10-01
+All notable changes to this project are written here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
+[Semantic Versioning](https://semver.org/).
+
+## [Unreleased]
+
+## [1.0.0] - 2026-10-01
 
 The Numbers family of grid puzzles, taken out of itsutsu.com so that the site can import them as it
 imports its other family packages. Every puzzle the site made before the move is made again here, givens and
