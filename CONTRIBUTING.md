@@ -10,6 +10,7 @@ pnpm install
 pnpm check          # lint, types and tests
 pnpm test:package   # pack it as npm does, install it in an empty project, import every entry
 pnpm test:demo      # build the demo and play it in a real browser
+pnpm docs:make      # rewrite docs/strings-ja.md after changing a word of the board
 ```
 
 A change to how a puzzle is made must leave every puzzle in `src/site.fixture.json` exactly as it is: people's

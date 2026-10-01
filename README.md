@@ -13,7 +13,7 @@ Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki a
 <p align="center"><a href="https://johnmorrisdotca.github.io/kazu/"><strong>Play a puzzle →</strong></a> · <a href="https://johnmorrisdotca.github.io/kazu/api.html">API reference</a></p>
 
 <p align="center">
-  <img src="docs/desktop.jpg" alt="A 9×9 Killer Sudoku part filled in, under the demo's header with its language chooser and five cloth patches: the choices of puzzle, size and level, then the board on green felt with dashed cages and their sums, the chosen cell and its row, column and box washed in colour, the number pad and the Undo, Pencil, Hint and Check buttons" width="620">
+  <img src="docs/desktop.jpg" alt="A 9×9 Killer Sudoku part filled in, under the demo's header with its language chooser, the API reference link, five cloth patches and the Help switch: the choices of puzzle, size and level, then the board on green felt with dashed cages and their sums, the chosen cell and its row, column and box washed in colour, the number pad and the Undo, Pencil, Hint and Check buttons" width="620">
   <img src="docs/phone.jpg" alt="A 6×6 Skyscrapers puzzle part filled in, on a phone in dark mode and in Japanese: the clues round the edge, the number pad, the buttons and the first of the settings under it" width="200">
 </p>
 
@@ -57,6 +57,116 @@ And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else
 - **Pages that just want the grid**: it draws itself as SVG text, and plays itself in an element or one
   function call, with a number pad, pencil marks, Undo, Hint, Check and a clock, and its words in English and
   Japanese.
+
+## Features
+
+- **Six puzzles, three levels.** Sudoku (4×4, 6×6, 9×9 and a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys.
+- **Exactly one answer.** A generator makes puzzles from a seed, and a solver that counts answers confirms there is one. The same kind, size, level and seed make the same puzzle in every browser and every Node, for ever.
+- **A check a server can trust.** `checkKazu` reads a finished grid in O(cells), with no search, and says the first thing wrong in words.
+- **A hint that is a reason.** Which cell to fill next, with the rule that says so (a cell with one number left, a number with one place left), never built on a wrong entry.
+- **Puzzles and runs as short strings**, so a game half done, its pencil marks and its steps can be kept in a database column.
+- **Drawn as SVG text**, in an entry of its own: a server that only checks answers never loads the drawing.
+- **Played in any page** by touch, mouse and keyboard, with pencil marks, Undo, Hint, Check and a clock, as one function call (`mountKazu`) or one tag (`<kazu-board>`).
+- **English and Japanese**, in the board's words, the puzzles' names and rules, and the demo.
+- **No dependencies**, no network requests, no sound, no animation, and nothing stored outside the page it is in.
+
+## Use it in your project
+
+Kazu is three things, each usable without the others: **the puzzles** (making, solving, checking and hinting, as plain functions over strings), **the drawing** (SVG text), and **the page** (a mounted board or a tag). The table under [The element](#the-element) says which entry holds which. The examples are one puzzle each time, written in `number-place` at 9×9.
+
+### 1. The API alone, on a server
+
+```ts
+import { checkKazu, generateKazu } from "@johnmorrisdotca/kazu";
+
+const { givens } = generateKazu("number-place", 9, "medium", 42);   // send `givens` to the browser; keep `42` and the answer
+checkKazu("number-place", 9, givens, answerFromThePlayer);          // { ok: true } or { ok: false, reason }, in O(cells)
+```
+
+Importing the main entry on a server is safe: it touches no page.
+
+### 2. One tag, no bundler
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@1/dist/element-define.js"></script>
+<kazu-board kind="number-place" size="9" level="medium" seed="42"></kazu-board>
+<script>
+  document.querySelector("kazu-board").addEventListener("kazu-solve", (event) => console.log(event.detail.elapsedMs));
+</script>
+```
+
+### 3. A bundler, and a framework
+
+`import "@johnmorrisdotca/kazu/element/define"` once, in code that runs in the browser, and `<kazu-board>` is a tag like any other. The tag draws itself in the page's own DOM, so the page's CSS reaches it. Its attributes are read again when they change, and it speaks through DOM events (`kazu-change`, `kazu-hint`, `kazu-check`, `kazu-solve`) that carry a `detail`.
+
+```jsx
+// React 19
+import { useEffect, useRef } from "react";
+import "@johnmorrisdotca/kazu/element/define";
+
+export function Puzzle({ seed, onSolved }) {
+  const board = useRef(null);
+  useEffect(() => {
+    const listen = (event) => onSolved(event.detail.elapsedMs);
+    board.current?.addEventListener("kazu-solve", listen);
+    return () => board.current?.removeEventListener("kazu-solve", listen);
+  }, [onSolved]);
+  return <kazu-board ref={board} kind="number-place" size="9" level="medium" seed={String(seed)} />;
+}
+```
+
+```vue
+<!-- Vue 3: tell the compiler the tag is not a Vue component -->
+<script setup>
+import "@johnmorrisdotca/kazu/element/define";
+defineProps({ seed: Number });
+</script>
+<template>
+  <kazu-board kind="number-place" size="9" level="medium" :seed="seed" @kazu-solve="(event) => console.log(event.detail.elapsedMs)" />
+</template>
+<!-- in vite.config: vue({ template: { compilerOptions: { isCustomElement: (tag) => tag.startsWith("kazu-") } } }) -->
+```
+
+```svelte
+<!-- Svelte 5 -->
+<script>
+  import "@johnmorrisdotca/kazu/element/define";
+  let { seed } = $props();
+  let board;
+  $effect(() => {
+    const listen = (event) => console.log(event.detail.elapsedMs);
+    board.addEventListener("kazu-solve", listen);
+    return () => board.removeEventListener("kazu-solve", listen);
+  });
+</script>
+<kazu-board bind:this={board} kind="number-place" size="9" level="medium" seed={seed}></kazu-board>
+```
+
+```ts
+// Angular: a standalone component with CUSTOM_ELEMENTS_SCHEMA
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import "@johnmorrisdotca/kazu/element/define";
+
+@Component({
+  selector: "app-puzzle",
+  standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `<kazu-board kind="number-place" size="9" level="medium" seed="42" (kazu-solve)="solved($event)"></kazu-board>`,
+})
+export class Puzzle {
+  solved(event: Event) { console.log((event as CustomEvent).detail.elapsedMs); }
+}
+```
+
+In Next.js or any server-rendering framework, import the define entry from a client component, so the tag is defined in the browser. Or skip the tag and call `mountKazu(element, options)` from `@johnmorrisdotca/kazu/play` in an effect: the handle it returns has `destroy()`.
+
+These recipes are written to the tag's documented attributes and events; they are not built from the packed tarball by this repository's tests, which play the tag in a bare page in Chromium and WebKit.
+
+### What a developer gets
+
+- **Typed results**, with a doc comment on every export. Every function is pure and returns new values.
+- **No dependencies.** ES modules, an entry per concern, and `sideEffects` set so that only the define entry has an effect.
+- **Where it runs.** See [Browser support](#browser-support).
 
 ## The puzzles
 
@@ -251,6 +361,87 @@ The [API reference](https://johnmorrisdotca.github.io/kazu/api.html) lists every
 
 Every function is pure: it returns new values and never changes what it was given.
 
+## Theming
+
+Nothing here is branded. The drawing and the playable board are coloured by custom properties, and a page sets only the ones it wants different. The paper follows the device's light or dark setting; `data-theme="light"` or `"dark"` on `<html>` forces one.
+
+**The drawing** (`drawKazu`), custom properties on `.kazu`:
+
+| Property | What it colours | Light | Dark |
+| --- | --- | --- | --- |
+| `--kz-paper` | the grid's paper | `#fbf8f1` | `#262a27` |
+| `--kz-ink` | a mark's outline (Futoshiki's chevrons) | `#1f2320` | `#ece8dc` |
+| `--kz-given` | a printed number | `#1f2320` | `#ece8dc` |
+| `--kz-entry` | a number the player wrote | `#1d5fa8` | `#8fc1ff` |
+| `--kz-note` | a pencil mark | `#5b6b7d` | `#9fb0c2` |
+| `--kz-grid` | the thin lines between cells | `#cfc6b2` | `#454a44` |
+| `--kz-box` | the heavy lines round boxes and regions | `#3a3d38` | `#c9c5b8` |
+| `--kz-frame` | the frame, when `frame` is on | `#a98954` | `#6b5632` |
+| `--kz-cage` | a Killer Sudoku cage and its sum | `#6a5a8e` | `#b8a5e6` |
+| `--kz-clue` | a Skyscrapers clue | `#7a4b14` | `#e8c48f` |
+| `--kz-diagonal` | the two diagonals of Diagonal Sudoku | `#e9dfc6` | `#34382f` |
+| `--kz-peer` | the chosen cell's row, column and group | `#efe8d8` | `#2f332f` |
+| `--kz-same` | every cell holding the chosen number | `#dcd0f2` | `#433a5c` |
+| `--kz-select` | the chosen cell | `#ffe08a` | `#6b5a1f` |
+| `--kz-hint` | the cell a hint pointed at | `#b9e3c4` | `#25503a` |
+| `--kz-conflict` | a cell that breaks a rule | `#f4b8ad` | `#6e2f26` |
+| `--kz-wrong` | a cell Check flagged | `#f4b8ad` | `#6e2f26` |
+| `--kz-bad` | the number in a cell that breaks a rule | `#b5452c` | `#ff8a6b` |
+| `--kz-good` | a solved puzzle's wash | `#2f7a4f` | `#6fcf97` |
+| `--kz-font` | the numbers' type | the system's own | the same |
+
+**The playable board** (`mountKazu` and `<kazu-board>`) wears the drawing's properties, and six of its own on `.kazu-play`:
+
+| Property | What it colours | Light | Dark |
+| --- | --- | --- | --- |
+| `--kzp-ink` | text, the number pad's numbers, and a pressed button | `#1f2320` | `#ece8dc` |
+| `--kzp-muted` | the progress count, the erase key and the words under the board | `#6b6f68` | `#a09d93` |
+| `--kzp-rule` | borders | `#ddd6c6` | `#3a3d38` |
+| `--kzp-surface` | the number pad and the buttons | `#fbf8f1` | `#1d201e` |
+| `--kzp-accent` | the focus ring, and a warning in the words under the board | `#b5452c` | `#ff8a6b` |
+| `--kzp-good` | the words and the clock once the puzzle is solved | `#2f7a4f` | `#6fcf97` |
+
+```css
+kazu-board, .kazu, .kazu-play { --kz-select: #ffd23f; --kz-entry: #0b5cad; --kzp-accent: #8a1c1c; }
+```
+
+The demo's own page is the worked example: its green felt and its cloth patches are the family's stylesheet, [`demo/family.css`](./demo/family.css), which is the same file byte for byte in every sibling's demo, and a test holds it to its hash. The parts of the drawing carry classes (`kz-given`, `kz-entry`, `kz-note`, `kz-cage-sum`, `kz-clue`, `kz-mark`, `kz-conflict`, `kz-hit`) for anything a property cannot reach.
+
+## Limits
+
+All of these are held by tests, and the ones with a name are exported.
+
+| Limit | Value | Where |
+| --- | --- | --- |
+| Puzzles | the six keys of `KAZU_KINDS` | the table under [The puzzles](#the-puzzles) |
+| Levels | `easy`, `medium`, `hard` | `KAZU_LEVELS` |
+| Sizes | each puzzle's own, 4×4 to 16×16 | `KAZU_SPECS[kind].sizes` |
+| A seed | a whole number from 1 to 2,147,483,647 | `KAZU_SEED_MOST`, `isKazuSeed` |
+| Symbols in a grid | `1` to `9`, then `A` to `G` for the 16×16 | `symbolOf`, `valueOfSymbol` |
+| The longest givens code | Sudoku 256 characters, Jigsaw 162, Diagonal 81, Killer Sudoku 286, Futoshiki 133, Skyscrapers 77 | `KAZU_SPECS[kind].mostCells`, for a route that must refuse anything larger |
+| Answers counted | two, so that "many" costs no more than "two" | the `limit` argument of `countKazuSolutions` |
+| The solver's work | 2,000,000 steps, then it says it cannot say (`null`) | the `budget` argument of `solveKazu` |
+| A step log | the newest 400 steps | `KAZU_STEPS_KEPT` |
+
+A generator never runs on a server unless you ask it to. The check never searches: it is linear in the size of the grid.
+
+## Browser support
+
+Any browser with ES2020 modules, custom elements and CSS `aspect-ratio`: Chrome and Edge 88, Safari 15, Firefox 89, all from 2021 on. The element draws in the page's own DOM, with no shadow DOM and no CSS the page cannot reach. The demo is played in a real Chromium at a phone's width (with touch) and a desk's, and in WebKit, Safari's engine, at a phone's width; Firefox is not in that run. The package itself (everything but the drawing and the page) needs no DOM: it runs in Node 22 and 24, which is what CI tests, and its `engines` field says 20 or later. Deno and Bun are not tested.
+
+## Languages
+
+English and Japanese, chosen by the `language` option, the host's `lang` or the page's, and followed when the page's `lang` changes. The demo has a chooser of its own and takes the browser's language on a first visit. The board's words (`KAZU_STRINGS`), each puzzle's names and rules (`KAZU_NAMES`) and the sizes' names are in both. **Japanese: included; not yet reviewed by a native reader. Corrections welcome.** Every string of the board is listed beside its English in [docs/strings-ja.md](./docs/strings-ja.md), and there is an [issue template](https://github.com/johnmorrisdotca/kazu/issues/new?template=fix-a-translation.md) for fixing one. Any other language is a table of your own, passed beside these two.
+
+## Roadmap
+
+Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/kazu/issues):
+
+- A daily puzzle: a puzzle of the day for each kind and level, from the date, the way [Tane](https://github.com/johnmorrisdotca/tane) makes daily seeds.
+- A command line: make a puzzle, solve a code, check an answer, and print the grid as text.
+
+Left out on purpose: a puzzle with more than one answer, and any account, ranking or storage. A page keeps its own runs: `onChange` hands them over.
+
 ## Architecture
 
 The generators, the solvers, the check, the hint and the game are plain functions over short codes, with no
@@ -320,13 +511,31 @@ and each checked on a server in O(cells); once they all stood alone it seemed wo
 
 - [Itsutsu](https://itsutsu.com), for its Numbers puzzles: Sudoku, Jigsaw Sudoku, Diagonal Sudoku, Killer Sudoku, Futoshiki and Skyscrapers.
 
+Using Kazu in something? Open an *Add my project* issue and we will add you.
+
 ### The family
 
-Kazu has siblings, each made for the same site, each MIT, each at
-[github.com/johnmorrisdotca](https://github.com/johnmorrisdotca): Korokoro (dice), Kyuubu (a cube), Hitotsu
-(a colour-card game), Toranpu (card games), Tane (seeded random numbers), Narabe (abstract board games), Tenka
-(world conquest), Kumimoji (a crossword tile race), Tsunagi (a line-joining puzzle), Jarajara (mahjong tiles),
-Suido (a pipe puzzle), Domino (dominoes) and Kotoba (words).
+Kazu is one of sixteen packages, each made for the same site, each MIT, each at
+[github.com/johnmorrisdotca](https://github.com/johnmorrisdotca):
+
+- [Korokoro](https://github.com/johnmorrisdotca/korokoro) (コロコロ, the sound of something small rolling): dice, with notation, exact odds and games.
+- [Kyuubu](https://github.com/johnmorrisdotca/kyuubu) (キューブ, how Japanese says "cube"): a turning cube for the browser, 2×2 to 7×7.
+- [Hitotsu](https://github.com/johnmorrisdotca/hitotsu) (一つ, "one"): a colour-card game, named for the call a player makes with one card left.
+- [Toranpu](https://github.com/johnmorrisdotca/toranpu) (トランプ, the everyday Japanese word for a deck of playing cards): card games as pure rules.
+- [Tane](https://github.com/johnmorrisdotca/tane) (種, a seed, the kind you plant): seeded random numbers and daily seeds.
+- [Narabe](https://github.com/johnmorrisdotca/narabe) (並べ, "line them up"): a rules engine for gomoku, Reversi, Go, checkers and many more.
+- [Tenka](https://github.com/johnmorrisdotca/tenka) (天下, "under heaven"): a world-conquest game for two to six.
+- [Kumimoji](https://github.com/johnmorrisdotca/kumimoji) (組み文字, "letters put together"): a crossword tile race in English and Japanese.
+- [Tsunagi](https://github.com/johnmorrisdotca/tsunagi) (繋ぎ, "joining"): a line-joining puzzle.
+- [Jarajara](https://github.com/johnmorrisdotca/jarajara) (ジャラジャラ, the rattle of mahjong tiles being shuffled): mahjong tiles and a matching solitaire.
+- [Suido](https://github.com/johnmorrisdotca/suido) (水道, "waterworks"): a pipe puzzle.
+- [Domino](https://github.com/johnmorrisdotca/domino) (ドミノ, the Japanese word for dominoes): dominoes and Mexican Train.
+- [Kotoba](https://github.com/johnmorrisdotca/kotoba) (言葉, "words"): word lists and word-game rules.
+- [Sugoroku](https://github.com/johnmorrisdotca/sugoroku) (双六, backgammon's Japanese name): backgammon and its variants.
+- [Kazu](https://github.com/johnmorrisdotca/kazu) (数, "number"): grid number puzzles, Sudoku and five more.
+- [Meikyuu](https://github.com/johnmorrisdotca/meikyuu) (迷宮, "labyrinth"): mazes to draw a line through.
+
+**This package is Kazu.** The demos of all sixteen share one header and footer, so each links the rest.
 
 ## Development
 
@@ -338,6 +547,16 @@ pnpm test:demo      # build the demo and play it in a real browser, at a phone's
 pnpm site           # build the demo into site/, as the Pages workflow publishes it
 pnpm pictures       # take the README's two pictures from the built demo
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md). The commands are under [Development](#development).
+
+Please follow the [code of conduct](./CODE_OF_CONDUCT.md). A way to make the check or the solver run for long, or markup that gets out of the drawing, is for the [security policy](./SECURITY.md), not a public issue.
+
+## Changes
+
+See [CHANGELOG.md](./CHANGELOG.md).
 
 ## Licence
 
