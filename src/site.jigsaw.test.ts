@@ -1,0 +1,3 @@
+import { madeAsBefore } from "./site.fixture.ts";
+
+madeAsBefore("jigsaw");

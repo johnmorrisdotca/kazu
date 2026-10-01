@@ -1,0 +1,37 @@
+/* Kazu's own look, after family.css: the settings, the board on its table, and the rules under it. */
+:root { --intro-room: 14rem; --intro-room-wide: 7rem; }
+.setup { margin-top: 10px; }
+.of { color: var(--muted); font-weight: 500; }
+.sub { font-weight: 500; font-size: .72rem; color: inherit; opacity: .7; }
+.status { margin: 10px 0 0; color: var(--muted); font-size: .85rem; min-height: 1.4em; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
+
+/* The board on its table: the play element on the family's felt, its words in the felt's ink. */
+#board { margin: 10px auto 0; max-width: min(100%, 600px); padding: 14px 14px 10px; min-width: 0;
+  --kzp-ink: var(--felt-ink); --kzp-surface: rgba(0,0,0,.28); --kzp-rule: rgba(255,255,255,.35); --kzp-muted: var(--felt-ink); --kzp-accent: #ffd23f; --kzp-good: #b9f1c9; }
+#board .kzp-box { border-radius: 10px; }
+#board .kzp-key, #board .kzp-button { box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); border-color: transparent; }
+#board .kzp-says { opacity: .92; }
+#board .kzp-button[aria-pressed="true"] { background: var(--felt-ink); color: var(--felt-deep); }
+
+.settings { margin-top: 22px; display: grid; gap: 4px; }
+.settings h2 { margin: 12px 0 0; font-size: 1.05rem; }
+.settings h2:first-child { margin-top: 0; }
+.settings .fam-label { min-width: 6.2rem; }
+.settings .fam-seg button { font-size: .85rem; }
+.fam-seg button { flex-direction: column; gap: 0; line-height: 1.15; padding-top: 4px; padding-bottom: 4px; }
+.fam-seg button:not(:has(.sub)) { flex-direction: row; }
+
+.rules h2 { margin: 0 0 4px; font-size: 1.05rem; }
+.rules ul { display: block; list-style: disc; padding-left: 1.2rem; margin: 0 0 10px; }
+.rules li { color: var(--ink); font-size: .9rem; line-height: 1.5; margin-bottom: 4px; max-width: 70ch; }
+.rules p { max-width: 70ch; }
+
+.uses { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.uses code { font-family: var(--mono); font-size: .85rem; overflow-wrap: anywhere; }
+.more .uses { grid-template-columns: 1fr; }
+.tag kazu-board { display: block; max-width: 420px; margin-top: 10px; }
+.tag kazu-board { --kzp-muted: var(--muted); }
+@media (max-width: 520px) {
+  #board { padding: 10px 10px 8px; }
+  .settings .fam-label { min-width: 100%; }
+}
