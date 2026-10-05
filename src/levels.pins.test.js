@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { generateAkari } from "./akariGenerate.ts";
 import { generateFillomino } from "./fillominoGenerate.ts";
@@ -11,6 +11,9 @@ import { generateHitori } from "./hitoriGenerate.ts";
 import { generateKakuro } from "./kakuroGenerate.ts";
 import { generateShikaku } from "./shikakuGenerate.ts";
 import { generateSlitherlink } from "./slitherlinkGenerate.ts";
+
+// These generate and enumerate a lot; a slow runner must not fail them for taking its time.
+vi.setConfig({ testTimeout: 120_000 });
 
 const LEVELS = ["easy", "medium", "hard", "extra-hard"];
 

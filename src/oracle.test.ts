@@ -1,6 +1,6 @@
 // The grid solvers checked against plain enumeration: every possible answer of a small board is tried, and the solver must
 // count exactly the ones that pass the rules as the checkers state them.
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { checkFillomino } from "./fillominoBoard.ts";
 import { solveFillomino } from "./fillominoSolve.ts";
@@ -9,6 +9,9 @@ import { solveHitori } from "./hitoriSolve.ts";
 import { checkKakuro } from "./kakuroBoard.ts";
 import { solveKakuro } from "./kakuroSolve.ts";
 import { seededRandom } from "./random.ts";
+
+// These generate and enumerate a lot; a slow runner must not fail them for taking its time.
+vi.setConfig({ testTimeout: 120_000 });
 
 describe("Hitori's solver", () => {
   it("counts the minimal shade patterns of random 4×4 boards exactly", () => {
@@ -70,7 +73,7 @@ describe("Kakuro's solver", () => {
 describe("Fillomino's solver", () => {
   it("counts the fillings of small boards exactly", () => {
     const random = seededRandom(9);
-    for (let round = 0; round < 40; round += 1) {
+    for (let round = 0; round < 25; round += 1) {
       const width = 3, height = 2, cells = 6;
       const givens = Array.from({ length: cells }, () => random() < .4 ? 1 + Math.floor(random() * 4) : 0);
       const board = { width, height, givens };

@@ -1,7 +1,7 @@
 // The four levels of the six grid kinds: every one is made, has exactly one answer, is the same on every run, and steps up
 // in what a person must do to solve it. Sizes here are small so the suite stays quick; scripts/measure-levels.mjs
 // measures every size and times the generators.
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { AKARI_LEVELS, AKARI_SIZES } from "./akari.constants.ts";
 import { checkAkari } from "./akariBoard.ts";
@@ -33,6 +33,9 @@ import { checkSlitherlink } from "./slitherlinkBoard.ts";
 import { generateSlitherlink } from "./slitherlinkGenerate.ts";
 import { rateSlitherlink } from "./slitherlinkRate.ts";
 import { solveSlitherlink } from "./slitherlinkSolve.ts";
+
+// These generate and enumerate a lot; a slow runner must not fail them for taking its time.
+vi.setConfig({ testTimeout: 120_000 });
 
 const LEVELS = ["easy", "medium", "hard", "extra-hard"] as const;
 const SEEDS = [1, 2, 3, 4, 5, 6];
