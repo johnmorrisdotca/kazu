@@ -6,6 +6,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-05
+
 ### Added
 
 - Hitori and Nurikabe: independent shading rules, bounded solution counting, original proof-backed puzzle families, bilingual players and package entry points.
@@ -13,6 +15,12 @@ All notable changes to this project are written here. The format follows
 - Nine named Shikaku challenges across square, wide and tall routes.
 - Akari: a separate rule engine, bounded solution counter, seeded unique puzzle generator, immutable play, accessible bilingual player, drawing and demo.
 - Slitherlink: a dedicated edge-loop engine, bounded unique-puzzle generation, accessible bilingual player, demo and package entry points.
+- Ripple Effect: a dedicated room and spacing engine, bounded unique 9×9 generation, bilingual accessible player, demo and package entries.
+- Kakuro: a seeded uniquely proved crossword-sum family, independent bounded solver, immutable progress, SVG and accessible English/Japanese player.
+
+- Masyu and Yajilin: cell-centre loop engines, bounded proof-backed 5×5 families, drawing, bilingual players and saved progress.
+- Fillomino: connected numbered regions, bounded original rectangular generation, independent checks, hints and a bilingual player.
+- Heyawake: rectangular rooms, shading and white-path rules, bounded original small-board generation, hints and a bilingual player.
 
 ## [1.1.0] - 2026-10-04
 

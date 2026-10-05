@@ -1,0 +1,1 @@
+.heyawake-layout{display:grid;grid-template-columns:minmax(15rem,20rem) minmax(0,1fr);gap:1.5rem;align-items:start}.heyawake-layout aside{display:grid;gap:.5rem}.heyawake-layout form{display:grid;gap:.4rem}.heyawake-layout .panel{min-width:0}@media(max-width:760px){.heyawake-layout{grid-template-columns:1fr}.heyawake-layout aside{order:2}.heyawake-layout .panel{order:1}}

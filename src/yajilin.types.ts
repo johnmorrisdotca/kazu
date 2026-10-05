@@ -1,0 +1,11 @@
+export type YajilinDirection = "up" | "right" | "down" | "left";
+export type YajilinClue = { direction: YajilinDirection; count: number };
+export type YajilinBoard = { width: number; height: number; clues: readonly (YajilinClue | null)[] };
+export type YajilinPuzzle = YajilinBoard & { seed: number; solution: { shaded: readonly boolean[]; edges: readonly number[] } };
+export type YajilinCheck = { ok: boolean; errors: readonly number[] };
+export type YajilinSolution = { shaded: readonly boolean[]; edges: readonly number[] };
+export type YajilinSolve = { count: number; solution: YajilinSolution | null; complete: boolean; nodes: number };
+export type YajilinGame = { board: YajilinBoard; shaded: readonly boolean[]; edges: readonly number[]; history: readonly { shaded: readonly boolean[]; edges: readonly number[] }[]; helped: boolean };
+export type YajilinDrawOptions = { shaded?: readonly boolean[]; edges?: readonly number[]; selected?: number; errors?: readonly number[]; material?: "ivory" | "wood" | "slate"; pieces?: "plain" | "tiles"; language?: "en" | "ja" };
+export type YajilinMountOptions = YajilinDrawOptions & { board: YajilinBoard; progress?: string; onChange?: (game: YajilinGame) => void; onFinish?: (game: YajilinGame) => void };
+export type YajilinMount = { game: () => YajilinGame; progress: () => string; set: (options: YajilinDrawOptions) => void; restart: () => void; destroy: () => void };

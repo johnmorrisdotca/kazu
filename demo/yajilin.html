@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Kazu 数 · Yajilin</title>
+    <link rel="stylesheet" href="family.css">
+    <link rel="stylesheet" href="yajilin.css">
+  </head>
+  <body>
+    <main>
+      <!--family-header-->
+      <section class="yajilin-intro">
+        <p id="intro"></p>
+        <form id="setup">
+          <label><span id="seed-label">Seed</span><input id="seed" type="number" min="1" max="2147483647" value="1"></label>
+          <label><span id="material-label">Board</span><select id="material"><option value="ivory">Ivory</option><option value="wood">Wood</option><option value="slate">Slate</option></select></label>
+          <label><span id="pieces-label">Clues</span><select id="pieces"><option value="plain">Plain</option><option value="tiles">Tiles</option></select></label>
+          <button class="fam-button" type="submit" id="new">New puzzle</button>
+        </form>
+        <p id="notice" role="status"></p>
+      </section>
+      <section class="panel fam-felt">
+        <h2>Yajilin <span id="seed-note"></span></h2>
+        <div id="board"></div>
+      </section>
+      <p id="origin" class="origin"></p>
+      <!--family-footer-->
+      <!--family-unreviewed-->
+    </main>
+    <!--family-script-->
+    <script type="module" src="yajilin.js"></script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 <h1 align="center">Kazu <sub>数</sub></h1>
 
 <p align="center"><strong>Grid number and logic puzzles for JavaScript and TypeScript.</strong><br>
-Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan and Slitherlink. Dedicated typed engines, independently checked puzzles, SVG drawing, saved progress, and English and Japanese players for touch, mouse and keyboard. No runtime dependencies.</p>
+Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Slitherlink, Masyu, Yajilin, Ripple Effect, Kakuro, Fillomino and Heyawake. Dedicated typed engines, independently checked puzzles, SVG drawing, saved progress, and English and Japanese players for touch, mouse and keyboard. No runtime dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml/badge.svg"></a>
@@ -17,7 +17,7 @@ Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, 
   <img src="docs/phone.jpg" alt="A 6×6 Skyscrapers puzzle part filled in, on a phone in dark mode and in Japanese: the clues round the edge, the number pad, the buttons and the first of the settings under it" width="200">
 </p>
 
-Kazu is a family of grid puzzles. Its number puzzles fill cells, Shikaku divides rectangles, Hitori and Nurikabe shade cells, Akari places lights, Juosan chooses marks, and Slitherlink draws a loop. The original number puzzles are
+Kazu is a family of grid puzzles: number placement, regions, shading, lights and loops. Each puzzle has its own rules and engine. The original number puzzles are
 played at [itsutsu.com](https://itsutsu.com), which this package was taken out of, and in
 [the demo](https://johnmorrisdotca.github.io/kazu/), with nothing to install.
 
@@ -443,6 +443,42 @@ Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/
 
 Left out on purpose: a puzzle with more than one answer, and any account, ranking or storage. A page keeps its own runs: `onChange` hands them over.
 
+## Masyu — pearls and a single loop
+
+Masyu is a line puzzle with its own cell-centre loop model. A white pearl lies on a straight section and the loop turns in at least one of its adjacent cells. A black pearl lies at a turn, with a straight section in each adjacent cell. One closed loop must pass through every pearl.
+
+```ts
+import { generateMasyu, checkMasyu, solveMasyu } from "@johnmorrisdotca/kazu/masyu";
+import { mountMasyu } from "@johnmorrisdotca/kazu/masyu/play";
+
+const puzzle = generateMasyu(5, 42);
+checkMasyu(puzzle, puzzle.solution); // { ok: true }
+solveMasyu(puzzle);                  // count: 1, complete: true
+mountMasyu(document.querySelector("#board"), { board: puzzle });
+```
+
+The dedicated `/masyu`, `/masyu/play`, and `/masyu/draw` entry points keep the loop engine separate from number-entry state. Import them from `@johnmorrisdotca/kazu/masyu`, `@johnmorrisdotca/kazu/masyu/play`, and `@johnmorrisdotca/kazu/masyu/draw`. The solver uses bounded cell-degree search; it reports `complete: false` when its node budget stops. The seeded generator currently supports original 5×5 layouts only: four distinct loop families, with board symmetries, produce varied pearl patterns and loop lengths. It returns a puzzle only after a completed uniqueness proof. Larger boards are not advertised until they can be proved within the search budget. Hints expose a next loop edge from a proved unique solution; saved play data contains the public pearls, drawn edges, and whether a hint was used.
+
+[Nikoli describes the Masyu rules here](https://www.nikoli.co.jp/en/puzzles/masyu/). The generated layouts are original and do not use Nikoli's grids or artwork.
+
+## Yajilin — arrows, shaded cells and a loop
+
+Yajilin places black cells by arrow counts and draws one loop through every remaining empty cell. Black cells do not touch by an edge; arrow cells are not shaded and are not part of the loop. The loop uses cell centres, not Slitherlink's grid edges.
+
+```ts
+import { generateYajilin, checkYajilin, solveYajilin } from "@johnmorrisdotca/kazu/yajilin";
+import { mountYajilin } from "@johnmorrisdotca/kazu/yajilin/play";
+
+const puzzle = generateYajilin(5, 42);
+checkYajilin(puzzle, puzzle.solution.shaded, puzzle.solution.edges); // { ok: true }
+solveYajilin(puzzle); // count: 1, complete: true
+mountYajilin(document.querySelector("#board"), { board: puzzle });
+```
+
+Import the engine, player, and drawing from `@johnmorrisdotca/kazu/yajilin`, `@johnmorrisdotca/kazu/yajilin/play`, and `@johnmorrisdotca/kazu/yajilin/draw`. The solver enumerates public shade assignments, then checks the remaining cell-centre loop, with a finite node budget and an explicit incomplete result. The original seeded generator currently supports 5×5 only and keeps boards whose unique answer was proved. It varies both 3×3 and 3×4 loop families and their symmetries. Hints infer either a shade or a loop edge from the public clues and mark progress as helped. Save data contains only clues, current shades and drawn edges.
+
+[Nikoli's Yajilin rules](https://www.nikoli.co.jp/en/puzzles/yajilin/) define the arrow counts, non-touching shaded cells and single loop. These original layouts use no Nikoli puzzle grids or artwork.
+
 ## Shikaku — rectangles in Kazu
 
 The demo includes square, wide (10 × 6), tall (6 × 10) and custom rectangular boards, with width and height from 2 to 16. The named Courtyard (square), Long Table (wide) and Narrow Garden (tall) packs each hold three uniquely proved challenges with useful titles. Shares and saved settings preserve both dimensions. It uses Kazu’s shared materials and pieces palette.
@@ -528,6 +564,7 @@ Use `@johnmorrisdotca/kazu/akari`, `@johnmorrisdotca/kazu/akari/play`, or `@john
 The demo is `site/akari.html` after `pnpm site`. It shares Kazu's family header, footer, palette and felt board. Progress stays in local storage; share links carry board settings, not player data.
 
 [Nikoli's Akari rules](https://www.nikoli.co.jp/en/puzzles/akari/) describe the same line-of-sight and numbered-square constraints. These boards are generated here; the implementation does not copy Nikoli's grids or artwork.
+
 ## Slitherlink
 
 ```js
@@ -544,6 +581,83 @@ const player = mountSlitherlink(document.querySelector("#board"), {
 The Slitherlink engine has its own edge model, checker, progress checker, bounded solution counter, seeded generator and immutable play state. `solveSlitherlink` distinguishes an exhausted search from a proved count; the generator returns only boards proved to have one loop. Boards may be 2–10 cells wide and high. The original generator uses rectangular and L-shaped loop families with seed-selected positions and reflections; its profiles describe these families, not human difficulty. The player supports touch and mouse edge toggles, arrow-key focus, Enter/Space, undo, restart, checking, proved hints, save/restore, and ivory, wood and slate materials in English and Japanese.
 
 Use `@johnmorrisdotca/kazu/slitherlink`, `@johnmorrisdotca/kazu/slitherlink/play`, or `@johnmorrisdotca/kazu/slitherlink/draw`. The demo is `site/slitherlink.html` after `pnpm site`. The rules are described by [Nikoli](https://www.nikoli.co.jp/en/puzzles/slitherlink/). This implementation uses original generated layouts and does not copy Nikoli puzzle grids, wording or artwork.
+
+## Ripple Effect
+
+```ts
+import { generateRipple, newRipple, hintRipple } from "@johnmorrisdotca/kazu/ripple";
+import { mountRipple } from "@johnmorrisdotca/kazu/ripple/play";
+
+const puzzle = generateRipple(9, 9, 42);
+const game = newRipple(puzzle);
+const hint = hintRipple(game); // only returned after a unique completion is proved
+const player = mountRipple(document.querySelector<HTMLElement>("#board")!, {
+  board: puzzle, material: "ivory", pieces: "ink", language: "en",
+});
+```
+
+Each room contains every number from 1 through its size exactly once. Repeated N values in one row or column have at least N cells between them, so their coordinate distance must exceed N. The DOM-free engine has independent completion and progress checks and a bounded solution counter that reports when a search stopped before proof. The original seeded 9×9 generator uses 3×3 rooms, seeded row-band, column-stack and digit permutations, and uniqueness-preserving clue removal. It returns only puzzles proved to have one completion; custom sizes are not advertised until their generator family passes the same proof checks. These are original layouts and do not reproduce Nikoli puzzle grids or artwork.
+
+Use `@johnmorrisdotca/kazu/ripple`, `@johnmorrisdotca/kazu/ripple/play`, or `@johnmorrisdotca/kazu/ripple/draw`. The touch and keyboard player includes number entry, pencil notes, undo, restart, checking, unique-proof hints, accessible room boundaries, save/restore, and ivory, wood and slate materials with ink or tile pieces in English and Japanese. The demo is `site/ripple.html` after `pnpm site`. Rules: [Nikoli’s Ripple Effect page](https://www.nikoli.co.jp/en/puzzles/ripple_effect/).
+
+## Kakuro — crossword sums in Kazu
+
+Kakuro fills white cells with digits 1–9. Each across and down run must match its clue sum without repeating a digit. Run lengths are at least two, and every white cell belongs to exactly one run in each direction. [Nikoli describes the rules](https://www.nikoli.co.jp/en/puzzles/kakuro/); generated layouts here are original.
+
+```js
+import { generateKakuro, solveKakuro, checkKakuro } from "@johnmorrisdotca/kazu/kakuro";
+import { mountKakuro } from "@johnmorrisdotca/kazu/kakuro/play";
+
+const puzzle = generateKakuro(42);
+const proof = solveKakuro(puzzle); // uniqueness only when complete && count === 1
+const player = mountKakuro(document.querySelector("#board"), { board: puzzle, language: "en" });
+player.progress(); // public clues, entries and pencil marks; no answer
+```
+
+`@johnmorrisdotca/kazu/kakuro/draw` provides standalone SVG drawing. The 10×10 seeded family uses crossing 2×2, 2×3, 3×2 and 3×3 regions of white cells with separated runs; every returned layout is accepted only after a bounded exact count proves one answer. This is a defined family, not a general-purpose random-layout generator. `solveKakuro` reports `complete: false` when its node budget or answer limit stops counting. `checkKakuro` validates completed runs independently; `progressKakuro` permits blanks while marking impossible totals and repeats. The bilingual player supports touch, arrows, digits, pencil mode, Undo, Hint, Check, Restart and versioned saved progress.
+
+The Kakuro entries are `@johnmorrisdotca/kazu/kakuro`, `@johnmorrisdotca/kazu/kakuro/play` and `@johnmorrisdotca/kazu/kakuro/draw`.
+
+## Fillomino — connected regions with exact areas
+
+The dedicated package entries are `@johnmorrisdotca/kazu/fillomino`, `@johnmorrisdotca/kazu/fillomino/play`, and `@johnmorrisdotca/kazu/fillomino/draw`.
+
+Each cell holds a number. All orthogonally connected cells with the same number form a region, and the region's area must equal that number. Two regions of the same area cannot touch. A completed region does not need to contain a printed clue; the checker and solver do not require one clue per region.
+
+```ts
+import { generateFillomino, checkFillomino, solveFillomino } from "@johnmorrisdotca/kazu/fillomino";
+import { mountFillomino } from "@johnmorrisdotca/kazu/fillomino/play";
+
+const puzzle = generateFillomino(5, 5, "easy", 17);
+const result = solveFillomino(puzzle);
+if (!result.complete || result.count !== 1) throw new Error("The answer was not proved unique");
+checkFillomino(puzzle, result.solution);
+mountFillomino(document.querySelector("#board"), { board: puzzle });
+```
+
+`FillominoBoard` contains `width`, `height`, and row-major `givens`, with zero for an empty cell. Engine validation supports boards up to 12×12; the seeded generator supports rectangular boards from 4 to 8 cells per side, capped at 36 total cells. A seed reproduces its puzzle. Easy, medium and hard are clue-density profiles rather than measured human difficulty; the generator retains additional clues when needed to prove uniqueness. Search bounds report when counting stopped rather than treating a partial search as a uniqueness proof.
+
+`checkFillomino(board, entries)` checks givens, oversized connected groups and completion independently of the generated answer. An unfinished group smaller than its number can still grow. `solveFillomino(board, entries?, { limit?, nodes? })` counts filled solutions by growing connected regions, including regions with no given. Only `complete && count === 1` proves uniqueness. `newFillomino`, `setFillominoCell`, `undoFillomino`, `restartFillomino`, `hintFillomino`, and `fillominoFinished` are immutable game helpers. Progress codes contain public clues, entries, and the persistent assisted flag; they contain no stored answer.
+
+The player accepts touch, mouse, and keyboard input, with undo, check, a proved hint, restart, and local progress codes. Hints persistently mark a run as assisted. The English and Japanese player uses the same board materials and number styles as Shikaku. The demo offers 4×4 through 6×6 settings. It is at [fillomino.html](https://johnmorrisdotca.github.io/kazu/fillomino.html).
+
+[Nikoli's Fillomino rules](https://www.nikoli.co.jp/en/puzzles/fillomino/) describe numbered connected regions, exact area, and separation between equal-area regions. This implementation generates original puzzles and does not reuse published grids or artwork.
+
+## Heyawake — rooms and white paths
+
+The Heyawake demo supports rectangular room boards, black/white/blank marking, keyboard and touch play, undo, a contradiction check, unique-solution hints, restart, local progress, and English/Japanese labels. Use `@johnmorrisdotca/kazu/heyawake`, `@johnmorrisdotca/kazu/heyawake/play`, or `@johnmorrisdotca/kazu/heyawake/draw`; generated answers are never included in progress data.
+
+```js
+import { generateHeyawake, checkHeyawake, solveHeyawake } from "@johnmorrisdotca/kazu/heyawake";
+
+const puzzle = generateHeyawake(5, 4, "easy", 17);
+checkHeyawake(puzzle, puzzle.solution); // checks room counts and all three global rules
+solveHeyawake(puzzle); // { count: 1, complete: true, ... }
+```
+
+The engine accepts boards up to 12×12. The original seeded generator supports rectangles from 4 to 8 cells per side, capped at 25 total cells to keep uniqueness proofs bounded. Its easy, medium and hard profiles start with different room-clue densities, then retain more room clues and may split rooms more finely when needed for a uniqueness proof. These are clue profiles, not measured human difficulty. See [the Heyawake rules and API guide](docs/HEYAWAKE.md).
+
+[Nikoli's Heyawake rules](https://www.nikoli.co.jp/en/puzzles/heyawake/) describe numbered room counts, non-touching black cells, connected whites, and a maximum of two rooms in a straight uninterrupted white run. The package generates original grids and uses no published puzzle boards or artwork.
 
 ## Architecture
 
@@ -594,9 +708,66 @@ the page's part (the mount and the element) is another.
 ├── juosanSolve.ts
 ├── juosanStrings.ts
 ├── juosanStyle.ts
+├── masyu-draw-entry.ts
+├── masyu-entry.ts
+├── masyu-play-entry.ts
+├── masyu.constants.ts
+├── masyu.types.ts
+├── masyuBoard.ts
+├── masyuDraw.ts
+├── masyuGame.ts
+├── masyuGenerate.ts
+├── masyuMount.ts
+├── masyuPlay.types.ts
+├── masyuSolve.ts
+├── masyuStrings.ts
+├── masyuStyle.ts
+├── yajilin-draw-entry.ts
+├── yajilin-entry.ts
+├── yajilin-play-entry.ts
+├── yajilin.constants.ts
+├── yajilin.types.ts
+├── yajilinBoard.ts
+├── yajilinDraw.ts
+├── yajilinGame.ts
+├── yajilinGenerate.ts
+├── yajilinMount.ts
+├── yajilinPlay.types.ts
+├── yajilinSolve.ts
+├── yajilinStrings.ts
+├── yajilinStyle.ts
+├── fillomino-draw-entry.ts
+├── fillomino-entry.ts
+├── fillomino-play-entry.ts
+├── fillomino.constants.ts
+├── fillomino.types.ts
+├── fillominoBoard.ts
+├── fillominoDraw.ts
+├── fillominoGame.ts
+├── fillominoGenerate.ts
+├── fillominoMount.ts
+├── fillominoPlay.types.ts
+├── fillominoSolve.ts
+├── fillominoStrings.ts
+├── fillominoStyle.ts
+├── fillominoWorker.ts
 ├── shikaku-draw-entry.ts
 ├── shikaku-entry.ts
 ├── shikaku-play-entry.ts
+├── kakuro-draw-entry.ts
+├── kakuro-entry.ts
+├── kakuro-play-entry.ts
+├── kakuro.constants.ts
+├── kakuro.types.ts
+├── kakuroBoard.ts
+├── kakuroDraw.ts
+├── kakuroGame.ts
+├── kakuroGenerate.ts
+├── kakuroMount.ts
+├── kakuroPlay.types.ts
+├── kakuroSolve.ts
+├── kakuroStrings.ts
+├── kakuroStyle.ts
 ├── shikaku.constants.ts
 ├── shikaku.types.ts
 ├── shikakuBoard.ts
@@ -638,6 +809,35 @@ the page's part (the mount and the element) is another.
 ├── slitherlinkSolve.ts
 ├── slitherlinkStrings.ts
 ├── slitherlinkStyle.ts
+├── ripple-draw-entry.ts
+├── ripple-entry.ts
+├── ripple-play-entry.ts
+├── ripple.constants.ts
+├── ripple.types.ts
+├── rippleBoard.ts
+├── rippleDraw.ts
+├── rippleGame.ts
+├── rippleGenerate.ts
+├── rippleMount.ts
+├── ripplePlay.types.ts
+├── rippleSolve.ts
+├── rippleStrings.ts
+├── rippleStyle.ts
+├── heyawake-draw-entry.ts
+├── heyawake-entry.ts
+├── heyawake-play-entry.ts
+├── heyawake.constants.ts
+├── heyawake.types.ts
+├── heyawakeBoard.ts
+├── heyawakeDraw.ts
+├── heyawakeGame.ts
+├── heyawakeGenerate.ts
+├── heyawakeMount.ts
+├── heyawakePlay.types.ts
+├── heyawakeSolve.ts
+├── heyawakeStrings.ts
+├── heyawakeStyle.ts
+├── heyawakeWorker.ts
 src/
 ├── index.ts            the main entry: everything but the drawing and the page
 ├── kinds.ts            the six puzzles' keys, sizes and levels, and the shape of a puzzle

@@ -1,0 +1,6 @@
+export const KAKURO_MIN_SIDE = 3;
+export const KAKURO_MAX_SIDE = 10;
+export const KAKURO_MAX_NODES = 250_000;
+export const KAKURO_MAX_ATTEMPTS = 120;
+export const KAKURO_GENERATION_ATTEMPTS = 1_200;
+export const KAKURO_GENERATION_NODES = 1_000_000;

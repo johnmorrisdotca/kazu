@@ -1,0 +1,10 @@
+export type KakuroCell = { kind: "white" } | { kind: "black"; across: number | null; down: number | null };
+export type KakuroBoard = { width: number; height: number; cells: readonly KakuroCell[] };
+export type KakuroRun = { direction: "across" | "down"; clueCell: number; cells: readonly number[]; sum: number };
+export type KakuroPuzzle = KakuroBoard & { seed: number; solution: readonly number[] };
+export type KakuroCheck = { ok: boolean; complete: boolean; errors: readonly number[] };
+export type KakuroSolve = { count: number; solution: readonly number[] | null; complete: boolean; nodes: number };
+export type KakuroGame = { board: KakuroBoard; values: readonly number[]; notes: readonly (readonly number[])[]; history: readonly { values: readonly number[]; notes: readonly (readonly number[])[] }[]; helped: boolean };
+export type KakuroLanguage = "en" | "ja";
+export type KakuroMaterial = "ivory" | "wood" | "slate";
+export type KakuroPieces = "ink" | "tiles";

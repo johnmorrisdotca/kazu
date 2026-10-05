@@ -1,0 +1,6 @@
+import type { RippleLanguage } from "./ripple.types.ts";
+export const RIPPLE_STRINGS = {
+  en: { title: "Ripple Effect", help: "Fill each room with 1 through its size. Equal numbers in a row or column need at least that many cells between them.", undo: "Undo", check: "Check", hint: "Hint", restart: "Restart", pencil: "Pencil", won: "Every room and ripple rule is correct.", wrong: "Some entries break a room or ripple rule.", checked: "Fill the rooms and check the spacing.", noHint: "No single proved answer is available yet.", hintWhy: "This value follows from the room and spacing rules.", view: "Just the board", close: "Close", cell: "Row {row}, column {column}", clue: "clue {value}", empty: "empty", entry: "{value}", note: "notes {values}" },
+  ja: { title: "波及効果", help: "部屋には1から部屋の大きさまでの数字を一つずつ入れます。同じ数字を同じ行・列に置くときは、その数字以上のマスを間に空けます。", undo: "戻す", check: "確認", hint: "ヒント", restart: "やり直す", pencil: "メモ", won: "部屋と間隔のルールをすべて満たしました。", wrong: "部屋か数字の間隔に誤りがあります。", checked: "部屋を埋めて間隔を確認してください。", noHint: "確定できるヒントはまだありません。", hintWhy: "部屋と間隔のルールから確定する数字です。", view: "盤だけ", close: "閉じる", cell: "{row}行{column}列", clue: "手がかり {value}", empty: "空き", entry: "{value}", note: "メモ {values}" },
+} as const;
+export function rippleWords(language: RippleLanguage = "en") { return RIPPLE_STRINGS[language]; }

@@ -42,3 +42,10 @@ export * from "./nurikabe-entry.ts";
 export * from "./akari-entry.ts";
 export * from "./juosan-entry.ts";
 export * from "./slitherlink-entry.ts";
+export * from "./ripple-entry.ts";
+export * from "./kakuro-entry.ts";
+export * from "./fillomino-entry.ts";
+export * from "./heyawake-entry.ts";
+
+export * from "./masyu-entry.ts";
+export * from "./yajilin-entry.ts";

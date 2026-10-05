@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kazu 数 · Heyawake</title><link rel="stylesheet" href="family.css"><link rel="stylesheet" href="heyawake.css"></head>
+  <body><main><!--family-header-->
+    <div class="heyawake-layout">
+      <aside><h2 id="field-title">Your puzzle</h2>
+        <form id="setup">
+          <label class="fam-row"><span id="width-label">Width</span><input class="fam-field" id="width" type="number" min="4" max="5" value="5" required></label>
+          <label class="fam-row"><span id="height-label">Height</span><input class="fam-field" id="height" type="number" min="4" max="5" value="4" required></label>
+          <label class="fam-row"><span id="level-label">Clue mix</span><select class="fam-field" id="level"><option value="easy" selected>More clues</option><option value="medium">Mixed</option><option value="hard">Fewer clues</option></select></label>
+          <label class="fam-row"><span id="material-label">Board material</span><select class="fam-field" id="material"><option value="ivory">Ivory</option><option value="wood">Wood</option><option value="slate">Slate</option></select></label>
+          <label class="fam-row"><span id="pieces-label">Marks</span><select class="fam-field" id="pieces"><option value="ink">Ink</option><option value="tiles">Tiles</option></select></label>
+          <label class="fam-row"><span id="seed-label">Seed</span><input class="fam-field" id="seed" type="number" min="1" max="2147483647" value="17" required></label>
+          <button class="fam-button" data-primary="true" id="new" type="submit">New puzzle →</button>
+        </form>
+        <button class="text-button" id="share" type="button">Share puzzle</button><p id="notice" role="status"></p>
+        <p id="unique">Generated puzzles are returned only after a unique answer is proved.</p>
+      </aside>
+      <section class="panel fam-felt"><div class="panel-head"><h2 id="title">Heyawake</h2><span id="summary"></span></div><div id="board"></div><p id="clock" aria-live="off"></p></section>
+    </div>
+    <section class="more rules"><h2 id="rules-title">Rules</h2><ul id="rules-list"><li>Numbered rooms contain that many black cells; unnumbered rooms have no count.</li><li>Black cells do not touch horizontally or vertically.</li><li>All white cells form one orthogonally connected group.</li><li>A straight uninterrupted white run may span at most two rooms.</li></ul><p id="rules-origin"><a href="https://www.nikoli.co.jp/en/puzzles/heyawake/">Nikoli's Heyawake rules</a>. These puzzles are generated here; no published puzzle grids are used.</p></section>
+    <!--family-unreviewed--><!--family-footer-->
+  </main><!--family-script--><script type="module" src="heyawake.js"></script></body>
+</html>

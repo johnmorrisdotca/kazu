@@ -1,7 +1,7 @@
 {
   "name": "@johnmorrisdotca/kazu",
-  "version": "1.1.0",
-  "description": "Grid number and logic puzzles for JavaScript and TypeScript: Sudoku and its variants, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan and Slitherlink. Dedicated typed engines, independently checked puzzles, SVG boards and bilingual touch and keyboard players. Zero runtime dependencies.",
+  "version": "1.2.0",
+  "description": "Grid number and logic puzzles for JavaScript and TypeScript: Sudoku and its variants, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Slitherlink, Masyu, Yajilin, Ripple Effect, Kakuro, Fillomino and Heyawake. Dedicated typed engines, independently checked puzzles, SVG boards and bilingual touch and keyboard players. Zero runtime dependencies.",
   "keywords": [
     "puzzle",
     "sudoku",
@@ -30,7 +30,13 @@
     "akari",
     "light-puzzle",
     "juosan",
-    "slitherlink"
+    "slitherlink",
+    "masyu",
+    "yajilin",
+    "ripple-effect",
+    "kakuro",
+    "fillomino",
+    "heyawake"
   ],
   "homepage": "https://github.com/johnmorrisdotca/kazu#readme",
   "repository": {
@@ -164,6 +170,96 @@
       "types": "./dist/slitherlink-draw-entry.d.ts",
       "import": "./dist/slitherlink-draw-entry.js",
       "default": "./dist/slitherlink-draw-entry.js"
+    },
+    "./masyu": {
+      "types": "./dist/masyu-entry.d.ts",
+      "import": "./dist/masyu-entry.js",
+      "default": "./dist/masyu-entry.js"
+    },
+    "./masyu/play": {
+      "types": "./dist/masyu-play-entry.d.ts",
+      "import": "./dist/masyu-play-entry.js",
+      "default": "./dist/masyu-play-entry.js"
+    },
+    "./masyu/draw": {
+      "types": "./dist/masyu-draw-entry.d.ts",
+      "import": "./dist/masyu-draw-entry.js",
+      "default": "./dist/masyu-draw-entry.js"
+    },
+    "./yajilin": {
+      "types": "./dist/yajilin-entry.d.ts",
+      "import": "./dist/yajilin-entry.js",
+      "default": "./dist/yajilin-entry.js"
+    },
+    "./yajilin/play": {
+      "types": "./dist/yajilin-play-entry.d.ts",
+      "import": "./dist/yajilin-play-entry.js",
+      "default": "./dist/yajilin-play-entry.js"
+    },
+    "./yajilin/draw": {
+      "types": "./dist/yajilin-draw-entry.d.ts",
+      "import": "./dist/yajilin-draw-entry.js",
+      "default": "./dist/yajilin-draw-entry.js"
+    },
+    "./ripple": {
+      "types": "./dist/ripple-entry.d.ts",
+      "import": "./dist/ripple-entry.js",
+      "default": "./dist/ripple-entry.js"
+    },
+    "./ripple/play": {
+      "types": "./dist/ripple-play-entry.d.ts",
+      "import": "./dist/ripple-play-entry.js",
+      "default": "./dist/ripple-play-entry.js"
+    },
+    "./ripple/draw": {
+      "types": "./dist/ripple-draw-entry.d.ts",
+      "import": "./dist/ripple-draw-entry.js",
+      "default": "./dist/ripple-draw-entry.js"
+    },
+    "./kakuro": {
+      "types": "./dist/kakuro-entry.d.ts",
+      "import": "./dist/kakuro-entry.js",
+      "default": "./dist/kakuro-entry.js"
+    },
+    "./kakuro/play": {
+      "types": "./dist/kakuro-play-entry.d.ts",
+      "import": "./dist/kakuro-play-entry.js",
+      "default": "./dist/kakuro-play-entry.js"
+    },
+    "./kakuro/draw": {
+      "types": "./dist/kakuro-draw-entry.d.ts",
+      "import": "./dist/kakuro-draw-entry.js",
+      "default": "./dist/kakuro-draw-entry.js"
+    },
+    "./fillomino": {
+      "types": "./dist/fillomino-entry.d.ts",
+      "import": "./dist/fillomino-entry.js",
+      "default": "./dist/fillomino-entry.js"
+    },
+    "./fillomino/play": {
+      "types": "./dist/fillomino-play-entry.d.ts",
+      "import": "./dist/fillomino-play-entry.js",
+      "default": "./dist/fillomino-play-entry.js"
+    },
+    "./fillomino/draw": {
+      "types": "./dist/fillomino-draw-entry.d.ts",
+      "import": "./dist/fillomino-draw-entry.js",
+      "default": "./dist/fillomino-draw-entry.js"
+    },
+    "./heyawake": {
+      "types": "./dist/heyawake-entry.d.ts",
+      "import": "./dist/heyawake-entry.js",
+      "default": "./dist/heyawake-entry.js"
+    },
+    "./heyawake/play": {
+      "types": "./dist/heyawake-play-entry.d.ts",
+      "import": "./dist/heyawake-play-entry.js",
+      "default": "./dist/heyawake-play-entry.js"
+    },
+    "./heyawake/draw": {
+      "types": "./dist/heyawake-draw-entry.d.ts",
+      "import": "./dist/heyawake-draw-entry.js",
+      "default": "./dist/heyawake-draw-entry.js"
     }
   },
   "files": [

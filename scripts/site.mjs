@@ -40,7 +40,7 @@ const page = `<!doctype html>
   <body>
     <main>
       ${familyHeader({ id, links: [{ href: "api.html", say: "pageApi" }] })}
-      <nav aria-label="More grid puzzles"><a href="shikaku.html">Shikaku</a> · <a href="hitori.html">Hitori</a> · <a href="nurikabe.html">Nurikabe</a> · <a href="akari.html">Akari</a> · <a href="juosan.html">Juosan</a> · <a href="slitherlink.html">Slitherlink</a></nav>
+      <nav aria-label="More grid puzzles"><a href="shikaku.html">Shikaku</a> · <a href="hitori.html">Hitori</a> · <a href="nurikabe.html">Nurikabe</a> · <a href="akari.html">Akari</a> · <a href="juosan.html">Juosan</a> · <a href="slitherlink.html">Slitherlink</a> · <a href="masyu.html">Masyu</a> · <a href="yajilin.html">Yajilin</a> · <a href="ripple.html">Ripple Effect</a> · <a href="kakuro.html">Kakuro</a> · <a href="fillomino.html">Fillomino</a> · <a href="heyawake.html">Heyawake</a></nav>
       ${row("kinds", "puzzle", ["Choose which of the six puzzles to play. Each one has its own rules, listed below the board.", "遊ぶパズルを、六つの中から選びます。ルールは盤の下に載っています。"])}
       ${row("sizes", "size", ["Choose the size of the grid. A bigger grid takes longer.", "盤の大きさを選びます。大きいほど時間がかかります。"])}
       ${row("levels", "level", ["Choose how hard the puzzle is. Easy can be solved by reasoning alone; hard may ask you to try something and see.", "問題のむずかしさを選びます。やさしい問題は推理だけで解け、むずかしい問題では試してみる場面があります。"])}
@@ -95,7 +95,7 @@ writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kazu", icon: ICON }));
 console.log("site/ is ready: serve it, or let the Pages workflow publish it.");
 
-for (const game of ["shikaku", "hitori", "nurikabe", "akari", "juosan", "slitherlink"]) {
+for (const game of ["shikaku", "hitori", "nurikabe", "akari", "juosan", "slitherlink", "masyu", "yajilin", "ripple", "kakuro", "fillomino", "heyawake"]) {
   const gamePage = readFileSync(`demo/${game}.html`, "utf8")
     .replace("<!--family-header-->", familyHeader({ id, links: [{ href: "index.html", say: "pageBack" }, { href: "api.html", say: "pageApi" }] }))
     .replace("<!--family-footer-->", familyFooter({ id }))
