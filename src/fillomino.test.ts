@@ -76,7 +76,9 @@ describe("seeded original Fillomino generation", () => {
     }
   });
 
-  it("rejects generator areas above its documented proof bound", () => {
-    expect(() => generateFillomino(7, 7, "easy", 1)).toThrow(RangeError);
+  it("rejects boards smaller or larger than the generator is built for, and unknown levels", () => {
+    expect(() => generateFillomino(3, 5, "easy", 1)).toThrow(RangeError);
+    expect(() => generateFillomino(13, 5, "easy", 1)).toThrow(RangeError);
+    expect(() => generateFillomino(6, 6, "impossible" as never, 1)).toThrow(RangeError);
   });
 });

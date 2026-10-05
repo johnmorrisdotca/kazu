@@ -1,166 +1,61 @@
-import { HITORI_MAX_NODES, HITORI_SIZES } from "./hitori.constants.ts";
+import { HITORI_LEAST_SIDE, HITORI_LEVELS, HITORI_MOST_ATTEMPTS, HITORI_MOST_SIDE } from "./hitori.constants.ts";
 import { checkHitori } from "./hitoriBoard.ts";
+import { candidateHitori, latinSquare } from "./hitoriBuild.ts";
+import { hitoriModel } from "./hitoriLogic.ts";
 import { solveHitori } from "./hitoriSolve.ts";
-import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
-import type { HitoriPuzzle } from "./hitori.types.ts";
+import { logicCsp, openSlots } from "./csp.ts";
+import { isKazuSeed, seededRandom } from "./random.ts";
+import type { HitoriBoard, HitoriLevel, HitoriPuzzle } from "./hitori.types.ts";
 
-type OriginalLayout = { numbers: readonly number[]; shade: readonly boolean[] };
-const layouts: Record<5 | 7, readonly OriginalLayout[]> = {
-  5: [
-    {
-      numbers: [
-        1, 3, 3, 1, 5, 2, 3,
-        4, 5, 1, 3, 4, 5, 1,
-        2, 4, 5, 1, 2, 3, 5,
-        1, 2, 3, 4,
-      ],
-      shade: [
-        false, true, false, true, false, ...Array(20).fill(false),
-      ],
-    },
-    {
-      numbers: [
-        1, 2, 3, 4, 5, 2, 3,
-        4, 1, 1, 3, 4, 5, 1,
-        2, 3, 5, 1, 4, 3, 5,
-        1, 2, 3, 4,
-      ],
-      shade: [
-        false, false, false, false, false, false, false,
-        false, true, false, false, false, false, false,
-        false, true, false, false, true, false, false,
-        false, false, false, false,
-      ],
-    },
-    {
-      numbers: [
-        1, 4, 3, 4, 1, 2, 3,
-        4, 5, 1, 3, 4, 5, 1,
-        2, 4, 5, 1, 2, 3, 5,
-        1, 2, 3, 4,
-      ],
-      shade: [
-        false, true, false, false, true, false, false,
-        false, false, false, false, false, false, false,
-        false, false, false, false, false, false, false,
-        false, false, false, false,
-      ],
-    },
-    {
-      numbers: [
-        1, 4, 3, 4, 5, 2, 3,
-        2, 5, 1, 2, 4, 5, 1,
-        2, 4, 5, 1, 2, 3, 5,
-        5, 2, 3, 4,
-      ],
-      shade: [
-        false, true, false, false, false, false, false,
-        true, false, false, true, false, false, false,
-        false, false, false, false, false, false, false,
-        true, false, false, false,
-      ],
-    },
-  ],
-  7: [
-    {
-      numbers: [
-        1, 2, 3, 4, 2, 6, 7,
-        2, 6, 4, 5, 6, 7, 1,
-        3, 4, 5, 6, 1, 1, 1,
-        4, 5, 6, 7, 1, 2, 3,
-        5, 6, 7, 1, 2, 3, 4,
-        6, 7, 1, 2, 3, 4, 5,
-        7, 1, 2, 3, 4, 5, 6,
-      ],
-      shade: [
-        false, false, false, false, true, false, false,
-        false, true, false, false, false, false, false,
-        false, false, false, false, true, false, true,
-        ...Array(28).fill(false),
-      ],
-    },
-    {
-      numbers: [
-        1, 2, 4, 4, 5, 7, 7,
-        2, 3, 4, 5, 5, 7, 1,
-        3, 4, 5, 6, 7, 1, 2,
-        4, 5, 6, 7, 1, 2, 7,
-        5, 6, 7, 1, 2, 3, 4,
-        6, 2, 1, 2, 3, 4, 5,
-        7, 1, 2, 3, 7, 5, 6,
-      ],
-      shade: [
-        false, false, true, false, false, true, false,
-        false, false, false, false, true, false, false,
-        false, false, false, false, false, false, false,
-        false, false, false, false, false, false, true,
-        false, false, false, false, false, false, false,
-        false, true, false, false, false, false, false,
-        false, false, false, false, true, false, false,
-      ],
-    },
-    {
-      numbers: [
-        1, 2, 3, 4, 5, 6, 7,
-        2, 3, 4, 5, 6, 7, 1,
-        3, 4, 5, 6, 1, 1, 6,
-        4, 6, 6, 6, 1, 2, 3,
-        5, 6, 7, 1, 2, 3, 4,
-        6, 7, 1, 2, 3, 4, 5,
-        7, 1, 2, 3, 4, 5, 6,
-      ],
-      shade: [
-        false, false, false, false, false, false, false,
-        false, false, false, false, false, false, false,
-        false, false, false, false, true, false, true,
-        false, true, false, true, false, false, false,
-        false, false, false, false, false, false, false,
-        false, ...Array(13).fill(false),
-      ],
-    },
-    {
-      numbers: [
-        1, 2, 3, 4, 6, 6, 7,
-        2, 2, 4, 5, 6, 2, 1,
-        3, 4, 5, 6, 7, 1, 2,
-        4, 5, 6, 7, 1, 2, 3,
-        5, 6, 7, 1, 2, 3, 4,
-        6, 7, 1, 2, 3, 4, 5,
-        7, 1, 2, 3, 6, 5, 6,
-      ],
-      shade: [
-        false, false, false, false, true, false, false,
-        false, true, false, false, false, true, false,
-        false, false, false, false, false, false, false,
-        false, false, false, false, false, false, false,
-        false, false, false, false, false, false, false,
-        false, false, false, false, false, false, false,
-        false, false, false, false, true, false, false,
-      ],
-    },
-  ],
-};
-
-/** Seeded number relabelings and board symmetries of original layouts, accepted only after a uniqueness proof. */
-export function generateHitori(size: 5 | 7 = 5, seed = 1): HitoriPuzzle {
-  if (!HITORI_SIZES.includes(size) || !isKazuSeed(seed)) throw new RangeError("Invalid Hitori settings");
-  const random = seededRandom(seed), templates = layouts[size];
-  const template = templates[Math.floor(random() * templates.length)]!;
-  const labels = shuffled(Array.from({ length: size }, (_, index) => index + 1), random);
-  const turns = Math.floor(random() * 4), reflected = random() < 0.5;
-  const numbers = Array(size * size), solution = Array(size * size);
-
-  for (let y = 0; y < size; y += 1) for (let x = 0; x < size; x += 1) {
-    let tx = reflected ? size - 1 - x : x, ty = y;
-    for (let turn = 0; turn < turns; turn += 1) [tx, ty] = [size - 1 - ty, tx];
-    const source = y * size + x, destination = ty * size + tx;
-    numbers[destination] = labels[template.numbers[source]! - 1]!;
-    solution[destination] = template.shade[source]!;
+/**
+ * Makes a seeded puzzle and proves its answer is the only one. The shaded squares are chosen first (never touching,
+ * the rest in one piece), the white squares get numbers that repeat nowhere in their row or column, and every shaded
+ * square takes a number that a white square in its row or column already has. Boards with more than one answer are
+ * repaired by renumbering a shaded square so that the other answer repeats a number, and the result is rated:
+ * easy by the plain rules, medium once the whites must stay in one piece, hard by supposing, and extra-hard the
+ * most-supposing of several boards.
+ */
+export function generateHitori(size = 5, seed = 1, level: HitoriLevel = "medium"): HitoriPuzzle {
+  if (!Number.isInteger(size) || size < HITORI_LEAST_SIDE || size > HITORI_MOST_SIDE || !isKazuSeed(seed) || !HITORI_LEVELS.includes(level)) {
+    throw new RangeError("Invalid Hitori settings");
   }
-
-  const board = { size, numbers }, proof = solveHitori(board, { nodes: HITORI_MAX_NODES });
-  if (!checkHitori(board, solution).ok || !proof.complete || proof.count !== 1 || !proof.solution) {
-    throw new Error("No uniquely solvable Hitori found within the generation budget; try another seed");
+  const random = seededRandom(seed);
+  const base = latinSquare(size, random);
+  if (!base) throw new Error("No Hitori found within the generation budget; try another seed");
+  for (let aim = HITORI_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
+    const aimed = HITORI_LEVELS[aim]!;
+    const wanted = aimed === "extra-hard" ? 4 : 1;
+    let best: { board: HitoriBoard; shaded: readonly boolean[]; score: number } | null = null, found = 0;
+    for (let attempt = 0; attempt < HITORI_MOST_ATTEMPTS && found < wanted; attempt += 1) {
+      const built = candidateHitori(size, aimed, random, base);
+      const made = built && rated(built.board, built.shaded, aimed);
+      if (!made) continue;
+      found += 1;
+      if (!best || made.score > best.score) best = made;
+    }
+    if (best) {
+      const proof = solveHitori(best.board);
+      if (proof.complete && proof.count === 1 && proof.solution && checkHitori(best.board, proof.solution).ok) {
+        return { ...best.board, seed, level, solution: proof.solution };
+      }
+    }
   }
-  return { ...board, seed, solution: proof.solution };
+  throw new Error("No uniquely solvable Hitori found within the generation budget; try another seed");
+}
+
+
+function rated(board: HitoriBoard, shaded: readonly boolean[], level: HitoriLevel): { board: HitoriBoard; shaded: readonly boolean[]; score: number } | null {
+  const total = board.size * board.size;
+  const solved = (strength: 0 | 2, depth: number) => {
+    const { csp } = hitoriModel(board, strength);
+    const run = logicCsp(csp, openSlots(csp), depth);
+    return run.solved && checkHitori(board, Array.from({ length: total }, (_, cell) => run.alive[2 * cell + 1] === 1)).ok ? run : null;
+  };
+  if (level === "easy") return solved(0, 0) ? { board, shaded, score: 0 } : null;
+  if (solved(0, 0)) return null;
+  if (level === "medium") return solved(2, 0) ? { board, shaded, score: 0 } : null;
+  if (solved(2, 0)) return null;
+  const probing = solved(2, 1);
+  if (!probing) return level === "extra-hard" ? { board, shaded, score: 1_000 } : null;
+  return { board, shaded, score: probing.probes };
 }

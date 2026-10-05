@@ -29,7 +29,14 @@ describe("Kakuro rules", () => {
   });
   it("counts the cross-run solution and reports interrupted searches honestly", () => {
     expect(solveKakuro(board)).toMatchObject({ count: 1, complete: true, solution: [0, 0, 0, 0, 2, 1, 0, 1, 3] });
-    expect(solveKakuro(board, [], { nodes: 1 })).toMatchObject({ count: 0, complete: false });
+    // A two-by-two block whose rows and columns all add to 3 has two answers, and a one-node search reaches neither.
+    const twin = { width: 3, height: 3, cells: [
+      { kind: "black", across: null, down: null }, { kind: "black", across: null, down: 3 }, { kind: "black", across: null, down: 3 },
+      { kind: "black", across: 3, down: null }, { kind: "white" }, { kind: "white" },
+      { kind: "black", across: 3, down: null }, { kind: "white" }, { kind: "white" },
+    ] } as const;
+    expect(solveKakuro(twin, [], { limit: 5 })).toMatchObject({ count: 2, complete: true });
+    expect(solveKakuro(twin, [], { nodes: 1 })).toMatchObject({ count: 0, complete: false });
   });
 });
 

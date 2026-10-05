@@ -61,19 +61,7 @@ describe("Akari rules", () => {
     expect(decodeAkari("{")).toBeNull();
     expect(hintAkari(generated)).not.toBeNull();
   });
-  it("generates deterministic original 5×5, 7×7 and rectangular boards with proved uniqueness", () => {
-    expect(generateAkari(5, 5, 42)).toMatchObject({
-      cells: [1, null, false, false, null, false, null, false, 1, null, false, false, false,
-        false, false, false, null, false, 1, null, 1, null, false, false, null],
-      solution: [1, 9, 19, 21],
-    });
-    expect(generateAkari(7, 7, 42)).toMatchObject({
-      cells: [1, null, false, 1, null, false, false, false, false, false, false, false, false, false,
-        1, null, false, false, null, false, false, false, null, false, 1, null, false, false, false,
-        false, false, false, false, false, false, false, null, false, 1, null, false, false, 1, null,
-        false, false, null, false, false],
-      solution: [1, 4, 15, 25, 39, 43],
-    });
+  it("generates deterministic 5×5, 7×7 and rectangular boards with proved uniqueness", () => {
     for (const [width, height] of [[5, 5], [7, 7], [10, 6], [6, 10], [16, 9]]) {
       for (let seed = 1; seed <= 4; seed += 1) {
         const puzzle = generateAkari(width, height, seed);

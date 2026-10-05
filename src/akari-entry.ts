@@ -3,6 +3,7 @@ export * from "./akari.constants.ts";
 export * from "./akariBoard.ts";
 export * from "./akariSolve.ts";
 export * from "./akariGenerate.ts";
+export * from "./akariRate.ts";
 export * from "./akariGame.ts";
 export { drawAkari } from "./akariDraw.ts";
 export type { AkariDrawOptions } from "./akariPlay.types.ts";

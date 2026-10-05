@@ -1,33 +1,53 @@
-import { SHIKAKU_LEVELS, SHIKAKU_MOST_ATTEMPTS } from "./shikaku.constants.ts";
-import { isShikakuBoard, shikakuCells } from "./shikakuBoard.ts";
+import { SHIKAKU_LEVELS, SHIKAKU_MOST_ATTEMPTS, SHIKAKU_MOST_SIDE } from "./shikaku.constants.ts";
+import { checkShikaku } from "./shikakuBoard.ts";
+import { candidateShikaku } from "./shikakuBuild.ts";
+import { shikakuModel } from "./shikakuLogic.ts";
 import { solveShikaku } from "./shikakuSolve.ts";
+import { templateShikaku } from "./shikakuTemplate.ts";
+import { logicCsp, openSlots } from "./csp.ts";
 import { isKazuSeed, seededRandom } from "./random.ts";
-import type { ShikakuLevel, ShikakuPuzzle, ShikakuRectangle } from "./shikaku.types.ts";
+import type { ShikakuBoard, ShikakuLevel, ShikakuPuzzle } from "./shikaku.types.ts";
 
-/** Seeded partitions with an independently counted, unique answer. Levels choose rectangle sizes, not a promised human rating. */
+/**
+ * Seeded rectangles packed into the board, one number each, with an independently counted, unique answer. The board
+ * is rated by solving it: easy by the first two rules (a number with one fitting rectangle, a square one rectangle can
+ * cover), medium once the third rule is needed too, hard by supposing, extra-hard the most-supposing of several boards. If no board of the level is found within the attempts
+ * the next level down is tried, and the first generator is the last resort.
+ */
 export function generateShikaku(width = 7, height = width, level: ShikakuLevel = "medium", seed = 1): ShikakuPuzzle {
-  if (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= 16)) throw new RangeError("Invalid Shikaku dimensions");
-  const empty = { width, height, clues: Array(width * height).fill(0) as number[] };
-  if (!isKazuSeed(seed) || !SHIKAKU_LEVELS.includes(level)
-    || !isShikakuBoard({ ...empty, clues: [width * height, ...empty.clues.slice(1)] })) throw new RangeError("Invalid Shikaku settings");
-  const random = seededRandom(seed), maximum = { easy: 5, medium: 9, hard: 15 }[level];
-  for (let attempt = 0; attempt < SHIKAKU_MOST_ATTEMPTS; attempt += 1) {
-    const solution: ShikakuRectangle[] = [];
-    const split = (r: ShikakuRectangle) => {
-      if (r.width * r.height <= maximum && (r.width * r.height < 3 || random() < .6)) { solution.push(r); return; }
-      const vertical = r.height === 1 || (r.width > 1 && random() < .5);
-      const cut = 1 + Math.floor(random() * ((vertical ? r.width : r.height) - 1));
-      if (vertical) { split({ ...r, width: cut }); split({ ...r, x: r.x + cut, width: r.width - cut }); }
-      else { split({ ...r, height: cut }); split({ ...r, y: r.y + cut, height: r.height - cut }); }
-    };
-    split({ x: 0, y: 0, width, height });
-    const clues = [...empty.clues];
-    for (const r of solution) {
-      const cells = shikakuCells(empty, r)!;
-      clues[cells[Math.floor(random() * cells.length)]] = cells.length;
+  if (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= SHIKAKU_MOST_SIDE)
+    || !isKazuSeed(seed) || !SHIKAKU_LEVELS.includes(level)) throw new RangeError("Invalid Shikaku settings");
+  const random = seededRandom(seed);
+  for (let aim = SHIKAKU_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
+    const aimed = SHIKAKU_LEVELS[aim]!;
+    const wanted = aimed === "extra-hard" ? 3 : 1;
+    let best: { board: ShikakuBoard; score: number } | null = null, found = 0;
+    for (let attempt = 0; attempt < SHIKAKU_MOST_ATTEMPTS && found < wanted; attempt += 1) {
+      const built = candidateShikaku(width, height, aimed, random);
+      if (!built) continue;
+      const score = scored(built.board, aimed);
+      if (score === null) continue;
+      found += 1;
+      if (!best || score > best.score) best = { board: built.board, score };
     }
-    const board = { width, height, clues }, counted = solveShikaku(board);
-    if (counted.complete && counted.count === 1) return { ...board, seed, level, solution: counted.solution! };
+    if (best) {
+      const proof = solveShikaku(best.board);
+      if (proof.complete && proof.count === 1 && proof.solution && checkShikaku(best.board, proof.solution).ok) {
+        return { ...best.board, seed, level, solution: proof.solution };
+      }
+    }
   }
-  throw new Error("No unique Shikaku found within the generation budget; try another seed");
+  return { ...templateShikaku(width, height, level === "extra-hard" ? "hard" : level, seed), level };
+}
+
+/** Whether a board suits a level, and how well: higher is harder. */
+function scored(board: ShikakuBoard, level: ShikakuLevel): number | null {
+  const models = [shikakuModel(board, 1), shikakuModel(board, 2)] as const;
+  const solves = (index: 0 | 1, depth: number) => logicCsp(models[index].csp, openSlots(models[index].csp), depth);
+  if (solves(0, 0).solved) return level === "easy" ? 0 : null;
+  if (level === "easy") return null;
+  if (solves(1, 0).solved) return level === "medium" ? 0 : null;
+  if (level === "medium") return null;
+  const probing = solves(1, 1);
+  return probing.solved ? probing.probes : level === "extra-hard" ? 1_000 : null;
 }

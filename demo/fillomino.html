@@ -14,9 +14,9 @@
         <aside>
           <h2 id="field-title">Your puzzle</h2>
           <form id="setup">
-            <label class="fam-row"><span id="width-label">Width</span><input class="fam-field" id="width" type="number" min="4" max="6" value="5" required></label>
-            <label class="fam-row"><span id="height-label">Height</span><input class="fam-field" id="height" type="number" min="4" max="6" value="5" required></label>
-            <label class="fam-row"><span id="level-label">Clue mix</span><select class="fam-field" id="level"><option value="easy" selected>More clues</option><option value="medium">Mixed</option><option value="hard">Fewer clues</option></select></label>
+            <label class="fam-row" data-help-en="Choose how many cells wide the board is, from 4 to 12." data-help-ja="盤の幅を4～12マスから選びます。"><span id="width-label">Width</span><input class="fam-field" id="width" type="number" min="4" max="12" value="6" required></label>
+            <label class="fam-row" data-help-en="Choose how many cells high the board is, from 4 to 12." data-help-ja="盤の高さを4～12マスから選びます。"><span id="height-label">Height</span><input class="fam-field" id="height" type="number" min="4" max="12" value="6" required></label>
+            <label class="fam-row" data-help-en="Choose how hard the puzzle is. Easy and medium use only plain rules and give more numbers; hard and extra hard give fewer and ask you to suppose a number and see if it breaks." data-help-ja="問題のむずかしさを選びます。やさしい・ふつうは決まった規則だけで解け、ヒントが多め。むずかしい・とてもむずかしいはヒントが少なく、数字を仮に置いて矛盾を確かめる場面があります。"><span id="level-label">Level</span><select class="fam-field" id="level"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option><option value="extra-hard">Extra hard</option></select></label>
             <label class="fam-row"><span id="material-label">Board material</span><select class="fam-field" id="material"><option value="ivory">Ivory</option><option value="wood">Wood</option><option value="slate">Slate</option></select></label>
             <label class="fam-row"><span id="pieces-label">Numbers</span><select class="fam-field" id="pieces"><option value="ink">Ink</option><option value="tiles">Tiles</option></select></label>
             <label class="fam-row"><span id="seed-label">Seed</span><input class="fam-field" id="seed" type="number" min="1" max="2147483647" value="17" required></label>

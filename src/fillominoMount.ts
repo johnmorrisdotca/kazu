@@ -1,4 +1,5 @@
 import { checkFillomino } from "./fillominoBoard.ts";
+import { fillominoMostValue } from "./fillominoLogic.ts";
 import { drawFillomino } from "./fillominoDraw.ts";
 import { decodeFillomino, encodeFillomino, hintFillomino, newFillomino, restartFillomino, setFillominoCell, undoFillomino } from "./fillominoGame.ts";
 import { FILLOMINO_PLAY_STYLE } from "./fillominoStyle.ts";
@@ -104,7 +105,9 @@ export function mountFillomino(host: HTMLElement, initial: FillominoMountOptions
     const number = document.createElement("select");
     number.setAttribute("aria-label", words.selectNumber);
     number.dataset.number = "true";
-    for (let value = 1; value <= game.entries.length; value += 1) {
+    // Only numbers an answer can hold: more than the biggest given only fits among squares that have no given.
+    const most = Math.max(fillominoMostValue(game.board, game.board.givens), ...game.entries);
+    for (let value = 1; value <= most; value += 1) {
       const option = document.createElement("option");
       option.value = String(value);
       option.textContent = String(value);

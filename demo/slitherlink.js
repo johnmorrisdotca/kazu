@@ -15,6 +15,8 @@ function translate() {
   for (const [id, key] of [["field-title", "field"], ["size-label", "size"], ["material-label", "material"], ["seed-label", "seed"], ["new", "make"], ["share", "share"], ["rules-title", "rulesTitle"], ["rules", "rules"], ["unique", "unique"]]) get(id).textContent = w[key];
   document.querySelectorAll(".dimensions label")[0].firstElementChild.textContent = w.width;
   document.querySelectorAll(".dimensions label")[1].firstElementChild.textContent = w.height;
+  get("level-label").textContent = get("level-label").dataset[language];
+  for (const option of get("level").options) option.textContent = option.dataset[language];
   handle?.set({ language });
 }
 function dimensions() {
@@ -25,13 +27,13 @@ function dimensions() {
 }
 function start() {
   const width = Number(get("width").value), height = Number(get("height").value), seed = Number(get("seed").value);
-  settings = { width, height, seed, material: get("material").value };
+  settings = { width, height, seed, level: get("level").value, material: get("material").value };
   try {
-    const puzzle = generateSlitherlink(width, height, seed);
+    const puzzle = generateSlitherlink(width, height, seed, settings.level);
     handle?.destroy();
     let saved;
     try { saved = JSON.parse(localStorage.getItem("kazu-slitherlink-v1") ?? "null"); } catch { saved = null; }
-    const restored = !query.has("seed") && saved && saved.width === width && saved.height === height && saved.seed === seed
+    const restored = !query.has("seed") && saved && saved.width === width && saved.height === height && saved.seed === seed && (saved.level ?? "medium") === settings.level
       ? decodeSlitherlink(saved.progress) : null;
     handle = mountSlitherlink(get("board"), {
       board: puzzle,
@@ -46,7 +48,7 @@ function start() {
     get("notice").textContent = text[language].made;
   } catch { get("notice").textContent = text[language].failed; }
 }
-for (const id of ["size", "width", "height", "seed", "material"]) if (query.has(id)) get(id).value = query.get(id);
+for (const id of ["size", "width", "height", "level", "seed", "material"]) if (query.has(id)) get(id).value = query.get(id);
 if (query.has("width") || query.has("height")) get("size").value = "custom"; else dimensions();
 get("size").onchange = dimensions;
 for (const id of ["width", "height"]) get(id).onchange = () => { get("size").value = "custom"; };

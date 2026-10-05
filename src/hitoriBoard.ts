@@ -1,7 +1,8 @@
+import { HITORI_LEAST_SIDE, HITORI_MOST_SIDE } from "./hitori.constants.ts";
 import type { HitoriBoard } from "./hitori.types.ts";
 
 export function isHitoriBoard(board: HitoriBoard): boolean {
-  return !!board && (board.size === 5 || board.size === 7)
+  return !!board && Number.isInteger(board.size) && board.size >= HITORI_LEAST_SIDE && board.size <= HITORI_MOST_SIDE
     && Array.isArray(board.numbers)
     && board.numbers.length === board.size * board.size
     && board.numbers.every(value => Number.isInteger(value) && value >= 1 && value <= board.size);

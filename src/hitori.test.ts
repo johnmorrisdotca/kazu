@@ -19,9 +19,14 @@ describe("Hitori rules", () => {
 
   it("rejects malformed boards and reports bounded searches as incomplete", () => {
     expect(isHitoriBoard({ size: 6, numbers: [] } as never)).toBe(false);
+    expect(isHitoriBoard({ size: 3, numbers: Array(9).fill(1) } as never)).toBe(false);
+    expect(isHitoriBoard({ size: 13, numbers: Array(169).fill(1) } as never)).toBe(false);
     const board = { size: 5 as const, numbers: Array.from({ length: 25 }, (_, cell) => cell % 5 + 1) };
     expect(solveHitori(board, { limit: 2 }).complete).toBe(true);
-    expect(solveHitori(board, { nodes: 1 }).complete).toBe(false);
+    // Two answers that no rule can tell apart: a search of one node cannot reach either.
+    const twin = { size: 4, numbers: [3, 1, 1, 4, 2, 2, 1, 3, 1, 4, 3, 2, 3, 3, 2, 4] };
+    expect(solveHitori(twin, { limit: 10 })).toMatchObject({ count: 2, complete: true });
+    expect(solveHitori(twin, { nodes: 1 })).toMatchObject({ count: 0, complete: false });
   });
 
   it("generates reproducible unique puzzles with varied original layouts at both sizes", () => {

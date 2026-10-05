@@ -3,6 +3,7 @@ export * from "./kakuro.constants.ts";
 export * from "./kakuroBoard.ts";
 export * from "./kakuroSolve.ts";
 export * from "./kakuroGenerate.ts";
+export * from "./kakuroRate.ts";
 export * from "./kakuroGame.ts";
 export { drawKakuro } from "./kakuroDraw.ts";
 export type { KakuroDrawOptions } from "./kakuroDraw.ts";

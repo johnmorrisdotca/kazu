@@ -4,6 +4,7 @@ export * from "./slitherlink.constants.ts";
 export * from "./slitherlinkBoard.ts";
 export * from "./slitherlinkSolve.ts";
 export * from "./slitherlinkGenerate.ts";
+export * from "./slitherlinkRate.ts";
 export * from "./slitherlinkGame.ts";
 export { drawSlitherlink } from "./slitherlinkDraw.ts";
 export type { SlitherlinkDrawOptions } from "./slitherlinkPlay.types.ts";

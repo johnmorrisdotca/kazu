@@ -15,7 +15,7 @@ describe("Shikaku rectangle rules", () => {
     expect(solveShikaku(ambiguous)).toMatchObject({ count: 2, complete: false });
   });
   it("never calls a bounded search a proved answer", () => {
-    expect(solveShikaku(board, [], { nodes: 1 })).toMatchObject({ count: 0, complete: false });
+    expect(solveShikaku({ width: 2, height: 2, clues: [2, 0, 0, 2] }, [], { nodes: 1 })).toMatchObject({ count: 0, complete: false });
   });
   it("checks coverage, clue area, overlap, empty rectangles and bounds independently", () => {
     const top = { x: 0, y: 0, width: 3, height: 1 }, bottom = { ...top, y: 1 };

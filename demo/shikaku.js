@@ -3,15 +3,15 @@ import { mountShikaku } from "./dist/shikaku-play-entry.js";
 const get = id => document.getElementById(id), params = new URLSearchParams(location.search);
 let activeSettings, activeChallenge = null, handle, worker, started = Date.now(), stopped = null, language = params.get("lang") === "ja" ? "ja" : "en";
 const words = {
-  en: ["A place for every number.", "Divide the grid into rectangles. One number in each, telling you how many cells belong inside.", "Your board", "Size", "Rectangle mix", "Board material", "Numbers", "Seed", "New puzzle →", "Share puzzle", "Every generated puzzle has one proved answer. All play stays on your device.", "Shikaku is a Nikoli puzzle. These puzzles are generated here; none are copied from Nikoli.", "Making a unique puzzle…", "Puzzle link copied.", "Unable to make this puzzle. Try another seed.", "Small", "Mixed", "Large", "Ivory", "Wood", "Slate", "Ink", "Tiles"],
-  ja: ["数字の居場所を見つけよう。", "盤を長方形に分けます。一つの長方形に一つの数字。その数字が面積を教えてくれます。", "あなたの盤", "大きさ", "長方形の組み合わせ", "盤の素材", "数字", "シード", "新しい問題 →", "問題を共有", "作った問題の答えは一つだけ。遊びの記録はこの端末に保存します。", "四角に切れはニコリのパズルです。ここでは問題を自動で作り、ニコリの問題は使っていません。", "答えが一つの問題を作っています…", "リンクをコピーしました。", "問題を作れませんでした。別のシードを試してください。", "小さい", "混合", "大きい", "象牙色", "木", "石板", "インク", "タイル"]
+  en: ["A place for every number.", "Divide the grid into rectangles. One number in each, telling you how many cells belong inside.", "Your board", "Size", "Level", "Board material", "Numbers", "Seed", "New puzzle →", "Share puzzle", "Every generated puzzle has one proved answer. All play stays on your device.", "Shikaku is a Nikoli puzzle. These puzzles are generated here; none are copied from Nikoli.", "Making a unique puzzle…", "Puzzle link copied.", "Unable to make this puzzle. Try another seed.", "Easy", "Medium", "Hard", "Extra hard", "Ivory", "Wood", "Slate", "Ink", "Tiles"],
+  ja: ["数字の居場所を見つけよう。", "盤を長方形に分けます。一つの長方形に一つの数字。その数字が面積を教えてくれます。", "あなたの盤", "大きさ", "むずかしさ", "盤の素材", "数字", "シード", "新しい問題 →", "問題を共有", "作った問題の答えは一つだけ。遊びの記録はこの端末に保存します。", "四角に切れはニコリのパズルです。ここでは問題を自動で作り、ニコリの問題は使っていません。", "答えが一つの問題を作っています…", "リンクをコピーしました。", "問題を作れませんでした。別のシードを試してください。", "やさしい", "ふつう", "むずかしい", "とてもむずかしい", "象牙色", "木", "石板", "インク", "タイル"]
 };
 const ids = ["title", "intro", "field-title", "size-label", "level-label", "material-label", "pieces-label", "seed-label", "new", "share", "unique", "origin"];
 function translate() {
   document.documentElement.lang = language;
   get("width-label").textContent = language === "ja" ? "幅" : "Width"; get("height-label").textContent = language === "ja" ? "高さ" : "Height";
   ids.forEach((id, i) => { const element = get(id); if (element) element.textContent = words[language][i]; });
-  ["level", "material", "pieces"].forEach((id, group) => [...get(id).options].forEach((o, i) => o.textContent = words[language][15 + [0, 3, 6][group] + i]));
+  ["level", "material", "pieces"].forEach((id, group) => [...get(id).options].forEach((o, i) => o.textContent = words[language][15 + [0, 4, 7][group] + i]));
   get("pack-label").textContent = language === "ja" ? "チャレンジパック" : "Challenge pack";
   get("challenge-label").textContent = language === "ja" ? "問題" : "Challenge";
   get("play-challenge").textContent = language === "ja" ? "チャレンジを始める" : "Play challenge";
@@ -39,7 +39,7 @@ function remember(game) {
   try { localStorage.setItem("kazu-shikaku-v1", JSON.stringify({ progress: encodeShikaku(game), ...activeSettings, ...appearance() })); } catch { /* Storage is optional. */ }
 }
 function play(board, progress) {
-  get("size").value = board.width === board.height && [5, 7, 9, 12].includes(board.width) ? String(board.width) : board.width === 10 && board.height === 6 ? "wide" : board.width === 6 && board.height === 10 ? "tall" : "custom";
+  get("size").value = board.width === board.height && [5, 7, 10, 14].includes(board.width) ? String(board.width) : board.width === 10 && board.height === 6 ? "wide" : board.width === 6 && board.height === 10 ? "tall" : "custom";
   activeSettings = { size: get("size").value, width: String(board.width), height: String(board.height), seed: get("seed").value, level: get("level").value, ...(activeChallenge ?? {}) };
   handle?.destroy(); started = Date.now(); stopped = null;
   handle = mountShikaku(get("board"), { board, progress, ...appearance(), onChange: remember, onFinish: game => { stopped = Date.now(); remember(game); } });

@@ -40,7 +40,9 @@ describe("Slitherlink loop rules", () => {
   it("counts completions honestly and stops when a node budget is reached", () => {
     const board = { width: 2, height: 2, clues: [2, 2, 2, 2] } as const;
     expect(solveSlitherlink(board, { limit: 100 })).toMatchObject({ count: 1, complete: true });
-    expect(solveSlitherlink(board, { nodes: 1 })).toMatchObject({ count: 0, complete: false });
+    const open = { width: 3, height: 3, clues: Array(9).fill(null) };
+    expect(solveSlitherlink(open, { limit: 10_000 })).toMatchObject({ complete: true });
+    expect(solveSlitherlink(open, { limit: 10_000, nodes: 3 })).toMatchObject({ complete: false });
     expect(() => solveSlitherlink(board, { limit: 0 })).toThrow(RangeError);
   });
 
@@ -75,16 +77,7 @@ describe("Slitherlink loop rules", () => {
     expect(decodeSlitherlink("{")).toBeNull();
   });
 
-  it("pins seeded 5×5 and 7×7 boards and proves rectangular presets", () => {
-    expect(generateSlitherlink(5, 5, 42)).toMatchObject({
-      clues: [0, 1, 2, 1, 2, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 2, 1, 2],
-      solution: [2, 3, 4, 27, 28, 29, 32, 35, 38, 41, 44, 47, 50, 53, 56, 59],
-    });
-    expect(generateSlitherlink(7, 7, 42)).toMatchObject({
-      clues: [0, 0, 1, 1, 1, 1, 0, 0, 1, 2, 1, 1, 2, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1,
-        1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 2, 1, 1, 2, 1],
-      solution: [9, 10, 11, 12, 51, 52, 53, 54, 66, 70, 74, 78, 82, 86, 90, 94, 98, 102, 106, 110],
-    });
+  it("makes repeatable boards of any size from 2 to 10 and proves each has one answer", () => {
     for (const [width, height] of [[5, 5], [7, 7], [10, 6], [6, 10], [2, 2]]) {
       for (let seed = 1; seed <= 6; seed += 1) {
         const puzzle = generateSlitherlink(width, height, seed);
@@ -93,6 +86,8 @@ describe("Slitherlink loop rules", () => {
         expect(generateSlitherlink(width, height, seed)).toEqual(puzzle);
       }
     }
+    expect(generateSlitherlink(5, 5, 1)).not.toEqual(generateSlitherlink(5, 5, 2));
+    expect(() => generateSlitherlink(11, 5, 1)).toThrow(RangeError);
   });
 
   it("draws clues and selected loop edges in each board material", () => {

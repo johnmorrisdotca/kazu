@@ -14,7 +14,8 @@
         <aside>
           <h2 id="title">Hitori</h2>
           <p id="rules">Shade cells so numbers are unique in each row and column. Shaded cells cannot touch, and all unshaded cells stay connected.</p>
-          <label><span id="size-label">Size</span> <select id="size"><option>5</option><option>7</option></select></label>
+          <label><span id="size-label">Size</span> <select id="size"><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>12</option></select></label>
+          <label data-help-en="Choose how hard the puzzle is. Easy and medium use only plain rules; hard and extra hard ask you to suppose something and see if it breaks." data-help-ja="問題のむずかしさを選びます。やさしい・ふつうは決まった規則だけで解け、むずかしい・とてもむずかしいでは、試して矛盾を確かめる場面があります。"><span id="level-label">Level</span> <select id="level"><option value="easy" data-en="Easy" data-ja="やさしい">Easy</option><option value="medium" selected data-en="Medium" data-ja="ふつう">Medium</option><option value="hard" data-en="Hard" data-ja="むずかしい">Hard</option><option value="extra-hard" data-en="Extra hard" data-ja="とてもむずかしい">Extra hard</option></select></label>
           <label><span id="seed-label">Seed</span> <input id="seed" type="number" min="1" value="42"></label>
           <button id="new">New puzzle</button>
           <p id="notice" role="status"></p>

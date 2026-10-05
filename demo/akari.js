@@ -48,6 +48,8 @@ function translate() {
     });
   });
   get("title").textContent = language === "ja" ? "美術館 · Akari" : "Akari · 美術館";
+  get("level-label").textContent = get("level-label").dataset[language];
+  for (const option of get("level").options) option.textContent = option.dataset[language];
   handle?.set({ language });
 }
 
@@ -72,7 +74,7 @@ function remember(game) {
 }
 
 function play(board, progress) {
-  const preset = board.width === board.height && [5, 7].includes(board.width)
+  const preset = board.width === board.height && [5, 7, 10, 14].includes(board.width)
     ? String(board.width)
     : board.width === 10 && board.height === 6
       ? "wide"
@@ -85,6 +87,7 @@ function play(board, progress) {
     width: String(board.width),
     height: String(board.height),
     seed: get("seed").value,
+    level: get("level").value,
   };
 
   handle?.destroy();
@@ -122,14 +125,14 @@ function make() {
     const width = Number(get("width").value);
     const height = Number(get("height").value);
     const seed = Number(get("seed").value);
-    play(generateAkari(width, height, seed));
+    play(generateAkari(width, height, seed, get("level").value));
     get("notice").textContent = "";
   } catch {
     get("notice").textContent = words[language][18];
   }
 }
 
-for (const id of ["size", "width", "height", "seed", "material", "pieces"]) {
+for (const id of ["size", "width", "height", "level", "seed", "material", "pieces"]) {
   if (params.has(id)) get(id).value = params.get(id);
 }
 if (!params.has("width") && !params.has("height")) dimensions();
@@ -202,8 +205,8 @@ try {
 const restored = !params.has("seed") && saved && decodeAkari(saved.progress);
 if (restored) {
   if (!params.has("lang") && ["en", "ja"].includes(saved.language)) pageLanguage.set(saved.language);
-  for (const id of ["size", "width", "height", "seed", "material", "pieces"]) {
-    get(id).value = saved[id] ?? "custom";
+  for (const id of ["size", "width", "height", "level", "seed", "material", "pieces"]) {
+    get(id).value = saved[id] ?? (id === "level" ? "medium" : "custom");
   }
   play(restored.board, saved.progress);
 } else {

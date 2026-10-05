@@ -3,8 +3,8 @@ import { mountFillomino } from "../dist/fillomino-play-entry.js";
 
 const byId = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
-const names = ["Your puzzle", "Width", "Height", "Clue mix", "Board material", "Numbers", "Seed", "New puzzle →", "Share puzzle", "Every generated puzzle is counted to prove it has one solution.", "Making a puzzle with one proved solution…", "Puzzle link copied.", "This seed did not produce a puzzle in the search budget. Try another seed or a smaller board.", "More clues", "Mixed", "Fewer clues", "Ivory", "Wood", "Slate", "Ink", "Tiles"];
-const japanese = ["問題", "幅", "高さ", "ヒントの数", "盤の素材", "数字", "シード", "新しい問題 →", "問題を共有", "作った問題は答えを数えて一つだけと確かめます。", "答えが一つの問題を作っています…", "問題のリンクをコピーしました。", "このシードでは制限内に問題を作れませんでした。別のシードか小さな盤を試してください。", "多め", "標準", "少なめ", "象牙色", "木", "石板", "インク", "タイル"];
+const names = ["Your puzzle", "Width", "Height", "Level", "Board material", "Numbers", "Seed", "New puzzle →", "Share puzzle", "Every generated puzzle is counted to prove it has one solution.", "Making a puzzle with one proved solution…", "Puzzle link copied.", "This seed did not produce a puzzle in the search budget. Try another seed or a smaller board.", "Easy", "Medium", "Hard", "Extra hard", "Ivory", "Wood", "Slate", "Ink", "Tiles"];
+const japanese = ["問題", "幅", "高さ", "むずかしさ", "盤の素材", "数字", "シード", "新しい問題 →", "問題を共有", "作った問題は答えを数えて一つだけと確かめます。", "答えが一つの問題を作っています…", "問題のリンクをコピーしました。", "このシードでは制限内に問題を作れませんでした。別のシードか小さな盤を試してください。", "やさしい", "ふつう", "むずかしい", "とてもむずかしい", "象牙色", "木", "石板", "インク", "タイル"];
 const textIds = ["field-title", "width-label", "height-label", "level-label", "material-label", "pieces-label", "seed-label", "new", "share", "unique"];
 let language = params.get("lang") === "ja" ? "ja" : "en";
 let player;
@@ -28,7 +28,7 @@ function translate() {
   const words = language === "ja" ? japanese : names;
   textIds.forEach((id, index) => { const node = byId(id); if (node) node.textContent = words[index]; });
   ["level", "material", "pieces"].forEach((id, group) => {
-    const offset = [13, 16, 19][group];
+    const offset = [13, 17, 20][group];
     [...byId(id).options].forEach((option, index) => { option.textContent = words[offset + index]; });
   });
   byId("title").textContent = language === "ja" ? "フィロミノ" : "Fillomino";
@@ -111,8 +111,8 @@ if (restored) {
   if (!params.has("lang") && ["en", "ja"].includes(saved.language)) family.set(saved.language);
   start(restored.board, saved.progress);
 } else {
-  if (!params.has("width")) byId("width").value = "5";
-  if (!params.has("height")) byId("height").value = "5";
+  if (!params.has("width")) byId("width").value = "6";
+  if (!params.has("height")) byId("height").value = "6";
   if (!params.has("seed")) byId("seed").value = "17";
   generate();
 }
