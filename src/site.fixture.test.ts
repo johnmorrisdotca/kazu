@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import fixture from "./site.fixture.json" with { type: "json" };
-import { sitePuzzles } from "./site.fixture.ts";
+import { recordedSizes, sitePuzzles } from "./site.fixture.ts";
 import { decodeCells, encodeCells } from "./cells.ts";
 import { checkKazu } from "./check.ts";
 import { readGivens } from "./givens.ts";
-import { KAZU_KIND_OF_SITE_KIND, KAZU_LEVELS, KAZU_SPECS, type KazuKind } from "./kinds.ts";
+import { KAZU_KIND_OF_SITE_KIND, KAZU_LEVELS, type KazuKind } from "./kinds.ts";
 import { decodeSteps, encodeSteps } from "./progress.ts";
 import { encodeJigsaw } from "./jigsaw.ts";
 import { encodeKiller } from "./sumCages.ts";
@@ -26,7 +26,7 @@ describe("the puzzles itsutsu.com made", () => {
   it("covers every kind, every size and every level, with sixty seeds each", () => {
     const seen = new Map<string, number>();
     for (const [kind, size, level] of rows) seen.set(`${kind}/${size}/${level}`, (seen.get(`${kind}/${size}/${level}`) ?? 0) + 1);
-    const wanted = Object.entries(KAZU_KIND_OF_SITE_KIND).flatMap(([site, kind]) => KAZU_SPECS[kind].sizes.flatMap((size) => KAZU_LEVELS.map((level) => `${site}/${size}/${level}`)));
+    const wanted = Object.entries(KAZU_KIND_OF_SITE_KIND).flatMap(([site, kind]) => recordedSizes(kind).flatMap((size) => KAZU_LEVELS.map((level) => `${site}/${size}/${level}`)));
     expect([...seen.keys()].sort()).toEqual(wanted.sort());
     for (const [key, count] of seen) expect(count, key).toBe(60);
     expect(rows).toHaveLength(3600);

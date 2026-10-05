@@ -23,6 +23,7 @@ export const KAZU_BOXES: Record<number, Boxes> = {
   6: { rows: 2, cols: 3 },
   9: { rows: 3, cols: 3 },
   16: { rows: 4, cols: 4 },
+  25: { rows: 5, cols: 5 },
 };
 
 /** The box a cell is in, numbered row-major from 0. */

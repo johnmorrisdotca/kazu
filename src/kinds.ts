@@ -26,7 +26,7 @@ export type KazuSpec = {
 };
 
 export const KAZU_SPECS: Record<KazuKind, KazuSpec> = {
-  "number-place": { sizes: [4, 6, 9, 16], defaultSize: 9, mostCells: 256 },
+  "number-place": { sizes: [4, 6, 9, 16, 25], defaultSize: 9, mostCells: 625 },
   jigsaw: { sizes: [5, 6, 7, 9], defaultSize: 7, mostCells: 162 },
   diagonal: { sizes: [6, 9], defaultSize: 9, mostCells: 81 },
   "sum-cages": { sizes: [6, 9], defaultSize: 9, mostCells: 286 },

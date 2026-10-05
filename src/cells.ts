@@ -2,22 +2,22 @@
  * A GRID OF NUMBERS AS A STRING: for an address, a POST body, and a kept run.
  *
  * Row-major, one character per cell: a digit for a value, `.` for an empty cell. Past nine the
- * values are letters, A for 10 up to G for 16, as a 16×16 Sudoku is printed (`symbolOf`), so one
- * character is still one cell. Upper case only in a code, so one grid has one spelling. These are
+ * values are letters, A for 10 up to G for 16 as a 16×16 Sudoku is printed, and on to P for 25 on a
+ * 25×25 (`symbolOf`), so one character is still one cell. Upper case only in a code, so one grid has one spelling. These are
  * the spellings itsutsu.com has always stored, and they decode here unchanged.
  */
 
 export const EMPTY_CELL = ".";
 
-/** The letters after 9, in order: A is 10, G is 16. */
-const PAST_NINE = "ABCDEFG";
+/** The letters after 9, in order: A is 10, G is 16, P is 25. */
+const PAST_NINE = "ABCDEFGHIJKLMNOP";
 
-/** How a value is written, in a code and on a cell: 1–9, then A–G. */
+/** How a value is written, in a code and on a cell: 1–9, then A–P. */
 export function symbolOf(value: number): string {
   return value <= 9 ? String(value) : PAST_NINE[value - 10]!;
 }
 
-/** The value a symbol names, or 0 for one that is not 1–9 or A–G (either case). */
+/** The value a symbol names, or 0 for one that is not 1–9 or A–P (either case). */
 export function valueOfSymbol(symbol: string): number {
   if (symbol.length !== 1) return 0;
   if (symbol >= "1" && symbol <= "9") return Number(symbol);

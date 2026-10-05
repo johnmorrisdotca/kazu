@@ -16,9 +16,10 @@ import { kazuLanguageOf, kazuNameOf, kazuSay, type KazuLanguage } from "./string
  * instead; Undo takes the last change back; Hint says which cell to fill next and why; Check says how
  * many are wrong, never which. A clock starts on the first entry and stops when the last cell is right.
  *
- * The keys: the arrows move, a number (1 to 9, and A to G on the 16×16) fills the chosen cell, Shift
- * with a number writes it as a pencil mark, Backspace empties the cell, N turns Pencil on or off,
- * Ctrl or Cmd with Z undoes, and Escape lets the cell go.
+ * The keys: the arrows move, a number (1 to 9, then A to G on the 16×16 and on to P on the 25×25) fills
+ * the chosen cell, Shift with a number writes it as a pencil mark, Backspace empties the cell, N turns
+ * Pencil on or off (the slash key on the 25×25, where N is the number 23), Ctrl or Cmd with Z undoes,
+ * and Escape lets the cell go.
  *
  * What happens is told in events, on the host as DOM events and to the callbacks given: `kazu-change`
  * for every change to the grid, `kazu-hint` for each hint, `kazu-check` for each check, and `kazu-solve`
@@ -27,6 +28,9 @@ import { kazuLanguageOf, kazuNameOf, kazuSay, type KazuLanguage } from "./string
  *
  * Needs a page. Its words are English and Japanese and follow the page's `lang`.
  */
+
+/** From this side up the letter N is a number (A is 10, so N is 23), and Pencil moves to the slash key. */
+const NOTES_KEY_IS_A_NUMBER = 23;
 
 /** What every event tells of the board. */
 export type KazuEventDetail = {
@@ -332,7 +336,7 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     host.dataset.kind = game.kind;
     host.dataset.size = String(game.size);
     box.setAttribute("aria-label", say("board", { name: kazuNameOf(game.kind, language), size: game.size }));
-    keysNote.textContent = say("keys");
+    keysNote.textContent = say(game.size >= NOTES_KEY_IS_A_NUMBER ? "keysColossus" : "keys");
     const counts = numberCounts(game);
     padKeys.forEach((key, at) => {
       const value = at + 1;
@@ -444,12 +448,12 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     } else if (event.key === "Backspace" || event.key === "Delete" || event.key === "0" || event.key === " ") {
       event.preventDefault();
       api.enter(0);
-    } else if (event.key.toLowerCase() === "n") {
+    } else if (event.key.toLowerCase() === (game.size >= NOTES_KEY_IS_A_NUMBER ? "/" : "n")) {
       event.preventDefault();
       api.pencil();
     } else if (event.shiftKey && selected !== null) {
       // Shift with a number is a pencil mark, whatever the keyboard writes for a shifted digit: read the key's place, not its symbol.
-      const code = /^Digit([1-9])$/.exec(event.code)?.[1] ?? /^Key([A-G])$/.exec(event.code)?.[1];
+      const code = /^Digit([1-9])$/.exec(event.code)?.[1] ?? /^Key([A-P])$/.exec(event.code)?.[1];
       const value = code === undefined ? 0 : valueOfSymbol(code);
       if (value >= 1 && value <= game.size) {
         event.preventDefault();

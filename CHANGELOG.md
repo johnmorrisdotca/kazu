@@ -6,6 +6,17 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-05
+
+### Added
+
+- **A 25×25 Sudoku, the Colossus.** `number-place` takes a side of 25 (`KAZU_SPECS["number-place"].sizes` is now 4, 6, 9, 16, 25; boxes of 5×5; `mostCells` 625) at `easy`, `medium` and `hard`, every puzzle with exactly one answer. Its symbols go on from the 16×16's: 1 to 9, then A to P for 10 to 25 (`symbolOf`, `valueOfSymbol`, `decodeCells` and the run and note codes read A to P). Easy yields to singles alone (366 numbers printed), medium to one guess (305), hard to two nested guesses (283). The player's pad has 25 keys and the eraser in three rows, and the keyboard types the letters up to P; because N is the number 23 there, Pencil moves to the slash key on this size (`keysColossus` says so in English and Japanese). Made in a browser's time, over seeds 1 to 50 on a Mac: easy a median 13 ms (slowest 30), medium 81 ms (161), hard 308 ms (590). Hard is the one a phone may take a few seconds over, so a page that deals one for a person should do it in a worker, as the demo's slower generators do.
+- A 25×25 is made and checked by proof, not by counting every answer: `provedByGuessing(grid, layout, guesses)` is what a person's reasoning proves (singles, then guesses at the most constrained cell, each shown wrong or finished by singles), and `countKazuSolutions`, `solveKazu` and `kazuGuessDepth` use singles inside the search from the 25×25 up, which takes a medium or hard 25×25 from minutes to a few milliseconds. Every smaller size is searched exactly as before.
+
+### Fixed
+
+- **Akari never returns the old fixed lattice.** When a level found no random board within its 60 attempts, 1.3.0 returned the fixed rooms of 1.2.0 without saying so: 74% black squares and five full black rows at 14×14, which was about 45% of 14×14 easy seeds (and 17% of 12×12, 35% of 13×13, 65% of 15×15 and 83% of 16×16 easy seeds, and some medium ones at 13×13 and larger). The generator now tries again with more black squares (1.5, 1.8, 2.1 and 2.4 times the usual share, thirty attempts each), which a large board needs to be solvable by its numbers. Every seed that made a random board in 1.3.0 makes the identical one (`src/levels.pins.test.js`, and a comparison over 12×12 to 16×16 at every level); only the seeds that used to return the lattice make a different board, and they make a random one. `src/akariLattice.test.ts` asserts, over every size from 3 to 16 and every level, that no seed returns the lattice, and that the black share and the boards vary. Generation time is unchanged where it was already random (14×14 extra-hard: median 212 ms, slowest 362 ms) and the old lattice cases take a median of 9 ms at 14×14 easy.
+
 ## [1.3.0] - 2026-10-05
 
 ### Added

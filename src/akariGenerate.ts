@@ -1,4 +1,4 @@
-import { AKARI_LEVELS, AKARI_MOST_ATTEMPTS, AKARI_MOST_SIDE } from "./akari.constants.ts";
+import { AKARI_DENSER_ATTEMPTS, AKARI_DENSER_CROWDS, AKARI_LEVELS, AKARI_MOST_ATTEMPTS, AKARI_MOST_SIDE } from "./akari.constants.ts";
 import { akariNeighbours, akariVisible, checkAkari, isAkariBoard } from "./akariBoard.ts";
 import { akariModel } from "./akariLogic.ts";
 import { solveAkari } from "./akariSolve.ts";
@@ -16,34 +16,46 @@ type Cells = (number | null | false)[];
  * the puzzle can still be solved the way the level asks: easy and medium by the rules alone (easy keeps most
  * of its numbers), hard by supposing one square at a time, extra-hard for as long as the answer stays single,
  * which leaves a board that needs more supposing than that. If no board of the level is found within the
- * attempts, the next one down is tried, and the first generator, which cannot fail, is the last.
+ * attempts, the next one down is tried; if none of the levels finds one, the same is tried again with more
+ * black squares, which a large board needs to be solvable at all (see `AKARI_DENSER_CROWDS`). The fixed lattice
+ * of the first generator is only what is left if even that fails, which no seed does at any size offered.
  */
 export function generateAkari(width = 7, height = width, seed = 1, level: AkariLevel = "medium"): AkariPuzzle {
   if (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= AKARI_MOST_SIDE)
     || !isKazuSeed(seed) || !AKARI_LEVELS.includes(level)) throw new RangeError("Invalid Akari settings");
   const random = seededRandom(seed);
+  // The plain attempts come first, as they always have, so every seed that made a board before makes the same one.
   for (let aim = AKARI_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
-    const aimed = AKARI_LEVELS[aim]!;
-    // Extra-hard is the hardest of several boards that need supposing: the most suppositions wins.
-    const wanted = aimed === "extra-hard" ? 8 : 1;
-    let best: { board: AkariBoard; probes: number; solution: readonly number[] } | null = null, found = 0;
-    for (let attempt = 0; attempt < AKARI_MOST_ATTEMPTS && found < wanted; attempt += 1) {
-      const made = attemptAkari(width, height, aimed, random);
-      if (!made) continue;
-      const proof = solveAkari(made.board, { limit: 2 });
-      if (!proof.complete || proof.count !== 1 || !proof.solution || !checkAkari(made.board, proof.solution).ok) continue;
-      found += 1;
-      if (!best || made.probes > best.probes) best = { board: made.board, probes: made.probes, solution: proof.solution };
-    }
-    if (best) return { ...best.board, seed, level, solution: best.solution };
+    const found = bestAkari(width, height, AKARI_LEVELS[aim]!, random, 1, AKARI_MOST_ATTEMPTS);
+    if (found) return { ...found.board, seed, level, solution: found.solution };
+  }
+  for (const crowd of AKARI_DENSER_CROWDS) for (let aim = AKARI_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
+    const found = bestAkari(width, height, AKARI_LEVELS[aim]!, random, crowd, AKARI_DENSER_ATTEMPTS);
+    if (found) return { ...found.board, seed, level, solution: found.solution };
   }
   const fallback = templateAkari(width, height, seed);
   return { ...fallback, level };
 }
 
-function attemptAkari(width: number, height: number, level: AkariLevel, random: Random): { board: AkariBoard; probes: number } | null {
+/** The best board of the level found within `attempts` tries at this share of black squares, with its answer, or null. */
+function bestAkari(width: number, height: number, level: AkariLevel, random: Random, crowd: number, attempts: number): { board: AkariBoard; solution: readonly number[] } | null {
+  // Extra-hard is the hardest of several boards that need supposing: the most suppositions wins.
+  const wanted = level === "extra-hard" ? 8 : 1;
+  let best: { board: AkariBoard; probes: number; solution: readonly number[] } | null = null, found = 0;
+  for (let attempt = 0; attempt < attempts && found < wanted; attempt += 1) {
+    const made = attemptAkari(width, height, level, random, crowd);
+    if (!made) continue;
+    const proof = solveAkari(made.board, { limit: 2 });
+    if (!proof.complete || proof.count !== 1 || !proof.solution || !checkAkari(made.board, proof.solution).ok) continue;
+    found += 1;
+    if (!best || made.probes > best.probes) best = { board: made.board, probes: made.probes, solution: proof.solution };
+  }
+  return best;
+}
+
+function attemptAkari(width: number, height: number, level: AkariLevel, random: Random, crowd: number): { board: AkariBoard; probes: number } | null {
   const size = width * height;
-  const density = { easy: .2, medium: .22, hard: .24, "extra-hard": .26 }[level] * (.85 + random() * .3);
+  const density = { easy: .2, medium: .22, hard: .24, "extra-hard": .26 }[level] * (.85 + random() * .3) * crowd;
   const cells: Cells = Array.from({ length: size }, () => random() < density ? false : null);
   if (random() < .5) for (let y = 0; y < height; y += 1) for (let x = 0; x < width; x += 1) {
     const mirror = (height - 1 - y) * width + width - 1 - x;

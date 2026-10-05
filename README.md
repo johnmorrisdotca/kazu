@@ -1,7 +1,7 @@
 <h1 align="center">Kazu <sub>数</sub></h1>
 
 <p align="center"><strong>Grid number and logic puzzles for JavaScript and TypeScript.</strong><br>
-Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Slitherlink, Masyu, Yajilin, Ripple Effect, Kakuro, Fillomino and Heyawake. Dedicated typed engines, independently checked puzzles, SVG drawing, saved progress, and English and Japanese players for touch, mouse and keyboard. No runtime dependencies.</p>
+Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Slitherlink, Masyu, Yajilin, Ripple Effect, Kakuro, Fillomino and Heyawake. Dedicated typed engines, independently checked puzzles, SVG drawing, saved progress, and English and Japanese players for touch, mouse and keyboard. No runtime dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml/badge.svg"></a>
@@ -60,8 +60,8 @@ And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else
 
 ## Features
 
-- **Seven puzzles, three levels.** Sudoku (4×4, 6×6, 9×9 and a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys.
-- **Six number puzzles, three levels.** Sudoku (4×4, 6×6, 9×9 and a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys. Shikaku and Juosan use dedicated rectangle and territory models.
+- **Seven puzzles, three levels.** Sudoku (4×4, 6×6, 9×9, a 16×16 Giant and a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys.
+- **Six number puzzles, three levels.** Sudoku (4×4, 6×6, 9×9, a 16×16 Giant and a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys. Shikaku and Juosan use dedicated rectangle and territory models.
 - **Four levels on the grid puzzles.** Shikaku, Akari, Slitherlink, Hitori, Fillomino and Kakuro each make `easy`, `medium`, `hard` and `extra-hard` boards, at three or more sizes each, every one with exactly one answer and rated by what a person must do to solve it: [Levels of the grid puzzles](#levels-of-the-grid-puzzles).
 - **Exactly one answer.** A generator makes puzzles from a seed, and a solver that counts answers confirms there is one. The same kind, size, level and seed make the same puzzle in every browser and every Node, for ever.
 - **A check a server can trust.** `checkKazu` reads a finished grid in O(cells), with no search, and says the first thing wrong in words.
@@ -177,7 +177,7 @@ exactly one answer. Every kind is named by a kebab-case key.
 
 | Key | Called | In Japanese | Sizes | What it prints | What is new |
 | --- | --- | --- | --- | --- | --- |
-| `number-place` | Sudoku | ナンプレ | 4×4, 6×6, 9×9, 16×16 | numbers | every row, column and box holds each number once; the 16×16 Giant uses 1 to 9 and then A to G |
+| `number-place` | Sudoku | ナンプレ | 4×4, 6×6, 9×9, 16×16, 25×25 | numbers | every row, column and box holds each number once; the 16×16 Giant uses 1 to 9 and then A to G, and the 25×25 Colossus goes on to P |
 | `jigsaw` | Jigsaw Sudoku | 変形ナンプレ | 5×5, 6×6, 7×7, 9×9 | numbers, and the regions | the boxes are irregular regions, each joined and none a row or a column |
 | `diagonal` | Diagonal Sudoku | 対角ナンプレ | 6×6, 9×9 | numbers | the two long diagonals hold each number once too |
 | `sum-cages` | Killer Sudoku | サムナンプレ | 6×6, 9×9 | cages and their sums | next to no numbers: dashed cages each add to a sum, and repeat nothing |
@@ -218,7 +218,7 @@ has always used. It restates the rules rather than reading the solver's mind, so
 A solver and a generator never run on a server unless you ask them to.
 
 A run is kept as short strings the site's own stored runs decode as they are: `encodeRun(entries)` and
-`decodeRun(code, size)` (one character a cell, `.` for empty, A to G past nine), `encodeSteps` and
+`decodeRun(code, size)` (one character a cell, `.` for empty, A to P past nine), `encodeSteps` and
 `decodeSteps` for a step log, `kazuHash(givens)` for a fingerprint of a puzzle, and `encodeNotes` and
 `decodeNotes` for Kazu's own pencil marks.
 
@@ -293,8 +293,8 @@ out of the notes of the cells it shares a group with. **Undo** takes the last ch
 cell to fill next and why, **Check** says how many cells are wrong, never which. A clock starts on the first entry
 and stops when the last cell is right, and waits while the page is hidden.
 
-The keys: the arrows move, a number (1 to 9, and A to G on the 16×16) fills the chosen cell, Shift with a
-number writes it as a pencil mark, Backspace empties the cell, N turns Pencil on or off, Ctrl or Cmd with Z
+The keys: the arrows move, a number (1 to 9, then A to G on the 16×16 and on to P on the 25×25) fills the chosen cell, Shift with a
+number writes it as a pencil mark, Backspace empties the cell, N turns Pencil on or off (the slash key on the 25×25, where N is the number 23), Ctrl or Cmd with Z
 undoes, Escape lets the cell go. The board's box keeps one steady square, and the lines of words under it keep
 the room their longest wording takes, so nothing moves as numbers are written or messages come and go. Nothing
 the player touches can be selected. Its words are English and Japanese and follow the page's `lang`.
@@ -417,10 +417,10 @@ All of these are held by tests, and the ones with a name are exported.
 | --- | --- | --- |
 | Puzzles | the six keys of `KAZU_KINDS` | the table under [The puzzles](#the-puzzles) |
 | Levels | `easy`, `medium`, `hard` | `KAZU_LEVELS` |
-| Sizes | each puzzle's own, 4×4 to 16×16 | `KAZU_SPECS[kind].sizes` |
+| Sizes | each puzzle's own, 4×4 to 25×25 | `KAZU_SPECS[kind].sizes` |
 | A seed | a whole number from 1 to 2,147,483,647 | `KAZU_SEED_MOST`, `isKazuSeed` |
-| Symbols in a grid | `1` to `9`, then `A` to `G` for the 16×16 | `symbolOf`, `valueOfSymbol` |
-| The longest givens code | Sudoku 256 characters, Jigsaw 162, Diagonal 81, Killer Sudoku 286, Futoshiki 133, Skyscrapers 77 | `KAZU_SPECS[kind].mostCells`, for a route that must refuse anything larger |
+| Symbols in a grid | `1` to `9`, then `A` to `G` for the 16×16 and on to `P` for the 25×25 | `symbolOf`, `valueOfSymbol` |
+| The longest givens code | Sudoku 625 characters, Jigsaw 162, Diagonal 81, Killer Sudoku 286, Futoshiki 133, Skyscrapers 77 | `KAZU_SPECS[kind].mostCells`, for a route that must refuse anything larger |
 | Answers counted | two, so that "many" costs no more than "two" | the `limit` argument of `countKazuSolutions` |
 | The solver's work | 2,000,000 steps, then it says it cannot say (`null`) | the `budget` argument of `solveKazu` |
 | A step log | the newest 400 steps | `KAZU_STEPS_KEPT` |
@@ -881,7 +881,7 @@ src/
 ├── kinds.ts            the six puzzles' keys, sizes and levels, and the shape of a puzzle
 ├── random.ts           the seeded random numbers every puzzle is made from
 ├── csp.ts              the one small engine under the six grid kinds: counting answers, and reasoning with and without supposing
-├── cells.ts            a grid of numbers as a string, 1 to 9 and A to G
+├── cells.ts            a grid of numbers as a string, 1 to 9 and A to P
 ├── layout.ts           the groups that must each hold every number once: rows, columns, boxes, regions, diagonals, cages
 ├── groupSolve.ts       the solver for puzzles made of groups: counting, singles, depth
 ├── numberPlace.ts      Sudoku and Diagonal Sudoku: the generator and how givens are carved

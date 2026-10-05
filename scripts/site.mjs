@@ -29,7 +29,7 @@ const page = `<!doctype html>
     ${familyHead({
       id,
       title: "Kazu · Sudoku, Killer Sudoku, Futoshiki and Skyscrapers",
-      description: "Play six number puzzles in your browser: Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Pencil marks, hints that say why, undo and a clock. Free and open source, in English and Japanese.",
+      description: "Play six number puzzles in your browser: Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Pencil marks, hints that say why, undo and a clock. Free and open source, in English and Japanese.",
       ogTitle: "Kazu number puzzles",
       ogDescription: "Sudoku, Killer Sudoku, Futoshiki, Skyscrapers and more. Every puzzle has exactly one answer.",
     })}

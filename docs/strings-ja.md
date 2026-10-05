@@ -26,6 +26,7 @@ with `One` at the end of its name is the singular, said in English when the coun
 | `tap` | Tap a cell, then a number. | マスをタップして、数字を選びます。 |
 | `tapPencil` | Pencil marks are on: tap a number to note it in the cell. | メモがオンです。数字をタップすると、マスにメモします。 |
 | `keys` | Arrow keys move, a number fills the cell, Backspace empties it, N turns pencil marks on or off. | 矢印キーで移動、数字キーで入力、Backspaceで消去、Nでメモのオンとオフ。 |
+| `keysColossus` | Arrow keys move, a number or a letter from A to P fills the cell, Backspace empties it, the slash key turns pencil marks on or off (N is a number here). | 矢印キーで移動、数字またはAからPのキーで入力、Backspaceで消去、スラッシュキーでメモのオンとオフ（ここではNは数字です）。 |
 | `undo` | Undo | 元に戻す |
 | `pencil` | Pencil | メモ |
 | `pencilTitle` | Write small notes in a cell instead of a number | 数字のかわりに、マスに小さくメモを書きます |

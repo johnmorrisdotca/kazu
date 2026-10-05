@@ -1,7 +1,7 @@
 {
   "name": "@johnmorrisdotca/kazu",
-  "version": "1.3.0",
-  "description": "Grid number and logic puzzles for JavaScript and TypeScript: Sudoku and its variants, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Slitherlink, Masyu, Yajilin, Ripple Effect, Kakuro, Fillomino and Heyawake. Dedicated typed engines, independently checked puzzles, SVG boards and bilingual touch and keyboard players. Zero runtime dependencies.",
+  "version": "1.4.0",
+  "description": "Grid number and logic puzzles for JavaScript and TypeScript: Sudoku (up to 25×25) and its variants, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Slitherlink, Masyu, Yajilin, Ripple Effect, Kakuro, Fillomino and Heyawake. Dedicated typed engines, independently checked puzzles, SVG boards and bilingual touch and keyboard players. Zero runtime dependencies.",
   "keywords": [
     "puzzle",
     "sudoku",

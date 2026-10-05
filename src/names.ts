@@ -39,13 +39,13 @@ export const KAZU_NAMES: Record<KazuKind, KazuName> = {
       en: [
         "Fill every empty cell with a number from 1 up to the side of the grid, so that each row, each column and each box holds every number exactly once.",
         "The numbers already printed are the givens. They stay where they are, and every puzzle has exactly one answer that fits them.",
-        "The 16×16 Giant has sixteen symbols: 1 to 9, then A to G for 10 to 16.",
+        "The 16×16 Giant has sixteen symbols: 1 to 9, then A to G for 10 to 16. The 25×25 Colossus has twenty-five: A to P for 10 to 25.",
         "Easy yields to reasoning alone: every cell can be found from what is already there. Medium and hard ask you to try something and see.",
       ],
       ja: [
         "空いているマスに、1から盤の一辺の数までの数字を入れます。どの行、列、ブロックにも、同じ数字が一つずつ入ります。",
         "最初から書かれている数字はそのままです。どの問題も、答えはちょうど一つだけです。",
-        "16×16の「特大」は、1から9までの数字に、10から16までを表すAからGを足した16種類を使います。",
+        "16×16の「特大」は、1から9までの数字に、10から16までを表すAからGを足した16種類を使います。25×25の「巨大」は、10から25までを表すAからPまでを使う25種類です。",
         "やさしい問題は、推理だけで全部のマスが決まります。ふつうとむずかしい問題では、試してみる場面があります。",
       ],
     },
@@ -183,7 +183,7 @@ export const KAZU_NAMES: Record<KazuKind, KazuName> = {
 
 /** What each side is for, under its size on a chooser: the quick one, the usual one, the long one. */
 export const KAZU_SIZE_NAMES: Record<KazuKind, Record<number, { en: string; ja: string }>> = {
-  "number-place": { 4: { en: "Quick", ja: "速" }, 6: { en: "Short", ja: "短" }, 9: { en: "Classic", ja: "定番" }, 16: { en: "Giant", ja: "特大" } },
+  "number-place": { 4: { en: "Quick", ja: "速" }, 6: { en: "Short", ja: "短" }, 9: { en: "Classic", ja: "定番" }, 16: { en: "Giant", ja: "特大" }, 25: { en: "Colossus", ja: "巨大" } },
   jigsaw: { 5: { en: "Quick", ja: "速" }, 6: { en: "Short", ja: "短" }, 7: { en: "Standard", ja: "定番" }, 9: { en: "Classic", ja: "本格" } },
   diagonal: { 6: { en: "Short", ja: "短" }, 9: { en: "Classic", ja: "定番" } },
   "sum-cages": { 6: { en: "Short", ja: "短" }, 9: { en: "Classic", ja: "定番" } },

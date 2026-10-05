@@ -143,6 +143,7 @@ export function countSolutions(grid: Grid, layout: Layout, limit = 2): number {
  * rather than keeping a browser waiting.
  */
 export function countSolutionsWithin(grid: Grid, layout: Layout, limit: number, budget: number, first?: (answer: Grid) => void): number | null {
+  if (layout.size > LARGEST_SEARCHED_BARE) return countByReasoning(grid, layout, limit, budget, first);
   const work = [...grid];
   const taken = used(work, layout);
   let found = 0;
@@ -168,6 +169,39 @@ export function countSolutionsWithin(grid: Grid, layout: Layout, limit: number, 
     }
   };
   step();
+  return steps > budget && found < limit ? null : found;
+}
+
+/**
+ * Up to this side the search guesses at the most constrained cell and nothing else, which is how every
+ * 4×4 to 16×16 grid has always been counted. Past it (the 25×25) a sparse grid thrashes that way for
+ * minutes, so a search there lets singles finish whatever they can before each guess.
+ */
+const LARGEST_SEARCHED_BARE = 16;
+
+/** The same count for a large grid: at every step all the singles are filled in first, and only what they leave is guessed at. */
+function countByReasoning(grid: Grid, layout: Layout, limit: number, budget: number, first?: (answer: Grid) => void): number | null {
+  let found = 0;
+  let steps = 0;
+  const step = (from: Grid): void => {
+    if (found >= limit || steps > budget) return;
+    steps += 1;
+    const singles = applySingles(from, layout);
+    if (singles.contradiction) return;
+    if (singles.solved) {
+      if (found === 0) first?.([...singles.grid]);
+      found += 1;
+      return;
+    }
+    const { index, mask } = mostConstrained(singles.grid, layout, used(singles.grid, layout));
+    for (let left = mask; left !== 0; left &= left - 1) {
+      const next = [...singles.grid];
+      next[index] = lowestBit(left);
+      step(next);
+      if (found >= limit || steps > budget) return;
+    }
+  };
+  step(grid);
   return steps > budget && found < limit ? null : found;
 }
 
@@ -259,6 +293,32 @@ export function guessDepth(grid: Grid, layout: Layout): number {
     if (depth < deepest) deepest = depth;
   }
   return deepest === Infinity ? Infinity : deepest + 1;
+}
+
+/**
+ * What reasoning with at most `guesses` guesses proves about a grid: 0 when it proves there is no answer, 1
+ * when it proves there is exactly one, 2 when it proves neither (it could not finish, or there are several).
+ * A guess is made at the most constrained empty cell and every value is tried, each followed by everything
+ * singles find; the grid has one answer when exactly one value leads to one and every other leads to none.
+ * This is a person's proof, and it stops where theirs would, so it costs a bounded few hundred passes of
+ * singles however sparse and large the grid is: counting every answer of a sparse 25×25 grid does not.
+ */
+export function provedByGuessing(grid: Grid, layout: Layout, guesses: number): 0 | 1 | 2 {
+  const singles = applySingles(grid, layout);
+  if (singles.contradiction) return 0;
+  if (singles.solved) return 1;
+  if (guesses < 1) return 2;
+  const work = singles.grid;
+  const { index, mask } = mostConstrained(work, layout, used(work, layout));
+  let ones = 0;
+  for (let left = mask; left !== 0; left &= left - 1) {
+    const next = [...work];
+    next[index] = lowestBit(left);
+    const outcome = provedByGuessing(next, layout, guesses - 1);
+    if (outcome === 2) return 2;
+    ones += outcome;
+  }
+  return ones === 0 ? 0 : ones === 1 ? 1 : 2;
 }
 
 /**

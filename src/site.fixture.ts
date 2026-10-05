@@ -7,6 +7,17 @@ import { KAZU_KIND_OF_SITE_KIND, KAZU_SPECS, type KazuKind, type KazuLevel } fro
 /** Every puzzle itsutsu.com made before the move: [site kind, size, level, seed, givens, solution]. */
 export const sitePuzzles = fixture.puzzles as [string, number, string, number, string, string][];
 
+/**
+ * The sizes made here and never on the site, so nothing of theirs was recorded: the 25×25 Sudoku joined in Kazu 1.4.0.
+ * Their puzzles are pinned instead by `levels.pins.test.js`, from the day they were first made.
+ */
+export const SIZES_NEVER_ON_THE_SITE: Partial<Record<KazuKind, readonly number[]>> = { "number-place": [25] };
+
+/** The sizes of a puzzle that itsutsu.com made before the move. */
+export function recordedSizes(kind: KazuKind): number[] {
+  return KAZU_SPECS[kind].sizes.filter((size) => !(SIZES_NEVER_ON_THE_SITE[kind] ?? []).includes(size));
+}
+
 /** The same, for one puzzle, by this package's key. */
 const SITE_NAME_OF: Record<string, string> = Object.fromEntries(Object.entries(KAZU_KIND_OF_SITE_KIND).map(([site, kind]) => [kind, site]));
 
@@ -16,7 +27,7 @@ const SITE_NAME_OF: Record<string, string> = Object.fromEntries(Object.entries(K
  */
 export function madeAsBefore(kind: KazuKind): void {
   describe(`${kind}, as itsutsu.com made it`, () => {
-    for (const size of KAZU_SPECS[kind].sizes) {
+    for (const size of recordedSizes(kind)) {
       it(`makes every ${size}×${size} exactly as before, byte for byte, at every level and every seed`, () => {
         let count = 0;
         for (const [wasKind, wasSize, level, seed, givens, solution] of sitePuzzles) {

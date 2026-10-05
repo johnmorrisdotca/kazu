@@ -3,13 +3,13 @@ import { describe, expect, it } from "vitest";
 import { decodeCells, EMPTY_CELL, encodeCells, kazuHash, stepEntry, symbolOf, valueOfSymbol } from "./cells.ts";
 
 describe("cells as a string", () => {
-  it("writes 1 to 9 and then A to G", () => {
-    expect([1, 9, 10, 16].map(symbolOf)).toEqual(["1", "9", "A", "G"]);
-    expect(["1", "9", "A", "G", "a", "g", "H", "0", ".", "", "12"].map(valueOfSymbol)).toEqual([1, 9, 10, 16, 10, 16, 0, 0, 0, 0, 0]);
+  it("writes 1 to 9 and then A to P", () => {
+    expect([1, 9, 10, 16, 17, 25].map(symbolOf)).toEqual(["1", "9", "A", "G", "H", "P"]);
+    expect(["1", "9", "A", "G", "a", "g", "H", "p", "P", "Q", "0", ".", "", "12"].map(valueOfSymbol)).toEqual([1, 9, 10, 16, 10, 16, 17, 25, 25, 0, 0, 0, 0, 0]);
   });
 
   it("round-trips a grid of every size", () => {
-    for (const size of [4, 6, 9, 16]) {
+    for (const size of [4, 6, 9, 16, 25]) {
       const cells = Array.from({ length: size * size }, (_, i) => (i % 3 === 0 ? 0 : (i % size) + 1));
       expect(decodeCells(encodeCells(cells), size)).toEqual(cells);
     }

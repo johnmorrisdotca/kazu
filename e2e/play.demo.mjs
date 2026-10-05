@@ -153,6 +153,33 @@ test("the arrows move, a number key fills, Backspace empties and N turns Pencil 
   await expect(notesIn(page)).toHaveCount(0);
 });
 
+test("the 25×25 takes its letters from the keyboard up to P, N is a number there, and the slash key turns Pencil on", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.use.hasTouch === true, "a keyboard");
+  await open(page, "?kind=number-place&size=25&level=easy&seed=3");
+  const m = made("number-place", 25, "easy", 3);
+  const empties = emptyCells(m);
+  const withValue = (value) => empties.find((index) => m.answer[index] === value);
+  await page.locator(`${at("board")} .kzp-box`).focus();
+  const walkTo = async (index) => {
+    await tap(page, cell(page, index), testInfo);
+  };
+  // P is 25, N is 23: both are numbers on this board, and neither turns Pencil on.
+  for (const [value, letter] of [[25, "p"], [23, "n"], [17, "h"]]) {
+    const index = withValue(value);
+    await walkTo(index);
+    await page.keyboard.press(letter);
+    expect(await valueAt(page, index)).toBe("HIJKLMNOP"[value - 17]);
+    await expect(button(page, "pencil")).toHaveAttribute("aria-pressed", "false");
+  }
+  await page.keyboard.press("/");
+  await expect(button(page, "pencil")).toHaveAttribute("aria-pressed", "true");
+  await page.keyboard.press("/");
+  await expect(button(page, "pencil")).toHaveAttribute("aria-pressed", "false");
+  // The keypad holds all 25 numbers and the eraser, and the page does not scroll sideways.
+  await expect(page.locator(`${at("board")} .kzp-key`)).toHaveCount(26);
+  await noSidewaysScroll(page);
+});
+
 test("the clock starts on the first entry, and Restart empties the grid and the clock", async ({ page }, testInfo) => {
   await open(page, "?kind=number-place&size=4&level=easy&seed=3");
   const m = made("number-place", 4, "easy", 3);
