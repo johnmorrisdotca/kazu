@@ -1,7 +1,7 @@
 <h1 align="center">Kazu <sub>数</sub></h1>
 
 <p align="center"><strong>Grid number puzzles for JavaScript and TypeScript.</strong><br>
-Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. A seeded generator whose every puzzle has exactly one answer, at three levels; a solver that counts answers; a check that reads a finished grid in O(cells); a hint that says which cell to fill next and why; puzzles and runs as short codes; the grid drawn as SVG; and played by touch, mouse and keyboard in any page, with pencil marks, undo and a clock, as one call or one tag. No dependencies.</p>
+Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers and Shikaku. A seeded generator whose every puzzle has exactly one answer, at three levels; a solver that counts answers; a check that reads a finished grid in O(cells); a hint that says which cell to fill next and why; puzzles and runs as short codes; the grid drawn as SVG; and played by touch, mouse and keyboard in any page, with pencil marks, undo and a clock, as one call or one tag. No dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml/badge.svg"></a>
@@ -17,7 +17,7 @@ Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki a
   <img src="docs/phone.jpg" alt="A 6×6 Skyscrapers puzzle part filled in, on a phone in dark mode and in Japanese: the clues round the edge, the number pad, the buttons and the first of the settings under it" width="200">
 </p>
 
-Kazu is the family of grid puzzles Sudoku belongs to: fill every cell with a number, so that no number repeats where the rules say it must not. It is
+Kazu is a family of grid puzzles built around numbers. Sudoku and its companions fill cells with numbers; Shikaku divides cells into numbered rectangles. It is
 played at [itsutsu.com](https://itsutsu.com), which this package was taken out of, and in
 [the demo](https://johnmorrisdotca.github.io/kazu/), with nothing to install.
 
@@ -442,6 +442,43 @@ Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/
 
 Left out on purpose: a puzzle with more than one answer, and any account, ranking or storage. A page keeps its own runs: `onChange` hands them over.
 
+## Shikaku — rectangles in Kazu
+
+The demo includes square, wide (10 × 6), tall (6 × 10) and custom rectangular boards, with width and height from 2 to 16. Shares and saved settings preserve both dimensions. It uses Kazu’s unchanged shared family stylesheet and header controls. Irregular outlines are not part of this classic rectangle-partition game.
+
+Shikaku belongs to the number-and-grid family. Its moves are rectangles rather than number entries, so it has a dedicated model and optional entry points; the existing six `KazuKind` values and saved Sudoku codes remain compatible.
+
+```js
+import { generateShikaku, newShikaku, placeShikaku, checkShikaku } from "@johnmorrisdotca/kazu/shikaku";
+import { mountShikaku } from "@johnmorrisdotca/kazu/shikaku/play";
+
+const puzzle = generateShikaku(7, 7, "medium", 42);
+const player = mountShikaku(document.querySelector("#board"), {
+  board: puzzle, material: "ivory", pieces: "ink", language: "en",
+  onFinish: game => console.log(game.helped ? "Solved with help" : "Solved"),
+});
+// player.progress() saves public clues and rectangles; player.destroy() removes the player.
+```
+
+Use `@johnmorrisdotca/kazu/shikaku`, `@johnmorrisdotca/kazu/shikaku/play`, or `@johnmorrisdotca/kazu/shikaku/draw`.
+
+The root entry re-exports the engine, `/play` re-exports `mountShikaku`, and `/draw` re-exports `drawShikaku`. The dedicated entries let a consumer load only Shikaku. There are no runtime dependencies.
+
+- `ShikakuBoard`: `width`, `height`, and row-major `clues` (zero for an empty cell). Dimensions are 2–16; clue areas sum to the grid area.
+- `ShikakuRectangle`: zero-based `x`, `y`, `width`, `height`.
+- `generateShikaku(width, height, level, seed)`: deterministic puzzle and solution. The answer is counted independently. Generation rejects ambiguous boards and stops after 200 attempts with an error; it never silently returns an unproved board. The seed range matches Kazu. Levels `easy`, `medium`, `hard` favor small, mixed and larger rectangles; these are generation profiles, not calibrated human difficulty ratings.
+- `solveShikaku(board, placements?, {limit?, nodes?})`: exact-cover count, first answer, nodes visited and `complete`. The default limit is two answers and 100,000 nodes. Only `complete && count === 1` proves uniqueness; a stopped search is explicitly incomplete.
+- `checkShikaku(board, rectangles)`: coverage and rectangle rule errors, independent of a stored answer. It accepts any valid completion.
+- `newShikaku`, `placeShikaku`, `removeShikaku`, `undoShikaku`: immutable game operations. A placement replaces intersecting rectangles, and rule errors are allowed until checked. The game strips generated solutions.
+- `hintShikaku(game)`: a rectangle from the single proved remaining partition, or `null`. Hints in the mounted player mark the run as helped.
+- `encodeShikaku`, `decodeShikaku`: versioned JSON with only public puzzle data and placements, validated on restore. Undo history and the clock are session-only.
+- `drawShikaku(board, options)`: SVG. Materials `ivory`, `wood`, `slate`; numbers `ink`, `tiles`; language `en`, `ja`.
+- `mountShikaku(host, options)`: tap two opposite corner cells, or use arrows and Enter/Space. Delete removes a selected rectangle; Escape cancels a pending corner. Undo, Check, Hint, Restart and a modal board view are built in. The handle has `game`, `progress`, `set`, `restart`, `destroy`; callbacks and bubbling `shikaku-change` / `shikaku-finish` events carry copies of public state. Mount once per puzzle; use `set` for appearance changes.
+
+The demo is `site/shikaku.html` after `pnpm site`; its generator runs in a module worker at `dist/shikakuWorker.js`. Deploy the worker with the built files and permit same-origin module workers. The npm player accepts a board synchronously; hosts can use their own worker when generating large custom boards. The demo stores progress locally and shares settings through the address. Shared seeds start fresh; they do not share your placements. Restart and page reload reset the session clock.
+
+[Shikaku's rules are described by Nikoli](https://www.nikoli.co.jp/en/puzzles/shikaku/). This implementation generates its own puzzles and does not copy Nikoli's puzzle grids, wording or artwork.
+
 ## Architecture
 
 The generators, the solvers, the check, the hint and the game are plain functions over short codes, with no
@@ -449,6 +486,21 @@ DOM. The drawing is SVG text in an entry of its own, so a server that only check
 the page's part (the mount and the element) is another.
 
 ```text
+├── shikaku-draw-entry.ts
+├── shikaku-entry.ts
+├── shikaku-play-entry.ts
+├── shikaku.constants.ts
+├── shikaku.types.ts
+├── shikakuBoard.ts
+├── shikakuDraw.ts
+├── shikakuGame.ts
+├── shikakuGenerate.ts
+├── shikakuMount.ts
+├── shikakuPlay.types.ts
+├── shikakuSolve.ts
+├── shikakuStrings.ts
+├── shikakuStyle.ts
+├── shikakuWorker.ts
 src/
 ├── index.ts            the main entry: everything but the drawing and the page
 ├── kinds.ts            the six puzzles' keys, sizes and levels, and the shape of a puzzle

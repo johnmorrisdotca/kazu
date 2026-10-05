@@ -34,3 +34,5 @@ export type { Boxes } from "./layout.ts";
 export { seededRandom, shuffled, freshKazuSeed, isKazuSeed, KAZU_SEED_MOST } from "./random.ts";
 export type { Random } from "./random.ts";
 export { VERSION } from "./version.ts";
+
+export * from "./shikaku-entry.ts";

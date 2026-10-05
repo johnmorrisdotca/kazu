@@ -1,7 +1,7 @@
 {
   "name": "@johnmorrisdotca/kazu",
-  "version": "1.0.0",
-  "description": "Kazu 数, grid number puzzles for JavaScript and TypeScript: Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. A seeded generator whose every puzzle has exactly one answer, at three levels; a solver that counts answers; a check that reads a finished grid in O(cells); a hint that says which cell to fill next and why; puzzles as short codes; the grid drawn as SVG; and played by touch, mouse and keyboard in any page, with pencil marks, undo and a clock, as a function call or a tag. Zero dependencies.",
+  "version": "1.1.0",
+  "description": "Kazu \u6570, grid number puzzles for JavaScript and TypeScript: Sudoku (4\u00d74 to a 16\u00d716 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers and Shikaku. Shikaku uses a dedicated rectangle model, exact-cover solver and player. A seeded generator whose every puzzle has exactly one answer, at three levels; a solver that counts answers; a check that reads a finished grid in O(cells); a hint that says which cell to fill next and why; puzzles as short codes; the grid drawn as SVG; and played by touch, mouse and keyboard in any page, with pencil marks, undo and a clock, as a function call or a tag. Zero dependencies.",
   "keywords": [
     "puzzle",
     "sudoku",
@@ -23,7 +23,8 @@
     "zero-dependencies",
     "browser",
     "node",
-    "itsutsu"
+    "itsutsu",
+    "shikaku"
   ],
   "homepage": "https://github.com/johnmorrisdotca/kazu#readme",
   "repository": {
@@ -67,6 +68,21 @@
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",
       "default": "./dist/element-define.js"
+    },
+    "./shikaku": {
+      "types": "./dist/shikaku-entry.d.ts",
+      "import": "./dist/shikaku-entry.js",
+      "default": "./dist/shikaku-entry.js"
+    },
+    "./shikaku/play": {
+      "types": "./dist/shikaku-play-entry.d.ts",
+      "import": "./dist/shikaku-play-entry.js",
+      "default": "./dist/shikaku-play-entry.js"
+    },
+    "./shikaku/draw": {
+      "types": "./dist/shikaku-draw-entry.d.ts",
+      "import": "./dist/shikaku-draw-entry.js",
+      "default": "./dist/shikaku-draw-entry.js"
     }
   },
   "files": [

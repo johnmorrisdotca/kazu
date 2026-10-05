@@ -1,7 +1,7 @@
 // Builds the static demo for GitHub Pages into ./site: the page, written here from the family's
 // shared header and footer, with the family's stylesheet, Kazu's own, the page's script and the
 // compiled library beside it.
-import { cpSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 
 import { API_CSS, apiPage } from "./api.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
@@ -40,6 +40,7 @@ const page = `<!doctype html>
   <body>
     <main>
       ${familyHeader({ id, links: [{ href: "api.html", say: "pageApi" }] })}
+      <p><a href="shikaku.html">Shikaku · 四角に切れ</a></p>
       ${row("kinds", "puzzle", ["Choose which of the six puzzles to play. Each one has its own rules, listed below the board.", "遊ぶパズルを、六つの中から選びます。ルールは盤の下に載っています。"])}
       ${row("sizes", "size", ["Choose the size of the grid. A bigger grid takes longer.", "盤の大きさを選びます。大きいほど時間がかかります。"])}
       ${row("levels", "level", ["Choose how hard the puzzle is. Easy can be solved by reasoning alone; hard may ask you to try something and see.", "問題のむずかしさを選びます。やさしい問題は推理だけで解け、むずかしい問題では試してみる場面があります。"])}
@@ -93,3 +94,10 @@ writeFileSync("site/index.html", page);
 writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kazu", icon: ICON }));
 console.log("site/ is ready: serve it, or let the Pages workflow publish it.");
+
+const shikakuPage = readFileSync("demo/shikaku.html", "utf8")
+  .replace("<!--family-header-->", familyHeader({ id, links: [{ href: "index.html", say: "pageBack" }, { href: "api.html", say: "pageApi" }] }))
+  .replace("<!--family-footer-->", familyFooter({ id }))
+  .replace("<!--family-unreviewed-->", familyUnreviewed({ id }))
+  .replace("<!--family-script-->", `<script>${FAMILY_SCRIPT}</script>`);
+writeFileSync("site/shikaku.html", shikakuPage);

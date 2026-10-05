@@ -12,3 +12,5 @@ export { KAZU_STRINGS, kazuLanguageOf, kazuNameOf, kazuSay } from "./strings.ts"
 export type { KazuLanguage } from "./strings.ts";
 export { KAZU_NAMES, KAZU_SIZE_NAMES } from "./names.ts";
 export type { KazuName } from "./names.ts";
+
+export * from "./shikaku-draw-entry.ts";

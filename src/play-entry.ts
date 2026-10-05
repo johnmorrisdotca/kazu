@@ -7,3 +7,5 @@ export { ensureKazuPlayStyle, mountKazu } from "./mount.ts";
 export type { KazuEventDetail, KazuMount, KazuMountOptions, KazuMountSettings } from "./mount.ts";
 export { KAZU_PLAY_STYLE } from "./playStyle.ts";
 export { kazuClockText } from "./clock.ts";
+
+export * from "./shikaku-play-entry.ts";

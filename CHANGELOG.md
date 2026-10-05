@@ -6,6 +6,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-04
+
+### Added
+
+- Shikaku: unique seeded rectangle puzzles, exact-cover solving, immutable play and progress, SVG drawing, accessible bilingual controls and worker-backed generation.
+- Square, wide, tall and custom rectangle demos using the shared family styling. Existing six number-entry kinds and saved codes remain compatible.
+
 ## [1.0.0] - 2026-10-01
 
 The Numbers family of grid puzzles, taken out of itsutsu.com so that the site can import them as it
