@@ -1,0 +1,2 @@
+export const SLITHERLINK_MOST_SIDE = 10;
+export const SLITHERLINK_MOST_NODES = 300_000;

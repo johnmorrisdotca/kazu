@@ -5,3 +5,4 @@ export * from "./shikakuBoard.ts";
 export * from "./shikakuSolve.ts";
 export * from "./shikakuGenerate.ts";
 export * from "./shikakuGame.ts";
+export * from "./shikakuPacks.ts";

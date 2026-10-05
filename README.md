@@ -1,7 +1,7 @@
 <h1 align="center">Kazu <sub>数</sub></h1>
 
-<p align="center"><strong>Grid number puzzles for JavaScript and TypeScript.</strong><br>
-Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers and Shikaku. A seeded generator whose every puzzle has exactly one answer, at three levels; a solver that counts answers; a check that reads a finished grid in O(cells); a hint that says which cell to fill next and why; puzzles and runs as short codes; the grid drawn as SVG; and played by touch, mouse and keyboard in any page, with pencil marks, undo and a clock, as one call or one tag. No dependencies.</p>
+<p align="center"><strong>Grid number and logic puzzles for JavaScript and TypeScript.</strong><br>
+Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan and Slitherlink. Dedicated typed engines, independently checked puzzles, SVG drawing, saved progress, and English and Japanese players for touch, mouse and keyboard. No runtime dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml/badge.svg"></a>
@@ -17,7 +17,7 @@ Sudoku (4×4 to a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, 
   <img src="docs/phone.jpg" alt="A 6×6 Skyscrapers puzzle part filled in, on a phone in dark mode and in Japanese: the clues round the edge, the number pad, the buttons and the first of the settings under it" width="200">
 </p>
 
-Kazu is a family of grid puzzles built around numbers. Sudoku and its companions fill cells with numbers; Shikaku divides cells into numbered rectangles. It is
+Kazu is a family of grid puzzles. Its number puzzles fill cells, Shikaku divides rectangles, Hitori and Nurikabe shade cells, Akari places lights, Juosan chooses marks, and Slitherlink draws a loop. The original number puzzles are
 played at [itsutsu.com](https://itsutsu.com), which this package was taken out of, and in
 [the demo](https://johnmorrisdotca.github.io/kazu/), with nothing to install.
 
@@ -48,7 +48,7 @@ And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else
 
 ## Who it is for
 
-- **Puzzle sites and apps** that want these six puzzles with the rules already right: puzzles everybody
+- **Puzzle sites and apps** that want these number puzzles with the rules already right: puzzles everybody
   plays alike from a seed, a check a server can trust in O(cells), a hint that is a reason and not just
   an answer, and runs kept as short strings.
 - **Anyone making number puzzles of their own**, who wants a solver that counts answers, generators whose
@@ -60,7 +60,8 @@ And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else
 
 ## Features
 
-- **Six puzzles, three levels.** Sudoku (4×4, 6×6, 9×9 and a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys.
+- **Seven puzzles, three levels.** Sudoku (4×4, 6×6, 9×9 and a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys.
+- **Six number puzzles, three levels.** Sudoku (4×4, 6×6, 9×9 and a 16×16 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys. Shikaku and Juosan use dedicated rectangle and territory models.
 - **Exactly one answer.** A generator makes puzzles from a seed, and a solver that counts answers confirms there is one. The same kind, size, level and seed make the same puzzle in every browser and every Node, for ever.
 - **A check a server can trust.** `checkKazu` reads a finished grid in O(cells), with no search, and says the first thing wrong in words.
 - **A hint that is a reason.** Which cell to fill next, with the rule that says so (a cell with one number left, a number with one place left), never built on a wrong entry.
@@ -444,15 +445,16 @@ Left out on purpose: a puzzle with more than one answer, and any account, rankin
 
 ## Shikaku — rectangles in Kazu
 
-The demo includes square, wide (10 × 6), tall (6 × 10) and custom rectangular boards, with width and height from 2 to 16. Shares and saved settings preserve both dimensions. It uses Kazu’s unchanged shared family stylesheet and header controls. Irregular outlines are not part of this classic rectangle-partition game.
+The demo includes square, wide (10 × 6), tall (6 × 10) and custom rectangular boards, with width and height from 2 to 16. The named Courtyard (square), Long Table (wide) and Narrow Garden (tall) packs each hold three uniquely proved challenges with useful titles. Shares and saved settings preserve both dimensions. It uses Kazu’s shared materials and pieces palette.
 
 Shikaku belongs to the number-and-grid family. Its moves are rectangles rather than number entries, so it has a dedicated model and optional entry points; the existing six `KazuKind` values and saved Sudoku codes remain compatible.
 
 ```js
 import { generateShikaku, newShikaku, placeShikaku, checkShikaku } from "@johnmorrisdotca/kazu/shikaku";
 import { mountShikaku } from "@johnmorrisdotca/kazu/shikaku/play";
+import { generateShikakuChallenge } from "@johnmorrisdotca/kazu/shikaku";
 
-const puzzle = generateShikaku(7, 7, "medium", 42);
+const { puzzle } = generateShikakuChallenge("wide", 2); // Causeway, a proved 10 × 6 puzzle
 const player = mountShikaku(document.querySelector("#board"), {
   board: puzzle, material: "ivory", pieces: "ink", language: "en",
   onFinish: game => console.log(game.helped ? "Solved with help" : "Solved"),
@@ -460,9 +462,27 @@ const player = mountShikaku(document.querySelector("#board"), {
 // player.progress() saves public clues and rectangles; player.destroy() removes the player.
 ```
 
+`generateShikakuChallenge("square" | "wide" | "tall", 1..3)` selects a named challenge and checks uniqueness with the existing solver.
+
 Use `@johnmorrisdotca/kazu/shikaku`, `@johnmorrisdotca/kazu/shikaku/play`, or `@johnmorrisdotca/kazu/shikaku/draw`.
 
 The root entry re-exports the engine, `/play` re-exports `mountShikaku`, and `/draw` re-exports `drawShikaku`. The dedicated entries let a consumer load only Shikaku. There are no runtime dependencies.
+
+## Juosan — horizontal and vertical marks
+
+Juosan gives each cell either a horizontal mark (`1`) or a vertical mark (`2`). A territory clue is the absolute difference between its horizontal and vertical mark counts; an unnumbered territory uses `difference: null`. Horizontal marks may make longer runs horizontally but never three vertically; vertical marks may make longer runs vertically but never three horizontally. See [Nikoli's English rules](https://www.nikoli.co.jp/en/puzzles/juosan/) for the original rule wording.
+
+```ts
+import { checkJuosan, generateJuosan, solveJuosan } from "@johnmorrisdotca/kazu/juosan";
+import { mountJuosan } from "@johnmorrisdotca/kazu/juosan/play";
+
+const puzzle = generateJuosan(3, 2, "easy", 42); // 3 × 2 training board; answer proved unique
+solveJuosan(puzzle, 2);                         // { count: 1, complete: true, ... }
+checkJuosan(puzzle, puzzle.solution);           // { ok: true, errors: [] }
+const game = mountJuosan(document.querySelector("#board")!, { board: puzzle });
+```
+
+Juosan has a dedicated immutable engine and package paths: `@johnmorrisdotca/kazu/juosan`, `@johnmorrisdotca/kazu/juosan/play`, and `@johnmorrisdotca/kazu/juosan/draw`. The player accepts any valid supplied board from 2×2 through 16×16. The built-in seeded generator currently supports the two small training shapes, 3×2 and 2×3. Even seeds split the board into straight three-cell territories; odd seeds use one whole-board territory. In each case, the maximum difference clue plus the directional run rule proves the single uniform orientation. Its `level` setting is reserved and does not change rule difficulty yet. The demo saves progress locally, marks hint use as assisted, and offers keyboard and touch input in English and Japanese.
 
 - `ShikakuBoard`: `width`, `height`, and row-major `clues` (zero for an empty cell). Dimensions are 2–16; clue areas sum to the grid area.
 - `ShikakuRectangle`: zero-based `x`, `y`, `width`, `height`.
@@ -479,6 +499,52 @@ The demo is `site/shikaku.html` after `pnpm site`; its generator runs in a modul
 
 [Shikaku's rules are described by Nikoli](https://www.nikoli.co.jp/en/puzzles/shikaku/). This implementation generates its own puzzles and does not copy Nikoli's puzzle grids, wording or artwork.
 
+## Akari — light the grid
+
+Akari (美術館) places bulbs in white squares. Each bulb lights in straight lines until a black square or the edge. Every white square must be lit, bulbs cannot see each other, and a numbered black square must touch exactly that many bulbs. Boards may be square, wide, tall or custom, with each side from 2 to 16. The seeded generator uses original horizontal and vertical paired-room layouts, varies bulb directions, and reflects the rooms across either axis. It rejects every board whose uniqueness proof does not finish.
+
+```js
+import { generateAkari, checkAkari } from "@johnmorrisdotca/kazu/akari";
+import { mountAkari } from "@johnmorrisdotca/kazu/akari/play";
+
+const puzzle = generateAkari(7, 7, 42);
+const player = mountAkari(document.querySelector("#board"), {
+  board: puzzle, material: "ivory", pieces: "ink", language: "en",
+});
+// player.progress() saves public clues and bulbs; player.destroy() removes the player.
+```
+
+Use `@johnmorrisdotca/kazu/akari`, `@johnmorrisdotca/kazu/akari/play`, or `@johnmorrisdotca/kazu/akari/draw`. The root package also re-exports the engine; the dedicated drawing and player entries keep those features optional. There are no runtime dependencies.
+
+- `AkariBoard`: width, height and row-major `cells`: `null` is white, `false` is an unnumbered black square, and `0`–`4` are numbered black squares.
+- `generateAkari(width, height, seed)`: deterministic puzzle and its solution, selected from original horizontal and vertical paired-room layouts with seed-chosen bulb directions and symmetry. It returns only when an independent bounded count proves exactly one answer.
+- `solveAkari(board, {limit?, nodes?})`: counts placements, returns the first answer, visited nodes and `complete`; only `complete && count === 1` proves uniqueness. The default answer limit is two and the node budget is 250,000.
+- `checkAkari(board, bulbs)`: checks a complete placement from the rules, independently of the generated answer. `progressAkari` reports dark squares and immediate conflicts while permitting unfinished numbered clues.
+- `newAkari`, `toggleAkari`, `undoAkari`, `akariFinished`, `hintAkari`: immutable play operations. Hints require a proved unique answer and mark the game as helped.
+- `encodeAkari`, `decodeAkari`: versioned JSON containing only public board data and player bulbs.
+- `drawAkari(board, options)`: SVG with `ivory`, `wood` and `slate` materials, `ink` or `tiles` bulb pieces, and `en` or `ja` labels.
+- `mountAkari(host, options)`: toggle bulbs by tap, click, Enter or Space. Arrow keys move through the grid; Delete removes a bulb. Undo, Check, Hint, Restart and a modal board view are built in. The handle has `game`, `progress`, `set`, `restart` and `destroy`.
+
+The demo is `site/akari.html` after `pnpm site`. It shares Kazu's family header, footer, palette and felt board. Progress stays in local storage; share links carry board settings, not player data.
+
+[Nikoli's Akari rules](https://www.nikoli.co.jp/en/puzzles/akari/) describe the same line-of-sight and numbered-square constraints. These boards are generated here; the implementation does not copy Nikoli's grids or artwork.
+## Slitherlink
+
+```js
+import { generateSlitherlink } from "@johnmorrisdotca/kazu/slitherlink";
+import { mountSlitherlink } from "@johnmorrisdotca/kazu/slitherlink/play";
+
+const puzzle = generateSlitherlink(7, 7, 42);
+const player = mountSlitherlink(document.querySelector("#board"), {
+  board: puzzle, material: "ivory", language: "en",
+});
+// player.progress() saves the public clues and selected edges.
+```
+
+The Slitherlink engine has its own edge model, checker, progress checker, bounded solution counter, seeded generator and immutable play state. `solveSlitherlink` distinguishes an exhausted search from a proved count; the generator returns only boards proved to have one loop. Boards may be 2–10 cells wide and high. The original generator uses rectangular and L-shaped loop families with seed-selected positions and reflections; its profiles describe these families, not human difficulty. The player supports touch and mouse edge toggles, arrow-key focus, Enter/Space, undo, restart, checking, proved hints, save/restore, and ivory, wood and slate materials in English and Japanese.
+
+Use `@johnmorrisdotca/kazu/slitherlink`, `@johnmorrisdotca/kazu/slitherlink/play`, or `@johnmorrisdotca/kazu/slitherlink/draw`. The demo is `site/slitherlink.html` after `pnpm site`. The rules are described by [Nikoli](https://www.nikoli.co.jp/en/puzzles/slitherlink/). This implementation uses original generated layouts and does not copy Nikoli puzzle grids, wording or artwork.
+
 ## Architecture
 
 The generators, the solvers, the check, the hint and the game are plain functions over short codes, with no
@@ -486,6 +552,48 @@ DOM. The drawing is SVG text in an entry of its own, so a server that only check
 the page's part (the mount and the element) is another.
 
 ```text
+├── hitori-draw-entry.ts
+├── hitori-entry.ts
+├── hitori-play-entry.ts
+├── hitori.constants.ts
+├── hitori.types.ts
+├── hitoriBoard.ts
+├── hitoriDraw.ts
+├── hitoriGame.ts
+├── hitoriGenerate.ts
+├── hitoriMount.ts
+├── hitoriPlay.types.ts
+├── hitoriSolve.ts
+├── hitoriStrings.ts
+├── hitoriStyle.ts
+├── nurikabe-draw-entry.ts
+├── nurikabe-entry.ts
+├── nurikabe-play-entry.ts
+├── nurikabe.constants.ts
+├── nurikabe.types.ts
+├── nurikabeBoard.ts
+├── nurikabeDraw.ts
+├── nurikabeGame.ts
+├── nurikabeGenerate.ts
+├── nurikabeMount.ts
+├── nurikabePlay.types.ts
+├── nurikabeSolve.ts
+├── nurikabeStrings.ts
+├── nurikabeStyle.ts
+├── juosan-draw-entry.ts
+├── juosan-entry.ts
+├── juosan-play-entry.ts
+├── juosan.constants.ts
+├── juosan.types.ts
+├── juosanBoard.ts
+├── juosanDraw.ts
+├── juosanGame.ts
+├── juosanGenerate.ts
+├── juosanMount.ts
+├── juosanPlay.types.ts
+├── juosanSolve.ts
+├── juosanStrings.ts
+├── juosanStyle.ts
 ├── shikaku-draw-entry.ts
 ├── shikaku-entry.ts
 ├── shikaku-play-entry.ts
@@ -496,11 +604,40 @@ the page's part (the mount and the element) is another.
 ├── shikakuGame.ts
 ├── shikakuGenerate.ts
 ├── shikakuMount.ts
+├── shikakuPacks.ts
 ├── shikakuPlay.types.ts
 ├── shikakuSolve.ts
 ├── shikakuStrings.ts
 ├── shikakuStyle.ts
 ├── shikakuWorker.ts
+├── akari-draw-entry.ts
+├── akari-entry.ts
+├── akari-play-entry.ts
+├── akari.constants.ts
+├── akari.types.ts
+├── akariBoard.ts
+├── akariDraw.ts
+├── akariGame.ts
+├── akariGenerate.ts
+├── akariMount.ts
+├── akariPlay.types.ts
+├── akariSolve.ts
+├── akariStrings.ts
+├── akariStyle.ts
+├── slitherlink-draw-entry.ts
+├── slitherlink-entry.ts
+├── slitherlink-play-entry.ts
+├── slitherlink.constants.ts
+├── slitherlink.types.ts
+├── slitherlinkBoard.ts
+├── slitherlinkDraw.ts
+├── slitherlinkGame.ts
+├── slitherlinkGenerate.ts
+├── slitherlinkMount.ts
+├── slitherlinkPlay.types.ts
+├── slitherlinkSolve.ts
+├── slitherlinkStrings.ts
+├── slitherlinkStyle.ts
 src/
 ├── index.ts            the main entry: everything but the drawing and the page
 ├── kinds.ts            the six puzzles' keys, sizes and levels, and the shape of a puzzle
@@ -618,3 +755,38 @@ See [CHANGELOG.md](./CHANGELOG.md).
 ## Licence
 
 MIT, © John Morris. The puzzles are made in code and the drawing is SVG; there is no sound and no data file but the record of what the site made.
+
+## Hitori
+
+Hitori is included as a small standalone rules engine, drawing and player. Its public board has a `size` of 5 or 7 and a flat row-major `numbers` array. A solution is a Boolean shade mask: `true` means black. The solver counts minimal shade patterns, excluding redundant extra black cells; `complete: true` means the search finished, while a node-budget stop never claims uniqueness. Four original layouts per size are varied by seeded number relabeling and all board symmetries; the generator returns only puzzles proved to have one minimal answer.
+
+```ts
+import { generateHitori, checkHitori, solveHitori } from "@johnmorrisdotca/kazu/hitori";
+import { drawHitori } from "@johnmorrisdotca/kazu/hitori/draw";
+import { mountHitori } from "@johnmorrisdotca/kazu/hitori/play";
+
+const puzzle = generateHitori(5, 42);
+checkHitori(puzzle, puzzle.solution); // { ok: true, errors: [] }
+solveHitori(puzzle);                 // count: 1, complete: true
+```
+
+`newHitori`, `shadeHitori`, `undoHitori`, `hintHitori`, `encodeHitori` and `decodeHitori` keep play state immutable and progress codes free of the answer. Hints are assistance and set `helped`; generated answers are never put into the player state. The demo is `site/hitori.html` after `pnpm site`, and stores progress in this browser only. The implementation follows [Nikoli's Hitori rules](https://www.nikoli.co.jp/en/puzzles/hitori/) and makes its own boards.
+
+Use `@johnmorrisdotca/kazu/hitori`, `@johnmorrisdotca/kazu/hitori/play`, or `@johnmorrisdotca/kazu/hitori/draw`.
+## Nurikabe
+
+Nurikabe is available through its own rules, drawing and player entries. This compact edition makes original 5×5 puzzles from seeded symmetric layouts; it returns a puzzle only after the bounded solver proves exactly one solution. The supported board size is intentionally limited to 5×5 so generation remains quick and dependable.
+
+```ts
+import { generateNurikabe, checkNurikabe, solveNurikabe } from "@johnmorrisdotca/kazu/nurikabe";
+import { drawNurikabe } from "@johnmorrisdotca/kazu/nurikabe/draw";
+import { mountNurikabe } from "@johnmorrisdotca/kazu/nurikabe/play";
+
+const puzzle = generateNurikabe(42);
+checkNurikabe(puzzle, puzzle.solution); // { ok: true, errors: [] }
+solveNurikabe(puzzle);                 // count: 1, complete: true
+```
+
+A clue gives the exact size of its white island; each island has one clue, the remaining black sea is connected, and no 2×2 square is entirely black. `newNurikabe`, `markNurikabeSea`, `undoNurikabe`, `hintNurikabe`, `encodeNurikabe` and `decodeNurikabe` keep the player's state separate from the answer. The demo stores progress locally. The implementation follows [Nikoli's Nurikabe rules](https://www.nikoli.co.jp/en/puzzles/nurikabe/) and uses its own puzzle layouts.
+
+Use `@johnmorrisdotca/kazu/nurikabe`, `@johnmorrisdotca/kazu/nurikabe/play`, or `@johnmorrisdotca/kazu/nurikabe/draw`.

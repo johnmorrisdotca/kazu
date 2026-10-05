@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Kazu 数 · Akari</title>
+    <link rel="stylesheet" href="family.css">
+    <link rel="stylesheet" href="akari.css">
+  </head>
+  <body>
+    <main>
+      <!--family-header-->
+      <p class="akari-intro">
+        <strong id="title">Akari · 美術館</strong><br>
+        <span id="intro">Light every white square without letting bulbs see one another.</span>
+      </p>
+      <div class="layout">
+        <aside>
+          <h2 id="field-title">Your board</h2>
+          <form id="setup">
+            <label class="fam-row">
+              <span id="size-label">Size</span>
+              <select class="fam-field" id="size">
+                <option value="5">5 × 5</option>
+                <option value="7" selected>7 × 7</option>
+                <option value="wide">10 × 6</option>
+                <option value="tall">6 × 10</option>
+                <option value="custom">Custom</option>
+              </select>
+            </label>
+            <div class="akari-dimensions">
+              <label class="fam-row">
+                <span id="width-label">Width</span>
+                <input class="fam-field" id="width" type="number" min="2" max="16" value="7" required>
+              </label>
+              <label class="fam-row">
+                <span id="height-label">Height</span>
+                <input class="fam-field" id="height" type="number" min="2" max="16" value="7" required>
+              </label>
+            </div>
+            <label class="fam-row">
+              <span id="material-label">Board material</span>
+              <select class="fam-field" id="material">
+                <option value="ivory">Ivory</option>
+                <option value="wood">Wood</option>
+                <option value="slate">Slate</option>
+              </select>
+            </label>
+            <label class="fam-row">
+              <span id="pieces-label">Bulbs</span>
+              <select class="fam-field" id="pieces">
+                <option value="ink">Ink</option>
+                <option value="tiles">Tiles</option>
+              </select>
+            </label>
+            <label class="fam-row">
+              <span id="seed-label">Seed</span>
+              <input class="fam-field" id="seed" type="number" min="1" max="2147483647" value="42" required>
+            </label>
+            <button class="fam-button" data-primary="true" id="new" type="submit">New puzzle →</button>
+          </form>
+          <button class="text-button" id="share">Share puzzle</button>
+          <p id="notice" role="status"></p>
+          <p id="unique">Every generated puzzle has one proved answer. Progress stays on your device.</p>
+        </aside>
+        <section class="panel fam-felt">
+          <div class="panel-head">
+            <h2 id="game-title">Akari</h2>
+            <span id="summary"></span>
+          </div>
+          <div id="board"></div>
+          <p id="clock" aria-live="off"></p>
+        </section>
+      </div>
+      <section class="more rules">
+        <h2 id="rules-title">Rules</h2>
+        <p id="rules">Place bulbs in white squares. A bulb lights along its row and column until a black square or the edge. Light every white square; bulbs cannot see one another. Each numbered black square touches exactly that many bulbs.</p>
+        <p id="origin">Akari is a Nikoli puzzle. These boards are generated here; no Nikoli puzzles are copied.</p>
+      </section>
+      <!--family-footer-->
+      <!--family-unreviewed-->
+    </main>
+    <!--family-script-->
+    <script type="module" src="akari.js"></script>
+  </body>
+</html>

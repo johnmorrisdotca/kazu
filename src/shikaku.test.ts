@@ -91,3 +91,20 @@ it("agrees with a separate geometric oracle for every possible 2×2 clue board",
     expect(answer.complete).toBe(true); expect(answer.count).toBe(bruteCount(clues));
   }
 });
+
+describe("Shikaku challenge packs", () => {
+  it("offers square, wide and tall routes with independently proved puzzles", async () => {
+    const { SHIKAKU_CHALLENGE_PACKS, generateShikakuChallenge } = await import("./shikakuPacks.ts");
+    for (const key of ["square", "wide", "tall"] as const) {
+      const pack = SHIKAKU_CHALLENGE_PACKS[key];
+      expect(pack.challenges).toHaveLength(3);
+      for (let index = 1; index <= pack.challenges.length; index += 1) {
+        const result = generateShikakuChallenge(key, index);
+        expect(result.puzzle).toMatchObject({ width: pack.width, height: pack.height, level: pack.challenges[index - 1]!.level, seed: pack.challenges[index - 1]!.seed });
+        expect(solveShikaku(result.puzzle)).toMatchObject({ count: 1, complete: true });
+        expect(generateShikakuChallenge(key, index)).toEqual(result);
+      }
+    }
+    expect(() => generateShikakuChallenge("square", 0)).toThrow(RangeError);
+  });
+});

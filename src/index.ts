@@ -36,3 +36,9 @@ export type { Random } from "./random.ts";
 export { VERSION } from "./version.ts";
 
 export * from "./shikaku-entry.ts";
+
+export * from "./hitori-entry.ts";
+export * from "./nurikabe-entry.ts";
+export * from "./akari-entry.ts";
+export * from "./juosan-entry.ts";
+export * from "./slitherlink-entry.ts";

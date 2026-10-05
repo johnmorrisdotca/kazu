@@ -6,6 +6,14 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Hitori and Nurikabe: independent shading rules, bounded solution counting, original proof-backed puzzle families, bilingual players and package entry points.
+- Juosan: a dedicated territory model, verified small training layouts and a bilingual player for supplied boards.
+- Nine named Shikaku challenges across square, wide and tall routes.
+- Akari: a separate rule engine, bounded solution counter, seeded unique puzzle generator, immutable play, accessible bilingual player, drawing and demo.
+- Slitherlink: a dedicated edge-loop engine, bounded unique-puzzle generation, accessible bilingual player, demo and package entry points.
+
 ## [1.1.0] - 2026-10-04
 
 ### Added

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Kazu 数 · Hitori</title>
+    <link rel="stylesheet" href="family.css">
+    <link rel="stylesheet" href="hitori.css">
+  </head>
+  <body>
+    <main>
+      <!--family-header-->
+      <div class="layout">
+        <aside>
+          <h2 id="title">Hitori</h2>
+          <p id="rules">Shade cells so numbers are unique in each row and column. Shaded cells cannot touch, and all unshaded cells stay connected.</p>
+          <label><span id="size-label">Size</span> <select id="size"><option>5</option><option>7</option></select></label>
+          <label><span id="seed-label">Seed</span> <input id="seed" type="number" min="1" value="42"></label>
+          <button id="new">New puzzle</button>
+          <p id="notice" role="status"></p>
+        </aside>
+        <section class="panel fam-felt"><div id="board"></div></section>
+      </div>
+      <!--family-footer-->
+      <!--family-unreviewed-->
+    </main>
+    <!--family-script-->
+    <script type="module" src="hitori.js"></script>
+  </body>
+</html>

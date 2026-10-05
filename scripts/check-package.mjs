@@ -72,9 +72,11 @@ const all = [${entries.map((_, i) => `m${i}`).join(", ")}];
 const names = ${JSON.stringify(entries)};
 // An entry that only defines the tag on a page (the /define one) exports nothing, and is imported for its effect.
 all.forEach((m, i) => { if (Object.keys(m).length === 0 && !names[i].endsWith("/define")) throw new Error(names[i] + " exports nothing"); });
-const { generateKazu, checkKazu, countKazuSolutions, hintKazu, VERSION, generateShikaku, solveShikaku, checkShikaku } = m0;
+const { generateKazu, checkKazu, countKazuSolutions, hintKazu, VERSION, generateShikaku, solveShikaku, checkShikaku, generateJuosan, solveJuosan, checkJuosan } = m0;
 const rectanglePuzzle = generateShikaku(7, 7, "medium", 42);
 if (!checkShikaku(rectanglePuzzle, rectanglePuzzle.solution).ok || solveShikaku(rectanglePuzzle).count !== 1) throw new Error("installed Shikaku engine failed");
+const markPuzzle = generateJuosan(3, 2, "easy", 42);
+if (!checkJuosan(markPuzzle, markPuzzle.solution).ok || solveJuosan(markPuzzle, 2).count !== 1) throw new Error("installed Juosan engine failed");
 const made = generateKazu("sum-cages", 6, "medium", 42);
 if (JSON.stringify(made) !== ${JSON.stringify(JSON.stringify(made))}) throw new Error("the installed package made " + JSON.stringify(made));
 if (!checkKazu("sum-cages", 6, made.givens, made.solution).ok) throw new Error("the solution does not check");

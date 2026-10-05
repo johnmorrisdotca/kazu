@@ -1,7 +1,7 @@
 {
   "name": "@johnmorrisdotca/kazu",
   "version": "1.1.0",
-  "description": "Kazu \u6570, grid number puzzles for JavaScript and TypeScript: Sudoku (4\u00d74 to a 16\u00d716 Giant), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers and Shikaku. Shikaku uses a dedicated rectangle model, exact-cover solver and player. A seeded generator whose every puzzle has exactly one answer, at three levels; a solver that counts answers; a check that reads a finished grid in O(cells); a hint that says which cell to fill next and why; puzzles as short codes; the grid drawn as SVG; and played by touch, mouse and keyboard in any page, with pencil marks, undo and a clock, as a function call or a tag. Zero dependencies.",
+  "description": "Grid number and logic puzzles for JavaScript and TypeScript: Sudoku and its variants, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan and Slitherlink. Dedicated typed engines, independently checked puzzles, SVG boards and bilingual touch and keyboard players. Zero runtime dependencies.",
   "keywords": [
     "puzzle",
     "sudoku",
@@ -24,7 +24,13 @@
     "browser",
     "node",
     "itsutsu",
-    "shikaku"
+    "shikaku",
+    "hitori",
+    "nurikabe",
+    "akari",
+    "light-puzzle",
+    "juosan",
+    "slitherlink"
   ],
   "homepage": "https://github.com/johnmorrisdotca/kazu#readme",
   "repository": {
@@ -83,6 +89,81 @@
       "types": "./dist/shikaku-draw-entry.d.ts",
       "import": "./dist/shikaku-draw-entry.js",
       "default": "./dist/shikaku-draw-entry.js"
+    },
+    "./hitori": {
+      "types": "./dist/hitori-entry.d.ts",
+      "import": "./dist/hitori-entry.js",
+      "default": "./dist/hitori-entry.js"
+    },
+    "./hitori/play": {
+      "types": "./dist/hitori-play-entry.d.ts",
+      "import": "./dist/hitori-play-entry.js",
+      "default": "./dist/hitori-play-entry.js"
+    },
+    "./hitori/draw": {
+      "types": "./dist/hitori-draw-entry.d.ts",
+      "import": "./dist/hitori-draw-entry.js",
+      "default": "./dist/hitori-draw-entry.js"
+    },
+    "./nurikabe": {
+      "types": "./dist/nurikabe-entry.d.ts",
+      "import": "./dist/nurikabe-entry.js",
+      "default": "./dist/nurikabe-entry.js"
+    },
+    "./nurikabe/play": {
+      "types": "./dist/nurikabe-play-entry.d.ts",
+      "import": "./dist/nurikabe-play-entry.js",
+      "default": "./dist/nurikabe-play-entry.js"
+    },
+    "./nurikabe/draw": {
+      "types": "./dist/nurikabe-draw-entry.d.ts",
+      "import": "./dist/nurikabe-draw-entry.js",
+      "default": "./dist/nurikabe-draw-entry.js"
+    },
+    "./akari": {
+      "types": "./dist/akari-entry.d.ts",
+      "import": "./dist/akari-entry.js",
+      "default": "./dist/akari-entry.js"
+    },
+    "./akari/play": {
+      "types": "./dist/akari-play-entry.d.ts",
+      "import": "./dist/akari-play-entry.js",
+      "default": "./dist/akari-play-entry.js"
+    },
+    "./akari/draw": {
+      "types": "./dist/akari-draw-entry.d.ts",
+      "import": "./dist/akari-draw-entry.js",
+      "default": "./dist/akari-draw-entry.js"
+    },
+    "./juosan": {
+      "types": "./dist/juosan-entry.d.ts",
+      "import": "./dist/juosan-entry.js",
+      "default": "./dist/juosan-entry.js"
+    },
+    "./juosan/play": {
+      "types": "./dist/juosan-play-entry.d.ts",
+      "import": "./dist/juosan-play-entry.js",
+      "default": "./dist/juosan-play-entry.js"
+    },
+    "./juosan/draw": {
+      "types": "./dist/juosan-draw-entry.d.ts",
+      "import": "./dist/juosan-draw-entry.js",
+      "default": "./dist/juosan-draw-entry.js"
+    },
+    "./slitherlink": {
+      "types": "./dist/slitherlink-entry.d.ts",
+      "import": "./dist/slitherlink-entry.js",
+      "default": "./dist/slitherlink-entry.js"
+    },
+    "./slitherlink/play": {
+      "types": "./dist/slitherlink-play-entry.d.ts",
+      "import": "./dist/slitherlink-play-entry.js",
+      "default": "./dist/slitherlink-play-entry.js"
+    },
+    "./slitherlink/draw": {
+      "types": "./dist/slitherlink-draw-entry.d.ts",
+      "import": "./dist/slitherlink-draw-entry.js",
+      "default": "./dist/slitherlink-draw-entry.js"
     }
   },
   "files": [

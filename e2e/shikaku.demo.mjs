@@ -25,3 +25,16 @@ test("Shikaku rectangles, undo, hints, language, materials and restore", async (
   await expect(page.locator('.ks-cell[aria-label*="長方形の中"], .ks-cell[aria-label*="in a rectangle"]')).not.toHaveCount(0);
   expect(errors).toEqual([]);
 });
+
+
+test("the named challenge selector starts square, wide and tall pack puzzles", async ({ page }) => {
+  await serve(page); await page.goto("http://kazu.test/shikaku.html");
+  await page.locator("#pack").selectOption("wide"); await page.locator("#challenge").selectOption("2");
+  await page.getByRole("button", { name: "Play challenge", exact: true }).click();
+  await expect(page.locator("#notice")).toContainText("The Long Table · Causeway");
+  await expect(page.locator("#summary")).toContainText("10 × 6");
+  await page.locator("#pack").selectOption("tall"); await page.locator("#challenge").selectOption("3");
+  await page.getByRole("button", { name: "Play challenge", exact: true }).click();
+  await expect(page.locator("#notice")).toContainText("The Narrow Garden · Lantern Walk");
+  await expect(page.locator("#summary")).toContainText("6 × 10");
+});
