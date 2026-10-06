@@ -76,26 +76,3 @@ The Release workflow (`.github/workflows/release.yml`) checks and builds the
 package, attaches the tarball to a GitHub release and publishes it to npm by
 trusted publishing, with provenance and no token. A version already on npm is
 not published again.
-
-## Particular to Kazu
-
-Bug reports and ideas go in the [issues](https://github.com/johnmorrisdotca/kazu/issues).
-
-### Commands and rules
-
-```sh
-pnpm check          # lint, types and tests
-pnpm test:package   # pack it as npm does, install it in an empty project, import every entry
-pnpm test:demo      # build the demo and play it in a real browser
-pnpm docs:make      # rewrite docs/strings-ja.md after changing a word of the board
-node scripts/measure-levels.mjs   # after pnpm build: how hard each level of the six grid puzzles is, and how long each generator takes
-```
-
-A change to how one of the six grid puzzles (Shikaku, Akari, Slitherlink, Hitori, Fillomino, Kakuro) is made must keep every board of every level
-within its level, the budgets of `docs/LEVELS.md` (under 300 ms median, 1.5 s slowest, on the largest size at `extra-hard`), and each
-board it pins in `src/levels.fixture.json` unless the change is meant, in which case `UPDATE_LEVELS=1 pnpm test` writes the file
-again and the changelog says that seeds make different boards.
-
-A change to how a number puzzle is made must leave every puzzle in `src/site.fixture.json` exactly as it is: people's
-solves, times and half-done grids on itsutsu.com are kept by the puzzle's kind, size, level and seed, and a
-change that alters one is a new major version, never a fix.
