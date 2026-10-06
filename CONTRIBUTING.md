@@ -91,7 +91,7 @@ pnpm docs:make      # rewrite docs/strings-ja.md after changing a word of the bo
 node scripts/measure-levels.mjs   # after pnpm build: how hard each level of the six grid puzzles is, and how long each generator takes
 ```
 
-A change to how one of the six grid puzzles (Shikaku, Akari, Slitherlink, Hitori, Fillomino, Kakuro) is made must keep every board of every level
+A change to how one of the six grid puzzles (Shikaku, Akari, Loop, Hitori, Regions, Cross Sums) is made must keep every board of every level
 within its level, the budgets of `docs/LEVELS.md` (under 300 ms median, 1.5 s slowest, on the largest size at `extra-hard`), and each
 board it pins in `src/levels.fixture.json` unless the change is meant, in which case `UPDATE_LEVELS=1 pnpm test` writes the file
 again and the changelog says that seeds make different boards.

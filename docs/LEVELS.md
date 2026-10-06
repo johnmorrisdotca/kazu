@@ -1,6 +1,6 @@
 # Levels of the grid puzzles
 
-Shikaku, Akari, Slitherlink, Hitori, Fillomino and Kakuro each make boards at four levels, `easy`, `medium`, `hard` and
+Shikaku, Akari, Loop, Hitori, Regions and Cross Sums each make boards at four levels, `easy`, `medium`, `hard` and
 `extra-hard`. A level is not a promise about how many numbers a board has: it says what a person has to do to solve it,
 and it is measured by solving the board, never guessed from how it was made. This page says what each level means for
 each kind, defines the numbers the `rate*` functions report, and tables them by size and level, with the time each
@@ -11,7 +11,7 @@ complete: true`). Nothing here is a human difficulty rating; it is how deep the 
 
 ## How a board is rated
 
-`rateShikaku`, `rateAkari`, `rateSlitherlink`, `rateHitori`, `rateFillomino` and `rateKakuro` solve a board with one
+`rateShikaku`, `rateAkari`, `rateLoop`, `rateHitori`, `rateRegions` and `rateCrossSums` solve a board with one
 answer the way a person works, never by guessing a value and keeping it:
 
 1. **The rules alone** (`depth` 0). Each kind has a few rules that follow from its definition, listed below. They are
@@ -52,7 +52,7 @@ and a number on every black square that touches a white one; numbers are then ta
 | hard | supposing one square | as few as that allows |
 | extra-hard | supposing, the most suppositions of eight boards | as few as that allows |
 
-**Slitherlink** has these rules: every corner has no edge or two; a number is how many of its square's four edges are in
+**Loop** has these rules: every corner has no edge or two; a number is how many of its square's four edges are in
 the loop; the loop is one piece and may not close before everything drawn is part of it, nor while a number is unmet; and everything drawn must still be able to
 join up. A board starts as a random winding loop (a connected region of squares with no hole, whose outline never touches itself) that covers a half
 of the squares, every square is numbered with the edges it has in the loop, and numbers are taken away, the 0s first.
@@ -77,7 +77,7 @@ whose shading would cut them in two stays white). About a quarter of the squares
 | hard | supposing one square |
 | extra-hard | supposing, the most suppositions of four boards |
 
-**Fillomino** has these rules: a finished group of equal numbers keeps its neighbours off that number; a group still
+**Regions** has these rules: a finished group of equal numbers keeps its neighbours off that number; a group still
 short of its size must be able to grow, to squares that can still be that number, and takes exactly the room it has; and a square can only be a
 number if the squares that can still be it, joined up, make a group that big. Boards are cut into connected regions with no two of one size touching.
 
@@ -90,7 +90,7 @@ number if the squares that can still be it, joined up, make a group that big. Bo
 
 No stretch of squares with no given is longer than 12 (or than the biggest region, if that is more), so a proof never has to allow for a giant blank region.
 
-**Kakuro** has these rules: a run's digits are different and add to its total, so a square can only be a digit that some set of digits making
+**Cross Sums** has these rules: a run's digits are different and add to its total, so a square can only be a digit that some set of digits making
 the total can still use; a digit already settled in a run leaves its other squares; and (when `plain` is false) a digit that every
 remaining set uses must go somewhere, so a square that is the only one to hold it takes it. Boards are laid out row by row so that
 no run is a single square or longer than the level allows, and every board is one connected piece.
@@ -110,25 +110,25 @@ no run is a single square or longer than the level allows, and every board is on
 - **probes**: mean suppositions that broke a rule at depth 1 (0 for a board the rules solve).
 - Shikaku: **rules** is the highest of the three rules a depth-0 solve needed (a mean, 3 when every board needs the third); **rectangles**, **meanArea**, **largest** are their count and areas; **ambiguity** is the mean number of rectangles a number could be at the start.
 - Akari: **clues** is the numbered black squares, **clueShare** their share of the black squares that touch a white one, **openShare** the white squares' share of the board, **bulbs** the bulbs in the answer.
-- Slitherlink: **clues** and **clueShare** are the numbered squares and their share of all squares; **zeroShare** is how many numbered squares say 0; **loop** is the loop's length in edges.
+- Loop: **clues** and **clueShare** are the numbered squares and their share of all squares; **zeroShare** is how many numbered squares say 0; **loop** is the loop's length in edges.
 - Hitori: **reach** is the share of boards that needed the white squares to stay in one piece; **shaded**, **shadedShare** and **repeatShare** are the shaded squares, their share, and the share of squares whose number repeats in their row or column.
-- Fillomino: **givens**, **givenShare**; **regions**; **unnamed** is regions with no given; **largest** and **meanRegion** are their sizes.
-- Kakuro: **plain** is the share of boards the single-run rules solved; **whites**, **runs**, **longest** and **meanRun** describe the runs; **fixedShare** is the share of runs whose total can be made one way only.
+- Regions: **givens**, **givenShare**; **regions**; **unnamed** is regions with no given; **largest** and **meanRegion** are their sizes.
+- Cross Sums: **plain** is the share of boards the single-run rules solved; **whites**, **runs**, **longest** and **meanRun** describe the runs; **fixedShare** is the share of runs whose total can be made one way only.
 
 ## Times
 
 Times are for one `generate*` call in Node 24 on an Apple-silicon laptop that was busy with other work (a load average of about 13 on 20 cores), so a quiet machine is faster. A browser runs the same code at much the same speed on a desk
-and slower on a phone. The generators work in rule runs and attempts, never in time, so a seed makes the same board on every machine; the demo makes Shikaku and Fillomino in a worker. On the largest size of
+and slower on a phone. The generators work in rule runs and attempts, never in time, so a seed makes the same board on every machine; the demo makes Shikaku and Regions in a worker. On the largest size of
 each kind, at extra-hard (the slowest level), over 200 seeds:
 
 | kind | size | median ms | p95 ms | slowest ms |
 | --- | --- | --- | --- | --- |
 | Shikaku | 14 | 89 | 256 | 302 |
 | Akari | 14 | 212 | 286 | 362 |
-| Slitherlink | 10 | 231 | 259 | 286 |
+| Loop | 10 | 231 | 259 | 286 |
 | Hitori | 12 | 157 | 311 | 511 |
-| Fillomino | 12 | 187 | 273 | 422 |
-| Kakuro | 12 | 273 | 665 | 1254 |
+| Regions | 12 | 187 | 273 | 422 |
+| Cross Sums | 12 | 273 | 665 | 1254 |
 
 If a generator cannot make a board of the level within its attempts it makes the next level down, and in the end a plain one; no seed of these tables did.
 
@@ -178,7 +178,7 @@ Made again with `pnpm build && node scripts/measure-levels.mjs <kind> 200`, on 2
 | 14 | hard | 200/200 | 33 | 72 | 113 | 0 / 200 / 0 | 12.88 | 24.57 | 0.45 | 0.71 | 35.16 |
 | 14 | extra-hard | 200/200 | 212 | 286 | 362 | 0 / 200 / 0 | 22.46 | 25.62 | 0.48 | 0.72 | 34.91 |
 
-### Slitherlink
+### Loop
 
 | size | level | made | median ms | p95 ms | slowest ms | depth 0 / 1 / 2 | probes | clues | clueShare | zeroShare | loop |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -228,7 +228,7 @@ Made again with `pnpm build && node scripts/measure-levels.mjs <kind> 200`, on 2
 | 12 | hard | 200/200 | 47 | 188 | 460 | 0 / 200 / 0 | 0 | 1.17 | 40.19 | 0.28 | 0.64 |
 | 12 | extra-hard | 200/200 | 157 | 311 | 511 | 0 / 200 / 0 | 0 | 1.59 | 41.20 | 0.29 | 0.66 |
 
-### Fillomino
+### Regions
 
 | size | level | made | median ms | p95 ms | slowest ms | depth 0 / 1 / 2 | probes | givens | givenShare | regions | unnamed | largest | meanRegion |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -249,7 +249,7 @@ Made again with `pnpm build && node scripts/measure-levels.mjs <kind> 200`, on 2
 | 12 | hard | 200/200 | 154 | 291 | 434 | 0 / 200 / 0 | 53.40 | 64.62 | 0.45 | 30.82 | 0.04 | 7.99 | 4.68 |
 | 12 | extra-hard | 200/200 | 187 | 273 | 422 | 0 / 191 / 9 | 62.59 | 63.88 | 0.44 | 26.57 | 0.03 | 8.91 | 5.44 |
 
-### Kakuro
+### Cross Sums
 
 | size | level | made | median ms | p95 ms | slowest ms | depth 0 / 1 / 2 | plain | probes | whites | runs | longest | meanRun | fixedShare |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

@@ -7,11 +7,11 @@ import { describe, expect, it, vi } from "vitest";
 
 import { generateAkari } from "./akari-generate.ts";
 import { generateKazu } from "./generate.ts";
-import { generateFillomino } from "./fillomino-generate.ts";
+import { generateRegions } from "./regions-generate.ts";
 import { generateHitori } from "./hitori-generate.ts";
-import { generateKakuro } from "./kakuro-generate.ts";
+import { generateCrossSums } from "./cross-sums-generate.ts";
 import { generateShikaku } from "./shikaku-generate.ts";
-import { generateSlitherlink } from "./slitherlink-generate.ts";
+import { generateLoop } from "./loop-generate.ts";
 
 // These generate and enumerate a lot; a slow runner must not fail them for taking its time.
 vi.setConfig({ testTimeout: 120_000 });
@@ -28,10 +28,10 @@ describe("the boards made for a seed", () => {
   for (const level of LEVELS) for (const seed of [1, 2]) {
     made[`shikaku 7 ${level} ${seed}`] = () => generateShikaku(7, 7, level, seed);
     made[`akari 7 ${level} ${seed}`] = () => generateAkari(7, 7, seed, level);
-    made[`slitherlink 7 ${level} ${seed}`] = () => generateSlitherlink(7, 7, seed, level);
+    made[`loop 7 ${level} ${seed}`] = () => generateLoop(7, 7, seed, level);
     made[`hitori 7 ${level} ${seed}`] = () => generateHitori(7, seed, level);
-    made[`fillomino 8 ${level} ${seed}`] = () => generateFillomino(8, 8, level, seed);
-    made[`kakuro 8 ${level} ${seed}`] = () => generateKakuro(seed, level, 8);
+    made[`regions 8 ${level} ${seed}`] = () => generateRegions(8, 8, level, seed);
+    made[`cross-sums 8 ${level} ${seed}`] = () => generateCrossSums(seed, level, 8);
   }
   // The 25×25 Sudoku was never on itsutsu.com, so `site.fixture.json` has none of it; these pin it from Kazu 1.4.0.
   for (const level of ["easy", "medium", "hard"]) for (const seed of [1, 2]) made[`number-place 25 ${level} ${seed}`] = () => generateKazu("number-place", 25, level, seed);

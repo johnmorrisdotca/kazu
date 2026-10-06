@@ -1,8 +1,8 @@
 // Measures how hard the generated puzzles of the six grid kinds are, and how long they take to make.
 //
 //   pnpm build && node scripts/measure-levels.mjs                 every kind, every size, 30 seeds
-//   node scripts/measure-levels.mjs kakuro 40                     one kind, 40 seeds
-//   node scripts/measure-levels.mjs kakuro 200 12                 one kind, 200 seeds, one size
+//   node scripts/measure-levels.mjs cross-sums 40                     one kind, 40 seeds
+//   node scripts/measure-levels.mjs cross-sums 200 12                 one kind, 200 seeds, one size
 //   node scripts/measure-levels.mjs --show akari 7 hard 3         one puzzle, drawn in text
 //
 // For every kind, size and level it makes the puzzle for seeds 1 to N, checks the answer with the package's own solver
@@ -12,11 +12,11 @@ import { performance } from "node:perf_hooks";
 import process from "node:process";
 
 import * as akari from "../dist/akari-entry.js";
-import * as fillomino from "../dist/fillomino-entry.js";
+import * as regions from "../dist/regions-entry.js";
 import * as hitori from "../dist/hitori-entry.js";
-import * as kakuro from "../dist/kakuro-entry.js";
+import * as crossSums from "../dist/cross-sums-entry.js";
 import * as shikaku from "../dist/shikaku-entry.js";
-import * as slitherlink from "../dist/slitherlink-entry.js";
+import * as loop from "../dist/loop-entry.js";
 
 const LEVELS = ["easy", "medium", "hard", "extra-hard"];
 
@@ -36,11 +36,11 @@ const KINDS = {
     rate: akari.rateAkari,
     columns: ["probes", "clues", "clueShare", "openShare", "bulbs"],
   },
-  slitherlink: {
-    sizes: slitherlink.SLITHERLINK_SIZES,
-    make: (n, level, seed) => slitherlink.generateSlitherlink(n, n, seed, level),
-    count: (puzzle) => slitherlink.solveSlitherlink(puzzle),
-    rate: slitherlink.rateSlitherlink,
+  loop: {
+    sizes: loop.LOOP_SIZES,
+    make: (n, level, seed) => loop.generateLoop(n, n, seed, level),
+    count: (puzzle) => loop.solveLoop(puzzle),
+    rate: loop.rateLoop,
     columns: ["probes", "clues", "clueShare", "zeroShare", "loop"],
   },
   hitori: {
@@ -50,18 +50,18 @@ const KINDS = {
     rate: hitori.rateHitori,
     columns: ["reach", "probes", "shaded", "shadedShare", "repeatShare"],
   },
-  fillomino: {
-    sizes: fillomino.FILLOMINO_SIZES,
-    make: (n, level, seed) => fillomino.generateFillomino(n, n, level, seed),
-    count: (puzzle) => fillomino.solveFillomino(puzzle),
-    rate: fillomino.rateFillomino,
+  regions: {
+    sizes: regions.REGIONS_SIZES,
+    make: (n, level, seed) => regions.generateRegions(n, n, level, seed),
+    count: (puzzle) => regions.solveRegions(puzzle),
+    rate: regions.rateRegions,
     columns: ["probes", "givens", "givenShare", "regions", "unnamed", "largest", "meanRegion"],
   },
-  kakuro: {
-    sizes: kakuro.KAKURO_SIZES,
-    make: (n, level, seed) => kakuro.generateKakuro(seed, level, n),
-    count: (puzzle) => kakuro.solveKakuro(puzzle),
-    rate: kakuro.rateKakuro,
+  "cross-sums": {
+    sizes: crossSums.CROSS_SUMS_SIZES,
+    make: (n, level, seed) => crossSums.generateCrossSums(seed, level, n),
+    count: (puzzle) => crossSums.solveCrossSums(puzzle),
+    rate: crossSums.rateCrossSums,
     columns: ["plain", "probes", "whites", "runs", "longest", "meanRun", "fixedShare"],
   },
 };
@@ -82,7 +82,7 @@ function draw(kind, puzzle) {
       const at = y * puzzle.size + x;
       return puzzle.solution[at] ? "#" : String(puzzle.numbers[at]).padStart(2);
     }).join(" "));
-  } else if (kind === "fillomino") {
+  } else if (kind === "regions") {
     for (let y = 0; y < puzzle.height; y += 1) rows.push(Array.from({ length: puzzle.width }, (_, x) => {
       const at = y * puzzle.width + x;
       return puzzle.givens[at] ? String(puzzle.givens[at]).padStart(2) : " .";
@@ -92,12 +92,12 @@ function draw(kind, puzzle) {
       const at = y * puzzle.width + x;
       return puzzle.clues[at] ? String(puzzle.clues[at]).padStart(2) : " .";
     }).join(" "));
-  } else if (kind === "kakuro") {
+  } else if (kind === "cross-sums") {
     for (let y = 0; y < puzzle.height; y += 1) rows.push(Array.from({ length: puzzle.width }, (_, x) => {
       const cell = puzzle.cells[y * puzzle.width + x];
       return cell.kind === "white" ? "  .  " : `${cell.down ?? "  "}\\${cell.across ?? "  "}`.padEnd(5);
     }).join(" "));
-  } else if (kind === "slitherlink") {
+  } else if (kind === "loop") {
     for (let y = 0; y < puzzle.height; y += 1) rows.push(Array.from({ length: puzzle.width }, (_, x) => {
       const clue = puzzle.clues[y * puzzle.width + x];
       return clue === null ? "." : String(clue);

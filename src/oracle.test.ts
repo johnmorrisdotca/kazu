@@ -2,12 +2,12 @@
 // count exactly the ones that pass the rules as the checkers state them.
 import { describe, expect, it, vi } from "vitest";
 
-import { checkFillomino } from "./fillomino-board.ts";
-import { solveFillomino } from "./fillomino-solve.ts";
+import { checkRegions } from "./regions-board.ts";
+import { solveRegions } from "./regions-solve.ts";
 import { checkHitori } from "./hitori-board.ts";
 import { solveHitori } from "./hitori-solve.ts";
-import { checkKakuro } from "./kakuro-board.ts";
-import { solveKakuro } from "./kakuro-solve.ts";
+import { checkCrossSums } from "./cross-sums-board.ts";
+import { solveCrossSums } from "./cross-sums-solve.ts";
 import { seededRandom } from "./random.ts";
 
 // These generate and enumerate a lot; a slow runner must not fail them for taking its time.
@@ -30,7 +30,7 @@ describe("Hitori's solver", () => {
   });
 });
 
-describe("Kakuro's solver", () => {
+describe("Cross Sums' solver", () => {
   it("counts the digit fillings of small boards exactly", () => {
     const random = seededRandom(5);
     let compared = 0;
@@ -61,16 +61,16 @@ describe("Kakuro's solver", () => {
         const values = Array(width * height).fill(0);
         let rest = code;
         for (const cell of white) { values[cell] = 1 + rest % 9; rest = Math.floor(rest / 9); }
-        if (checkKakuro(board, values).ok) brute += 1;
+        if (checkCrossSums(board, values).ok) brute += 1;
       }
-      try { expect(solveKakuro(board, [], { limit: 100_000 })).toMatchObject({ count: brute, complete: true }); compared += 1; }
+      try { expect(solveCrossSums(board, [], { limit: 100_000 })).toMatchObject({ count: brute, complete: true }); compared += 1; }
       catch (error) { if ((error as Error).name !== "RangeError") throw error; }
     }
     expect(compared).toBeGreaterThanOrEqual(3);
   });
 });
 
-describe("Fillomino's solver", () => {
+describe("Regions's solver", () => {
   it("counts the fillings of small boards exactly", () => {
     const random = seededRandom(9);
     for (let round = 0; round < 25; round += 1) {
@@ -80,9 +80,9 @@ describe("Fillomino's solver", () => {
       let brute = 0;
       for (let code = 0; code < cells ** cells; code += 1) {
         const entries = Array.from({ length: cells }, (_, cell) => 1 + Math.floor(code / cells ** cell) % cells);
-        if (checkFillomino(board, entries).ok) brute += 1;
+        if (checkRegions(board, entries).ok) brute += 1;
       }
-      expect(solveFillomino(board, givens, { limit: 100_000 })).toMatchObject({ count: brute, complete: true });
+      expect(solveRegions(board, givens, { limit: 100_000 })).toMatchObject({ count: brute, complete: true });
     }
   });
 });

@@ -51,7 +51,7 @@ function make() {
   if (!get("setup").reportValidity()) return;
   activeChallenge = null;
   worker?.terminate(); get("new").disabled = true; get("notice").textContent = words[language][12];
-  worker = new Worker(new URL("./dist/shikakuWorker.js", import.meta.url), { type: "module" });
+  worker = new Worker(new URL("./dist/shikaku-worker.js", import.meta.url), { type: "module" });
   const done = () => { worker?.terminate(); worker = null; get("new").disabled = false; };
   const settings = { width: Number(get("width").value), height: Number(get("height").value), level: get("level").value, seed: Number(get("seed").value) };
   worker.onmessage = e => { done(); if (e.data.error) { get("notice").textContent = words[language][14]; return; } get("notice").textContent = ""; for (const id of ["width", "height", "level", "seed"]) get(id).value = String(settings[id]); play(e.data.puzzle, encodeShikaku(newShikaku(e.data.puzzle))); };

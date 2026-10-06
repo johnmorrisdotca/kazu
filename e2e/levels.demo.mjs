@@ -6,10 +6,10 @@ import { serve } from "./demo.mjs";
 const PAGES = [
   { page: "shikaku", size: "10", cells: ".ks-cell", count: 100 },
   { page: "akari", size: "10", cells: ".ka-cell", count: 100 },
-  { page: "slitherlink", size: "10", cells: ".sl-edge", count: 220 },
+  { page: "loop", size: "10", cells: ".sl-edge", count: 220 },
   { page: "hitori", size: "9", cells: ".kh-cell", count: 81 },
-  { page: "kakuro", size: "8", cells: ".kk-cell", count: 64 },
-  { page: "fillomino", size: "10", cells: ".fillomino-cell", count: 100 },
+  { page: "cross-sums", size: "8", cells: ".kk-cell", count: 64 },
+  { page: "regions", size: "10", cells: ".regions-cell", count: 100 },
 ];
 
 for (const { page: name, size, cells, count } of PAGES) {
@@ -21,7 +21,7 @@ for (const { page: name, size, cells, count } of PAGES) {
     await expect(page.locator(cells).first()).toBeVisible();
     await expect(page.locator("#level option")).toHaveCount(4);
     await expect(page.locator("#level")).toHaveValue("medium");
-    if (name === "fillomino") {
+    if (name === "regions") {
       await page.locator("#width").fill(size);
       await page.locator("#height").fill(size);
     } else {

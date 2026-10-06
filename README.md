@@ -1,7 +1,7 @@
 <h1 align="center">Kazu <sub>数</sub></h1>
 
 <p align="center"><strong>Grid number and logic puzzles for JavaScript and TypeScript.</strong><br>
-Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Slitherlink, Masyu, Yajilin, Ripple Effect, Kakuro, Fillomino and Heyawake. Dedicated typed engines, independently checked puzzles, SVG drawing, saved progress, and English and Japanese players for touch, mouse and keyboard. No runtime dependencies.</p>
+Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Loop, Masyu, Yajilin, Ripple Effect, Cross Sums, Regions and Heyawake. Dedicated typed engines, independently checked puzzles, SVG drawing, saved progress, and English and Japanese players for touch, mouse and keyboard. No runtime dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kazu/actions/workflows/ci.yml/badge.svg"></a>
@@ -42,7 +42,7 @@ hintKazu("number-place", 9, sudoku.givens, new Array(81).fill(0));
 And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else to set up:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@1/dist/element-define.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@2/dist/element-define.js"></script>
 <kazu-board kind="number-place" size="9" level="medium" seed="7"></kazu-board>
 ```
 
@@ -62,7 +62,7 @@ And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else
 
 - **Seven puzzles, three levels.** Sudoku (4×4, 6×6, 9×9, a 16×16 Giant and a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys.
 - **Six number puzzles, three levels.** Sudoku (4×4, 6×6, 9×9, a 16×16 Giant and a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys. Shikaku and Juosan use dedicated rectangle and territory models.
-- **Four levels on the grid puzzles.** Shikaku, Akari, Slitherlink, Hitori, Fillomino and Kakuro each make `easy`, `medium`, `hard` and `extra-hard` boards, at three or more sizes each, every one with exactly one answer and rated by what a person must do to solve it: [Levels of the grid puzzles](#levels-of-the-grid-puzzles).
+- **Four levels on the grid puzzles.** Shikaku, Akari, Loop, Hitori, Regions and Cross Sums each make `easy`, `medium`, `hard` and `extra-hard` boards, at three or more sizes each, every one with exactly one answer and rated by what a person must do to solve it: [Levels of the grid puzzles](#levels-of-the-grid-puzzles).
 - **Exactly one answer.** A generator makes puzzles from a seed, and a solver that counts answers confirms there is one. The same kind, size, level and seed make the same puzzle in every browser and every Node, for ever.
 - **A check a server can trust.** `checkKazu` reads a finished grid in O(cells), with no search, and says the first thing wrong in words.
 - **A hint that is a reason.** Which cell to fill next, with the rule that says so (a cell with one number left, a number with one place left), never built on a wrong entry.
@@ -90,7 +90,7 @@ Importing the main entry on a server is safe: it touches no page.
 ### 2. One tag, no bundler
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@1/dist/element-define.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@2/dist/element-define.js"></script>
 <kazu-board kind="number-place" size="9" level="medium" seed="42"></kazu-board>
 <script>
   document.querySelector("kazu-board").addEventListener("kazu-solve", (event) => console.log(event.detail.elapsedMs));
@@ -318,7 +318,7 @@ Everything a button does is also a method on the handle (`undo`, `hint`, `check`
 ### The element
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@1/dist/element-define.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@2/dist/element-define.js"></script>
 <kazu-board kind="sum-cages" size="9" level="medium" seed="42"></kazu-board>
 <kazu-board kind="towers" size="5" givens="…" solution="…" hints="show" lang="ja"></kazu-board>
 ```
@@ -464,7 +464,7 @@ The dedicated `/masyu`, `/masyu/play`, and `/masyu/draw` entry points keep the l
 
 ## Yajilin — arrows, shaded cells and a loop
 
-Yajilin places black cells by arrow counts and draws one loop through every remaining empty cell. Black cells do not touch by an edge; arrow cells are not shaded and are not part of the loop. The loop uses cell centres, not Slitherlink's grid edges.
+Yajilin places black cells by arrow counts and draws one loop through every remaining empty cell. Black cells do not touch by an edge; arrow cells are not shaded and are not part of the loop. The loop uses cell centres, not Loop's grid edges.
 
 ```ts
 import { generateYajilin, checkYajilin, solveYajilin } from "@johnmorrisdotca/kazu/yajilin";
@@ -568,22 +568,22 @@ The demo is `site/akari.html` after `pnpm site`. It shares Kazu's family header,
 
 [Nikoli's Akari rules](https://www.nikoli.co.jp/en/puzzles/akari/) describe the same line-of-sight and numbered-square constraints. These boards are generated here; the implementation does not copy Nikoli's grids or artwork.
 
-## Slitherlink
+## Loop
 
 ```js
-import { generateSlitherlink } from "@johnmorrisdotca/kazu/slitherlink";
-import { mountSlitherlink } from "@johnmorrisdotca/kazu/slitherlink/play";
+import { generateLoop } from "@johnmorrisdotca/kazu/loop";
+import { mountLoop } from "@johnmorrisdotca/kazu/loop/play";
 
-const puzzle = generateSlitherlink(7, 7, 42, "hard"); // width, height, seed, level ("medium" if left out)
-const player = mountSlitherlink(document.querySelector("#board"), {
+const puzzle = generateLoop(7, 7, 42, "hard"); // width, height, seed, level ("medium" if left out)
+const player = mountLoop(document.querySelector("#board"), {
   board: puzzle, material: "ivory", language: "en",
 });
 // player.progress() saves the public clues and selected edges.
 ```
 
-The Slitherlink engine has its own edge model, checker, progress checker, bounded solution counter, seeded generator and immutable play state. `solveSlitherlink` distinguishes an exhausted search from a proved count; the generator returns only boards proved to have one loop. `generateSlitherlink(width, height, seed, level?)` makes `easy`, `medium`, `hard` or `extra-hard` (`SLITHERLINK_LEVELS`) boards, and `SLITHERLINK_SIZES` lists the square sides on offer (5, 7, 10). `rateSlitherlink(board)` measures a board by solving it: `depth` (0 rules alone, 1 supposing one edge, 2 more), `probes`, the numbers, how many of them say 0, and the loop's length. Boards may be 2–10 cells wide and high. The generator grows a random winding loop (a connected region without holes whose outline never touches itself), numbers every square with how many of its edges the loop uses, and takes numbers away, squares numbered 0 first, for as long as the board can still be solved the way the level asks, so boards are not a few shapes and few squares say 0. The player supports touch and mouse edge toggles, arrow-key focus, Enter/Space, undo, restart, checking, proved hints, save/restore, and ivory, wood and slate materials in English and Japanese.
+The Loop engine has its own edge model, checker, progress checker, bounded solution counter, seeded generator and immutable play state. `solveLoop` distinguishes an exhausted search from a proved count; the generator returns only boards proved to have one loop. `generateLoop(width, height, seed, level?)` makes `easy`, `medium`, `hard` or `extra-hard` (`LOOP_LEVELS`) boards, and `LOOP_SIZES` lists the square sides on offer (5, 7, 10). `rateLoop(board)` measures a board by solving it: `depth` (0 rules alone, 1 supposing one edge, 2 more), `probes`, the numbers, how many of them say 0, and the loop's length. Boards may be 2–10 cells wide and high. The generator grows a random winding loop (a connected region without holes whose outline never touches itself), numbers every square with how many of its edges the loop uses, and takes numbers away, squares numbered 0 first, for as long as the board can still be solved the way the level asks, so boards are not a few shapes and few squares say 0. The player supports touch and mouse edge toggles, arrow-key focus, Enter/Space, undo, restart, checking, proved hints, save/restore, and ivory, wood and slate materials in English and Japanese.
 
-Use `@johnmorrisdotca/kazu/slitherlink`, `@johnmorrisdotca/kazu/slitherlink/play`, or `@johnmorrisdotca/kazu/slitherlink/draw`. The demo is `site/slitherlink.html` after `pnpm site`. The rules are described by [Nikoli](https://www.nikoli.co.jp/en/puzzles/slitherlink/). This implementation uses original generated layouts and does not copy Nikoli puzzle grids, wording or artwork.
+Use `@johnmorrisdotca/kazu/loop`, `@johnmorrisdotca/kazu/loop/play`, or `@johnmorrisdotca/kazu/loop/draw`. The demo is `site/loop.html` after `pnpm site`. Loop is also known as Slitherlink, and its rules are described by [Nikoli](https://www.nikoli.co.jp/en/puzzles/slitherlink/). This implementation uses original generated layouts and does not copy Nikoli puzzle grids, wording or artwork.
 
 ## Ripple Effect
 
@@ -603,61 +603,61 @@ Each room contains every number from 1 through its size exactly once. Repeated N
 
 Use `@johnmorrisdotca/kazu/ripple`, `@johnmorrisdotca/kazu/ripple/play`, or `@johnmorrisdotca/kazu/ripple/draw`. The touch and keyboard player includes number entry, pencil notes, undo, restart, checking, unique-proof hints, accessible room boundaries, save/restore, and ivory, wood and slate materials with ink or tile pieces in English and Japanese. The demo is `site/ripple.html` after `pnpm site`. Rules: [Nikoli’s Ripple Effect page](https://www.nikoli.co.jp/en/puzzles/ripple_effect/).
 
-## Kakuro — crossword sums in Kazu
+## Cross Sums — crossword sums in Kazu
 
-Kakuro fills white cells with digits 1–9. Each across and down run must match its clue sum without repeating a digit. Run lengths are at least two, and every white cell belongs to exactly one run in each direction. [Nikoli describes the rules](https://www.nikoli.co.jp/en/puzzles/kakuro/); generated layouts here are original.
+Cross Sums fills white cells with digits 1–9. Each across and down run must match its clue sum without repeating a digit. Run lengths are at least two, and every white cell belongs to exactly one run in each direction. The puzzle is also known as Kakuro, and [Nikoli describes the rules](https://www.nikoli.co.jp/en/puzzles/kakuro/); generated layouts here are original.
 
 ```js
-import { generateKakuro, solveKakuro, checkKakuro } from "@johnmorrisdotca/kazu/kakuro";
-import { mountKakuro } from "@johnmorrisdotca/kazu/kakuro/play";
+import { generateCrossSums, solveCrossSums, checkCrossSums } from "@johnmorrisdotca/kazu/cross-sums";
+import { mountCrossSums } from "@johnmorrisdotca/kazu/cross-sums/play";
 
-const puzzle = generateKakuro(42, "hard", 8); // seed, level ("medium"), size including the totals' row and column (10)
-const proof = solveKakuro(puzzle); // uniqueness only when complete && count === 1
-const player = mountKakuro(document.querySelector("#board"), { board: puzzle, language: "en" });
+const puzzle = generateCrossSums(42, "hard", 8); // seed, level ("medium"), size including the totals' row and column (10)
+const proof = solveCrossSums(puzzle); // uniqueness only when complete && count === 1
+const player = mountCrossSums(document.querySelector("#board"), { board: puzzle, language: "en" });
 player.progress(); // public clues, entries and pencil marks; no answer
 ```
 
-`@johnmorrisdotca/kazu/kakuro/draw` provides standalone SVG drawing. `generateKakuro(seed, level?, size?)` makes a board of any side from 5 to 12 (`KAKURO_SIZES` lists those on offer: 6, 8, 10, 12) at `easy`, `medium`, `hard` or `extra-hard` (`KAKURO_LEVELS`). It lays out the black squares row by row so that no run is a single square or longer than the level allows, fills random digits, and changes digits or darkens squares until the answer is single; easy and medium also ease the board until the rules they promise are enough, and hard and extra-hard ask for supposing. A board is accepted only after a bounded exact count proves one answer, and a seed never throws: if a level is not found within its attempts the next level down is made, and the first generator is the last resort on a 10×10. `rateKakuro(board)` measures a board by solving it: `depth`, `plain` (the single-run rules were enough), `probes`, the runs, the longest run and the share of totals that can be made one way only. `solveKakuro` reports `complete: false` when its node budget or answer limit stops counting. `checkKakuro` validates completed runs independently; `progressKakuro` permits blanks while marking impossible totals and repeats. The bilingual player supports touch, arrows, digits, pencil mode, Undo, Hint, Check, Restart and versioned saved progress.
+`@johnmorrisdotca/kazu/cross-sums/draw` provides standalone SVG drawing. `generateCrossSums(seed, level?, size?)` makes a board of any side from 5 to 12 (`CROSS_SUMS_SIZES` lists those on offer: 6, 8, 10, 12) at `easy`, `medium`, `hard` or `extra-hard` (`CROSS_SUMS_LEVELS`). It lays out the black squares row by row so that no run is a single square or longer than the level allows, fills random digits, and changes digits or darkens squares until the answer is single; easy and medium also ease the board until the rules they promise are enough, and hard and extra-hard ask for supposing. A board is accepted only after a bounded exact count proves one answer, and a seed never throws: if a level is not found within its attempts the next level down is made, and the first generator is the last resort on a 10×10. `rateCrossSums(board)` measures a board by solving it: `depth`, `plain` (the single-run rules were enough), `probes`, the runs, the longest run and the share of totals that can be made one way only. `solveCrossSums` reports `complete: false` when its node budget or answer limit stops counting. `checkCrossSums` validates completed runs independently; `progressCrossSums` permits blanks while marking impossible totals and repeats. The bilingual player supports touch, arrows, digits, pencil mode, Undo, Hint, Check, Restart and versioned saved progress.
 
-The Kakuro entries are `@johnmorrisdotca/kazu/kakuro`, `@johnmorrisdotca/kazu/kakuro/play` and `@johnmorrisdotca/kazu/kakuro/draw`.
+The Cross Sums entries are `@johnmorrisdotca/kazu/cross-sums`, `@johnmorrisdotca/kazu/cross-sums/play` and `@johnmorrisdotca/kazu/cross-sums/draw`.
 
-## Fillomino — connected regions with exact areas
+## Regions — connected regions with exact areas
 
-The dedicated package entries are `@johnmorrisdotca/kazu/fillomino`, `@johnmorrisdotca/kazu/fillomino/play`, and `@johnmorrisdotca/kazu/fillomino/draw`.
+The dedicated package entries are `@johnmorrisdotca/kazu/regions`, `@johnmorrisdotca/kazu/regions/play`, and `@johnmorrisdotca/kazu/regions/draw`.
 
 Each cell holds a number. All orthogonally connected cells with the same number form a region, and the region's area must equal that number. Two regions of the same area cannot touch. A completed region does not need to contain a printed clue; the checker and solver do not require one clue per region.
 
 ```ts
-import { generateFillomino, checkFillomino, solveFillomino } from "@johnmorrisdotca/kazu/fillomino";
-import { mountFillomino } from "@johnmorrisdotca/kazu/fillomino/play";
+import { generateRegions, checkRegions, solveRegions } from "@johnmorrisdotca/kazu/regions";
+import { mountRegions } from "@johnmorrisdotca/kazu/regions/play";
 
-const puzzle = generateFillomino(6, 6, "hard", 17);
-const result = solveFillomino(puzzle);
+const puzzle = generateRegions(6, 6, "hard", 17);
+const result = solveRegions(puzzle);
 if (!result.complete || result.count !== 1) throw new Error("The answer was not proved unique");
-checkFillomino(puzzle, result.solution);
-mountFillomino(document.querySelector("#board"), { board: puzzle });
+checkRegions(puzzle, result.solution);
+mountRegions(document.querySelector("#board"), { board: puzzle });
 ```
 
-`FillominoBoard` contains `width`, `height`, and row-major `givens`, with zero for an empty cell. Engine validation and the seeded generator both support rectangular boards from 4 to 12 cells per side (`FILLOMINO_SIZES` lists the square sides on offer: 6, 8, 10, 12). A seed reproduces its puzzle. The levels are `easy`, `medium`, `hard` and `extra-hard` (`FILLOMINO_LEVELS`), and `rateFillomino(board)` measures a board by solving it: `depth` (0 rules alone, 1 supposing one number, 2 more), `probes`, the givens and their share, the regions, how many have no given and how big they are. The generator cuts the board into connected regions with no two of one size touching, gives every square, and takes givens away while the board can still be solved the way the level asks. Search bounds report when counting stopped rather than treating a partial search as a uniqueness proof.
+`RegionsBoard` contains `width`, `height`, and row-major `givens`, with zero for an empty cell. Engine validation and the seeded generator both support rectangular boards from 4 to 12 cells per side (`REGIONS_SIZES` lists the square sides on offer: 6, 8, 10, 12). A seed reproduces its puzzle. The levels are `easy`, `medium`, `hard` and `extra-hard` (`REGIONS_LEVELS`), and `rateRegions(board)` measures a board by solving it: `depth` (0 rules alone, 1 supposing one number, 2 more), `probes`, the givens and their share, the regions, how many have no given and how big they are. The generator cuts the board into connected regions with no two of one size touching, gives every square, and takes givens away while the board can still be solved the way the level asks. Search bounds report when counting stopped rather than treating a partial search as a uniqueness proof.
 
-`checkFillomino(board, entries)` checks givens, oversized connected groups and completion independently of the generated answer. An unfinished group smaller than its number can still grow. `solveFillomino(board, entries?, { limit?, nodes? })` counts filled solutions by growing connected regions, including regions with no given. Only `complete && count === 1` proves uniqueness. `newFillomino`, `setFillominoCell`, `undoFillomino`, `restartFillomino`, `hintFillomino`, and `fillominoFinished` are immutable game helpers. Progress codes contain public clues, entries, and the persistent assisted flag; they contain no stored answer.
+`checkRegions(board, entries)` checks givens, oversized connected groups and completion independently of the generated answer. An unfinished group smaller than its number can still grow. `solveRegions(board, entries?, { limit?, nodes? })` counts filled solutions by growing connected regions, including regions with no given. Only `complete && count === 1` proves uniqueness. `newRegions`, `setRegionsCell`, `undoRegions`, `restartRegions`, `hintRegions`, and `regionsFinished` are immutable game helpers. Progress codes contain public clues, entries, and the persistent assisted flag; they contain no stored answer.
 
-The player accepts touch, mouse, and keyboard input, with undo, check, a proved hint, restart, and local progress codes. Hints persistently mark a run as assisted. The English and Japanese player uses the same board materials and number styles as Shikaku. The demo offers 4×4 through 12×12 settings at four levels. It is at [fillomino.html](https://johnmorrisdotca.github.io/kazu/fillomino.html).
+The player accepts touch, mouse, and keyboard input, with undo, check, a proved hint, restart, and local progress codes. Hints persistently mark a run as assisted. The English and Japanese player uses the same board materials and number styles as Shikaku. The demo offers 4×4 through 12×12 settings at four levels. It is at [regions.html](https://johnmorrisdotca.github.io/kazu/regions.html).
 
-[Nikoli's Fillomino rules](https://www.nikoli.co.jp/en/puzzles/fillomino/) describe numbered connected regions, exact area, and separation between equal-area regions. This implementation generates original puzzles and does not reuse published grids or artwork.
+Regions is also known as Fillomino, and [Nikoli's rules](https://www.nikoli.co.jp/en/puzzles/fillomino/) describe numbered connected regions, exact area, and separation between equal-area regions. This implementation generates original puzzles and does not reuse published grids or artwork.
 
 ## Levels of the grid puzzles
 
-Shikaku, Akari, Slitherlink, Hitori, Fillomino and Kakuro make boards at `easy`, `medium`, `hard` and `extra-hard`. Every board has exactly one answer, and a level says what a person has to do to solve it, measured by solving the board with the package's own rules: easy and medium need only the rules (easy keeps more numbers, medium as few as the rules allow), hard needs supposing something and watching it break, and extra-hard needs the most of that. `rateShikaku`, `rateAkari`, `rateSlitherlink`, `rateHitori`, `rateFillomino` and `rateKakuro` return the measure of a board (`depth`, `probes` and what it is made of), so a site can show it or pick boards by it.
+Shikaku, Akari, Loop, Hitori, Regions and Cross Sums make boards at `easy`, `medium`, `hard` and `extra-hard`. Every board has exactly one answer, and a level says what a person has to do to solve it, measured by solving the board with the package's own rules: easy and medium need only the rules (easy keeps more numbers, medium as few as the rules allow), hard needs supposing something and watching it break, and extra-hard needs the most of that. `rateShikaku`, `rateAkari`, `rateLoop`, `rateHitori`, `rateRegions` and `rateCrossSums` return the measure of a board (`depth`, `probes` and what it is made of), so a site can show it or pick boards by it.
 
 | Kind | Call | Sizes on offer | Largest size, extra-hard: median / slowest to make |
 | --- | --- | --- | --- |
 | Shikaku | `generateShikaku(width, height, level, seed)` | 5, 7, 10, 14 (any side 2–16) | 14 × 14: 89 ms / 302 ms |
 | Akari | `generateAkari(width, height, seed, level?)` | 5, 7, 10, 14 (any side 2–16) | 14 × 14: 212 ms / 366 ms |
-| Slitherlink | `generateSlitherlink(width, height, seed, level?)` | 5, 7, 10 (any side 2–10) | 10 × 10: 231 ms / 286 ms |
+| Loop | `generateLoop(width, height, seed, level?)` | 5, 7, 10 (any side 2–10) | 10 × 10: 231 ms / 286 ms |
 | Hitori | `generateHitori(size, seed, level?)` | 5, 6, 7, 8, 9, 10, 12 (any side 4–12) | 12 × 12: 157 ms / 511 ms |
-| Fillomino | `generateFillomino(width, height, level, seed)` | 6, 8, 10, 12 (any side 4–12) | 12 × 12: 187 ms / 422 ms |
-| Kakuro | `generateKakuro(seed, level?, size?)` | 6, 8, 10, 12 (any side 5–12) | 12 × 12: 273 ms / 1,254 ms |
+| Regions | `generateRegions(width, height, level, seed)` | 6, 8, 10, 12 (any side 4–12) | 12 × 12: 187 ms / 422 ms |
+| Cross Sums | `generateCrossSums(seed, level?, size?)` | 6, 8, 10, 12 (any side 5–12) | 12 × 12: 273 ms / 1,254 ms |
 
 [docs/LEVELS.md](docs/LEVELS.md) defines each level for each kind, defines the measure, and tables it by size and level over 200 seeds, with the median, 95th percentile and slowest time to make a board; `node scripts/measure-levels.mjs` makes the tables again. These are the same boards in every browser and every Node for a given kind, size, level and seed, but they are **not** the boards 1.2.0 made for that seed.
 
@@ -757,45 +757,45 @@ the page's part (the mount and the element) is another.
 ├── yajilin-solve.ts
 ├── yajilin-strings.ts
 ├── yajilin-style.ts
-├── fillomino-draw-entry.ts
-├── fillomino-entry.ts
-├── fillomino-play-entry.ts
-├── fillomino.constants.ts
-├── fillomino.types.ts
-├── fillomino-board.ts
-├── fillomino-draw.ts
-├── fillomino-game.ts
-├── fillomino-generate.ts
-├── fillomino-build.ts
-├── fillomino-logic.ts
-├── fillomino-rate.ts
-├── fillomino-mount.ts
-├── fillomino-play.types.ts
-├── fillomino-solve.ts
-├── fillomino-strings.ts
-├── fillomino-style.ts
-├── fillomino-worker.ts
+├── regions-draw-entry.ts
+├── regions-entry.ts
+├── regions-play-entry.ts
+├── regions.constants.ts
+├── regions.types.ts
+├── regions-board.ts
+├── regions-draw.ts
+├── regions-game.ts
+├── regions-generate.ts
+├── regions-build.ts
+├── regions-logic.ts
+├── regions-rate.ts
+├── regions-mount.ts
+├── regions-play.types.ts
+├── regions-solve.ts
+├── regions-strings.ts
+├── regions-style.ts
+├── regions-worker.ts
 ├── shikaku-draw-entry.ts
 ├── shikaku-entry.ts
 ├── shikaku-play-entry.ts
-├── kakuro-draw-entry.ts
-├── kakuro-entry.ts
-├── kakuro-play-entry.ts
-├── kakuro.constants.ts
-├── kakuro.types.ts
-├── kakuro-board.ts
-├── kakuro-draw.ts
-├── kakuro-game.ts
-├── kakuro-generate.ts
-├── kakuro-build.ts
-├── kakuro-logic.ts
-├── kakuro-rate.ts
-├── kakuro-template.ts
-├── kakuro-mount.ts
-├── kakuro-play.types.ts
-├── kakuro-solve.ts
-├── kakuro-strings.ts
-├── kakuro-style.ts
+├── cross-sums-draw-entry.ts
+├── cross-sums-entry.ts
+├── cross-sums-play-entry.ts
+├── cross-sums.constants.ts
+├── cross-sums.types.ts
+├── cross-sums-board.ts
+├── cross-sums-draw.ts
+├── cross-sums-game.ts
+├── cross-sums-generate.ts
+├── cross-sums-build.ts
+├── cross-sums-logic.ts
+├── cross-sums-rate.ts
+├── cross-sums-template.ts
+├── cross-sums-mount.ts
+├── cross-sums-play.types.ts
+├── cross-sums-solve.ts
+├── cross-sums-strings.ts
+├── cross-sums-style.ts
 ├── shikaku.constants.ts
 ├── shikaku.types.ts
 ├── shikaku-board.ts
@@ -830,23 +830,23 @@ the page's part (the mount and the element) is another.
 ├── akari-solve.ts
 ├── akari-strings.ts
 ├── akari-style.ts
-├── slitherlink-draw-entry.ts
-├── slitherlink-entry.ts
-├── slitherlink-play-entry.ts
-├── slitherlink.constants.ts
-├── slitherlink.types.ts
-├── slitherlink-board.ts
-├── slitherlink-draw.ts
-├── slitherlink-game.ts
-├── slitherlink-generate.ts
-├── slitherlink-logic.ts
-├── slitherlink-rate.ts
-├── slitherlink-template.ts
-├── slitherlink-mount.ts
-├── slitherlink-play.types.ts
-├── slitherlink-solve.ts
-├── slitherlink-strings.ts
-├── slitherlink-style.ts
+├── loop-draw-entry.ts
+├── loop-entry.ts
+├── loop-play-entry.ts
+├── loop.constants.ts
+├── loop.types.ts
+├── loop-board.ts
+├── loop-draw.ts
+├── loop-game.ts
+├── loop-generate.ts
+├── loop-logic.ts
+├── loop-rate.ts
+├── loop-template.ts
+├── loop-mount.ts
+├── loop-play.types.ts
+├── loop-solve.ts
+├── loop-strings.ts
+├── loop-style.ts
 ├── ripple-draw-entry.ts
 ├── ripple-entry.ts
 ├── ripple-play-entry.ts

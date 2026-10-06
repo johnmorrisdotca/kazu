@@ -8,31 +8,31 @@ import { checkAkari } from "./akari-board.ts";
 import { generateAkari } from "./akari-generate.ts";
 import { rateAkari } from "./akari-rate.ts";
 import { solveAkari } from "./akari-solve.ts";
-import { FILLOMINO_LEVELS, FILLOMINO_SIZES } from "./fillomino.constants.ts";
-import { checkFillomino } from "./fillomino-board.ts";
-import { generateFillomino } from "./fillomino-generate.ts";
-import { rateFillomino } from "./fillomino-rate.ts";
-import { solveFillomino } from "./fillomino-solve.ts";
+import { REGIONS_LEVELS, REGIONS_SIZES } from "./regions.constants.ts";
+import { checkRegions } from "./regions-board.ts";
+import { generateRegions } from "./regions-generate.ts";
+import { rateRegions } from "./regions-rate.ts";
+import { solveRegions } from "./regions-solve.ts";
 import { HITORI_LEVELS, HITORI_SIZES } from "./hitori.constants.ts";
 import { checkHitori } from "./hitori-board.ts";
 import { generateHitori } from "./hitori-generate.ts";
 import { rateHitori } from "./hitori-rate.ts";
 import { solveHitori } from "./hitori-solve.ts";
-import { KAKURO_LEVELS, KAKURO_SIZES } from "./kakuro.constants.ts";
-import { checkKakuro } from "./kakuro-board.ts";
-import { generateKakuro } from "./kakuro-generate.ts";
-import { rateKakuro } from "./kakuro-rate.ts";
-import { solveKakuro } from "./kakuro-solve.ts";
+import { CROSS_SUMS_LEVELS, CROSS_SUMS_SIZES } from "./cross-sums.constants.ts";
+import { checkCrossSums } from "./cross-sums-board.ts";
+import { generateCrossSums } from "./cross-sums-generate.ts";
+import { rateCrossSums } from "./cross-sums-rate.ts";
+import { solveCrossSums } from "./cross-sums-solve.ts";
 import { SHIKAKU_LEVELS, SHIKAKU_SIZES } from "./shikaku.constants.ts";
 import { checkShikaku } from "./shikaku-board.ts";
 import { generateShikaku } from "./shikaku-generate.ts";
 import { rateShikaku } from "./shikaku-rate.ts";
 import { solveShikaku } from "./shikaku-solve.ts";
-import { SLITHERLINK_LEVELS, SLITHERLINK_SIZES } from "./slitherlink.constants.ts";
-import { checkSlitherlink } from "./slitherlink-board.ts";
-import { generateSlitherlink } from "./slitherlink-generate.ts";
-import { rateSlitherlink } from "./slitherlink-rate.ts";
-import { solveSlitherlink } from "./slitherlink-solve.ts";
+import { LOOP_LEVELS, LOOP_SIZES } from "./loop.constants.ts";
+import { checkLoop } from "./loop-board.ts";
+import { generateLoop } from "./loop-generate.ts";
+import { rateLoop } from "./loop-rate.ts";
+import { solveLoop } from "./loop-solve.ts";
 
 // These generate and enumerate a lot; a slow runner must not fail them for taking its time.
 vi.setConfig({ testTimeout: 120_000 });
@@ -42,18 +42,18 @@ const SEEDS = [1, 2, 3, 4, 5, 6];
 
 describe("the four levels", () => {
   it("are the same four words for every kind, and every kind offers at least three sizes", () => {
-    for (const levels of [AKARI_LEVELS, FILLOMINO_LEVELS, HITORI_LEVELS, KAKURO_LEVELS, SHIKAKU_LEVELS, SLITHERLINK_LEVELS]) expect([...levels]).toEqual([...LEVELS]);
-    for (const sizes of [AKARI_SIZES, FILLOMINO_SIZES, HITORI_SIZES, KAKURO_SIZES, SHIKAKU_SIZES, SLITHERLINK_SIZES]) expect(sizes.length).toBeGreaterThanOrEqual(3);
-    expect([...KAKURO_SIZES]).toEqual([6, 8, 10, 12]);
+    for (const levels of [AKARI_LEVELS, REGIONS_LEVELS, HITORI_LEVELS, CROSS_SUMS_LEVELS, SHIKAKU_LEVELS, LOOP_LEVELS]) expect([...levels]).toEqual([...LEVELS]);
+    for (const sizes of [AKARI_SIZES, REGIONS_SIZES, HITORI_SIZES, CROSS_SUMS_SIZES, SHIKAKU_SIZES, LOOP_SIZES]) expect(sizes.length).toBeGreaterThanOrEqual(3);
+    expect([...CROSS_SUMS_SIZES]).toEqual([6, 8, 10, 12]);
   });
 
   it("are refused by name when a generator is not given one of them", () => {
     expect(() => generateAkari(5, 5, 1, "impossible" as never)).toThrow(RangeError);
     expect(() => generateHitori(5, 1, "impossible" as never)).toThrow(RangeError);
-    expect(() => generateSlitherlink(5, 5, 1, "impossible" as never)).toThrow(RangeError);
-    expect(() => generateKakuro(1, "impossible" as never)).toThrow(RangeError);
+    expect(() => generateLoop(5, 5, 1, "impossible" as never)).toThrow(RangeError);
+    expect(() => generateCrossSums(1, "impossible" as never)).toThrow(RangeError);
     expect(() => generateShikaku(5, 5, "impossible" as never, 1)).toThrow(RangeError);
-    expect(() => generateFillomino(6, 6, "impossible" as never, 1)).toThrow(RangeError);
+    expect(() => generateRegions(6, 6, "impossible" as never, 1)).toThrow(RangeError);
   });
 });
 
@@ -89,15 +89,15 @@ describe("Akari", () => {
   });
 });
 
-describe("Slitherlink", () => {
+describe("Loop", () => {
   it("has one answer at every level and size, repeats itself, and steps up in supposing", () => {
     for (const size of [5, 7]) for (const level of LEVELS) for (const seed of SEEDS.slice(0, 3)) {
-      const puzzle = generateSlitherlink(size, size, seed, level);
+      const puzzle = generateLoop(size, size, seed, level);
       expect(puzzle.level).toBe(level);
-      expect(checkSlitherlink(puzzle, puzzle.solution).ok).toBe(true);
-      expect(solveSlitherlink(puzzle)).toMatchObject({ count: 1, complete: true });
-      expect(generateSlitherlink(size, size, seed, level)).toEqual(puzzle);
-      const rating = rateSlitherlink(puzzle);
+      expect(checkLoop(puzzle, puzzle.solution).ok).toBe(true);
+      expect(solveLoop(puzzle)).toMatchObject({ count: 1, complete: true });
+      expect(generateLoop(size, size, seed, level)).toEqual(puzzle);
+      const rating = rateLoop(puzzle);
       if (level === "easy" || level === "medium") expect(rating.depth).toBe(0);
       else expect(rating.depth).toBeGreaterThanOrEqual(1);
     }
@@ -105,11 +105,11 @@ describe("Slitherlink", () => {
 
   it("numbers few squares with 0, gives easy boards more numbers than medium ones, and makes long loops", () => {
     for (const level of LEVELS) {
-      const ratings = SEEDS.map(seed => rateSlitherlink(generateSlitherlink(7, 7, seed, level)));
+      const ratings = SEEDS.map(seed => rateLoop(generateLoop(7, 7, seed, level)));
       expect(ratings.reduce((sum, rating) => sum + rating.zeroShare, 0) / ratings.length).toBeLessThan(.25);
       expect(Math.min(...ratings.map(rating => rating.loop))).toBeGreaterThan(14);
     }
-    const clues = (level: (typeof LEVELS)[number]) => SEEDS.reduce((sum, seed) => sum + rateSlitherlink(generateSlitherlink(7, 7, seed, level)).clues, 0);
+    const clues = (level: (typeof LEVELS)[number]) => SEEDS.reduce((sum, seed) => sum + rateLoop(generateLoop(7, 7, seed, level)).clues, 0);
     expect(clues("easy")).toBeGreaterThan(clues("medium"));
     expect(clues("medium")).toBeGreaterThan(clues("hard"));
   });
@@ -144,15 +144,15 @@ describe("Hitori", () => {
   });
 });
 
-describe("Kakuro", () => {
+describe("Cross Sums", () => {
   it("has one answer at every level and size, repeats itself, and steps up in what it needs", () => {
     for (const size of [6, 8, 10]) for (const level of LEVELS) for (const seed of SEEDS.slice(0, 2)) {
-      const puzzle = generateKakuro(seed, level, size);
+      const puzzle = generateCrossSums(seed, level, size);
       expect(puzzle).toMatchObject({ level, width: size, height: size });
-      expect(checkKakuro(puzzle, puzzle.solution).ok).toBe(true);
-      expect(solveKakuro(puzzle)).toMatchObject({ count: 1, complete: true });
-      expect(generateKakuro(seed, level, size)).toEqual(puzzle);
-      const rating = rateKakuro(puzzle);
+      expect(checkCrossSums(puzzle, puzzle.solution).ok).toBe(true);
+      expect(solveCrossSums(puzzle)).toMatchObject({ count: 1, complete: true });
+      expect(generateCrossSums(seed, level, size)).toEqual(puzzle);
+      const rating = rateCrossSums(puzzle);
       if (level === "easy") expect(rating).toMatchObject({ depth: 0, plain: true });
       if (level === "medium") expect(rating).toMatchObject({ depth: 0, plain: false });
       if (level === "hard" || level === "extra-hard") expect(rating.depth).toBeGreaterThanOrEqual(1);
@@ -160,20 +160,20 @@ describe("Kakuro", () => {
   });
 
   it("makes every seed, including 97, which the first generator could not", () => {
-    for (const level of LEVELS) for (const size of KAKURO_SIZES) expect(solveKakuro(generateKakuro(97, level, size))).toMatchObject({ count: 1, complete: true });
-    for (let seed = 90; seed <= 110; seed += 1) expect(solveKakuro(generateKakuro(seed))).toMatchObject({ count: 1, complete: true });
+    for (const level of LEVELS) for (const size of CROSS_SUMS_SIZES) expect(solveCrossSums(generateCrossSums(97, level, size))).toMatchObject({ count: 1, complete: true });
+    for (let seed = 90; seed <= 110; seed += 1) expect(solveCrossSums(generateCrossSums(seed))).toMatchObject({ count: 1, complete: true });
   });
 
   it("has longer runs and fewer fixed totals as it gets harder", () => {
-    const mean = (level: (typeof LEVELS)[number], pick: (rating: ReturnType<typeof rateKakuro>) => number) =>
-      SEEDS.reduce((sum, seed) => sum + pick(rateKakuro(generateKakuro(seed, level, 10))), 0) / SEEDS.length;
+    const mean = (level: (typeof LEVELS)[number], pick: (rating: ReturnType<typeof rateCrossSums>) => number) =>
+      SEEDS.reduce((sum, seed) => sum + pick(rateCrossSums(generateCrossSums(seed, level, 10))), 0) / SEEDS.length;
     expect(mean("hard", rating => rating.longest)).toBeGreaterThan(mean("easy", rating => rating.longest));
     expect(mean("easy", rating => rating.fixedShare)).toBeGreaterThan(mean("hard", rating => rating.fixedShare));
   });
 
   it("refuses sizes it cannot make", () => {
-    expect(() => generateKakuro(1, "easy", 4)).toThrow(RangeError);
-    expect(() => generateKakuro(1, "easy", 13)).toThrow(RangeError);
+    expect(() => generateCrossSums(1, "easy", 4)).toThrow(RangeError);
+    expect(() => generateCrossSums(1, "easy", 13)).toThrow(RangeError);
   });
 });
 
@@ -205,30 +205,30 @@ describe("Shikaku", () => {
   });
 });
 
-describe("Fillomino", () => {
+describe("Regions", () => {
   it("has one answer at every level and size, repeats itself, and steps up in what it needs", () => {
     for (const size of [6, 8]) for (const level of LEVELS) for (const seed of SEEDS.slice(0, 2)) {
-      const puzzle = generateFillomino(size, size, level, seed);
+      const puzzle = generateRegions(size, size, level, seed);
       expect(puzzle.level).toBe(level);
-      expect(checkFillomino(puzzle, puzzle.solution).ok).toBe(true);
-      expect(solveFillomino(puzzle)).toMatchObject({ count: 1, complete: true });
-      expect(generateFillomino(size, size, level, seed)).toEqual(puzzle);
-      const rating = rateFillomino(puzzle);
+      expect(checkRegions(puzzle, puzzle.solution).ok).toBe(true);
+      expect(solveRegions(puzzle)).toMatchObject({ count: 1, complete: true });
+      expect(generateRegions(size, size, level, seed)).toEqual(puzzle);
+      const rating = rateRegions(puzzle);
       if (level === "easy" || level === "medium") expect(rating.depth).toBe(0);
       else expect(rating.depth).toBeGreaterThanOrEqual(1);
     }
   });
 
   it("gives fewer clues as it gets harder", () => {
-    const share = (level: (typeof LEVELS)[number]) => SEEDS.reduce((sum, seed) => sum + rateFillomino(generateFillomino(8, 8, level, seed)).givenShare, 0) / SEEDS.length;
+    const share = (level: (typeof LEVELS)[number]) => SEEDS.reduce((sum, seed) => sum + rateRegions(generateRegions(8, 8, level, seed)).givenShare, 0) / SEEDS.length;
     expect(share("easy")).toBeGreaterThan(share("medium"));
     expect(share("medium")).toBeGreaterThan(share("extra-hard"));
   });
 
   it("makes boards up to 12 on a side, quickly enough to ask for in a page", () => {
     const started = performance.now();
-    const puzzle = generateFillomino(12, 12, "medium", 5);
-    expect(solveFillomino(puzzle)).toMatchObject({ count: 1, complete: true });
+    const puzzle = generateRegions(12, 12, "medium", 5);
+    expect(solveRegions(puzzle)).toMatchObject({ count: 1, complete: true });
     expect(performance.now() - started).toBeLessThan(10_000);
   });
 });

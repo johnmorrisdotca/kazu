@@ -6,16 +6,54 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-10-06
+
+The package is named for the puzzles it makes, not for the names another site printed them under: Slitherlink is
+**Loop**, Kakuro is **Cross Sums** and Fillomino is **Regions**, in every address, file, export and attribute. Nothing
+is kept under an old name, so this is a major version. The puzzles themselves are unchanged: the same seed makes the
+same board.
+
+### Breaking
+
+- **Package entries.** Each is renamed with its `/play` and `/draw`:
+
+  | 1.x | 2.0 |
+  | --- | --- |
+  | `@johnmorrisdotca/kazu/slitherlink` (`/play`, `/draw`) | `@johnmorrisdotca/kazu/loop` (`/play`, `/draw`) |
+  | `@johnmorrisdotca/kazu/kakuro` (`/play`, `/draw`) | `@johnmorrisdotca/kazu/cross-sums` (`/play`, `/draw`) |
+  | `@johnmorrisdotca/kazu/fillomino` (`/play`, `/draw`) | `@johnmorrisdotca/kazu/regions` (`/play`, `/draw`) |
+
+- **Exports.** Every name carrying an old puzzle name carries the new one, in the same place: `Slitherlink` becomes
+  `Loop`, `Kakuro` becomes `CrossSums` and `Fillomino` becomes `Regions`, and `SLITHERLINK_`, `KAKURO_` and
+  `FILLOMINO_` become `LOOP_`, `CROSS_SUMS_` and `REGIONS_`. For example `generateSlitherlink` is `generateLoop`,
+  `drawSlitherlink` is `drawLoop`, `mountSlitherlink` is `mountLoop`, `SlitherlinkBoard` is `LoopBoard`,
+  `SLITHERLINK_SIZES` is `LOOP_SIZES`, `slitherlinkCellEdges` is `loopCellEdges`; `checkKakuro` is `checkCrossSums`,
+  `kakuroRuns` is `crossSumsRuns`, `KAKURO_LEVELS` is `CROSS_SUMS_LEVELS`, `KakuroPuzzle` is `CrossSumsPuzzle`;
+  `generateFillomino` is `generateRegions`, `checkFillomino` is `checkRegions`, `fillominoFinished` is
+  `regionsFinished`, `FILLOMINO_SIZES` is `REGIONS_SIZES`, `FillominoBoard` is `RegionsBoard`. The types, the
+  `*Options` and `*Language` and the play style and strings constants follow the same rule.
+- **Two names that would have met an existing one.** `encodeFillomino` and `decodeFillomino` are `encodeRegionsGame`
+  and `decodeRegionsGame`, because `encodeRegions` and `decodeRegions` already encode a Jigsaw's regions; and
+  `fillominoRegions` is `entryRegions`.
+- **Saved progress.** The player keeps its progress under `kazu-loop-v1`, `kazu-cross-sums-v1` and `kazu-regions-v1`,
+  where it used `kazu-slitherlink-v1`, `kazu-kakuro-v1` and `kazu-fillomino-v1`; a run saved under the old key is not
+  read, and a new one begins.
+- **The demo's pages** are `loop.html`, `cross-sums.html` and `regions.html` on the project's site; the old pages are
+  gone.
+
 ### Changed
 
 - Source files are named in kebab-case, and a lint rule keeps them so.
-- Repository only: the package and everything it exports are unchanged. `CONTRIBUTING.md` is the family's one text with a section of its own for Kazu, held to the master in johnmorrisdotca/.github by `src/family.test.js`; `ci.yml` and `pages.yml` are the family's one text (`pnpm check`, the demo, and the package on Linux, macOS and Windows), and any jobs of the package's own after them.
+- The README, the documentation and the player's titles say Loop, Cross Sums and Regions, and say once where each is
+  also known as Slitherlink, Kakuro or Fillomino. `docs/FILLOMINO.md` is `docs/REGIONS.md`.
+- `CONTRIBUTING.md` is the family's one text with a section of its own for Kazu, held to the master in johnmorrisdotca/.github by `src/family.test.js`; `ci.yml` and `pages.yml` are the family's one text (`pnpm check`, the demo, and the package on Linux, macOS and Windows), and any jobs of the package's own after them.
 - The demo's page titles read `Kazu · pitch`, like the rest of the family's.
 
 ### Fixed
 
-- The demo test that draws More or Less at each size no longer fails now and then: a fresh seed makes the puzzle, and about one 4×4 in seventy prints no mark, so it asked for at least one `.kz-mark` and got none. It now holds the marks drawn to the marks the package prints for the seed on the board. Nothing the package exports has changed.
-- The API reference page wraps a long entry path instead of running about 2 px wider than a 360 px screen. Nothing the package exports has changed.
+- The Regions demo page asked for its worker at `../dist/`, which resolved only on a server serving the site from its root; on the project's site at `/kazu/` it reached `/dist/` and found nothing. It and the Shikaku page now name `./dist/`.
+- The demo test that draws More or Less at each size no longer fails now and then: a fresh seed makes the puzzle, and about one 4×4 in seventy prints no mark, so it asked for at least one `.kz-mark` and got none. It now holds the marks drawn to the marks the package prints for the seed on the board.
+- The API reference page wraps a long entry path instead of running about 2 px wider than a 360 px screen.
 
 ## [1.4.1] - 2026-10-05
 

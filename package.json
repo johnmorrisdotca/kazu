@@ -1,7 +1,7 @@
 {
   "name": "@johnmorrisdotca/kazu",
-  "version": "1.4.1",
-  "description": "Grid number and logic puzzles for JavaScript and TypeScript: Sudoku and its variants, Futoshiki, Skyscrapers, Kakuro, Slitherlink, Nurikabe and more. Typed engines, checked puzzles, SVG boards and bilingual players. Zero runtime dependencies.",
+  "version": "2.0.0",
+  "description": "Grid number and logic puzzles for JavaScript and TypeScript: Sudoku and its variants, Futoshiki, Skyscrapers, Cross Sums, Loop, Nurikabe and more. Typed engines, checked puzzles, SVG boards and bilingual players. Zero runtime dependencies.",
   "keywords": [
     "puzzle",
     "sudoku",
@@ -30,12 +30,12 @@
     "akari",
     "light-puzzle",
     "juosan",
-    "slitherlink",
+    "loop",
     "masyu",
     "yajilin",
     "ripple-effect",
-    "kakuro",
-    "fillomino",
+    "cross-sums",
+    "regions",
     "heyawake"
   ],
   "homepage": "https://johnmorrisdotca.github.io/kazu/",
@@ -156,20 +156,20 @@
       "import": "./dist/juosan-draw-entry.js",
       "default": "./dist/juosan-draw-entry.js"
     },
-    "./slitherlink": {
-      "types": "./dist/slitherlink-entry.d.ts",
-      "import": "./dist/slitherlink-entry.js",
-      "default": "./dist/slitherlink-entry.js"
+    "./loop": {
+      "types": "./dist/loop-entry.d.ts",
+      "import": "./dist/loop-entry.js",
+      "default": "./dist/loop-entry.js"
     },
-    "./slitherlink/play": {
-      "types": "./dist/slitherlink-play-entry.d.ts",
-      "import": "./dist/slitherlink-play-entry.js",
-      "default": "./dist/slitherlink-play-entry.js"
+    "./loop/play": {
+      "types": "./dist/loop-play-entry.d.ts",
+      "import": "./dist/loop-play-entry.js",
+      "default": "./dist/loop-play-entry.js"
     },
-    "./slitherlink/draw": {
-      "types": "./dist/slitherlink-draw-entry.d.ts",
-      "import": "./dist/slitherlink-draw-entry.js",
-      "default": "./dist/slitherlink-draw-entry.js"
+    "./loop/draw": {
+      "types": "./dist/loop-draw-entry.d.ts",
+      "import": "./dist/loop-draw-entry.js",
+      "default": "./dist/loop-draw-entry.js"
     },
     "./masyu": {
       "types": "./dist/masyu-entry.d.ts",
@@ -216,35 +216,35 @@
       "import": "./dist/ripple-draw-entry.js",
       "default": "./dist/ripple-draw-entry.js"
     },
-    "./kakuro": {
-      "types": "./dist/kakuro-entry.d.ts",
-      "import": "./dist/kakuro-entry.js",
-      "default": "./dist/kakuro-entry.js"
+    "./cross-sums": {
+      "types": "./dist/cross-sums-entry.d.ts",
+      "import": "./dist/cross-sums-entry.js",
+      "default": "./dist/cross-sums-entry.js"
     },
-    "./kakuro/play": {
-      "types": "./dist/kakuro-play-entry.d.ts",
-      "import": "./dist/kakuro-play-entry.js",
-      "default": "./dist/kakuro-play-entry.js"
+    "./cross-sums/play": {
+      "types": "./dist/cross-sums-play-entry.d.ts",
+      "import": "./dist/cross-sums-play-entry.js",
+      "default": "./dist/cross-sums-play-entry.js"
     },
-    "./kakuro/draw": {
-      "types": "./dist/kakuro-draw-entry.d.ts",
-      "import": "./dist/kakuro-draw-entry.js",
-      "default": "./dist/kakuro-draw-entry.js"
+    "./cross-sums/draw": {
+      "types": "./dist/cross-sums-draw-entry.d.ts",
+      "import": "./dist/cross-sums-draw-entry.js",
+      "default": "./dist/cross-sums-draw-entry.js"
     },
-    "./fillomino": {
-      "types": "./dist/fillomino-entry.d.ts",
-      "import": "./dist/fillomino-entry.js",
-      "default": "./dist/fillomino-entry.js"
+    "./regions": {
+      "types": "./dist/regions-entry.d.ts",
+      "import": "./dist/regions-entry.js",
+      "default": "./dist/regions-entry.js"
     },
-    "./fillomino/play": {
-      "types": "./dist/fillomino-play-entry.d.ts",
-      "import": "./dist/fillomino-play-entry.js",
-      "default": "./dist/fillomino-play-entry.js"
+    "./regions/play": {
+      "types": "./dist/regions-play-entry.d.ts",
+      "import": "./dist/regions-play-entry.js",
+      "default": "./dist/regions-play-entry.js"
     },
-    "./fillomino/draw": {
-      "types": "./dist/fillomino-draw-entry.d.ts",
-      "import": "./dist/fillomino-draw-entry.js",
-      "default": "./dist/fillomino-draw-entry.js"
+    "./regions/draw": {
+      "types": "./dist/regions-draw-entry.d.ts",
+      "import": "./dist/regions-draw-entry.js",
+      "default": "./dist/regions-draw-entry.js"
     },
     "./heyawake": {
       "types": "./dist/heyawake-entry.d.ts",
