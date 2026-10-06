@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { checkNurikabe, isNurikabeBoard } from "./nurikabeBoard.ts";
-import { solveNurikabe } from "./nurikabeSolve.ts";
-import { generateNurikabe } from "./nurikabeGenerate.ts";
-import { decodeNurikabe, encodeNurikabe, hintNurikabe, markNurikabeSea, newNurikabe, undoNurikabe } from "./nurikabeGame.ts";
-import { drawNurikabe } from "./nurikabeDraw.ts";
+import { checkNurikabe, isNurikabeBoard } from "./nurikabe-board.ts";
+import { solveNurikabe } from "./nurikabe-solve.ts";
+import { generateNurikabe } from "./nurikabe-generate.ts";
+import { decodeNurikabe, encodeNurikabe, hintNurikabe, markNurikabeSea, newNurikabe, undoNurikabe } from "./nurikabe-game.ts";
+import { drawNurikabe } from "./nurikabe-draw.ts";
 
 describe("Nurikabe island and sea rules", () => {
   it("checks numbered island areas, connected sea, and the 2×2 sea ban", () => {

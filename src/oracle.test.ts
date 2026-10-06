@@ -2,12 +2,12 @@
 // count exactly the ones that pass the rules as the checkers state them.
 import { describe, expect, it, vi } from "vitest";
 
-import { checkFillomino } from "./fillominoBoard.ts";
-import { solveFillomino } from "./fillominoSolve.ts";
-import { checkHitori } from "./hitoriBoard.ts";
-import { solveHitori } from "./hitoriSolve.ts";
-import { checkKakuro } from "./kakuroBoard.ts";
-import { solveKakuro } from "./kakuroSolve.ts";
+import { checkFillomino } from "./fillomino-board.ts";
+import { solveFillomino } from "./fillomino-solve.ts";
+import { checkHitori } from "./hitori-board.ts";
+import { solveHitori } from "./hitori-solve.ts";
+import { checkKakuro } from "./kakuro-board.ts";
+import { solveKakuro } from "./kakuro-solve.ts";
 import { seededRandom } from "./random.ts";
 
 // These generate and enumerate a lot; a slow runner must not fail them for taking its time.

@@ -1,8 +1,8 @@
 import { decodeCells, encodeCells } from "./cells.ts";
-import { fillLayout } from "./groupSolve.ts";
+import { fillLayout } from "./group-solve.ts";
 import type { KazuLevel, KazuPuzzle } from "./kinds.ts";
 import { KAZU_BOXES, neighbours, regionLayout, regionsAreSound } from "./layout.ts";
-import { carve } from "./numberPlace.ts";
+import { carve } from "./number-place.ts";
 import { seededRandom, type Random } from "./random.ts";
 
 /**

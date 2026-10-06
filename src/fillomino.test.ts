@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { checkFillomino, isFillominoBoard } from "./fillominoBoard.ts";
-import { decodeFillomino, encodeFillomino, newFillomino, setFillominoCell, undoFillomino } from "./fillominoGame.ts";
-import { generateFillomino } from "./fillominoGenerate.ts";
-import { solveFillomino } from "./fillominoSolve.ts";
+import { checkFillomino, isFillominoBoard } from "./fillomino-board.ts";
+import { decodeFillomino, encodeFillomino, newFillomino, setFillominoCell, undoFillomino } from "./fillomino-game.ts";
+import { generateFillomino } from "./fillomino-generate.ts";
+import { solveFillomino } from "./fillomino-solve.ts";
 
 describe("Fillomino region rules", () => {
   it("accepts two separated area-two regions and a clue-free area-five region", () => {

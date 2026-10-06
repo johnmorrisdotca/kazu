@@ -1,9 +1,9 @@
 import { isKazuKind, isKazuLevel, isKazuSize, type KazuKind, type KazuLevel, type KazuPuzzle } from "./kinds.ts";
 import { generateJigsaw } from "./jigsaw.ts";
-import { generateMoreOrLess } from "./moreOrLess.ts";
-import { generateDiagonal, generateNumberPlace } from "./numberPlace.ts";
+import { generateMoreOrLess } from "./more-or-less.ts";
+import { generateDiagonal, generateNumberPlace } from "./number-place.ts";
 import { isKazuSeed } from "./random.ts";
-import { generateSumCages } from "./sumCages.ts";
+import { generateSumCages } from "./sum-cages.ts";
 import { generateTowers } from "./towers.ts";
 
 const GENERATORS: Record<KazuKind, (size: number, level: KazuLevel, seed: number) => KazuPuzzle> = {

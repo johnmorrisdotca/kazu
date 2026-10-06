@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import { KazuBoard } from "./element.ts";
 import { KAZU_KINDS, KAZU_LEVELS, KAZU_SPECS } from "./kinds.ts";
-import { KAZU_PLAY_STYLE } from "./playStyle.ts";
+import { KAZU_PLAY_STYLE } from "./play-style.ts";
 import { KAZU_STEPS_KEPT } from "./progress.ts";
 import { KAZU_SEED_MOST } from "./random.ts";
 import { KAZU_STRINGS } from "./strings.ts";

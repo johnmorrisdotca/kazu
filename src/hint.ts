@@ -1,9 +1,9 @@
 import { decodeCells } from "./cells.ts";
 import { layoutOfGivens, readGivens, type KazuGivens } from "./givens.ts";
-import { bitCount, candidatesAt, lowestBit, used } from "./groupSolve.ts";
+import { bitCount, candidatesAt, lowestBit, used } from "./group-solve.ts";
 import type { KazuKind } from "./kinds.ts";
 import { solveKazu } from "./solve.ts";
-import { cluedLines, narrowEdges } from "./towersSolve.ts";
+import { cluedLines, narrowEdges } from "./towers-solve.ts";
 
 /**
  * A HINT: the next cell a person could fill in by looking, and why.

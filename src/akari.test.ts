@@ -5,9 +5,9 @@ import {
   checkAkari,
   isAkariBoard,
   progressAkari,
-} from "./akariBoard.ts";
-import { solveAkari } from "./akariSolve.ts";
-import { generateAkari } from "./akariGenerate.ts";
+} from "./akari-board.ts";
+import { solveAkari } from "./akari-solve.ts";
+import { generateAkari } from "./akari-generate.ts";
 import {
   akariFinished,
   decodeAkari,
@@ -16,8 +16,8 @@ import {
   newAkari,
   toggleAkari,
   undoAkari,
-} from "./akariGame.ts";
-import { drawAkari } from "./akariDraw.ts";
+} from "./akari-game.ts";
+import { drawAkari } from "./akari-draw.ts";
 
 describe("Akari rules", () => {
   const board = {

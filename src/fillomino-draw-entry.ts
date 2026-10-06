@@ -1,2 +1,2 @@
-export { drawFillomino } from "./fillominoDraw.ts";
-export type { FillominoDrawOptions } from "./fillominoPlay.types.ts";
+export { drawFillomino } from "./fillomino-draw.ts";
+export type { FillominoDrawOptions } from "./fillomino-play.types.ts";

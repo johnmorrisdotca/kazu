@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { checkRipple, isRippleBoard, progressRipple } from "./rippleBoard.ts";
-import { solveRipple } from "./rippleSolve.ts";
-import { generateRipple } from "./rippleGenerate.ts";
-import { decodeRipple, encodeRipple, hintRipple, newRipple, rippleFinished, setRippleValue, toggleRippleNote, undoRipple } from "./rippleGame.ts";
-import { drawRipple } from "./rippleDraw.ts";
+import { checkRipple, isRippleBoard, progressRipple } from "./ripple-board.ts";
+import { solveRipple } from "./ripple-solve.ts";
+import { generateRipple } from "./ripple-generate.ts";
+import { decodeRipple, encodeRipple, hintRipple, newRipple, rippleFinished, setRippleValue, toggleRippleNote, undoRipple } from "./ripple-game.ts";
+import { drawRipple } from "./ripple-draw.ts";
 
 describe("Ripple Effect rooms and spacing", () => {
   it("requires room values 1 through room size exactly once", () => {

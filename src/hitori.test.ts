@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { checkHitori, isHitoriBoard } from "./hitoriBoard.ts";
-import { solveHitori } from "./hitoriSolve.ts";
-import { generateHitori } from "./hitoriGenerate.ts";
-import { decodeHitori, encodeHitori, hintHitori, newHitori, shadeHitori, undoHitori } from "./hitoriGame.ts";
-import { drawHitori } from "./hitoriDraw.ts";
+import { checkHitori, isHitoriBoard } from "./hitori-board.ts";
+import { solveHitori } from "./hitori-solve.ts";
+import { generateHitori } from "./hitori-generate.ts";
+import { decodeHitori, encodeHitori, hintHitori, newHitori, shadeHitori, undoHitori } from "./hitori-game.ts";
+import { drawHitori } from "./hitori-draw.ts";
 
 describe("Hitori rules", () => {
   it("checks row and column duplicates, adjacent shades, and connected white cells", () => {

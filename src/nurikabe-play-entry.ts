@@ -1,4 +1,4 @@
-export { mountNurikabe } from "./nurikabeMount.ts";
-export { NURIKABE_PLAY_STYLE } from "./nurikabeStyle.ts";
-export { NURIKABE_STRINGS } from "./nurikabeStrings.ts";
-export type * from "./nurikabePlay.types.ts";
+export { mountNurikabe } from "./nurikabe-mount.ts";
+export { NURIKABE_PLAY_STYLE } from "./nurikabe-style.ts";
+export { NURIKABE_STRINGS } from "./nurikabe-strings.ts";
+export type * from "./nurikabe-play.types.ts";

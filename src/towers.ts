@@ -1,9 +1,9 @@
 import { encodeCells } from "./cells.ts";
 import type { KazuLevel, KazuPuzzle } from "./kinds.ts";
-import { latinSquare } from "./moreOrLess.ts";
+import { latinSquare } from "./more-or-less.ts";
 import { seededRandom, shuffled } from "./random.ts";
-import { cluesOf, encodeTowers, TOWER_SIDES, type TowerClues, type TowerSide } from "./towersCode.ts";
-import { countSolutions, guessDepth, type Grid } from "./towersSolve.ts";
+import { cluesOf, encodeTowers, TOWER_SIDES, type TowerClues, type TowerSide } from "./towers-code.ts";
+import { countSolutions, guessDepth, type Grid } from "./towers-solve.ts";
 
 /**
  * Making a Skyscrapers (Towers) puzzle from a seed.

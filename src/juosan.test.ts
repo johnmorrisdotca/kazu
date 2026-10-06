@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { checkJuosan, isJuosanBoard } from "./juosanBoard.ts";
-import { generateJuosan } from "./juosanGenerate.ts";
-import { decodeJuosan, encodeJuosan, newJuosan, setJuosanMark, undoJuosan } from "./juosanGame.ts";
-import { solveJuosan } from "./juosanSolve.ts";
+import { checkJuosan, isJuosanBoard } from "./juosan-board.ts";
+import { generateJuosan } from "./juosan-generate.ts";
+import { decodeJuosan, encodeJuosan, newJuosan, setJuosanMark, undoJuosan } from "./juosan-game.ts";
+import { solveJuosan } from "./juosan-solve.ts";
 import type { JuosanBoard } from "./juosan.types.ts";
 
 describe("Juosan rules", () => {

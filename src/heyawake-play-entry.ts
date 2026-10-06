@@ -1,2 +1,2 @@
-export { mountHeyawake } from "./heyawakeMount.ts";
-export type { HeyawakeMount, HeyawakeMountOptions, HeyawakeAppearance } from "./heyawakePlay.types.ts";
+export { mountHeyawake } from "./heyawake-mount.ts";
+export type { HeyawakeMount, HeyawakeMountOptions, HeyawakeAppearance } from "./heyawake-play.types.ts";

@@ -1,6 +1,6 @@
 import type { KazuGivens } from "./givens.ts";
 import { layoutOfGivens } from "./givens.ts";
-import { lineFrom, TOWER_SIDES } from "./towersCode.ts";
+import { lineFrom, TOWER_SIDES } from "./towers-code.ts";
 
 /**
  * THE CELLS THAT BREAK A RULE RIGHT NOW, read from the rules alone: no answer is needed, so it works

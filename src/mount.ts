@@ -4,7 +4,7 @@ import { drawKazu, kazuCellName, kazuWhere } from "./draw.ts";
 import { answerOf, clearCell, enterNumber, gameConflicts, isPrinted, isSolved, kazuProgress, newKazuGame, numberCounts, restartKazu, toggleNote, undoKazu, valuesOf, type KazuGame } from "./game.ts";
 import { hintKazu, type KazuHint } from "./hint.ts";
 import type { KazuKind, KazuLevel } from "./kinds.ts";
-import { KAZU_PLAY_STYLE } from "./playStyle.ts";
+import { KAZU_PLAY_STYLE } from "./play-style.ts";
 import { decodeNotes, decodeRun, encodeNotes, encodeRun, notesOf } from "./progress.ts";
 import { solveKazu } from "./solve.ts";
 import { kazuLanguageOf, kazuNameOf, kazuSay, type KazuLanguage } from "./strings.ts";

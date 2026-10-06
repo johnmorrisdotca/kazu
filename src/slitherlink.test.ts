@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   checkSlitherlink,
   progressSlitherlink,
-} from "./slitherlinkBoard.ts";
-import { solveSlitherlink } from "./slitherlinkSolve.ts";
-import { generateSlitherlink } from "./slitherlinkGenerate.ts";
+} from "./slitherlink-board.ts";
+import { solveSlitherlink } from "./slitherlink-solve.ts";
+import { generateSlitherlink } from "./slitherlink-generate.ts";
 import {
   decodeSlitherlink,
   encodeSlitherlink,
@@ -12,8 +12,8 @@ import {
   newSlitherlink,
   toggleSlitherlink,
   undoSlitherlink,
-} from "./slitherlinkGame.ts";
-import { drawSlitherlink } from "./slitherlinkDraw.ts";
+} from "./slitherlink-game.ts";
+import { drawSlitherlink } from "./slitherlink-draw.ts";
 
 describe("Slitherlink loop rules", () => {
   it("checks loop closure, connectedness, vertex degree and numbered cell edges", () => {

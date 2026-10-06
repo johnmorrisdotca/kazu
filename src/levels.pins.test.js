@@ -5,13 +5,13 @@ import process from "node:process";
 
 import { describe, expect, it, vi } from "vitest";
 
-import { generateAkari } from "./akariGenerate.ts";
+import { generateAkari } from "./akari-generate.ts";
 import { generateKazu } from "./generate.ts";
-import { generateFillomino } from "./fillominoGenerate.ts";
-import { generateHitori } from "./hitoriGenerate.ts";
-import { generateKakuro } from "./kakuroGenerate.ts";
-import { generateShikaku } from "./shikakuGenerate.ts";
-import { generateSlitherlink } from "./slitherlinkGenerate.ts";
+import { generateFillomino } from "./fillomino-generate.ts";
+import { generateHitori } from "./hitori-generate.ts";
+import { generateKakuro } from "./kakuro-generate.ts";
+import { generateShikaku } from "./shikaku-generate.ts";
+import { generateSlitherlink } from "./slitherlink-generate.ts";
 
 // These generate and enumerate a lot; a slow runner must not fail them for taking its time.
 vi.setConfig({ testTimeout: 120_000 });

@@ -5,8 +5,8 @@ import type { KazuKind } from "./kinds.ts";
 import { notesOf } from "./progress.ts";
 import { kazuNameOf, kazuSay, type KazuLanguage } from "./strings.ts";
 import { KAZU_STYLE } from "./style.ts";
-import { cageOutline } from "./sumCages.ts";
-import { lineFrom, TOWER_SIDES } from "./towersCode.ts";
+import { cageOutline } from "./sum-cages.ts";
+import { lineFrom, TOWER_SIDES } from "./towers-code.ts";
 
 /** What a drawing shows beyond the puzzle itself. Every part is optional: a puzzle alone is its printed grid. */
 export type KazuDrawOptions = {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { checkHeyawake, isHeyawakeBoard } from "./heyawakeBoard.ts";
-import { decodeHeyawake, encodeHeyawake, newHeyawake, setHeyawakeCell, undoHeyawake } from "./heyawakeGame.ts";
-import { generateHeyawake } from "./heyawakeGenerate.ts";
-import { solveHeyawake } from "./heyawakeSolve.ts";
+import { checkHeyawake, isHeyawakeBoard } from "./heyawake-board.ts";
+import { decodeHeyawake, encodeHeyawake, newHeyawake, setHeyawakeCell, undoHeyawake } from "./heyawake-game.ts";
+import { generateHeyawake } from "./heyawake-generate.ts";
+import { solveHeyawake } from "./heyawake-solve.ts";
 
 describe("Heyawake rules", () => {
   it("counts room clues and permits unnumbered rooms", () => {

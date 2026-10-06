@@ -1,4 +1,4 @@
-export { mountRipple } from "./rippleMount.ts";
-export { RIPPLE_PLAY_STYLE } from "./rippleStyle.ts";
-export { RIPPLE_STRINGS } from "./rippleStrings.ts";
-export type * from "./ripplePlay.types.ts";
+export { mountRipple } from "./ripple-mount.ts";
+export { RIPPLE_PLAY_STYLE } from "./ripple-style.ts";
+export { RIPPLE_STRINGS } from "./ripple-strings.ts";
+export type * from "./ripple-play.types.ts";

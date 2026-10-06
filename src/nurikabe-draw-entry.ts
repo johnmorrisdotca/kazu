@@ -1,2 +1,2 @@
-export { drawNurikabe } from "./nurikabeDraw.ts";
-export type { NurikabeDrawOptions } from "./nurikabePlay.types.ts";
+export { drawNurikabe } from "./nurikabe-draw.ts";
+export type { NurikabeDrawOptions } from "./nurikabe-play.types.ts";

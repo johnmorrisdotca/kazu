@@ -1,2 +1,2 @@
-export { drawKakuro } from "./kakuroDraw.ts";
-export type { KakuroDrawOptions } from "./kakuroDraw.ts";
+export { drawKakuro } from "./kakuro-draw.ts";
+export type { KakuroDrawOptions } from "./kakuro-draw.ts";

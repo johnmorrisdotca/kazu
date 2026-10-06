@@ -1,2 +1,2 @@
-export { drawJuosan } from "./juosanDraw.ts";
-export type { JuosanDrawOptions } from "./juosanPlay.types.ts";
+export { drawJuosan } from "./juosan-draw.ts";
+export type { JuosanDrawOptions } from "./juosan-play.types.ts";

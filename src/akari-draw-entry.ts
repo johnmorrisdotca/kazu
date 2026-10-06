@@ -1,2 +1,2 @@
-export { drawAkari } from "./akariDraw.ts";
-export type { AkariDrawOptions } from "./akariPlay.types.ts";
+export { drawAkari } from "./akari-draw.ts";
+export type { AkariDrawOptions } from "./akari-play.types.ts";

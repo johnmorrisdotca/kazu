@@ -1,1 +1,1 @@
-export {drawHitori} from "./hitoriDraw.ts";export type {HitoriDrawOptions} from "./hitoriPlay.types.ts";
+export {drawHitori} from "./hitori-draw.ts";export type {HitoriDrawOptions} from "./hitori-play.types.ts";

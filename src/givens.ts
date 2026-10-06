@@ -2,9 +2,9 @@ import { decodeCells } from "./cells.ts";
 import { decodeJigsaw } from "./jigsaw.ts";
 import type { KazuKind } from "./kinds.ts";
 import { boxedLayout, cagedLayout, KAZU_BOXES, regionLayout, type Layout } from "./layout.ts";
-import { decodeMoreOrLess, type Mark } from "./moreOrLessCode.ts";
-import { decodeKiller, type Cage } from "./sumCages.ts";
-import { decodeTowers, type TowerClues } from "./towersCode.ts";
+import { decodeMoreOrLess, type Mark } from "./more-or-less-code.ts";
+import { decodeKiller, type Cage } from "./sum-cages.ts";
+import { decodeTowers, type TowerClues } from "./towers-code.ts";
 
 /**
  * WHAT A PUZZLE WAS PRINTED WITH, read from its givens code: the printed cells, and for a Jigsaw its

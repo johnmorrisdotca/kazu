@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { checkShikaku, isShikakuBoard, shikakuCandidates } from "./shikakuBoard.ts";
-import { solveShikaku } from "./shikakuSolve.ts";
-import { generateShikaku } from "./shikakuGenerate.ts";
-import { decodeShikaku, encodeShikaku, hintShikaku, newShikaku, placeShikaku, removeShikaku, undoShikaku } from "./shikakuGame.ts";
-import { drawShikaku } from "./shikakuDraw.ts";
+import { checkShikaku, isShikakuBoard, shikakuCandidates } from "./shikaku-board.ts";
+import { solveShikaku } from "./shikaku-solve.ts";
+import { generateShikaku } from "./shikaku-generate.ts";
+import { decodeShikaku, encodeShikaku, hintShikaku, newShikaku, placeShikaku, removeShikaku, undoShikaku } from "./shikaku-game.ts";
+import { drawShikaku } from "./shikaku-draw.ts";
 
 const board = { width: 3, height: 2, clues: [3, 0, 0, 0, 0, 3] };
 describe("Shikaku rectangle rules", () => {
@@ -94,7 +94,7 @@ it("agrees with a separate geometric oracle for every possible 2×2 clue board",
 
 describe("Shikaku challenge packs", () => {
   it("offers square, wide and tall routes with independently proved puzzles", async () => {
-    const { SHIKAKU_CHALLENGE_PACKS, generateShikakuChallenge } = await import("./shikakuPacks.ts");
+    const { SHIKAKU_CHALLENGE_PACKS, generateShikakuChallenge } = await import("./shikaku-packs.ts");
     for (const key of ["square", "wide", "tall"] as const) {
       const pack = SHIKAKU_CHALLENGE_PACKS[key];
       expect(pack.challenges).toHaveLength(3);

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { checkYajilin, isYajilinBoard, yajilinEdgeCount, yajilinNeighbors } from "./yajilinBoard.ts";
-import { generateYajilin } from "./yajilinGenerate.ts";
-import { decodeYajilin, encodeYajilin, hintYajilin, newYajilin, toggleYajilinEdge, toggleYajilinShade, undoYajilin } from "./yajilinGame.ts";
-import { solveYajilin } from "./yajilinSolve.ts";
+import { checkYajilin, isYajilinBoard, yajilinEdgeCount, yajilinNeighbors } from "./yajilin-board.ts";
+import { generateYajilin } from "./yajilin-generate.ts";
+import { decodeYajilin, encodeYajilin, hintYajilin, newYajilin, toggleYajilinEdge, toggleYajilinShade, undoYajilin } from "./yajilin-game.ts";
+import { solveYajilin } from "./yajilin-solve.ts";
 
 describe("Yajilin rules", () => {
   it("checks a generated loop, all arrow counts, shade adjacency and edge boundaries", () => {

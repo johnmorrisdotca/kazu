@@ -1,2 +1,2 @@
-export { drawRipple } from "./rippleDraw.ts";
-export type { RippleDrawOptions } from "./ripplePlay.types.ts";
+export { drawRipple } from "./ripple-draw.ts";
+export type { RippleDrawOptions } from "./ripple-play.types.ts";

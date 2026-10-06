@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { canReach, checkKakuro, isKakuroBoard, kakuroRuns, progressKakuro } from "./kakuroBoard.ts";
+import { canReach, checkKakuro, isKakuroBoard, kakuroRuns, progressKakuro } from "./kakuro-board.ts";
 import type { KakuroCell } from "./kakuro.types.ts";
-import { generateKakuro } from "./kakuroGenerate.ts";
-import { decodeKakuro, encodeKakuro, enterKakuro, hintKakuro, newKakuro, undoKakuro } from "./kakuroGame.ts";
-import { solveKakuro } from "./kakuroSolve.ts";
+import { generateKakuro } from "./kakuro-generate.ts";
+import { decodeKakuro, encodeKakuro, enterKakuro, hintKakuro, newKakuro, undoKakuro } from "./kakuro-game.ts";
+import { solveKakuro } from "./kakuro-solve.ts";
 
 const board = { width: 3, height: 3, cells: [
   { kind: "black", across: null, down: null }, { kind: "black", across: null, down: 3 }, { kind: "black", across: null, down: 4 },

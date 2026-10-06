@@ -1,9 +1,9 @@
 export * from "./fillomino.types.ts";
 export * from "./fillomino.constants.ts";
-export * from "./fillominoBoard.ts";
-export * from "./fillominoSolve.ts";
-export * from "./fillominoGenerate.ts";
-export * from "./fillominoRate.ts";
-export * from "./fillominoGame.ts";
-export { drawFillomino } from "./fillominoDraw.ts";
-export type { FillominoDrawOptions } from "./fillominoPlay.types.ts";
+export * from "./fillomino-board.ts";
+export * from "./fillomino-solve.ts";
+export * from "./fillomino-generate.ts";
+export * from "./fillomino-rate.ts";
+export * from "./fillomino-game.ts";
+export { drawFillomino } from "./fillomino-draw.ts";
+export type { FillominoDrawOptions } from "./fillomino-play.types.ts";

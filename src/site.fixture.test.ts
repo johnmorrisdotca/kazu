@@ -8,9 +8,9 @@ import { readGivens } from "./givens.ts";
 import { KAZU_KIND_OF_SITE_KIND, KAZU_LEVELS, type KazuKind } from "./kinds.ts";
 import { decodeSteps, encodeSteps } from "./progress.ts";
 import { encodeJigsaw } from "./jigsaw.ts";
-import { encodeKiller } from "./sumCages.ts";
-import { encodeMoreOrLess } from "./moreOrLessCode.ts";
-import { encodeTowers } from "./towersCode.ts";
+import { encodeKiller } from "./sum-cages.ts";
+import { encodeMoreOrLess } from "./more-or-less-code.ts";
+import { encodeTowers } from "./towers-code.ts";
 
 /**
  * EVERYTHING ITSUTSU.COM MADE BEFORE THE MOVE, MADE AGAIN. Recorded from the site's own generators on

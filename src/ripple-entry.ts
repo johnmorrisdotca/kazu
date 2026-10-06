@@ -1,12 +1,12 @@
 /** Ripple Effect has its own room and spacing model. */
 export * from "./ripple.types.ts";
 export * from "./ripple.constants.ts";
-export * from "./rippleBoard.ts";
-export * from "./rippleSolve.ts";
-export * from "./rippleGenerate.ts";
-export * from "./rippleGame.ts";
-export { drawRipple } from "./rippleDraw.ts";
-export { mountRipple } from "./rippleMount.ts";
-export { RIPPLE_PLAY_STYLE } from "./rippleStyle.ts";
-export { RIPPLE_STRINGS } from "./rippleStrings.ts";
-export type * from "./ripplePlay.types.ts";
+export * from "./ripple-board.ts";
+export * from "./ripple-solve.ts";
+export * from "./ripple-generate.ts";
+export * from "./ripple-game.ts";
+export { drawRipple } from "./ripple-draw.ts";
+export { mountRipple } from "./ripple-mount.ts";
+export { RIPPLE_PLAY_STYLE } from "./ripple-style.ts";
+export { RIPPLE_STRINGS } from "./ripple-strings.ts";
+export type * from "./ripple-play.types.ts";

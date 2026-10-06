@@ -1,4 +1,4 @@
-export { mountJuosan } from "./juosanMount.ts";
-export { JUOSAN_PLAY_STYLE } from "./juosanStyle.ts";
-export { JUOSAN_STRINGS } from "./juosanStrings.ts";
-export type * from "./juosanPlay.types.ts";
+export { mountJuosan } from "./juosan-mount.ts";
+export { JUOSAN_PLAY_STYLE } from "./juosan-style.ts";
+export { JUOSAN_STRINGS } from "./juosan-strings.ts";
+export type * from "./juosan-play.types.ts";

@@ -1,2 +1,2 @@
-export { drawShikaku } from "./shikakuDraw.ts";
-export type { ShikakuDrawOptions } from "./shikakuPlay.types.ts";
+export { drawShikaku } from "./shikaku-draw.ts";
+export type { ShikakuDrawOptions } from "./shikaku-play.types.ts";

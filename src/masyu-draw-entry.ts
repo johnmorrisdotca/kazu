@@ -1,2 +1,2 @@
-export { drawMasyu } from "./masyuDraw.ts";
+export { drawMasyu } from "./masyu-draw.ts";
 export type { MasyuDrawOptions } from "./masyu.types.ts";

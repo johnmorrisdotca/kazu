@@ -689,92 +689,92 @@ the page's part (the mount and the element) is another.
 ├── hitori-play-entry.ts
 ├── hitori.constants.ts
 ├── hitori.types.ts
-├── hitoriBoard.ts
-├── hitoriDraw.ts
-├── hitoriGame.ts
-├── hitoriGenerate.ts
-├── hitoriBuild.ts
-├── hitoriLogic.ts
-├── hitoriRate.ts
-├── hitoriMount.ts
-├── hitoriPlay.types.ts
-├── hitoriSolve.ts
-├── hitoriStrings.ts
-├── hitoriStyle.ts
+├── hitori-board.ts
+├── hitori-draw.ts
+├── hitori-game.ts
+├── hitori-generate.ts
+├── hitori-build.ts
+├── hitori-logic.ts
+├── hitori-rate.ts
+├── hitori-mount.ts
+├── hitori-play.types.ts
+├── hitori-solve.ts
+├── hitori-strings.ts
+├── hitori-style.ts
 ├── nurikabe-draw-entry.ts
 ├── nurikabe-entry.ts
 ├── nurikabe-play-entry.ts
 ├── nurikabe.constants.ts
 ├── nurikabe.types.ts
-├── nurikabeBoard.ts
-├── nurikabeDraw.ts
-├── nurikabeGame.ts
-├── nurikabeGenerate.ts
-├── nurikabeMount.ts
-├── nurikabePlay.types.ts
-├── nurikabeSolve.ts
-├── nurikabeStrings.ts
-├── nurikabeStyle.ts
+├── nurikabe-board.ts
+├── nurikabe-draw.ts
+├── nurikabe-game.ts
+├── nurikabe-generate.ts
+├── nurikabe-mount.ts
+├── nurikabe-play.types.ts
+├── nurikabe-solve.ts
+├── nurikabe-strings.ts
+├── nurikabe-style.ts
 ├── juosan-draw-entry.ts
 ├── juosan-entry.ts
 ├── juosan-play-entry.ts
 ├── juosan.constants.ts
 ├── juosan.types.ts
-├── juosanBoard.ts
-├── juosanDraw.ts
-├── juosanGame.ts
-├── juosanGenerate.ts
-├── juosanMount.ts
-├── juosanPlay.types.ts
-├── juosanSolve.ts
-├── juosanStrings.ts
-├── juosanStyle.ts
+├── juosan-board.ts
+├── juosan-draw.ts
+├── juosan-game.ts
+├── juosan-generate.ts
+├── juosan-mount.ts
+├── juosan-play.types.ts
+├── juosan-solve.ts
+├── juosan-strings.ts
+├── juosan-style.ts
 ├── masyu-draw-entry.ts
 ├── masyu-entry.ts
 ├── masyu-play-entry.ts
 ├── masyu.constants.ts
 ├── masyu.types.ts
-├── masyuBoard.ts
-├── masyuDraw.ts
-├── masyuGame.ts
-├── masyuGenerate.ts
-├── masyuMount.ts
-├── masyuPlay.types.ts
-├── masyuSolve.ts
-├── masyuStrings.ts
-├── masyuStyle.ts
+├── masyu-board.ts
+├── masyu-draw.ts
+├── masyu-game.ts
+├── masyu-generate.ts
+├── masyu-mount.ts
+├── masyu-play.types.ts
+├── masyu-solve.ts
+├── masyu-strings.ts
+├── masyu-style.ts
 ├── yajilin-draw-entry.ts
 ├── yajilin-entry.ts
 ├── yajilin-play-entry.ts
 ├── yajilin.constants.ts
 ├── yajilin.types.ts
-├── yajilinBoard.ts
-├── yajilinDraw.ts
-├── yajilinGame.ts
-├── yajilinGenerate.ts
-├── yajilinMount.ts
-├── yajilinPlay.types.ts
-├── yajilinSolve.ts
-├── yajilinStrings.ts
-├── yajilinStyle.ts
+├── yajilin-board.ts
+├── yajilin-draw.ts
+├── yajilin-game.ts
+├── yajilin-generate.ts
+├── yajilin-mount.ts
+├── yajilin-play.types.ts
+├── yajilin-solve.ts
+├── yajilin-strings.ts
+├── yajilin-style.ts
 ├── fillomino-draw-entry.ts
 ├── fillomino-entry.ts
 ├── fillomino-play-entry.ts
 ├── fillomino.constants.ts
 ├── fillomino.types.ts
-├── fillominoBoard.ts
-├── fillominoDraw.ts
-├── fillominoGame.ts
-├── fillominoGenerate.ts
-├── fillominoBuild.ts
-├── fillominoLogic.ts
-├── fillominoRate.ts
-├── fillominoMount.ts
-├── fillominoPlay.types.ts
-├── fillominoSolve.ts
-├── fillominoStrings.ts
-├── fillominoStyle.ts
-├── fillominoWorker.ts
+├── fillomino-board.ts
+├── fillomino-draw.ts
+├── fillomino-game.ts
+├── fillomino-generate.ts
+├── fillomino-build.ts
+├── fillomino-logic.ts
+├── fillomino-rate.ts
+├── fillomino-mount.ts
+├── fillomino-play.types.ts
+├── fillomino-solve.ts
+├── fillomino-strings.ts
+├── fillomino-style.ts
+├── fillomino-worker.ts
 ├── shikaku-draw-entry.ts
 ├── shikaku-entry.ts
 ├── shikaku-play-entry.ts
@@ -783,99 +783,99 @@ the page's part (the mount and the element) is another.
 ├── kakuro-play-entry.ts
 ├── kakuro.constants.ts
 ├── kakuro.types.ts
-├── kakuroBoard.ts
-├── kakuroDraw.ts
-├── kakuroGame.ts
-├── kakuroGenerate.ts
-├── kakuroBuild.ts
-├── kakuroLogic.ts
-├── kakuroRate.ts
-├── kakuroTemplate.ts
-├── kakuroMount.ts
-├── kakuroPlay.types.ts
-├── kakuroSolve.ts
-├── kakuroStrings.ts
-├── kakuroStyle.ts
+├── kakuro-board.ts
+├── kakuro-draw.ts
+├── kakuro-game.ts
+├── kakuro-generate.ts
+├── kakuro-build.ts
+├── kakuro-logic.ts
+├── kakuro-rate.ts
+├── kakuro-template.ts
+├── kakuro-mount.ts
+├── kakuro-play.types.ts
+├── kakuro-solve.ts
+├── kakuro-strings.ts
+├── kakuro-style.ts
 ├── shikaku.constants.ts
 ├── shikaku.types.ts
-├── shikakuBoard.ts
-├── shikakuDraw.ts
-├── shikakuGame.ts
-├── shikakuGenerate.ts
-├── shikakuBuild.ts
-├── shikakuLogic.ts
-├── shikakuRate.ts
-├── shikakuTemplate.ts
-├── shikakuMount.ts
-├── shikakuPacks.ts
-├── shikakuPlay.types.ts
-├── shikakuSolve.ts
-├── shikakuStrings.ts
-├── shikakuStyle.ts
-├── shikakuWorker.ts
+├── shikaku-board.ts
+├── shikaku-draw.ts
+├── shikaku-game.ts
+├── shikaku-generate.ts
+├── shikaku-build.ts
+├── shikaku-logic.ts
+├── shikaku-rate.ts
+├── shikaku-template.ts
+├── shikaku-mount.ts
+├── shikaku-packs.ts
+├── shikaku-play.types.ts
+├── shikaku-solve.ts
+├── shikaku-strings.ts
+├── shikaku-style.ts
+├── shikaku-worker.ts
 ├── akari-draw-entry.ts
 ├── akari-entry.ts
 ├── akari-play-entry.ts
 ├── akari.constants.ts
 ├── akari.types.ts
-├── akariBoard.ts
-├── akariDraw.ts
-├── akariGame.ts
-├── akariGenerate.ts
-├── akariLogic.ts
-├── akariRate.ts
-├── akariTemplate.ts
-├── akariMount.ts
-├── akariPlay.types.ts
-├── akariSolve.ts
-├── akariStrings.ts
-├── akariStyle.ts
+├── akari-board.ts
+├── akari-draw.ts
+├── akari-game.ts
+├── akari-generate.ts
+├── akari-logic.ts
+├── akari-rate.ts
+├── akari-template.ts
+├── akari-mount.ts
+├── akari-play.types.ts
+├── akari-solve.ts
+├── akari-strings.ts
+├── akari-style.ts
 ├── slitherlink-draw-entry.ts
 ├── slitherlink-entry.ts
 ├── slitherlink-play-entry.ts
 ├── slitherlink.constants.ts
 ├── slitherlink.types.ts
-├── slitherlinkBoard.ts
-├── slitherlinkDraw.ts
-├── slitherlinkGame.ts
-├── slitherlinkGenerate.ts
-├── slitherlinkLogic.ts
-├── slitherlinkRate.ts
-├── slitherlinkTemplate.ts
-├── slitherlinkMount.ts
-├── slitherlinkPlay.types.ts
-├── slitherlinkSolve.ts
-├── slitherlinkStrings.ts
-├── slitherlinkStyle.ts
+├── slitherlink-board.ts
+├── slitherlink-draw.ts
+├── slitherlink-game.ts
+├── slitherlink-generate.ts
+├── slitherlink-logic.ts
+├── slitherlink-rate.ts
+├── slitherlink-template.ts
+├── slitherlink-mount.ts
+├── slitherlink-play.types.ts
+├── slitherlink-solve.ts
+├── slitherlink-strings.ts
+├── slitherlink-style.ts
 ├── ripple-draw-entry.ts
 ├── ripple-entry.ts
 ├── ripple-play-entry.ts
 ├── ripple.constants.ts
 ├── ripple.types.ts
-├── rippleBoard.ts
-├── rippleDraw.ts
-├── rippleGame.ts
-├── rippleGenerate.ts
-├── rippleMount.ts
-├── ripplePlay.types.ts
-├── rippleSolve.ts
-├── rippleStrings.ts
-├── rippleStyle.ts
+├── ripple-board.ts
+├── ripple-draw.ts
+├── ripple-game.ts
+├── ripple-generate.ts
+├── ripple-mount.ts
+├── ripple-play.types.ts
+├── ripple-solve.ts
+├── ripple-strings.ts
+├── ripple-style.ts
 ├── heyawake-draw-entry.ts
 ├── heyawake-entry.ts
 ├── heyawake-play-entry.ts
 ├── heyawake.constants.ts
 ├── heyawake.types.ts
-├── heyawakeBoard.ts
-├── heyawakeDraw.ts
-├── heyawakeGame.ts
-├── heyawakeGenerate.ts
-├── heyawakeMount.ts
-├── heyawakePlay.types.ts
-├── heyawakeSolve.ts
-├── heyawakeStrings.ts
-├── heyawakeStyle.ts
-├── heyawakeWorker.ts
+├── heyawake-board.ts
+├── heyawake-draw.ts
+├── heyawake-game.ts
+├── heyawake-generate.ts
+├── heyawake-mount.ts
+├── heyawake-play.types.ts
+├── heyawake-solve.ts
+├── heyawake-strings.ts
+├── heyawake-style.ts
+├── heyawake-worker.ts
 src/
 ├── index.ts            the main entry: everything but the drawing and the page
 ├── kinds.ts            the six puzzles' keys, sizes and levels, and the shape of a puzzle
@@ -883,16 +883,16 @@ src/
 ├── csp.ts              the one small engine under the six grid kinds: counting answers, and reasoning with and without supposing
 ├── cells.ts            a grid of numbers as a string, 1 to 9 and A to P
 ├── layout.ts           the groups that must each hold every number once: rows, columns, boxes, regions, diagonals, cages
-├── groupSolve.ts       the solver for puzzles made of groups: counting, singles, depth
-├── numberPlace.ts      Sudoku and Diagonal Sudoku: the generator and how givens are carved
+├── group-solve.ts       the solver for puzzles made of groups: counting, singles, depth
+├── number-place.ts      Sudoku and Diagonal Sudoku: the generator and how givens are carved
 ├── jigsaw.ts           Jigsaw Sudoku: irregular regions, their code and the generator
-├── sumCages.ts         Killer Sudoku: cages grown by joining, their code and outline
-├── moreOrLess.ts       Futoshiki: the Latin square, the marks and the generator
-├── moreOrLessCode.ts   Futoshiki's givens as a string
-├── moreOrLessSolve.ts  Futoshiki's solver
+├── sum-cages.ts         Killer Sudoku: cages grown by joining, their code and outline
+├── more-or-less.ts       Futoshiki: the Latin square, the marks and the generator
+├── more-or-less-code.ts   Futoshiki's givens as a string
+├── more-or-less-solve.ts  Futoshiki's solver
 ├── towers.ts           Skyscrapers: the generator
-├── towersCode.ts       Skyscrapers' givens as a string, and what a clue sees
-├── towersSolve.ts      Skyscrapers' solver
+├── towers-code.ts       Skyscrapers' givens as a string, and what a clue sees
+├── towers-solve.ts      Skyscrapers' solver
 ├── generate.ts         generateKazu: the one door to every generator
 ├── solve.ts            solving, counting and measuring any puzzle from its givens
 ├── givens.ts           what a puzzle was printed with, read from its code
@@ -908,7 +908,7 @@ src/
 ├── style.ts            the drawing's style: its colours as custom properties
 ├── draw.ts             a puzzle as SVG text
 ├── draw-entry.ts       the "/draw" entry
-├── playStyle.ts        the style of a playable board: its box, pad, buttons and words
+├── play-style.ts        the style of a playable board: its box, pad, buttons and words
 ├── mount.ts            mountKazu: draws a puzzle into an element and plays it
 ├── play-entry.ts       the "/play" entry
 ├── element.ts          the "/element" entry: the <kazu-board> class

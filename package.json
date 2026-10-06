@@ -289,6 +289,7 @@
     "@eslint/js": "^9.0.0",
     "@playwright/test": "^1.63.0",
     "eslint": "^9.0.0",
+    "eslint-plugin-unicorn": "^77.0.0",
     "typescript": "^5.9.0",
     "typescript-eslint": "^8.0.0",
     "vitest": "^5.0.0"

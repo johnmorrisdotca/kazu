@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { checkMasyu, isMasyuBoard, masyuEdgeCount, masyuNeighbors } from "./masyuBoard.ts";
-import { generateMasyu } from "./masyuGenerate.ts";
-import { decodeMasyu, encodeMasyu, hintMasyu, newMasyu, toggleMasyuEdge, undoMasyu } from "./masyuGame.ts";
-import { solveMasyu } from "./masyuSolve.ts";
+import { checkMasyu, isMasyuBoard, masyuEdgeCount, masyuNeighbors } from "./masyu-board.ts";
+import { generateMasyu } from "./masyu-generate.ts";
+import { decodeMasyu, encodeMasyu, hintMasyu, newMasyu, toggleMasyuEdge, undoMasyu } from "./masyu-game.ts";
+import { solveMasyu } from "./masyu-solve.ts";
 
 describe("Masyu rules", () => {
   it("checks pearl-neighbor turns, straight runs, connectedness and boundaries", () => {

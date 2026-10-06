@@ -1,4 +1,4 @@
-export { mountMasyu } from "./masyuMount.ts";
-export { MASYU_PLAY_STYLE } from "./masyuStyle.ts";
-export { MASYU_STRINGS } from "./masyuStrings.ts";
-export type * from "./masyuPlay.types.ts";
+export { mountMasyu } from "./masyu-mount.ts";
+export { MASYU_PLAY_STYLE } from "./masyu-style.ts";
+export { MASYU_STRINGS } from "./masyu-strings.ts";
+export type * from "./masyu-play.types.ts";

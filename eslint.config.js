@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
+import unicorn from "eslint-plugin-unicorn";
 
 export default tseslint.config(
   { ignores: ["dist/", "site/", "node_modules/", "test-results/", "playwright-report/"] },
@@ -9,4 +10,5 @@ export default tseslint.config(
   { files: ["scripts/**/*.mjs"], languageOptions: { globals: { console: "readonly", URL: "readonly", document: "readonly" } } },
   { files: ["scripts/readme-pictures.mjs"], languageOptions: { globals: { window: "readonly", localStorage: "readonly" } } },
   { files: ["demo/**/*.js"], languageOptions: { globals: { document: "readonly", window: "readonly", location: "readonly", history: "readonly", navigator: "readonly", Worker: "readonly", URL: "readonly", URLSearchParams: "readonly", Intl: "readonly", setInterval: "readonly", setTimeout: "readonly", localStorage: "readonly", familyLanguage: "readonly", CustomEvent: "readonly" } } },
+  { files: ["src/**/*.ts", "scripts/**/*.mjs", "demo/**/*.js", "e2e/**/*.mjs"], plugins: { unicorn }, rules: { "unicorn/filename-case": ["error", { case: "kebabCase" }] } },
 );

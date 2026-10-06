@@ -1,1 +1,1 @@
-export * from "./hitori.types.ts";export * from "./hitori.constants.ts";export * from "./hitoriBoard.ts";export * from "./hitoriSolve.ts";export * from "./hitoriGenerate.ts";export * from "./hitoriRate.ts";export * from "./hitoriGame.ts";
+export * from "./hitori.types.ts";export * from "./hitori.constants.ts";export * from "./hitori-board.ts";export * from "./hitori-solve.ts";export * from "./hitori-generate.ts";export * from "./hitori-rate.ts";export * from "./hitori-game.ts";
