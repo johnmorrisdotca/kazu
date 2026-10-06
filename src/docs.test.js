@@ -1,4 +1,5 @@
 // The documents and the demo, held to the source. Plain JavaScript, so that reading files needs no Node types.
+import { fullReadme } from "../scripts/full-readme.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
@@ -15,7 +16,8 @@ import { KAZU_STYLE } from "./style.ts";
 import { VERSION } from "./version.ts";
 
 const pkg = JSON.parse(readFileSync("package.json", "utf8"));
-const readme = readFileSync("README.md", "utf8");
+// The README with the sections that moved to pages under docs/ put back: the tests hold the whole of what it says to the code.
+const readme = fullReadme();
 
 /** A README section's text, from its heading to the next heading of the same level. */
 const section = (heading) => {

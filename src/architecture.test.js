@@ -1,10 +1,12 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+
+import { fullReadme } from "../scripts/full-readme.mjs";
 
 /** The README's Architecture tree names every source file, and nothing that is not one, so it cannot fall behind the code. */
 describe("the README's Architecture", () => {
   it("names exactly the files under src/", () => {
-    const readme = readFileSync("README.md", "utf8");
+    const readme = fullReadme();
     const section = readme.slice(readme.indexOf("## Architecture"));
     const tree = section.slice(section.indexOf("```text"), section.indexOf("```", section.indexOf("```text") + 7));
     const named = [...tree.matchAll(/[├└]── ([\w.-]+\.ts)\b/g)].map((match) => match[1]).sort();

@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/kazu",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Grid number and logic puzzles for JavaScript and TypeScript: Sudoku and its variants, Futoshiki, Skyscrapers, Cross Sums, Loop, Nurikabe and more. Typed engines, checked puzzles, SVG boards and bilingual players. Zero runtime dependencies.",
   "keywords": [
     "puzzle",
@@ -282,7 +282,8 @@
     "prepublishOnly": "pnpm check && pnpm build",
     "site": "pnpm build && node scripts/site.mjs",
     "test:demo": "pnpm site && playwright test",
-    "pictures": "pnpm site && node scripts/readme-pictures.mjs",
+    "screenshots:readme": "pnpm site && node scripts/readme-pictures.mjs",
+    "test:readme": "pnpm build && node scripts/check-readme-examples.mjs",
     "docs:make": "node scripts/docs.mjs"
   },
   "devDependencies": {

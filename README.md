@@ -8,19 +8,33 @@ Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshik
   <a href="https://www.npmjs.com/package/@johnmorrisdotca/kazu"><img alt="npm" src="https://img.shields.io/npm/v/@johnmorrisdotca/kazu?color=2f5d4a"></a>
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
+  <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
 </p>
 
 <p align="center"><a href="https://johnmorrisdotca.github.io/kazu/"><strong>Play a puzzle →</strong></a> · <a href="https://johnmorrisdotca.github.io/kazu/api.html">API reference</a></p>
 
-<p align="center">
-  <img src="docs/desktop.jpg" alt="A 9×9 Killer Sudoku part filled in, under the demo's header with its language chooser, the API reference link, five cloth patches and the Help switch: the choices of puzzle, size and level, then the board on green felt with dashed cages and their sums, the chosen cell and its row, column and box washed in colour, the number pad and the Undo, Pencil, Hint and Check buttons" width="620">
-  <img src="docs/phone.jpg" alt="A 6×6 Skyscrapers puzzle part filled in, on a phone in dark mode and in Japanese: the clues round the edge, the number pad, the buttons and the first of the settings under it" width="200">
-</p>
+<table align="center">
+<tr>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hero-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English, with a 9×9 Killer Sudoku part filled in: the page header with the language chooser, the API reference link, five cloth patches and the Help switch, the choices of puzzle, size and level, then the board on green felt with dashed cages and their sums, the chosen cell and its row, column and box washed in colour, the number pad and the Undo, Pencil, Hint and Check buttons" width="600">
+</picture>
+<br><em>The demo on a desk: a Killer Sudoku part filled in.</em>
+</td>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hero-phone-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hero-phone-light.webp" alt="The demo on a phone, in Japanese: a 6×6 Skyscrapers puzzle part filled in, with the clues round the edge, the number pad from 1 to 6, the buttons 元に戻す, メモ, ヒント and 確かめる, and the line マスをタップして、数字を選びます, then the first of the settings under it" width="190">
+</picture>
+<br><em>On a phone, in Japanese, in the device's light or dark.</em>
+</td>
+</tr>
+</table>
 
 Kazu is a family of grid puzzles: number placement, regions, shading, lights and loops. Each puzzle has its own rules and engine. The original number puzzles are
 played at [itsutsu.com](https://itsutsu.com), which this package was taken out of, and in
 [the demo](https://johnmorrisdotca.github.io/kazu/), with nothing to install.
-
 ## In 30 seconds
 
 ```sh
@@ -45,7 +59,6 @@ And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else
 <script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@2/dist/element-define.js"></script>
 <kazu-board kind="number-place" size="9" level="medium" seed="7"></kazu-board>
 ```
-
 ## Who it is for
 
 - **Puzzle sites and apps** that want these number puzzles with the rules already right: puzzles everybody
@@ -57,10 +70,8 @@ And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else
 - **Pages that just want the grid**: it draws itself as SVG text, and plays itself in an element or one
   function call, with a number pad, pencil marks, Undo, Hint, Check and a clock, and its words in English and
   Japanese.
-
 ## Features
 
-- **Seven puzzles, three levels.** Sudoku (4×4, 6×6, 9×9, a 16×16 Giant and a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys.
 - **Six number puzzles, three levels.** Sudoku (4×4, 6×6, 9×9, a 16×16 Giant and a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers, each at `easy`, `medium` and `hard`, named by kebab-case keys. Shikaku and Juosan use dedicated rectangle and territory models.
 - **Four levels on the grid puzzles.** Shikaku, Akari, Loop, Hitori, Regions and Cross Sums each make `easy`, `medium`, `hard` and `extra-hard` boards, at three or more sizes each, every one with exactly one answer and rated by what a person must do to solve it: [Levels of the grid puzzles](#levels-of-the-grid-puzzles).
 - **Exactly one answer.** A generator makes puzzles from a seed, and a solver that counts answers confirms there is one. The same kind, size, level and seed make the same puzzle in every browser and every Node, for ever.
@@ -71,14 +82,174 @@ And in a page, a puzzle to play, by touch, mouse and keyboard, with nothing else
 - **Played in any page** by touch, mouse and keyboard, with pencil marks, Undo, Hint, Check and a clock, as one function call (`mountKazu`) or one tag (`<kazu-board>`).
 - **English and Japanese**, in the board's words, the puzzles' names and rules, and the demo.
 - **No dependencies**, no network requests, no sound, no animation, and nothing stored outside the page it is in.
+### What's in it
+
+Each picture is the real puzzle, drawn and played by the package and taken from [the demo](https://johnmorrisdotca.github.io/kazu/) with `pnpm screenshots:readme`, in light and dark. Every puzzle is the same seed each time, and the number puzzles are part filled in by tapping, as a person plays.
+
+<table>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/sudoku-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/sudoku-desk-light.webp" alt="Sudoku, 9×9, on a desk part filled in: the 3×3 boxes marked by heavy lines, printed numbers in black, the player's numbers in blue, the chosen cell washed in yellow and its row, column and box in beige, the number pad 1 to 9 and the Undo, Pencil, Hint and Check buttons" width="300">
+</picture>
+<br><em><strong>Sudoku.</strong> 4×4 to a 25×25 Colossus, three levels, exactly one answer.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/jigsaw-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/jigsaw-desk-light.webp" alt="A 7×7 Jigsaw Sudoku on a desk, part filled in: irregular regions marked by heavy lines in place of boxes, numbers 1 to 7 in black and blue, the chosen cell washed yellow, and the number pad 1 to 7 under the board" width="300">
+</picture>
+<br><em><strong>Jigsaw.</strong> The boxes are irregular regions, each joined and none a row or a column.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/diagonal-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/diagonal-desk-light.webp" alt="A 9×9 Diagonal Sudoku on a desk, part filled in: the two long diagonals shaded in beige, printed and written numbers, the number pad and the buttons under the board" width="300">
+</picture>
+<br><em><strong>Diagonal.</strong> The two long diagonals hold each number once too.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/killer-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/killer-desk-light.webp" alt="A 6×6 Killer Sudoku on a desk, part filled in: dashed cages each with its sum in the corner, large numbers in black and blue, the chosen cell washed yellow, and the number pad 1 to 6" width="300">
+</picture>
+<br><em><strong>Killer Sudoku.</strong> Dashed cages each add to their sum and repeat nothing.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/futoshiki-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/futoshiki-desk-light.webp" alt="A 5×5 Futoshiki on a desk, part filled in: numbers 1 to 5 with small less-than and greater-than marks between some cells, and the number pad 1 to 5 under the board" width="300">
+</picture>
+<br><em><strong>Futoshiki.</strong> Every mark between two cells must be true.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/skyscrapers-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/skyscrapers-desk-light.webp" alt="A 5×5 Skyscrapers puzzle on a desk, part filled in: numbers 1 to 5 in the grid, brown clue numbers round the edge saying how many towers show from there, and the number pad" width="300">
+</picture>
+<br><em><strong>Skyscrapers.</strong> A clue is how many towers show from there; a taller one hides those behind it.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/shikaku-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/shikaku-desk-light.webp" alt="A 7×7 Shikaku board on a desk: a grid with numbers 12, 6, 4, 3 and others in some cells, and the buttons Undo, Remove selected rectangle, Cancel, Check, Hint and Restart under it" width="300">
+</picture>
+<br><em><strong>Shikaku.</strong> Divide the board into rectangles, each holding one number equal to its area.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hitori-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hitori-desk-light.webp" alt="A 5×5 Hitori board on a desk: rows of numbers 1 to 5 in boxed cells, one cell shaded black and the others white, and the buttons Undo, Check, Hint and Restart under it" width="300">
+</picture>
+<br><em><strong>Hitori.</strong> Shade squares so that no number repeats in a row or column, with the unshaded squares in one piece.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/nurikabe-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/nurikabe-desk-light.webp" alt="A 5×5 Nurikabe board on a desk: an almost empty grid with the numbers 1, 6, 2 and 3 in some cells, one shaded black, and the buttons Undo, Check, Hint and Restart under it" width="300">
+</picture>
+<br><em><strong>Nurikabe.</strong> Original 5×5 puzzles, each proved to have exactly one solution.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/akari-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/akari-desk-light.webp" alt="A 7×7 Akari board on a desk: black squares with numbers 1, 2, 3, 0 and others, and pale white squares, with the line No rule conflicts so far and the buttons Undo, Check, Hint, Restart and Just the board" width="300">
+</picture>
+<br><em><strong>Akari.</strong> Light every white square with bulbs that cannot see each other.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/juosan-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/juosan-desk-light.webp" alt="A 3×2 Juosan board on a desk: two territories, each with the number 3 in its corner, empty cells to fill with a horizontal or vertical mark, and the buttons under it" width="300">
+</picture>
+<br><em><strong>Juosan.</strong> Each cell takes a horizontal or a vertical mark, and a territory clue is the difference between the counts.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/loop-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/loop-desk-light.webp" alt="A 7×7 Loop board on a desk: a grid of dots with numbers 1, 2 and 3 in some squares and lines laid along some edges, and the buttons Undo, Check, Hint, Restart and Just the board" width="300">
+</picture>
+<br><em><strong>Loop.</strong> One closed loop along the edges, each number counting the edges of its square the loop uses.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/masyu-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/masyu-desk-light.webp" alt="A 5×5 Masyu board on a desk: a grid of dots with white and black pearls placed on some of them, and the buttons Undo, Hint, Check and Restart under it" width="300">
+</picture>
+<br><em><strong>Masyu.</strong> One loop through every pearl: straight through a white one, turning at a black one.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/yajilin-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/yajilin-desk-light.webp" alt="A 5×5 Yajilin board on a desk: arrows with counts in some cells, a Line and Shade choice above the grid, and the buttons Undo, Hint, Check and Restart under it" width="300">
+</picture>
+<br><em><strong>Yajilin.</strong> Arrow counts, black cells that never touch, and one loop through every other empty cell.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/ripple-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/ripple-desk-light.webp" alt="A 9×9 Ripple Effect board on a desk: rooms outlined by heavy lines holding printed numbers, a row of number buttons 1 to 9 and the buttons Undo, Check, Hint, Restart and Just the board" width="300">
+</picture>
+<br><em><strong>Ripple Effect.</strong> Each room holds 1 to its size once, and equal numbers in a line are further apart than the number.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/cross-sums-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/cross-sums-desk-light.webp" alt="A Cross Sums board on a desk: a crossword of black cells with diagonal clue sums and white cells to fill with the digits 1 to 9, a row of buttons for the digits below it" width="300">
+</picture>
+<br><em><strong>Cross Sums.</strong> Fill the white cells so that every across and down run adds to its clue without repeating a digit.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/regions-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/regions-desk-light.webp" alt="A 6×6 Regions board on a desk: a grid with faint numbers 1 to 6 in some cells and a row of number buttons under it with the line Keep filling the empty cells" width="300">
+</picture>
+<br><em><strong>Regions.</strong> Each connected group of one number is exactly that many cells, and equal groups never touch.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/heyawake-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/heyawake-desk-light.webp" alt="A 5×4 Heyawake board on a desk: rooms outlined by heavy lines, each with a count of black cells (0, 1 or 2), and the buttons Undo, Check, Hint and Restart under it" width="300">
+</picture>
+<br><em><strong>Heyawake.</strong> Black cells that never touch, white cells that stay connected, and no white run through more than two rooms.</em>
+</td>
+</tr>
+</table>
 
 ## Use it in your project
 
-Kazu is three things, each usable without the others: **the puzzles** (making, solving, checking and hinting, as plain functions over strings), **the drawing** (SVG text), and **the page** (a mounted board or a tag). The table under [The element](#the-element) says which entry holds which. The examples are one puzzle each time, written in `number-place` at 9×9.
+Kazu is three things, each usable without the others: **the puzzles** (making, solving, checking and hinting, as plain functions over strings), **the drawing** (SVG text), and **the page** (a mounted board or a tag). The table under [The element](docs/PLAYING.md#the-element) says which entry holds which. The examples are one puzzle each time, written in `number-place` at 9×9.
+
+### Install
+
+```sh
+npm install @johnmorrisdotca/kazu
+pnpm add @johnmorrisdotca/kazu
+yarn add @johnmorrisdotca/kazu
+```
+
+It is ES modules only, with its types included, and needs Node 22 or later outside a browser. A page with no bundler loads the tag from a CDN (`@2` is the major version).
 
 ### 1. The API alone, on a server
 
-```ts
+```ts no-check
 import { checkKazu, generateKazu } from "@johnmorrisdotca/kazu";
 
 const { givens } = generateKazu("number-place", 9, "medium", 42);   // send `givens` to the browser; keep `42` and the answer
@@ -144,7 +315,7 @@ defineProps({ seed: Number });
 <kazu-board bind:this={board} kind="number-place" size="9" level="medium" seed={seed}></kazu-board>
 ```
 
-```ts
+```ts no-check
 // Angular: a standalone component with CUSTOM_ELEMENTS_SCHEMA
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import "@johnmorrisdotca/kazu/element/define";
@@ -169,6 +340,180 @@ These recipes are written to the tag's documented attributes and events; they ar
 - **Typed results**, with a doc comment on every export. Every function is pure and returns new values.
 - **No dependencies.** ES modules, an entry per concern, and `sideEffects` set so that only the define entry has an effect.
 - **Where it runs.** See [Browser support](#browser-support).
+## Examples
+
+Each example is a whole recipe: copy it and it works. The ones in TypeScript are run in CI against the built package (`pnpm test:readme`), so none of them is a guess, and the output shown is what they print.
+
+### A puzzle on a page with no script of your own
+
+Save this as a file and open it: a Killer Sudoku for touch, mouse and keyboard, with a number pad, pencil marks, Undo, Hint, Check and a clock. The tag registers itself when its module is imported, and `@2` is the major version.
+
+```html
+<!doctype html>
+<meta charset="utf-8">
+<title>Killer Sudoku</title>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@2/dist/element-define.js"></script>
+<kazu-board kind="sum-cages" size="9" level="medium" seed="42"></kazu-board>
+<p id="said"></p>
+<script>
+  const board = document.querySelector("kazu-board");
+  board.addEventListener("kazu-solve", (event) => {
+    document.getElementById("said").textContent = `Solved in ${Math.round(event.detail.elapsedMs / 1000)} s${event.detail.helped ? ", with help" : ""}`;
+  });
+</script>
+```
+
+### Make a puzzle, count its answers, check one
+
+A kind, a size, a level and a seed make the same puzzle in every browser and every Node, for ever. The solver counts the answers, so a generated puzzle has exactly one, and `checkKazu` reads a finished grid in O(cells), with no search, and says the first thing wrong in words.
+
+```ts
+import { checkKazu, countKazuSolutions, generateKazu } from "@johnmorrisdotca/kazu";
+
+const puzzle = generateKazu("sum-cages", 9, "medium", 42);        // a Killer Sudoku
+console.log(puzzle.givens.length, "characters of givens;", puzzle.solution.length, "cells in the answer");
+console.log("answers:", countKazuSolutions("sum-cages", 9, puzzle.givens));
+console.log(checkKazu("sum-cages", 9, puzzle.givens, puzzle.solution));
+console.log(checkKazu("sum-cages", 9, puzzle.givens, puzzle.solution.replace(/^./, (first) => (first === "1" ? "2" : "1"))));
+```
+
+```text
+224 characters of givens; 81 cells in the answer
+answers: 1
+{ ok: true }
+{ ok: false, reason: 'row 1 repeats a number' }
+```
+
+### What the levels mean
+
+A level is what the solver needed, not how many numbers are printed. Easy yields to singles alone, medium needs one guess, hard whatever it takes, and `kazuGuessDepth` says how many.
+
+```ts
+import { generateKazu, kazuGuessDepth } from "@johnmorrisdotca/kazu";
+
+for (const level of ["easy", "medium", "hard"] as const) {
+  const { givens } = generateKazu("towers", 6, level, 1234);
+  console.log(level.padEnd(6), "guesses a person needs:", kazuGuessDepth("towers", 6, givens));
+}
+```
+
+```text
+easy   guesses a person needs: 0
+medium guesses a person needs: 1
+hard   guesses a person needs: 7
+```
+
+### A hint that is a reason
+
+`hintKazu` reasons from what is right on the grid so far, one step at a time, as a person does, and says which rule makes the next cell certain.
+
+```ts
+import { generateKazu, hintKazu } from "@johnmorrisdotca/kazu";
+
+const sudoku = generateKazu("number-place", 9, "easy", 7);
+const empty = new Array(81).fill(0);                              // nothing written yet
+const hint = hintKazu("number-place", 9, sudoku.givens, empty)!;
+console.log(`cell ${hint.cell} takes ${hint.value}: ${hint.why}`);
+```
+
+```text
+cell 2 takes 8: only-number
+```
+
+### Keep a run as a short string
+
+A game half done, as one character a cell, fits in a database column; `kazuHash` is a fingerprint of the puzzle it belongs to.
+
+```ts
+import { decodeCells, decodeRun, encodeRun, generateKazu, kazuHash } from "@johnmorrisdotca/kazu";
+
+const small = generateKazu("number-place", 4, "easy", 3);
+const run = encodeRun(decodeCells(small.givens, 4)!);
+console.log(run, "->", decodeRun(run, 4)!.join(""), "| puzzle", kazuHash(small.givens));
+```
+
+```text
+....1.4231244..3 -> 0000104231244003 | puzzle 9f50bd47
+```
+
+### Draw a puzzle as SVG text, on a server
+
+`drawKazu` returns a string: put it in a page, a file or an email, with nothing to load. The puzzle's names and rules come in English and Japanese from the same entry.
+
+```ts
+import { KAZU_NAMES, drawKazu } from "@johnmorrisdotca/kazu/draw";
+import { generateKazu } from "@johnmorrisdotca/kazu";
+
+const { givens } = generateKazu("towers", 5, "medium", 7);
+const svg = drawKazu("towers", 5, givens, { language: "ja", style: true })!;
+console.log(svg.startsWith("<svg"), svg.includes("kz-clue"));
+console.log(KAZU_NAMES.towers.en, "/", KAZU_NAMES.towers.ja, "/", KAZU_NAMES.towers.alsoKnownAs.join(", "));
+console.log(KAZU_NAMES.towers.rules.en[0]);
+```
+
+```text
+true true
+Skyscrapers / 摩天楼 / Towers, Building Heights
+Fill every cell with a tower from 1 up to the side of the square, so that each row and each column holds every height exactly once.
+```
+
+### The other puzzles have engines of their own
+
+Hitori, Loop, Akari, Shikaku, Masyu and the rest each have an entry for the rules (`/hitori`), one for the player (`/hitori/play`) and one for the drawing (`/hitori/draw`). The rules are the same shape: make a puzzle from a seed, check an answer, solve, rate.
+
+```ts
+import { checkHitori, generateHitori, rateHitori, solveHitori } from "@johnmorrisdotca/kazu/hitori";
+import { checkLoop, generateLoop } from "@johnmorrisdotca/kazu/loop";
+import { checkAkari, generateAkari } from "@johnmorrisdotca/kazu/akari";
+
+const hitori = generateHitori(6, 42, "medium");                   // size, seed, level
+console.log("Hitori:", checkHitori(hitori, hitori.solution).ok, "| solutions found:", solveHitori(hitori).count, "| shaded:", rateHitori(hitori).shaded);
+const loop = generateLoop(5, 5, 42, "easy");                      // width, height, seed, level
+console.log("Loop:", checkLoop(loop, loop.solution).loops, "closed loop");
+const akari = generateAkari(7, 7, 42, "medium");
+console.log("Akari:", checkAkari(akari, akari.solution).illuminated, "squares lit by", akari.solution.length, "bulbs");
+```
+
+```text
+Hitori: true | solutions found: 1 | shaded: 10
+Loop: 1 closed loop
+Akari: 35 squares lit by 12 bulbs
+```
+
+### Play it from a script
+
+`mountKazu` plays a puzzle in any element. Callbacks hand the run, the pencil marks and the clock to a page that keeps a game half done, and the answer to one that checks it.
+
+```ts no-run
+import { generateKazu } from "@johnmorrisdotca/kazu";
+import { mountKazu } from "@johnmorrisdotca/kazu/play";
+
+const puzzle = generateKazu("towers", 6, "hard", 1234);
+const board = mountKazu(document.getElementById("here")!, {
+  kind: "towers",
+  size: 6,
+  givens: puzzle.givens,
+  solution: puzzle.solution,
+  hints: "show",                                                  // point at the cell and say why; write nothing
+  language: "ja",
+  onChange: ({ run, notes, elapsedMs }) => localStorage.setItem("kazu", JSON.stringify({ run, notes, elapsedMs })),
+  onSolve: ({ answer, elapsedMs, helped }) => fetch("/solved", { method: "POST", body: JSON.stringify({ answer, elapsedMs, helped }) }),
+});
+board?.undo();
+board?.hint();
+```
+
+### A look of your own
+
+Every colour is a custom property on `.kazu`, so a page sets only what it wants different; the paper follows the page's light or dark.
+
+```css
+.kazu {
+  --kz-paper: #fffaf0;
+  --kz-entry: #7a1f12;
+  --kz-select: #ffd9a8;
+}
+```
 
 ## The puzzles
 
@@ -192,7 +537,6 @@ fewer of them.
 *Sudoku* 数独 is Nikoli's mark in Japan, so its Japanese name here is ナンプレ (Number Place, the puzzle's
 own original name and the word Japanese publishers use); the English names are the ones players search
 for. `KAZU_NAMES` has each puzzle's names, its rules in English and Japanese, and where it comes from.
-
 ## Making, solving and checking
 
 ```ts
@@ -224,7 +568,7 @@ A run is kept as short strings the site's own stored runs decode as they are: `e
 
 ### A hint
 
-```ts
+```ts no-check
 import { hintKazu } from "@johnmorrisdotca/kazu";
 
 hintKazu("number-place", 9, givens, entries);
@@ -236,10 +580,9 @@ mistake), one step at a time, as a person does: a cell only one number fits (`on
 whether a cage's sum, a Futoshiki mark or a Skyscrapers clue did part of the ruling out), or a number with
 only one place left in a row, column, box, region or diagonal (`only-place`). When nothing follows by a single
 step, which a hard puzzle asks for, it says so (`answer`). `mountKazu` puts the reason into words.
-
 ## Drawing a puzzle
 
-```ts
+```ts no-check
 import { drawKazu, KAZU_STYLE } from "@johnmorrisdotca/kazu/draw";
 
 const svg = drawKazu("sum-cages", 9, givens, { entries, notes, selected: 40, peers: true, conflicts: [3, 4], language: "ja" });
@@ -272,72 +615,89 @@ and data attributes to style or find them: `kz-given`, `kz-entry`, `kz-note`, `k
 are written, and nothing in it can be selected, dragged or double-tapped into a selection.
 `kazuGeometry(kind, size)` says where every cell is in the drawing and which cell a point is over, so a page of
 your own can play it.
-
 ## Playing it in a page
 
-```ts
-import { mountKazu } from "@johnmorrisdotca/kazu/play";
+<!-- moved: docs/PLAYING.md -->
 
-const board = mountKazu(document.getElementById("here")!, {
-  kind: "towers", size: 6, givens, solution, level: "hard", seed: 1234,
-  hints: "show", check: "count",
-  onChange: ({ run, notes, elapsedMs }) => keep(run, notes, elapsedMs),   // to carry on a puzzle half done
-  onSolve: ({ answer, elapsedMs, helped }) => send(answer, elapsedMs, helped),   // `answer` is what checkKazu takes
-});
-board?.undo(); board?.hint(); board?.load({ kind: "diagonal", size: 9, givens: other });
-```
+`mountKazu` plays a puzzle in any element by touch, mouse and keyboard, with a number pad, pencil marks, Undo, Hint, Check and a clock; `<kazu-board>` is the same as a tag. [Playing it in a page](docs/PLAYING.md#playing-it-in-a-page) has the options, the keys, the events and the table of entries.
 
-Tap a cell and tap a number on the pad (or type it); tap the chosen cell again to step its number on, 1, 2, 3
-… and round to empty. Turn **Pencil** on and the pad writes small notes instead, and a number written takes itself
-out of the notes of the cells it shares a group with. **Undo** takes the last change back, **Hint** says which
-cell to fill next and why, **Check** says how many cells are wrong, never which. A clock starts on the first entry
-and stops when the last cell is right, and waits while the page is hidden.
+## Masyu — pearls and a single loop
 
-The keys: the arrows move, a number (1 to 9, then A to G on the 16×16 and on to P on the 25×25) fills the chosen cell, Shift with a
-number writes it as a pencil mark, Backspace empties the cell, N turns Pencil on or off (the slash key on the 25×25, where N is the number 23), Ctrl or Cmd with Z
-undoes, Escape lets the cell go. The board's box keeps one steady square, and the lines of words under it keep
-the room their longest wording takes, so nothing moves as numbers are written or messages come and go. Nothing
-the player touches can be selected. Its words are English and Japanese and follow the page's `lang`.
+<!-- moved: docs/PUZZLES.md -->
 
-| Option | What it does |
-| --- | --- |
-| `kind`, `size`, `givens`, `solution` | the puzzle; `solution` is worked out when Hint or Check needs it if you leave it out |
-| `level`, `seed` | carried in the events, to say which puzzle it was |
-| `run`, `notes`, `elapsed` | a run kept half done (`decodeRun`'s code), its pencil marks, and the milliseconds already on the clock |
-| `hints` | `place` (default) writes the number it found, `show` only points at the cell and says why, `off` takes the button away |
-| `check` | `count` (default) says how many are wrong, `show` marks them too, `off` takes the button away |
-| `conflicts`, `peers`, `tidy`, `tapToStep` | each on by default: cells that break a rule in red, the chosen cell's lines washed, a written number rubbed out of the notes beside it, a tap on the chosen cell stepping it on |
-| `clock`, `controls` | the clock (default on); the number pad and buttons (default on) |
-| `language` | `en` or `ja`; left out, the host's `lang` or the page's, and it follows the page's |
-| `onChange`, `onHint`, `onCheck`, `onSolve` | callbacks, and the same four as DOM events on the host: `kazu-change`, `kazu-hint`, `kazu-check`, `kazu-solve`. Each `detail` has `run`, `notes`, `answer`, `progress`, `elapsedMs`, `hints`, `checks`, `helped` and `solved` |
+Pearls on a grid and one closed loop through every one of them: a white pearl on a straight section, a black pearl at a turn. [More](docs/PUZZLES.md#masyu--pearls-and-a-single-loop).
 
-Everything a button does is also a method on the handle (`undo`, `hint`, `check`, `restart`, `pencil`, `select`,
-`enter`, `load`, `set`, `destroy`). The rules it plays by are `game.ts`'s, which are pure and need no page
-(`newKazuGame`, `enterNumber`, `toggleNote`, `undoKazu`, `isSolved`), so a server can replay a game.
+## Yajilin — arrows, shaded cells and a loop
 
-### The element
+<!-- moved: docs/PUZZLES.md -->
 
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kazu@2/dist/element-define.js"></script>
-<kazu-board kind="sum-cages" size="9" level="medium" seed="42"></kazu-board>
-<kazu-board kind="towers" size="5" givens="…" solution="…" hints="show" lang="ja"></kazu-board>
-```
+Arrow counts, black cells that never touch, and one loop through every other empty cell. [More](docs/PUZZLES.md#yajilin--arrows-shaded-cells-and-a-loop).
 
-Or `import "@johnmorrisdotca/kazu/element/define"` in a bundle. Attributes, each read again when it changes:
-`kind` (the key of one of the six), `size`, `level` (`easy`, `medium` or `hard`) and `seed` (a new one if left out): the
-puzzle is made in the page; or `size` with `givens` and `solution`, a puzzle of your own; `run`, `notes` and
-`elapsed`, to carry on a puzzle half done; `hints` (`place`, `show`, `off`); `check` (`count`, `show`, `off`);
-`conflicts`, `peers`, `tidy`, `tap-to-step`, `clock` and `controls`, each on unless set to `off`; and `lang`. It
-fires the four events above and has the methods `undo()`, `hint()`, `check()`, `restart()`, `pencil()` and
-`select()`. Importing either entry on a server is safe.
+## Shikaku — rectangles in Kazu
 
-| Import | What it holds |
-| --- | --- |
-| `@johnmorrisdotca/kazu` | the generator, the solver, the check, the hint, the codes, and the game in play as pure functions: everything but the drawing and the page |
-| `@johnmorrisdotca/kazu/draw` | `drawKazu` and the rest of the drawing as SVG text, its style, where everything sits in it, the words and the names; no page needed |
-| `@johnmorrisdotca/kazu/play` | `mountKazu`: a puzzle played in any element by touch, mouse and keyboard, with its pad, buttons, clock, words and events |
-| `@johnmorrisdotca/kazu/element` | the `KazuBoard` class behind `<kazu-board>`, to extend or to define under another name |
-| `@johnmorrisdotca/kazu/element/define` | defines `<kazu-board>` on the page, for its effect |
+<!-- moved: docs/PUZZLES.md -->
+
+Divide the board into rectangles; square, wide, tall and custom boards from 2 to 16 on a side, at four levels, with named packs of proved challenges. [More](docs/PUZZLES.md#shikaku--rectangles-in-kazu).
+
+## Juosan — horizontal and vertical marks
+
+<!-- moved: docs/PUZZLES.md -->
+
+Each cell takes a horizontal or a vertical mark, and a territory clue is the difference between the two counts. [More](docs/PUZZLES.md#juosan--horizontal-and-vertical-marks).
+
+## Akari — light the grid
+
+<!-- moved: docs/PUZZLES.md -->
+
+Place bulbs in white squares until every white square is lit, no two bulbs see each other, and every numbered black square touches that many. [More](docs/PUZZLES.md#akari--light-the-grid).
+
+## Loop
+
+<!-- moved: docs/PUZZLES.md -->
+
+One closed loop along the edges of a grid of numbers, each number saying how many of its square's edges the loop uses: its own edge model, checker, solver and generator. [More](docs/PUZZLES.md#loop).
+
+## Ripple Effect
+
+<!-- moved: docs/PUZZLES.md -->
+
+Rooms that each hold 1 to their size once, and equal numbers in a row or column that are further apart than the number. [More](docs/PUZZLES.md#ripple-effect).
+
+## Cross Sums — crossword sums in Kazu
+
+<!-- moved: docs/PUZZLES.md -->
+
+Digits 1 to 9 in white cells so that every across and down run adds to its clue without repeating a digit (Kakuro). [More](docs/PUZZLES.md#cross-sums--crossword-sums-in-kazu).
+
+## Regions — connected regions with exact areas
+
+<!-- moved: docs/PUZZLES.md -->
+
+Each cell holds a number; every connected group of one number must be exactly that many cells, and two groups of the same area never touch. [More](docs/PUZZLES.md#regions--connected-regions-with-exact-areas).
+
+## Levels of the grid puzzles
+
+<!-- moved: docs/PUZZLES.md -->
+
+Shikaku, Akari, Loop, Hitori, Regions and Cross Sums make boards at `easy`, `medium`, `hard` and `extra-hard`, each with exactly one answer. [More](docs/PUZZLES.md#levels-of-the-grid-puzzles).
+
+## Heyawake — rooms and white paths
+
+<!-- moved: docs/PUZZLES.md -->
+
+Black cells that never touch in rooms with counts, white cells that stay connected, and no straight white run across more than two rooms. [More](docs/PUZZLES.md#heyawake--rooms-and-white-paths).
+
+## Hitori
+
+<!-- moved: docs/PUZZLES.md -->
+
+Shade squares so that no number repeats in a row or column among the unshaded, shaded squares never touch, and the rest stays in one piece. [More](docs/PUZZLES.md#hitori).
+
+## Nurikabe
+
+<!-- moved: docs/PUZZLES.md -->
+
+Original 5×5 puzzles from seeded symmetric layouts, each proved to have exactly one solution. [More](docs/PUZZLES.md#nurikabe).
 
 ## API
 
@@ -362,6 +722,28 @@ The [API reference](https://johnmorrisdotca.github.io/kazu/api.html) lists every
 | `KAZU_NAMES`, `KAZU_SIZE_NAMES`, `KAZU_STRINGS`, `kazuSay` | names, rules and words in English and Japanese |
 
 Every function is pure: it returns new values and never changes what it was given.
+
+### Entry points
+
+| Import | What it holds |
+| --- | --- |
+| `@johnmorrisdotca/kazu` | The generator, the solver, the check, the hint, the codes, and the game in play as pure functions, for the six number puzzles |
+| `@johnmorrisdotca/kazu/draw` | `drawKazu` and the rest of the drawing as SVG text, the words and the names |
+| `@johnmorrisdotca/kazu/play` | `mountKazu`: a puzzle played in any element |
+| `@johnmorrisdotca/kazu/element` | The `KazuBoard` class behind `<kazu-board>` |
+| `@johnmorrisdotca/kazu/element/define` | Defines `<kazu-board>` by being imported |
+| `@johnmorrisdotca/kazu/<puzzle>`, `/<puzzle>/play`, `/<puzzle>/draw` | The rules, the player and the drawing of each puzzle with an engine of its own: `shikaku`, `hitori`, `nurikabe`, `akari`, `juosan`, `loop`, `masyu`, `yajilin`, `ripple`, `cross-sums`, `regions` and `heyawake` |
+
+### The calls to learn first
+
+| Call | What it does |
+| --- | --- |
+| `generateKazu(kind, size, level, seed)` | A puzzle with exactly one answer, the same everywhere |
+| `checkKazu(kind, size, givens, answer)` | `{ ok: true }` or `{ ok: false, reason }`, in O(cells) |
+| `hintKazu(kind, size, givens, entries)` | The next cell, its value and the rule that says so |
+| `drawKazu(kind, size, givens, options)` | The puzzle as SVG text |
+| `mountKazu(element, options)` | The puzzle, played |
+| `generate<Puzzle>`, `check<Puzzle>`, `solve<Puzzle>` | The same three for each of the other puzzles |
 
 ## Theming
 
@@ -408,7 +790,6 @@ kazu-board, .kazu, .kazu-play { --kz-select: #ffd23f; --kz-entry: #0b5cad; --kzp
 ```
 
 The demo's own page is the worked example: its green felt and its cloth patches are the family's stylesheet, [`demo/family.css`](./demo/family.css), which is the same file byte for byte in every sibling's demo, and a test holds it to its hash. The parts of the drawing carry classes (`kz-given`, `kz-entry`, `kz-note`, `kz-cage-sum`, `kz-clue`, `kz-mark`, `kz-conflict`, `kz-hit`) for anything a property cannot reach.
-
 ## Limits
 
 All of these are held by tests, and the ones with a name are exported.
@@ -426,15 +807,24 @@ All of these are held by tests, and the ones with a name are exported.
 | A step log | the newest 400 steps | `KAZU_STEPS_KEPT` |
 
 A generator never runs on a server unless you ask it to. The check never searches: it is linear in the size of the grid.
+## Accessibility
+
+- **The board and the pad are named.** A drawn grid is an image with a label that says the puzzle and its size ("Sudoku puzzle, 9 by 9"), and the playable board is a labelled group with a description of its keys. Each number on the pad is a button named by its value, and one that is used up everywhere is named as done; Pencil is an `aria-pressed` button.
+- **What happens is spoken.** A line under the board and a second line for announcements are polite live regions, so the result of a Hint (which cell, and the rule that says so), a Check (how many cells are wrong) and a solved puzzle are heard without moving focus.
+- **The keyboard plays everything.** The board is one tab stop; the arrows move between cells, a number writes (Shift writes a pencil mark), Backspace empties a cell, N turns Pencil on or off, Ctrl or Cmd with Z undoes, and Escape lets the cell go. The pad and the buttons are native buttons, reached with Tab.
+- **Touch targets.** Every key and button on the pad is at least 44 pixels square, and the board is one steady square that fits a phone at 390 pixels, so nothing moves as numbers are written.
+- **No colour on its own.** A cell that breaks a rule is washed red and its number is red; a printed number, one the player wrote and a pencil mark differ in weight and size as well as in colour; a Hint's cell and the chosen cell's row and column are washes, not the only sign of anything. A player who cannot see colour can still turn on Check, which says how many cells are wrong.
+- **No motion and no sound.** Nothing in the puzzles animates and nothing makes a sound, so there is nothing for `prefers-reduced-motion` to change.
+- **Light and dark** follow the page, and every colour is a custom property (see [Theming](#theming)); the colour pairs have not been measured against WCAG contrast ratios.
+- **The puzzles with a page of their own** (Hitori, Loop, Masyu, Yajilin, Shikaku, Akari and the rest) label their cells or edges as buttons ("cell 2, column 3: shaded"), keep one tab stop with the arrows to move, and say their state in a `status` line. How complete the keyboard play is differs from puzzle to puzzle, and has not been audited as the number puzzles' has.
+- **Not yet.** The Japanese has not been read by a native reader (see [Languages](#languages)).
 
 ## Browser support
 
 Any browser with ES2020 modules, custom elements and CSS `aspect-ratio`: Chrome and Edge 88, Safari 15, Firefox 89, all from 2021 on. The element draws in the page's own DOM, with no shadow DOM and no CSS the page cannot reach. The demo is played in a real Chromium at a phone's width (with touch) and a desk's, and in WebKit, Safari's engine, at a phone's width; Firefox is not in that run. The package itself (everything but the drawing and the page) needs no DOM: it runs in Node 22 or later (CI tests 22 and 24). Deno and Bun are not tested.
-
 ## Languages
 
 English and Japanese, chosen by the `language` option, the host's `lang` or the page's, and followed when the page's `lang` changes. The demo has a chooser of its own and takes the browser's language on a first visit. The board's words (`KAZU_STRINGS`), each puzzle's names and rules (`KAZU_NAMES`) and the sizes' names are in both. **Japanese: included; not yet reviewed by a native reader. Corrections welcome.** Every string of the board is listed beside its English in [docs/strings-ja.md](./docs/strings-ja.md), and there is an [issue template](https://github.com/johnmorrisdotca/kazu/issues/new?template=fix-a-translation.md) for fixing one. Any other language is a table of your own, passed beside these two.
-
 ## Roadmap
 
 Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/kazu/issues):
@@ -443,482 +833,11 @@ Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/
 - A command line: make a puzzle, solve a code, check an answer, and print the grid as text.
 
 Left out on purpose: a puzzle with more than one answer, and any account, ranking or storage. A page keeps its own runs: `onChange` hands them over.
-
-## Masyu — pearls and a single loop
-
-Masyu is a line puzzle with its own cell-centre loop model. A white pearl lies on a straight section and the loop turns in at least one of its adjacent cells. A black pearl lies at a turn, with a straight section in each adjacent cell. One closed loop must pass through every pearl.
-
-```ts
-import { generateMasyu, checkMasyu, solveMasyu } from "@johnmorrisdotca/kazu/masyu";
-import { mountMasyu } from "@johnmorrisdotca/kazu/masyu/play";
-
-const puzzle = generateMasyu(5, 42);
-checkMasyu(puzzle, puzzle.solution); // { ok: true }
-solveMasyu(puzzle);                  // count: 1, complete: true
-mountMasyu(document.querySelector("#board"), { board: puzzle });
-```
-
-The dedicated `/masyu`, `/masyu/play`, and `/masyu/draw` entry points keep the loop engine separate from number-entry state. Import them from `@johnmorrisdotca/kazu/masyu`, `@johnmorrisdotca/kazu/masyu/play`, and `@johnmorrisdotca/kazu/masyu/draw`. The solver uses bounded cell-degree search; it reports `complete: false` when its node budget stops. The seeded generator currently supports original 5×5 layouts only: four distinct loop families, with board symmetries, produce varied pearl patterns and loop lengths. It returns a puzzle only after a completed uniqueness proof. Larger boards are not advertised until they can be proved within the search budget. Hints expose a next loop edge from a proved unique solution; saved play data contains the public pearls, drawn edges, and whether a hint was used.
-
-[Nikoli describes the Masyu rules here](https://www.nikoli.co.jp/en/puzzles/masyu/). The generated layouts are original and do not use Nikoli's grids or artwork.
-
-## Yajilin — arrows, shaded cells and a loop
-
-Yajilin places black cells by arrow counts and draws one loop through every remaining empty cell. Black cells do not touch by an edge; arrow cells are not shaded and are not part of the loop. The loop uses cell centres, not Loop's grid edges.
-
-```ts
-import { generateYajilin, checkYajilin, solveYajilin } from "@johnmorrisdotca/kazu/yajilin";
-import { mountYajilin } from "@johnmorrisdotca/kazu/yajilin/play";
-
-const puzzle = generateYajilin(5, 42);
-checkYajilin(puzzle, puzzle.solution.shaded, puzzle.solution.edges); // { ok: true }
-solveYajilin(puzzle); // count: 1, complete: true
-mountYajilin(document.querySelector("#board"), { board: puzzle });
-```
-
-Import the engine, player, and drawing from `@johnmorrisdotca/kazu/yajilin`, `@johnmorrisdotca/kazu/yajilin/play`, and `@johnmorrisdotca/kazu/yajilin/draw`. The solver enumerates public shade assignments, then checks the remaining cell-centre loop, with a finite node budget and an explicit incomplete result. The original seeded generator currently supports 5×5 only and keeps boards whose unique answer was proved. It varies both 3×3 and 3×4 loop families and their symmetries. Hints infer either a shade or a loop edge from the public clues and mark progress as helped. Save data contains only clues, current shades and drawn edges.
-
-[Nikoli's Yajilin rules](https://www.nikoli.co.jp/en/puzzles/yajilin/) define the arrow counts, non-touching shaded cells and single loop. These original layouts use no Nikoli puzzle grids or artwork.
-
-## Shikaku — rectangles in Kazu
-
-The demo includes square boards (5, 7, 10 and 14 on a side), wide (10 × 6), tall (6 × 10) and custom rectangular boards, with width and height from 2 to 16, at four levels. The named Courtyard (square), Long Table (wide) and Narrow Garden (tall) packs each hold three uniquely proved challenges with useful titles. Shares and saved settings preserve both dimensions. It uses Kazu’s shared materials and pieces palette.
-
-Shikaku belongs to the number-and-grid family. Its moves are rectangles rather than number entries, so it has a dedicated model and optional entry points; the existing six `KazuKind` values and saved Sudoku codes remain compatible.
-
-```js
-import { generateShikaku, newShikaku, placeShikaku, checkShikaku } from "@johnmorrisdotca/kazu/shikaku";
-import { mountShikaku } from "@johnmorrisdotca/kazu/shikaku/play";
-import { generateShikakuChallenge } from "@johnmorrisdotca/kazu/shikaku";
-
-const { puzzle } = generateShikakuChallenge("wide", 2); // Causeway, a proved 10 × 6 puzzle
-const player = mountShikaku(document.querySelector("#board"), {
-  board: puzzle, material: "ivory", pieces: "ink", language: "en",
-  onFinish: game => console.log(game.helped ? "Solved with help" : "Solved"),
-});
-// player.progress() saves public clues and rectangles; player.destroy() removes the player.
-```
-
-`generateShikakuChallenge("square" | "wide" | "tall", 1..3)` selects a named challenge and checks uniqueness with the existing solver.
-
-Use `@johnmorrisdotca/kazu/shikaku`, `@johnmorrisdotca/kazu/shikaku/play`, or `@johnmorrisdotca/kazu/shikaku/draw`.
-
-The root entry re-exports the engine, `/play` re-exports `mountShikaku`, and `/draw` re-exports `drawShikaku`. The dedicated entries let a consumer load only Shikaku. There are no runtime dependencies.
-
-## Juosan — horizontal and vertical marks
-
-Juosan gives each cell either a horizontal mark (`1`) or a vertical mark (`2`). A territory clue is the absolute difference between its horizontal and vertical mark counts; an unnumbered territory uses `difference: null`. Horizontal marks may make longer runs horizontally but never three vertically; vertical marks may make longer runs vertically but never three horizontally. See [Nikoli's English rules](https://www.nikoli.co.jp/en/puzzles/juosan/) for the original rule wording.
-
-```ts
-import { checkJuosan, generateJuosan, solveJuosan } from "@johnmorrisdotca/kazu/juosan";
-import { mountJuosan } from "@johnmorrisdotca/kazu/juosan/play";
-
-const puzzle = generateJuosan(3, 2, "easy", 42); // 3 × 2 training board; answer proved unique
-solveJuosan(puzzle, 2);                         // { count: 1, complete: true, ... }
-checkJuosan(puzzle, puzzle.solution);           // { ok: true, errors: [] }
-const game = mountJuosan(document.querySelector("#board")!, { board: puzzle });
-```
-
-Juosan has a dedicated immutable engine and package paths: `@johnmorrisdotca/kazu/juosan`, `@johnmorrisdotca/kazu/juosan/play`, and `@johnmorrisdotca/kazu/juosan/draw`. The player accepts any valid supplied board from 2×2 through 16×16. The built-in seeded generator currently supports the two small training shapes, 3×2 and 2×3. Even seeds split the board into straight three-cell territories; odd seeds use one whole-board territory. In each case, the maximum difference clue plus the directional run rule proves the single uniform orientation. Its `level` setting is reserved and does not change rule difficulty yet. The demo saves progress locally, marks hint use as assisted, and offers keyboard and touch input in English and Japanese.
-
-- `ShikakuBoard`: `width`, `height`, and row-major `clues` (zero for an empty cell). Dimensions are 2–16; clue areas sum to the grid area.
-- `ShikakuRectangle`: zero-based `x`, `y`, `width`, `height`.
-- `generateShikaku(width, height, level, seed)`: deterministic puzzle and solution; `level` is `easy`, `medium`, `hard` or `extra-hard` (`SHIKAKU_LEVELS`), and `SHIKAKU_SIZES` lists the square sides the demo offers (5, 7, 10, 14). The board is cut into interlocking rectangles by packing, not by straight cuts, each carries one number, and the answer is counted independently; every level is checked by solving the board (see [Levels](#levels-of-the-grid-puzzles)). It never returns an unproved board. If no board of a level is found within its attempts the next level down is made instead, which the rating shows.
-- `rateShikaku(board)`: how hard a board is, measured by solving it: `depth` (0 rules alone, 1 supposing one rectangle, 2 more), `rules` (how many of the three rules a depth-0 solve needed), `probes`, and the number, area and ambiguity of the rectangles.
-- `solveShikaku(board, placements?, {limit?, nodes?})`: exact-cover count, first answer, nodes visited and `complete`. The default limit is two answers and 100,000 nodes. Only `complete && count === 1` proves uniqueness; a stopped search is explicitly incomplete.
-- `checkShikaku(board, rectangles)`: coverage and rectangle rule errors, independent of a stored answer. It accepts any valid completion.
-- `newShikaku`, `placeShikaku`, `removeShikaku`, `undoShikaku`: immutable game operations. A placement replaces intersecting rectangles, and rule errors are allowed until checked. The game strips generated solutions.
-- `hintShikaku(game)`: a rectangle from the single proved remaining partition, or `null`. Hints in the mounted player mark the run as helped.
-- `encodeShikaku`, `decodeShikaku`: versioned JSON with only public puzzle data and placements, validated on restore. Undo history and the clock are session-only.
-- `drawShikaku(board, options)`: SVG. Materials `ivory`, `wood`, `slate`; numbers `ink`, `tiles`; language `en`, `ja`.
-- `mountShikaku(host, options)`: tap two opposite corner cells, or use arrows and Enter/Space. Delete removes a selected rectangle; Escape cancels a pending corner. Undo, Check, Hint, Restart and a modal board view are built in. The handle has `game`, `progress`, `set`, `restart`, `destroy`; callbacks and bubbling `shikaku-change` / `shikaku-finish` events carry copies of public state. Mount once per puzzle; use `set` for appearance changes.
-
-The demo is `site/shikaku.html` after `pnpm site`; its generator runs in a module worker at `dist/shikakuWorker.js`. Deploy the worker with the built files and permit same-origin module workers. The npm player accepts a board synchronously; hosts can use their own worker when generating large custom boards. The demo stores progress locally and shares settings through the address. Shared seeds start fresh; they do not share your placements. Restart and page reload reset the session clock.
-
-[Shikaku's rules are described by Nikoli](https://www.nikoli.co.jp/en/puzzles/shikaku/). This implementation generates its own puzzles and does not copy Nikoli's puzzle grids, wording or artwork.
-
-## Akari — light the grid
-
-Akari (美術館) places bulbs in white squares. Each bulb lights in straight lines until a black square or the edge. Every white square must be lit, bulbs cannot see each other, and a numbered black square must touch exactly that many bulbs. Boards may be square, wide, tall or custom, with each side from 2 to 16. The seeded generator scatters black squares at random (half the time in rotating pairs), lights them with random bulbs, numbers every black square that touches a white one, and then takes numbers away for as long as the board can still be solved the way the level asks, so the layouts are not a fixed motif. It returns a board only when its answer is proved single.
-
-```js
-import { generateAkari, checkAkari } from "@johnmorrisdotca/kazu/akari";
-import { mountAkari } from "@johnmorrisdotca/kazu/akari/play";
-
-const puzzle = generateAkari(7, 7, 42, "hard"); // width, height, seed, level ("medium" if left out)
-const player = mountAkari(document.querySelector("#board"), {
-  board: puzzle, material: "ivory", pieces: "ink", language: "en",
-});
-// player.progress() saves public clues and bulbs; player.destroy() removes the player.
-```
-
-Use `@johnmorrisdotca/kazu/akari`, `@johnmorrisdotca/kazu/akari/play`, or `@johnmorrisdotca/kazu/akari/draw`. The root package also re-exports the engine; the dedicated drawing and player entries keep those features optional. There are no runtime dependencies.
-
-- `AkariBoard`: width, height and row-major `cells`: `null` is white, `false` is an unnumbered black square, and `0`–`4` are numbered black squares.
-- `generateAkari(width, height, seed, level?)`: deterministic puzzle and its solution at `easy`, `medium`, `hard` or `extra-hard` (`AKARI_LEVELS`; `AKARI_SIZES` lists the square sides on offer: 5, 7, 10, 14). Easy keeps most of its numbers, medium is solved by the rules alone with as few as it can, hard needs supposing a bulb or an empty square, extra-hard needs the most of that. It returns only when an independent count proves exactly one answer; if no board of the level is found within its attempts the next level down is made, and the first generator, which cannot fail, is the last resort.
-- `rateAkari(board)`: how hard a board is, measured by solving it: `depth` (0 rules alone, 1 supposing one square, 2 more), `probes`, and the numbers, bulbs and white squares.
-- `solveAkari(board, {limit?, nodes?})`: counts placements, returns the first answer, visited nodes and `complete`; only `complete && count === 1` proves uniqueness. The default answer limit is two and the node budget is 250,000.
-- `checkAkari(board, bulbs)`: checks a complete placement from the rules, independently of the generated answer. `progressAkari` reports dark squares and immediate conflicts while permitting unfinished numbered clues.
-- `newAkari`, `toggleAkari`, `undoAkari`, `akariFinished`, `hintAkari`: immutable play operations. Hints require a proved unique answer and mark the game as helped.
-- `encodeAkari`, `decodeAkari`: versioned JSON containing only public board data and player bulbs.
-- `drawAkari(board, options)`: SVG with `ivory`, `wood` and `slate` materials, `ink` or `tiles` bulb pieces, and `en` or `ja` labels.
-- `mountAkari(host, options)`: toggle bulbs by tap, click, Enter or Space. Arrow keys move through the grid; Delete removes a bulb. Undo, Check, Hint, Restart and a modal board view are built in. The handle has `game`, `progress`, `set`, `restart` and `destroy`.
-
-The demo is `site/akari.html` after `pnpm site`. It shares Kazu's family header, footer, palette and felt board. Progress stays in local storage; share links carry board settings, not player data.
-
-[Nikoli's Akari rules](https://www.nikoli.co.jp/en/puzzles/akari/) describe the same line-of-sight and numbered-square constraints. These boards are generated here; the implementation does not copy Nikoli's grids or artwork.
-
-## Loop
-
-```js
-import { generateLoop } from "@johnmorrisdotca/kazu/loop";
-import { mountLoop } from "@johnmorrisdotca/kazu/loop/play";
-
-const puzzle = generateLoop(7, 7, 42, "hard"); // width, height, seed, level ("medium" if left out)
-const player = mountLoop(document.querySelector("#board"), {
-  board: puzzle, material: "ivory", language: "en",
-});
-// player.progress() saves the public clues and selected edges.
-```
-
-The Loop engine has its own edge model, checker, progress checker, bounded solution counter, seeded generator and immutable play state. `solveLoop` distinguishes an exhausted search from a proved count; the generator returns only boards proved to have one loop. `generateLoop(width, height, seed, level?)` makes `easy`, `medium`, `hard` or `extra-hard` (`LOOP_LEVELS`) boards, and `LOOP_SIZES` lists the square sides on offer (5, 7, 10). `rateLoop(board)` measures a board by solving it: `depth` (0 rules alone, 1 supposing one edge, 2 more), `probes`, the numbers, how many of them say 0, and the loop's length. Boards may be 2–10 cells wide and high. The generator grows a random winding loop (a connected region without holes whose outline never touches itself), numbers every square with how many of its edges the loop uses, and takes numbers away, squares numbered 0 first, for as long as the board can still be solved the way the level asks, so boards are not a few shapes and few squares say 0. The player supports touch and mouse edge toggles, arrow-key focus, Enter/Space, undo, restart, checking, proved hints, save/restore, and ivory, wood and slate materials in English and Japanese.
-
-Use `@johnmorrisdotca/kazu/loop`, `@johnmorrisdotca/kazu/loop/play`, or `@johnmorrisdotca/kazu/loop/draw`. The demo is `site/loop.html` after `pnpm site`. Loop is also known as Slitherlink, and its rules are described by [Nikoli](https://www.nikoli.co.jp/en/puzzles/slitherlink/). This implementation uses original generated layouts and does not copy Nikoli puzzle grids, wording or artwork.
-
-## Ripple Effect
-
-```ts
-import { generateRipple, newRipple, hintRipple } from "@johnmorrisdotca/kazu/ripple";
-import { mountRipple } from "@johnmorrisdotca/kazu/ripple/play";
-
-const puzzle = generateRipple(9, 9, 42);
-const game = newRipple(puzzle);
-const hint = hintRipple(game); // only returned after a unique completion is proved
-const player = mountRipple(document.querySelector<HTMLElement>("#board")!, {
-  board: puzzle, material: "ivory", pieces: "ink", language: "en",
-});
-```
-
-Each room contains every number from 1 through its size exactly once. Repeated N values in one row or column have at least N cells between them, so their coordinate distance must exceed N. The DOM-free engine has independent completion and progress checks and a bounded solution counter that reports when a search stopped before proof. The original seeded 9×9 generator uses 3×3 rooms, seeded row-band, column-stack and digit permutations, and uniqueness-preserving clue removal. It returns only puzzles proved to have one completion; custom sizes are not advertised until their generator family passes the same proof checks. These are original layouts and do not reproduce Nikoli puzzle grids or artwork.
-
-Use `@johnmorrisdotca/kazu/ripple`, `@johnmorrisdotca/kazu/ripple/play`, or `@johnmorrisdotca/kazu/ripple/draw`. The touch and keyboard player includes number entry, pencil notes, undo, restart, checking, unique-proof hints, accessible room boundaries, save/restore, and ivory, wood and slate materials with ink or tile pieces in English and Japanese. The demo is `site/ripple.html` after `pnpm site`. Rules: [Nikoli’s Ripple Effect page](https://www.nikoli.co.jp/en/puzzles/ripple_effect/).
-
-## Cross Sums — crossword sums in Kazu
-
-Cross Sums fills white cells with digits 1–9. Each across and down run must match its clue sum without repeating a digit. Run lengths are at least two, and every white cell belongs to exactly one run in each direction. The puzzle is also known as Kakuro, and [Nikoli describes the rules](https://www.nikoli.co.jp/en/puzzles/kakuro/); generated layouts here are original.
-
-```js
-import { generateCrossSums, solveCrossSums, checkCrossSums } from "@johnmorrisdotca/kazu/cross-sums";
-import { mountCrossSums } from "@johnmorrisdotca/kazu/cross-sums/play";
-
-const puzzle = generateCrossSums(42, "hard", 8); // seed, level ("medium"), size including the totals' row and column (10)
-const proof = solveCrossSums(puzzle); // uniqueness only when complete && count === 1
-const player = mountCrossSums(document.querySelector("#board"), { board: puzzle, language: "en" });
-player.progress(); // public clues, entries and pencil marks; no answer
-```
-
-`@johnmorrisdotca/kazu/cross-sums/draw` provides standalone SVG drawing. `generateCrossSums(seed, level?, size?)` makes a board of any side from 5 to 12 (`CROSS_SUMS_SIZES` lists those on offer: 6, 8, 10, 12) at `easy`, `medium`, `hard` or `extra-hard` (`CROSS_SUMS_LEVELS`). It lays out the black squares row by row so that no run is a single square or longer than the level allows, fills random digits, and changes digits or darkens squares until the answer is single; easy and medium also ease the board until the rules they promise are enough, and hard and extra-hard ask for supposing. A board is accepted only after a bounded exact count proves one answer, and a seed never throws: if a level is not found within its attempts the next level down is made, and the first generator is the last resort on a 10×10. `rateCrossSums(board)` measures a board by solving it: `depth`, `plain` (the single-run rules were enough), `probes`, the runs, the longest run and the share of totals that can be made one way only. `solveCrossSums` reports `complete: false` when its node budget or answer limit stops counting. `checkCrossSums` validates completed runs independently; `progressCrossSums` permits blanks while marking impossible totals and repeats. The bilingual player supports touch, arrows, digits, pencil mode, Undo, Hint, Check, Restart and versioned saved progress.
-
-The Cross Sums entries are `@johnmorrisdotca/kazu/cross-sums`, `@johnmorrisdotca/kazu/cross-sums/play` and `@johnmorrisdotca/kazu/cross-sums/draw`.
-
-## Regions — connected regions with exact areas
-
-The dedicated package entries are `@johnmorrisdotca/kazu/regions`, `@johnmorrisdotca/kazu/regions/play`, and `@johnmorrisdotca/kazu/regions/draw`.
-
-Each cell holds a number. All orthogonally connected cells with the same number form a region, and the region's area must equal that number. Two regions of the same area cannot touch. A completed region does not need to contain a printed clue; the checker and solver do not require one clue per region.
-
-```ts
-import { generateRegions, checkRegions, solveRegions } from "@johnmorrisdotca/kazu/regions";
-import { mountRegions } from "@johnmorrisdotca/kazu/regions/play";
-
-const puzzle = generateRegions(6, 6, "hard", 17);
-const result = solveRegions(puzzle);
-if (!result.complete || result.count !== 1) throw new Error("The answer was not proved unique");
-checkRegions(puzzle, result.solution);
-mountRegions(document.querySelector("#board"), { board: puzzle });
-```
-
-`RegionsBoard` contains `width`, `height`, and row-major `givens`, with zero for an empty cell. Engine validation and the seeded generator both support rectangular boards from 4 to 12 cells per side (`REGIONS_SIZES` lists the square sides on offer: 6, 8, 10, 12). A seed reproduces its puzzle. The levels are `easy`, `medium`, `hard` and `extra-hard` (`REGIONS_LEVELS`), and `rateRegions(board)` measures a board by solving it: `depth` (0 rules alone, 1 supposing one number, 2 more), `probes`, the givens and their share, the regions, how many have no given and how big they are. The generator cuts the board into connected regions with no two of one size touching, gives every square, and takes givens away while the board can still be solved the way the level asks. Search bounds report when counting stopped rather than treating a partial search as a uniqueness proof.
-
-`checkRegions(board, entries)` checks givens, oversized connected groups and completion independently of the generated answer. An unfinished group smaller than its number can still grow. `solveRegions(board, entries?, { limit?, nodes? })` counts filled solutions by growing connected regions, including regions with no given. Only `complete && count === 1` proves uniqueness. `newRegions`, `setRegionsCell`, `undoRegions`, `restartRegions`, `hintRegions`, and `regionsFinished` are immutable game helpers. Progress codes contain public clues, entries, and the persistent assisted flag; they contain no stored answer.
-
-The player accepts touch, mouse, and keyboard input, with undo, check, a proved hint, restart, and local progress codes. Hints persistently mark a run as assisted. The English and Japanese player uses the same board materials and number styles as Shikaku. The demo offers 4×4 through 12×12 settings at four levels. It is at [regions.html](https://johnmorrisdotca.github.io/kazu/regions.html).
-
-Regions is also known as Fillomino, and [Nikoli's rules](https://www.nikoli.co.jp/en/puzzles/fillomino/) describe numbered connected regions, exact area, and separation between equal-area regions. This implementation generates original puzzles and does not reuse published grids or artwork.
-
-## Levels of the grid puzzles
-
-Shikaku, Akari, Loop, Hitori, Regions and Cross Sums make boards at `easy`, `medium`, `hard` and `extra-hard`. Every board has exactly one answer, and a level says what a person has to do to solve it, measured by solving the board with the package's own rules: easy and medium need only the rules (easy keeps more numbers, medium as few as the rules allow), hard needs supposing something and watching it break, and extra-hard needs the most of that. `rateShikaku`, `rateAkari`, `rateLoop`, `rateHitori`, `rateRegions` and `rateCrossSums` return the measure of a board (`depth`, `probes` and what it is made of), so a site can show it or pick boards by it.
-
-| Kind | Call | Sizes on offer | Largest size, extra-hard: median / slowest to make |
-| --- | --- | --- | --- |
-| Shikaku | `generateShikaku(width, height, level, seed)` | 5, 7, 10, 14 (any side 2–16) | 14 × 14: 89 ms / 302 ms |
-| Akari | `generateAkari(width, height, seed, level?)` | 5, 7, 10, 14 (any side 2–16) | 14 × 14: 212 ms / 366 ms |
-| Loop | `generateLoop(width, height, seed, level?)` | 5, 7, 10 (any side 2–10) | 10 × 10: 231 ms / 286 ms |
-| Hitori | `generateHitori(size, seed, level?)` | 5, 6, 7, 8, 9, 10, 12 (any side 4–12) | 12 × 12: 157 ms / 511 ms |
-| Regions | `generateRegions(width, height, level, seed)` | 6, 8, 10, 12 (any side 4–12) | 12 × 12: 187 ms / 422 ms |
-| Cross Sums | `generateCrossSums(seed, level?, size?)` | 6, 8, 10, 12 (any side 5–12) | 12 × 12: 273 ms / 1,254 ms |
-
-[docs/LEVELS.md](docs/LEVELS.md) defines each level for each kind, defines the measure, and tables it by size and level over 200 seeds, with the median, 95th percentile and slowest time to make a board; `node scripts/measure-levels.mjs` makes the tables again. These are the same boards in every browser and every Node for a given kind, size, level and seed, but they are **not** the boards 1.2.0 made for that seed.
-
-## Heyawake — rooms and white paths
-
-The Heyawake demo supports rectangular room boards, black/white/blank marking, keyboard and touch play, undo, a contradiction check, unique-solution hints, restart, local progress, and English/Japanese labels. Use `@johnmorrisdotca/kazu/heyawake`, `@johnmorrisdotca/kazu/heyawake/play`, or `@johnmorrisdotca/kazu/heyawake/draw`; generated answers are never included in progress data.
-
-```js
-import { generateHeyawake, checkHeyawake, solveHeyawake } from "@johnmorrisdotca/kazu/heyawake";
-
-const puzzle = generateHeyawake(5, 4, "easy", 17);
-checkHeyawake(puzzle, puzzle.solution); // checks room counts and all three global rules
-solveHeyawake(puzzle); // { count: 1, complete: true, ... }
-```
-
-The engine accepts boards up to 12×12. The original seeded generator supports rectangles from 4 to 8 cells per side, capped at 25 total cells to keep uniqueness proofs bounded. Its easy, medium and hard profiles start with different room-clue densities, then retain more room clues and may split rooms more finely when needed for a uniqueness proof. These are clue profiles, not measured human difficulty. See [the Heyawake rules and API guide](docs/HEYAWAKE.md).
-
-[Nikoli's Heyawake rules](https://www.nikoli.co.jp/en/puzzles/heyawake/) describe numbered room counts, non-touching black cells, connected whites, and a maximum of two rooms in a straight uninterrupted white run. The package generates original grids and uses no published puzzle boards or artwork.
-
 ## Architecture
 
-The generators, the solvers, the check, the hint and the game are plain functions over short codes, with no
-DOM. The drawing is SVG text in an entry of its own, so a server that only checks an answer never loads it, and
-the page's part (the mount and the element) is another.
+<!-- moved: docs/ARCHITECTURE.md -->
 
-```text
-├── hitori-draw-entry.ts
-├── hitori-entry.ts
-├── hitori-play-entry.ts
-├── hitori.constants.ts
-├── hitori.types.ts
-├── hitori-board.ts
-├── hitori-draw.ts
-├── hitori-game.ts
-├── hitori-generate.ts
-├── hitori-build.ts
-├── hitori-logic.ts
-├── hitori-rate.ts
-├── hitori-mount.ts
-├── hitori-play.types.ts
-├── hitori-solve.ts
-├── hitori-strings.ts
-├── hitori-style.ts
-├── nurikabe-draw-entry.ts
-├── nurikabe-entry.ts
-├── nurikabe-play-entry.ts
-├── nurikabe.constants.ts
-├── nurikabe.types.ts
-├── nurikabe-board.ts
-├── nurikabe-draw.ts
-├── nurikabe-game.ts
-├── nurikabe-generate.ts
-├── nurikabe-mount.ts
-├── nurikabe-play.types.ts
-├── nurikabe-solve.ts
-├── nurikabe-strings.ts
-├── nurikabe-style.ts
-├── juosan-draw-entry.ts
-├── juosan-entry.ts
-├── juosan-play-entry.ts
-├── juosan.constants.ts
-├── juosan.types.ts
-├── juosan-board.ts
-├── juosan-draw.ts
-├── juosan-game.ts
-├── juosan-generate.ts
-├── juosan-mount.ts
-├── juosan-play.types.ts
-├── juosan-solve.ts
-├── juosan-strings.ts
-├── juosan-style.ts
-├── masyu-draw-entry.ts
-├── masyu-entry.ts
-├── masyu-play-entry.ts
-├── masyu.constants.ts
-├── masyu.types.ts
-├── masyu-board.ts
-├── masyu-draw.ts
-├── masyu-game.ts
-├── masyu-generate.ts
-├── masyu-mount.ts
-├── masyu-play.types.ts
-├── masyu-solve.ts
-├── masyu-strings.ts
-├── masyu-style.ts
-├── yajilin-draw-entry.ts
-├── yajilin-entry.ts
-├── yajilin-play-entry.ts
-├── yajilin.constants.ts
-├── yajilin.types.ts
-├── yajilin-board.ts
-├── yajilin-draw.ts
-├── yajilin-game.ts
-├── yajilin-generate.ts
-├── yajilin-mount.ts
-├── yajilin-play.types.ts
-├── yajilin-solve.ts
-├── yajilin-strings.ts
-├── yajilin-style.ts
-├── regions-draw-entry.ts
-├── regions-entry.ts
-├── regions-play-entry.ts
-├── regions.constants.ts
-├── regions.types.ts
-├── regions-board.ts
-├── regions-draw.ts
-├── regions-game.ts
-├── regions-generate.ts
-├── regions-build.ts
-├── regions-logic.ts
-├── regions-rate.ts
-├── regions-mount.ts
-├── regions-play.types.ts
-├── regions-solve.ts
-├── regions-strings.ts
-├── regions-style.ts
-├── regions-worker.ts
-├── shikaku-draw-entry.ts
-├── shikaku-entry.ts
-├── shikaku-play-entry.ts
-├── cross-sums-draw-entry.ts
-├── cross-sums-entry.ts
-├── cross-sums-play-entry.ts
-├── cross-sums.constants.ts
-├── cross-sums.types.ts
-├── cross-sums-board.ts
-├── cross-sums-draw.ts
-├── cross-sums-game.ts
-├── cross-sums-generate.ts
-├── cross-sums-build.ts
-├── cross-sums-logic.ts
-├── cross-sums-rate.ts
-├── cross-sums-template.ts
-├── cross-sums-mount.ts
-├── cross-sums-play.types.ts
-├── cross-sums-solve.ts
-├── cross-sums-strings.ts
-├── cross-sums-style.ts
-├── shikaku.constants.ts
-├── shikaku.types.ts
-├── shikaku-board.ts
-├── shikaku-draw.ts
-├── shikaku-game.ts
-├── shikaku-generate.ts
-├── shikaku-build.ts
-├── shikaku-logic.ts
-├── shikaku-rate.ts
-├── shikaku-template.ts
-├── shikaku-mount.ts
-├── shikaku-packs.ts
-├── shikaku-play.types.ts
-├── shikaku-solve.ts
-├── shikaku-strings.ts
-├── shikaku-style.ts
-├── shikaku-worker.ts
-├── akari-draw-entry.ts
-├── akari-entry.ts
-├── akari-play-entry.ts
-├── akari.constants.ts
-├── akari.types.ts
-├── akari-board.ts
-├── akari-draw.ts
-├── akari-game.ts
-├── akari-generate.ts
-├── akari-logic.ts
-├── akari-rate.ts
-├── akari-template.ts
-├── akari-mount.ts
-├── akari-play.types.ts
-├── akari-solve.ts
-├── akari-strings.ts
-├── akari-style.ts
-├── loop-draw-entry.ts
-├── loop-entry.ts
-├── loop-play-entry.ts
-├── loop.constants.ts
-├── loop.types.ts
-├── loop-board.ts
-├── loop-draw.ts
-├── loop-game.ts
-├── loop-generate.ts
-├── loop-logic.ts
-├── loop-rate.ts
-├── loop-template.ts
-├── loop-mount.ts
-├── loop-play.types.ts
-├── loop-solve.ts
-├── loop-strings.ts
-├── loop-style.ts
-├── ripple-draw-entry.ts
-├── ripple-entry.ts
-├── ripple-play-entry.ts
-├── ripple.constants.ts
-├── ripple.types.ts
-├── ripple-board.ts
-├── ripple-draw.ts
-├── ripple-game.ts
-├── ripple-generate.ts
-├── ripple-mount.ts
-├── ripple-play.types.ts
-├── ripple-solve.ts
-├── ripple-strings.ts
-├── ripple-style.ts
-├── heyawake-draw-entry.ts
-├── heyawake-entry.ts
-├── heyawake-play-entry.ts
-├── heyawake.constants.ts
-├── heyawake.types.ts
-├── heyawake-board.ts
-├── heyawake-draw.ts
-├── heyawake-game.ts
-├── heyawake-generate.ts
-├── heyawake-mount.ts
-├── heyawake-play.types.ts
-├── heyawake-solve.ts
-├── heyawake-strings.ts
-├── heyawake-style.ts
-├── heyawake-worker.ts
-src/
-├── index.ts            the main entry: everything but the drawing and the page
-├── kinds.ts            the six puzzles' keys, sizes and levels, and the shape of a puzzle
-├── random.ts           the seeded random numbers every puzzle is made from
-├── csp.ts              the one small engine under the six grid kinds: counting answers, and reasoning with and without supposing
-├── cells.ts            a grid of numbers as a string, 1 to 9 and A to P
-├── layout.ts           the groups that must each hold every number once: rows, columns, boxes, regions, diagonals, cages
-├── group-solve.ts       the solver for puzzles made of groups: counting, singles, depth
-├── number-place.ts      Sudoku and Diagonal Sudoku: the generator and how givens are carved
-├── jigsaw.ts           Jigsaw Sudoku: irregular regions, their code and the generator
-├── sum-cages.ts         Killer Sudoku: cages grown by joining, their code and outline
-├── more-or-less.ts       Futoshiki: the Latin square, the marks and the generator
-├── more-or-less-code.ts   Futoshiki's givens as a string
-├── more-or-less-solve.ts  Futoshiki's solver
-├── towers.ts           Skyscrapers: the generator
-├── towers-code.ts       Skyscrapers' givens as a string, and what a clue sees
-├── towers-solve.ts      Skyscrapers' solver
-├── generate.ts         generateKazu: the one door to every generator
-├── solve.ts            solving, counting and measuring any puzzle from its givens
-├── givens.ts           what a puzzle was printed with, read from its code
-├── check.ts            whether a finished grid is right, in O(cells)
-├── conflicts.ts        the cells that break a rule right now
-├── hint.ts             the next cell a person could fill in, and why
-├── progress.ts         runs, pencil marks and step logs as strings
-├── game.ts             a game in play as pure functions: entries, notes, Undo
-├── clock.ts            a time as a clock shows it
-├── names.ts            each puzzle's names, rules and origin, in English and Japanese
-├── strings.ts          the words a board says, in English and Japanese
-├── geometry.ts         where every cell is in the drawing, and which cell a point is over
-├── style.ts            the drawing's style: its colours as custom properties
-├── draw.ts             a puzzle as SVG text
-├── draw-entry.ts       the "/draw" entry
-├── play-style.ts        the style of a playable board: its box, pad, buttons and words
-├── mount.ts            mountKazu: draws a puzzle into an element and plays it
-├── play-entry.ts       the "/play" entry
-├── element.ts          the "/element" entry: the <kazu-board> class
-├── element-define.ts   the "/element/define" entry: defines the tag on the page
-└── version.ts          the package's version
-```
-
-Tests sit beside the code they test (`*.test.ts`). `src/site.fixture.json` is what itsutsu.com made before the move,
-and six `site.<puzzle>.test.ts` files make it all again. `scripts/` builds the demo and its API reference page, takes the
-README's pictures and checks the package as npm packs it; `demo/` is the playable page, and `e2e/` its browser tests.
+The rules are plain functions over strings with no DOM; the drawing is a separate entry, so a server that only checks answers never loads it; and each puzzle has its own engine, drawing and player in its own entry. Tests sit beside the code they test. [Architecture](docs/ARCHITECTURE.md#architecture) lists every source file and what it does.
 
 ## The name
 
@@ -927,7 +846,6 @@ README's pictures and checks the package as npm packs it; `demo/` is the playabl
 (*kazoeru*), to count, is the verb that goes with it. It is said in two beats, *ka-zu*. In every puzzle here a
 number is what you write in each cell. ([Wiktionary: 数](https://en.wiktionary.org/wiki/数), which gives かず as
 "number; amount" and かぞえる as "to count".)
-
 ## Where it comes from, and where it is used
 
 Kazu was built for [Itsutsu](https://itsutsu.com), a site for board games, puzzles, card games and dice games
@@ -974,16 +892,16 @@ Kazu is one of twenty-four packages, each made for the same site, each at
 
 **This package is Kazu.** The demos of all twenty-four share one header and footer, so each links the rest.
 <!-- family:end -->
-
 ## Development
 
 ```sh
 pnpm install
-pnpm check          # lint, types and every test, every puzzle the site made made again
-pnpm test:package   # pack, install and import it as somebody who installed it would
-pnpm test:demo      # build the demo and play it in a real browser, at a phone's width and a desk's
-pnpm site           # build the demo into site/, as the Pages workflow publishes it
-pnpm pictures       # take the README's two pictures from the built demo
+pnpm check                # lint, types and every test, every puzzle the site made made again
+pnpm test:package        # pack it, install it, and use it as published
+pnpm test:demo           # build the demo and play it in a real browser, at a phone's width and a desk's
+pnpm test:readme         # run every example in this README against the built package
+pnpm site                # build the demo into site/, as the Pages workflow publishes it
+pnpm screenshots:readme  # take the README's pictures from the built demo, in light and dark
 ```
 
 ## Contributing
@@ -991,46 +909,10 @@ pnpm pictures       # take the README's two pictures from the built demo
 See [CONTRIBUTING.md](./CONTRIBUTING.md). The commands are under [Development](#development).
 
 Please follow the [code of conduct](./CODE_OF_CONDUCT.md). A way to make the check or the solver run for long, or markup that gets out of the drawing, is for the [security policy](./SECURITY.md), not a public issue.
-
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md).
+See [CHANGELOG.md](./CHANGELOG.md). The latest release, 2.0.1, adds no code: it is this README in full, with pictures of every puzzle, examples that are run on every change, an Accessibility section, and the reference for the puzzles with a page of their own moved to pages under `docs/`.
 
 ## Licence
 
 MIT, © John Morris. The puzzles are made in code and the drawing is SVG; there is no sound and no data file but the record of what the site made.
-
-## Hitori
-
-Hitori is included as a small standalone rules engine, drawing and player. Its public board has a `size` from 4 to 12 (`HITORI_SIZES` lists those on offer: 5, 6, 7, 8, 9, 10, 12) and a flat row-major `numbers` array. A solution is a Boolean shade mask: `true` means black. The solver counts minimal shade patterns, excluding redundant extra black cells; `complete: true` means the search finished, while a node-budget stop never claims uniqueness. `generateHitori(size, seed, level?)` makes `easy`, `medium`, `hard` or `extra-hard` (`HITORI_LEVELS`) puzzles: a random set of shaded squares that never touch and leave the rest in one piece, white squares numbered from a random Latin square so nothing repeats among them, and every shaded square numbered like a white one in its row or column, repaired until the answer is single. Easy is solved by the duplicates, pairs and sandwiches alone, medium once the whites must stay connected, hard by supposing, extra-hard needs the most supposing of several boards. The generator returns only puzzles proved to have one minimal answer, and `rateHitori(board)` measures a board by solving it: `depth`, `reach`, `probes` and how much is shaded and repeated.
-
-```ts
-import { generateHitori, checkHitori, solveHitori } from "@johnmorrisdotca/kazu/hitori";
-import { drawHitori } from "@johnmorrisdotca/kazu/hitori/draw";
-import { mountHitori } from "@johnmorrisdotca/kazu/hitori/play";
-
-const puzzle = generateHitori(9, 42, "hard"); // size, seed, level ("medium" if left out)
-checkHitori(puzzle, puzzle.solution); // { ok: true, errors: [] }
-solveHitori(puzzle);                 // count: 1, complete: true
-```
-
-`newHitori`, `shadeHitori`, `undoHitori`, `hintHitori`, `encodeHitori` and `decodeHitori` keep play state immutable and progress codes free of the answer. Hints are assistance and set `helped`; generated answers are never put into the player state. The demo is `site/hitori.html` after `pnpm site`, and stores progress in this browser only. The implementation follows [Nikoli's Hitori rules](https://www.nikoli.co.jp/en/puzzles/hitori/) and makes its own boards.
-
-Use `@johnmorrisdotca/kazu/hitori`, `@johnmorrisdotca/kazu/hitori/play`, or `@johnmorrisdotca/kazu/hitori/draw`.
-## Nurikabe
-
-Nurikabe is available through its own rules, drawing and player entries. This compact edition makes original 5×5 puzzles from seeded symmetric layouts; it returns a puzzle only after the bounded solver proves exactly one solution. The supported board size is intentionally limited to 5×5 so generation remains quick and dependable.
-
-```ts
-import { generateNurikabe, checkNurikabe, solveNurikabe } from "@johnmorrisdotca/kazu/nurikabe";
-import { drawNurikabe } from "@johnmorrisdotca/kazu/nurikabe/draw";
-import { mountNurikabe } from "@johnmorrisdotca/kazu/nurikabe/play";
-
-const puzzle = generateNurikabe(42);
-checkNurikabe(puzzle, puzzle.solution); // { ok: true, errors: [] }
-solveNurikabe(puzzle);                 // count: 1, complete: true
-```
-
-A clue gives the exact size of its white island; each island has one clue, the remaining black sea is connected, and no 2×2 square is entirely black. `newNurikabe`, `markNurikabeSea`, `undoNurikabe`, `hintNurikabe`, `encodeNurikabe` and `decodeNurikabe` keep the player's state separate from the answer. The demo stores progress locally. The implementation follows [Nikoli's Nurikabe rules](https://www.nikoli.co.jp/en/puzzles/nurikabe/) and uses its own puzzle layouts.
-
-Use `@johnmorrisdotca/kazu/nurikabe`, `@johnmorrisdotca/kazu/nurikabe/play`, or `@johnmorrisdotca/kazu/nurikabe/draw`.

@@ -6,6 +6,21 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-10-06
+
+Nothing that was exported has changed. The README is the family's one layout, in full, and the reference for the puzzles with a page of their own moved to pages under `docs/`.
+
+### Added
+
+- The README has a picture of the demo on a desk and on a phone, in light and dark, taken from the demo by `pnpm screenshots:readme` (the pictures are in `docs/images/` and are not in the package), a picture of each of the eighteen puzzles, an Examples section of nine examples that run (making a puzzle and counting its answers, the levels, a hint that is a reason, a run as a short string, the drawing as SVG text on a server, the other puzzles' engines, and playing from a script), tables of the entry points and the calls to learn first, and an Accessibility section.
+- `docs/PUZZLES.md`, `docs/PLAYING.md` and `docs/ARCHITECTURE.md` hold the sections of the README that were its reference (each puzzle with a page of its own, the levels of the grid puzzles, playing it in a page, and the source tree), word for word. npm shows only the first 65,536 characters of a README and this one was 78,097 (the registry's copy ended mid-sentence in the Roadmap, before the puzzles' sections, Architecture, the family and the Licence); it is 61,617 now, and each moved section keeps its heading, a summary and a link. `scripts/full-readme.mjs` puts the moved sections back, so that the tests that hold the documentation to the code read the whole.
+- `pnpm test:readme` type-checks and runs every TypeScript and JavaScript example in the README against the built package, as a job of its own in CI; `src/readme.test.js` holds the README to the family's standard (sections in order, languages on code fences, pictures with alt text and a caption, no marketing words, version pins, at most 64,000 characters) in `pnpm check`; `pnpm test:package` fails if a picture or anything under `docs/` is in the packed package.
+
+### Changed
+
+- The README's sections are in the family's order: Hitori and Nurikabe, which came after the Licence, and the other puzzles, which came after the Roadmap, are under the puzzles; and the Features list no longer says "Seven puzzles" beside "Six number puzzles".
+- `pnpm pictures` is `pnpm screenshots:readme`, and takes WebP pictures in light and dark under `docs/images/`; `docs/desktop.jpg` and `docs/phone.jpg` are gone.
+
 ## [2.0.0] - 2026-10-06
 
 The package is named for the puzzles it makes, not for the names another site printed them under: Slitherlink is
