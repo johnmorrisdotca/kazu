@@ -204,7 +204,19 @@ for (const kind of KAZU_KINDS) {
       await expect(page.locator(`${at("board")} .kz-hit`)).toHaveCount(size * size);
       if (kind === "towers") await expect(page.locator(`${at("board")} .kz-clue`).first()).toBeVisible();
       if (kind === "sum-cages") await expect(page.locator(`${at("board")} .kz-cage-sum`).first()).toBeVisible();
-      if (kind === "more-or-less") expect(await page.locator(`${at("board")} .kz-mark`).count()).toBeGreaterThan(0);
+      if (kind === "more-or-less") {
+        // A fresh seed makes the puzzle, and about one 4×4 in seventy prints no mark at all, so the marks drawn are held to the marks the
+        // package printed for the very seed on the board, read together with the count so a redraw between the two cannot mix them.
+        await expect
+          .poll(async () => {
+            const { seed, level, marks } = await page.evaluate((board) => {
+              const host = document.querySelector(board);
+              return { seed: Number(host.dataset.seed), level: document.querySelector('[data-testid="levels"] [aria-pressed="true"]').dataset.value, marks: host.querySelectorAll("svg.kazu .kz-mark").length };
+            }, at("board"));
+            return marks === readGivens(kind, size, generateKazu(kind, size, level, seed).givens).marks.length;
+          })
+          .toBe(true);
+      }
       if (kind === "diagonal") expect(await page.locator(`${at("board")} .kz-diagonal`).count()).toBe(size % 2 === 1 ? 2 * size - 1 : 2 * size);
       await noSidewaysScroll(page);
     }

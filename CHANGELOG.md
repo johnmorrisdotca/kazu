@@ -13,6 +13,7 @@ All notable changes to this project are written here. The format follows
 
 ### Fixed
 
+- The demo test that draws More or Less at each size no longer fails now and then: a fresh seed makes the puzzle, and about one 4×4 in seventy prints no mark, so it asked for at least one `.kz-mark` and got none. It now holds the marks drawn to the marks the package prints for the seed on the board. Nothing the package exports has changed.
 - The API reference page wraps a long entry path instead of running about 2 px wider than a 360 px screen. Nothing the package exports has changed.
 
 ## [1.4.1] - 2026-10-05
