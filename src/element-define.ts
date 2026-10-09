@@ -8,6 +8,6 @@
  *
  * A tag already defined is left as it is, and on a server, where there is no page, nothing happens.
  */
-import { KazuBoard } from "./element.ts";
-
-if (typeof customElements !== "undefined" && customElements.get("kazu-board") === undefined) customElements.define("kazu-board", KazuBoard);
+import { defineBoard } from "./element.ts";
+defineBoard();
+export * from "./element.ts";

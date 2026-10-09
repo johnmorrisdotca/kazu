@@ -289,7 +289,7 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
 
   function emit(name: "kazu-change" | "kazu-hint" | "kazu-check" | "kazu-solve", extra: Partial<KazuEventDetail> = {}): void {
     const info = { ...detail(), ...extra };
-    host.dispatchEvent(new CustomEvent(name, { detail: info, bubbles: true }));
+    host.dispatchEvent(new CustomEvent(name, { detail: JSON.parse(JSON.stringify(info)), bubbles: true, composed: true }));
     const call = { "kazu-change": callbacks.onChange, "kazu-hint": callbacks.onHint, "kazu-check": callbacks.onCheck, "kazu-solve": callbacks.onSolve }[name];
     call?.(info);
   }
