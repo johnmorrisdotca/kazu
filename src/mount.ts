@@ -144,7 +144,17 @@ function create<K extends keyof HTMLElementTagNameMap>(document: Document, tag: 
 
 const ARROWS: Record<string, [number, number]> = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
 
-/** Draw a puzzle into `host` and play it. Returns the handle that drives it, or null for givens that are not a puzzle of that kind and side. */
+/** Draw a puzzle into `host` and play it. Returns the handle that drives it, or null for givens that are not a puzzle of that kind and side.
+ * @param host - The HTMLElement that owns the native interface.
+ * @param options - Native settings and callbacks for this mounted interface.
+ * @returns The native mounted handle, or null for unsupported settings.
+ * @example
+ * ```ts
+ * import { mountKazu } from "@johnmorrisdotca/kazu/play";
+ * const show = (host: HTMLElement, options: Parameters<typeof mountKazu>[1]) => mountKazu(host, options);
+ * console.log(typeof show); // function
+ * ```
+ */
 export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMount | null {
   const document = host.ownerDocument;
   const view = document.defaultView!;

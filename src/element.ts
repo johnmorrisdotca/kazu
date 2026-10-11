@@ -38,11 +38,31 @@ const ElementBase: typeof HTMLElement = typeof HTMLElement === "undefined" ? (cl
 const isOff = (value: string | null): boolean => value !== null && ["false", "off", "0", "no"].includes(value.trim().toLowerCase());
 const oneOf = <T extends string>(value: string | null, allowed: readonly T[]): T | undefined => (allowed.includes(value as T) ? (value as T) : undefined);
 
-/** Every mounted-board option, kept complete by TypeScript and checked by the builder. */
+/** Every mounted-board option, kept complete by TypeScript and checked by the builder.
+ * @example
+ * ```ts
+ * import { KAZU_EMBED_OPTION_KEYS } from "@johnmorrisdotca/kazu/element";
+ * console.log(typeof KAZU_EMBED_OPTION_KEYS); // object
+ * ```
+ */
 export const KAZU_EMBED_OPTION_KEYS = Object.keys({ kind: true, size: true, givens: true, solution: true, level: true, seed: true, run: true, notes: true, elapsed: true, clock: true, controls: true, hints: true, check: true, conflicts: true, peers: true, tidy: true, tapToStep: true, language: true, onChange: true, onHint: true, onCheck: true, onSolve: true } satisfies Record<keyof KazuMountOptions, boolean>);
-/** Host callbacks; the same actions also emit native events. */
+/** Host callbacks; the same actions also emit native events.
+ * @example
+ * ```ts
+ * import type { KazuElementOptions } from "@johnmorrisdotca/kazu/element";
+ * const options: KazuElementOptions = {};
+ * console.log(Object.keys(options).length); // 0
+ * ```
+ */
 export type KazuElementOptions = Pick<KazuMountOptions, "onChange" | "onHint" | "onCheck" | "onSolve">;
 
+/** Native custom element with reflected setup and presentation.
+ * @example
+ * ```ts
+ * import { KazuBoard } from "@johnmorrisdotca/kazu/element";
+ * console.log(KazuBoard.observedAttributes.includes("lang")); // true
+ * ```
+ */
 export class KazuBoard extends ElementBase {
   static observedAttributes = ["kind", "size", "level", "seed", "givens", "solution", "run", "notes", "elapsed", "hints", "check", "conflicts", "peers", "tidy", "tap-to-step", "clock", "controls", "lang", "grid", "daily", "theme", "width", "label"];
 
@@ -280,7 +300,16 @@ export class KazuBoard extends ElementBase {
 // Preserve the method while allowing frameworks to assign its attribute.
 const checkMethod = KazuBoard.prototype.check;
 Object.defineProperty(KazuBoard.prototype, "check", { configurable: true, get() { return checkMethod; }, set(this: Element, value: unknown) { if (value === null || value === undefined) this.removeAttribute("check"); else this.setAttribute("check", value === false ? "off" : String(value)); } });
-/** Register a standard or custom board tag without replacing a definition. Safe without a browser. */
+/** Register a standard or custom board tag without replacing a definition. Safe without a browser.
+ * @param tag - The custom tag name; omitted to use the package default.
+ * @returns Nothing; existing definitions and server imports remain safe.
+ * @example
+ * ```ts
+ * import { defineBoard } from "@johnmorrisdotca/kazu/element";
+ * defineBoard();
+ * console.log(typeof defineBoard); // function
+ * ```
+ */
 export function defineBoard(tag = "kazu-board"): void {
   if (typeof customElements === "undefined" || customElements.get(tag) !== undefined) return;
   customElements.define(tag, tag === "kazu-board" ? KazuBoard : class extends KazuBoard {});
