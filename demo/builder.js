@@ -4,10 +4,36 @@ import { KAZU_SEED_MOST, isKazuSeed } from "./dist/random.js";
 import { KazuBoard, KAZU_EMBED_OPTION_KEYS } from "./dist/element.js";
 import { embedDay } from "./dist/embed-day.js";
 import "./dist/element-define.js";
-import { familyEmbedBuilder } from "./family-embed-builder.js";
+import { familyEmbedBuilder, FAMILY_EMBED_BUILDER_WORDS } from "./family-embed-builder.js";
 const words = {
-  en: { pitch: "Choose a number puzzle or a UTC daily puzzle, preview it, and copy the code for your page.", name: "Kazu means number in Japanese.", nameLink: "About the name", foot: "The setup is in the link. No game or personal data is stored.", toGallery: "The puzzles", previewTitle: "Your puzzle", makerLabel: "What to build", makerBoard: "A board", makerBoardSays: "Six number puzzles, each generated from a seed with one answer.", notSet: "Not set", on: "On", off: "Off", reset: "Reset", startAgain: "Start again", copy: "Copy", copied: "Copied.", copyLink: "Copy a link to this puzzle", linkCopied: "The link is copied.", codeTitle: "The code", codeText: "Choose how to include this puzzle on your page.", defaultIs: "Default: {value}", badDay: "Use a real UTC date written YYYY-MM-DD, today or off.", badGrid: "Choose a grid supported by this puzzle kind.", badSeed: "Choose a whole-number seed in the displayed range." },
-  ja: { pitch: "数のパズル、またはUTCの日替わり問題を選び、表示を確認して、ページに載せるコードをコピーします。", name: "「数」は英語の number に当たる日本語です。", nameLink: "名前について", foot: "設定はリンクに入ります。ゲームや個人情報は保存しません。", toGallery: "パズルの一覧", previewTitle: "あなたのパズル", makerLabel: "作るもの", makerBoard: "盤", makerBoardSays: "6種類の数のパズルを、答えが1つになるようにシードから作ります。", notSet: "指定なし", on: "オン", off: "オフ", reset: "元に戻す", startAgain: "最初からやり直す", copy: "コピー", copied: "コピーしました。", copyLink: "このパズルへのリンクをコピー", linkCopied: "リンクをコピーしました。", codeTitle: "コード", codeText: "ページへの載せ方を選びます。", defaultIs: "初期値: {value}", badDay: "実際の日付をYYYY-MM-DDで指定するか、today、offを指定してください。UTCの日付を使います。", badGrid: "この種類のパズルに対応する盤の大きさを選んでください。", badSeed: "表示された範囲の整数をシードに指定してください。" },
+  en: {
+    ...FAMILY_EMBED_BUILDER_WORDS.en,
+    pitch: "Choose a number puzzle or a UTC daily puzzle, preview it, and copy the code for your page.",
+    name: "Kazu means number in Japanese.",
+    nameLink: "About the name",
+    foot: "The setup is in the link. No game or personal data is stored.",
+    toGallery: "The puzzles",
+    makerBoard: "A board",
+    makerBoardSays: "Six number puzzles, each generated from a seed with one answer.",
+    copyLink: "Copy a link to this puzzle",
+    badDay: "Use a real UTC date written YYYY-MM-DD, today or off.",
+    badGrid: "Choose a grid supported by this puzzle kind.",
+    badSeed: "Choose a whole-number seed in the displayed range."
+  },
+  ja: {
+    ...FAMILY_EMBED_BUILDER_WORDS.ja,
+    pitch: "数のパズル、またはUTCの日替わり問題を選び、表示を確認して、ページに埋め込むコードをコピーできます。",
+    name: "「数」は英語の number に当たる日本語です。",
+    nameLink: "名前について",
+    foot: "設定はリンクに入ります。ゲームや個人情報は保存しません。",
+    toGallery: "パズルの一覧",
+    makerBoard: "盤",
+    makerBoardSays: "6種類の数のパズルを、答えが1つになるようにシードから作ります。",
+    copyLink: "このパズルへのリンクをコピー",
+    badDay: "実在する日付をYYYY-MM-DD形式で入力するか、today または off を指定してください。UTCの日付を使います。",
+    badGrid: "この種類のパズルに対応する盤の大きさを選んでください。",
+    badSeed: "表示された範囲の整数をシードに指定してください。"
+  },
 };
 const row = (id, kind, en, ja, extra = {}) => ({ id, kind, group: "board", names: { board: id, ...(id === "size" ? {} : { mount: ({ grid: "size", lang: "language", "tap-to-step": "tapToStep" }[id] ?? id) }) }, say: { en: { label: en[0], help: en[1] }, ja: { label: ja[0], help: ja[1] } }, ...extra });
 const grids = [...new Set(Object.values(KAZU_SPECS).flatMap((spec) => spec.sizes))].sort((a, b) => a - b).map(String);
@@ -34,7 +60,7 @@ const page = globalThis.familyLanguage({ id: "kazu", words, onChange: () => moun
 const heights = {};
 const key = (settings) => JSON.stringify(settings);
 function problem(settings) { try { const day = embedDay(settings.daily); if (day === null && settings.seed !== undefined && !isKazuSeed(Number(settings.seed))) return "badSeed"; } catch { return "badDay"; } return isKazuSize(settings.kind ?? "number-place", Number(settings.grid ?? 9)) ? null : "badGrid"; }
-const builder = familyEmbedBuilder({ id: "kazu", packageName: "@johnmorrisdotca/kazu", major: VERSION.split(".")[0], site: "https://johnmorrisdotca.github.io/kazu/", title: "Kazu · number puzzle", options, leftOut, groups: { board: { en: "The puzzle", ja: "パズルの設定" } }, makers: { board: { names: "board", element: "board", tag: "kazu-board", embed: "embed/", required: ["kind", "grid"], description: "makerBoardSays", formats: ["element", "iframe", "module", "react", "vue", "svelte", "angular", "html", "url"], width: 640, height: (settings) => heights[key(settings)] ?? ({ small: 780, medium: 940, large: 1100 }[settings.size] ?? 940) } }, code: ({ maker, format, settings }) => {
+const builder = familyEmbedBuilder({ id: "kazu", packageName: "@johnmorrisdotca/kazu", major: VERSION.split(".")[0], site: "https://johnmorrisdotca.github.io/kazu/", title: "Kazu · number puzzle", titleJa: "数のパズルの埋め込み", options, leftOut, groups: { board: { en: "The puzzle", ja: "パズルの設定" } }, makers: { board: { names: "board", element: "board", tag: "kazu-board", embed: "embed/", required: ["kind", "grid"], description: "makerBoardSays", formats: ["element", "iframe", "module", "react", "vue", "svelte", "angular", "html", "url"], width: 640, height: (settings) => heights[key(settings)] ?? ({ small: 780, medium: 940, large: 1100 }[settings.size] ?? 940) } }, code: ({ maker, format, settings }) => {
   if (problem(settings) !== null) return null;
   if ((format === "iframe" || format === "url") && settings.lang === undefined) return builder.codeFor(maker, format, options, { ...settings, lang: page.lang });
   return undefined;
