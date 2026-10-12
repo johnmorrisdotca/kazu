@@ -6,6 +6,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+- Add the bilingual documentation site, checked public examples, paired guides, local search and machine-readable pages.
+
 - Add a shared builder and validated, storage-free iframe for seeded and UTC daily number puzzles.
 - Add display sizes, grid, width, theme and spoken label while retaining numeric size aliases and existing methods. Native events now cross shadow boundaries with JSON-safe detail.
 

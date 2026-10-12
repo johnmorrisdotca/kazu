@@ -29,3 +29,6 @@ language = pageLanguage.lang; translate();
 let saved; try { saved = JSON.parse(localStorage.getItem("kazu-juosan-v1") ?? "null"); } catch { /* A corrupt save starts fresh. */ }
 const restored = !params.has("seed") && saved && decodeJuosan(saved.progress);
 if (restored && ["3x2","2x3"].includes(`${saved.width}x${saved.height}`)) { for (const id of ["material","pieces"]) get(id).value = saved[id] ?? get(id).value; get("size").value = `${saved.width}x${saved.height}`; get("seed").value = saved.seed ?? "42"; play(restored.board && { ...restored.board, seed: saved.seed ?? 42, level: "easy", solution: [] }, saved.progress); } else make();
+
+import { attachDocsLink } from "./docs-link.js";
+attachDocsLink();

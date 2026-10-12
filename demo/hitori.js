@@ -38,8 +38,8 @@ const mount = () => {
 const pageLanguage = familyLanguage({
   id: "kazu",
   words: {
-    en: { pitch: "Hitori: shade the duplicates and keep the remaining numbers connected.", name: "Kazu (数) is Japanese for number. Hitori is a number logic puzzle.", nameLink: "About the name", pageBack: "Number puzzles", pageApi: "API reference", foot: "Hitori, a number puzzle of black and white cells." },
-    ja: { pitch: "ひとりにしてくれ。重複する数字を黒くし、白マスをつなげます。", name: "Kazu（数）は数字のこと。ひとりにしてくれは数字のパズルです。", nameLink: "名前について", pageBack: "数字のパズル", pageApi: "APIリファレンス", foot: "黒マスと白マスで遊ぶ数字のパズル。" },
+    en: { pitch: "Hitori: shade the duplicates and keep the remaining numbers connected.", name: "Kazu (数) is Japanese for number. Hitori is a number logic puzzle.", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "Hitori, a number puzzle of black and white cells." },
+    ja: { pitch: "ひとりにしてくれ。重複する数字を黒くし、白マスをつなげます。", name: "Kazu（数）は数字のこと。ひとりにしてくれは数字のパズルです。", nameLink: "名前について", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "黒マスと白マスで遊ぶ数字のパズル。" },
   },
   onChange: next => { language = next; translate(); },
 });
@@ -47,3 +47,6 @@ language = pageLanguage.lang;
 translate();
 get("new").onclick = mount;
 mount();
+
+import { attachDocsLink } from "./docs-link.js";
+attachDocsLink();

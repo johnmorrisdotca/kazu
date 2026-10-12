@@ -175,7 +175,7 @@ const pageLanguage = familyLanguage({
       name: "Kazu (数) is Japanese for ‘number’. Akari is a light-placement puzzle.",
       nameLink: "About the name",
       pageBack: "Number puzzles",
-      pageApi: "API reference",
+      pageDocs: "Docs", pageApi: "API reference",
       foot: "Akari, a puzzle about placing lights.",
     },
     ja: {
@@ -183,7 +183,7 @@ const pageLanguage = familyLanguage({
       name: "Kazu（数）は数字のこと。美術館は電球を置くパズルです。",
       nameLink: "名前について",
       pageBack: "数字のパズル",
-      pageApi: "APIリファレンス",
+      pageDocs: "ドキュメント", pageApi: "APIリファレンス",
       foot: "電球を置いて盤を照らすパズル。",
     },
   },
@@ -212,3 +212,6 @@ if (restored) {
 } else {
   make();
 }
+
+import { attachDocsLink } from "./docs-link.js";
+attachDocsLink();

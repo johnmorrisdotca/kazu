@@ -28,9 +28,9 @@ const page = `<!doctype html>
   <head>
     ${familyHead({
       id,
-      title: "Kazu · Sudoku, Killer Sudoku, Futoshiki and Skyscrapers",
+      title: "Kazu 数 — Sudoku and grid number puzzles",
       description: "Play six number puzzles in your browser: Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Pencil marks, hints that say why, undo and a clock. Free and open source, in English and Japanese.",
-      ogTitle: "Kazu number puzzles",
+      ogTitle: "Kazu 数 — Sudoku and grid number puzzles",
       ogDescription: "Sudoku, Killer Sudoku, Futoshiki, Skyscrapers and more. Every puzzle has exactly one answer.",
     })}
     <link rel="icon" href="${ICON}" />
@@ -39,7 +39,7 @@ const page = `<!doctype html>
   </head>
   <body>
     <main>
-      ${familyHeader({ id, links: [{ href: "api.html", say: "pageApi" }] })}
+      ${familyHeader({ id, links: [{ href: "docs/index.html", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] })}
       <nav aria-label="More grid puzzles"><a href="shikaku.html">Shikaku</a> · <a href="hitori.html">Hitori</a> · <a href="nurikabe.html">Nurikabe</a> · <a href="akari.html">Akari</a> · <a href="juosan.html">Juosan</a> · <a href="loop.html">Loop</a> · <a href="masyu.html">Masyu</a> · <a href="yajilin.html">Yajilin</a> · <a href="ripple.html">Ripple Effect</a> · <a href="cross-sums.html">Cross Sums</a> · <a href="regions.html">Regions</a> · <a href="heyawake.html">Heyawake</a></nav>
       ${row("kinds", "puzzle", ["Choose which of the six puzzles to play. Each one has its own rules, listed below the board.", "遊ぶパズルを、六つの中から選びます。ルールは盤の下に載っています。"])}
       ${row("sizes", "size", ["Choose the size of the grid. A bigger grid takes longer.", "盤の大きさを選びます。大きいほど時間がかかります。"])}
@@ -97,7 +97,7 @@ console.log("site/ is ready: serve it, or let the Pages workflow publish it.");
 
 for (const game of ["shikaku", "hitori", "nurikabe", "akari", "juosan", "loop", "masyu", "yajilin", "ripple", "cross-sums", "regions", "heyawake"]) {
   const gamePage = readFileSync(`demo/${game}.html`, "utf8")
-    .replace("<!--family-header-->", familyHeader({ id, links: [{ href: "index.html", say: "pageBack" }, { href: "api.html", say: "pageApi" }] }))
+    .replace("<!--family-header-->", familyHeader({ id, links: [{ href: "index.html", say: "pageBack" }, { href: "docs/index.html", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] }))
     .replace("<!--family-footer-->", familyFooter({ id }))
     .replace("<!--family-unreviewed-->", familyUnreviewed({ id }))
     .replace("<!--family-script-->", `<script>${FAMILY_SCRIPT}</script>`);
@@ -107,7 +107,7 @@ for (const game of ["shikaku", "hitori", "nurikabe", "akari", "juosan", "loop", 
 writeFileSync("site/family-embed-builder.js", `export const FAMILY_EMBED_BUILDER_WORDS = ${JSON.stringify(FAMILY_EMBED_BUILDER_WORDS)};\nexport ${familyEmbedBuilder.toString()};\n`);
 const builderParts = {
   builderHead: familyHead({ id, title: "Kazu · build a number-puzzle embed", description: "Choose a seeded or daily number puzzle, preview it and copy the embed code." }),
-  builderHeader: familyHeader({ id, links: [{ href: "./", say: "toGallery" }] }),
+  builderHeader: familyHeader({ id, links: [{ href: "./", say: "toGallery" }, { href: "docs/index.html", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] }),
   unreviewed: familyUnreviewed({ id }), footer: familyFooter({ id }), script: `<script>${FAMILY_SCRIPT}</script>`,
 };
 writeFileSync("site/builder.html", readFileSync("demo/builder.html", "utf8").replace(/<!-- family:([A-Za-z]+) -->/g, (_match, key) => builderParts[key]));

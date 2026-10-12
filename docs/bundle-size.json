@@ -1,0 +1,169 @@
+{
+  "measured": "esbuild 0.28.2, bundled, minified, ES2020, gzip level 9",
+  "entries": {
+    ".": {
+      "minified": 202872,
+      "gzip": 64524
+    },
+    "./draw": {
+      "minified": 42254,
+      "gzip": 12623
+    },
+    "./play": {
+      "minified": 82694,
+      "gzip": 27139
+    },
+    "./element": {
+      "minified": 85975,
+      "gzip": 27554
+    },
+    "./element/define": {
+      "minified": 85980,
+      "gzip": 27556
+    },
+    "./shikaku": {
+      "minified": 13233,
+      "gzip": 5271
+    },
+    "./shikaku/play": {
+      "minified": 19150,
+      "gzip": 7219
+    },
+    "./shikaku/draw": {
+      "minified": 5157,
+      "gzip": 2195
+    },
+    "./hitori": {
+      "minified": 10925,
+      "gzip": 4449
+    },
+    "./hitori/play": {
+      "minified": 15957,
+      "gzip": 6269
+    },
+    "./hitori/draw": {
+      "minified": 1377,
+      "gzip": 839
+    },
+    "./nurikabe": {
+      "minified": 5344,
+      "gzip": 2234
+    },
+    "./nurikabe/play": {
+      "minified": 12971,
+      "gzip": 5229
+    },
+    "./nurikabe/draw": {
+      "minified": 1390,
+      "gzip": 839
+    },
+    "./akari": {
+      "minified": 23462,
+      "gzip": 9006
+    },
+    "./akari/play": {
+      "minified": 18754,
+      "gzip": 7138
+    },
+    "./akari/draw": {
+      "minified": 5056,
+      "gzip": 2301
+    },
+    "./juosan": {
+      "minified": 15519,
+      "gzip": 6041
+    },
+    "./juosan/play": {
+      "minified": 14292,
+      "gzip": 5515
+    },
+    "./juosan/draw": {
+      "minified": 4338,
+      "gzip": 2003
+    },
+    "./loop": {
+      "minified": 29448,
+      "gzip": 11089
+    },
+    "./loop/play": {
+      "minified": 21982,
+      "gzip": 8215
+    },
+    "./loop/draw": {
+      "minified": 4923,
+      "gzip": 2190
+    },
+    "./masyu": {
+      "minified": 5984,
+      "gzip": 2544
+    },
+    "./masyu/play": {
+      "minified": 10524,
+      "gzip": 4463
+    },
+    "./masyu/draw": {
+      "minified": 3393,
+      "gzip": 1613
+    },
+    "./yajilin": {
+      "minified": 8674,
+      "gzip": 3226
+    },
+    "./yajilin/play": {
+      "minified": 12507,
+      "gzip": 5038
+    },
+    "./yajilin/draw": {
+      "minified": 3887,
+      "gzip": 1812
+    },
+    "./ripple": {
+      "minified": 21296,
+      "gzip": 8079
+    },
+    "./ripple/play": {
+      "minified": 17629,
+      "gzip": 6560
+    },
+    "./ripple/draw": {
+      "minified": 1930,
+      "gzip": 969
+    },
+    "./cross-sums": {
+      "minified": 26728,
+      "gzip": 10339
+    },
+    "./cross-sums/play": {
+      "minified": 16518,
+      "gzip": 6715
+    },
+    "./cross-sums/draw": {
+      "minified": 3321,
+      "gzip": 1491
+    },
+    "./regions": {
+      "minified": 15433,
+      "gzip": 6374
+    },
+    "./regions/play": {
+      "minified": 15880,
+      "gzip": 6441
+    },
+    "./regions/draw": {
+      "minified": 4309,
+      "gzip": 1986
+    },
+    "./heyawake": {
+      "minified": 18149,
+      "gzip": 6990
+    },
+    "./heyawake/play": {
+      "minified": 14986,
+      "gzip": 5707
+    },
+    "./heyawake/draw": {
+      "minified": 3924,
+      "gzip": 1876
+    }
+  }
+}

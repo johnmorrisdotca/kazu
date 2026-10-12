@@ -9,7 +9,7 @@ import { mountKazu } from "./dist/play-entry.js";
 // The page's own words, in the two languages it speaks. Set as text, never as HTML.
 const WORDS = {
   en: {
-    pageApi: "API reference",
+    pageDocs: "Docs", pageApi: "API reference",
     pitch: "Six number puzzles on one square grid: Sudoku, Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Every puzzle has exactly one answer. Tap a cell, then a number; turn Pencil on to make notes; ask for a Hint to be told which cell to fill next, and why.",
     name: "Kazu (数) is Japanese for “number”, the everyday word, as in 数を数える, to count numbers.",
     nameLink: "About the name",
@@ -38,7 +38,7 @@ const WORDS = {
     foot: "Every puzzle is made in your browser from a seed, and is proved to have exactly one answer. Nothing leaves this page.",
   },
   ja: {
-    pageApi: "API（英語）",
+    pageDocs: "ドキュメント", pageApi: "API（英語）",
     pitch: "一つの正方形の盤で遊ぶ、六つの数字パズルです：ナンプレ、変形ナンプレ、対角ナンプレ、サムナンプレ、不等式、摩天楼。どの問題も、答えはちょうど一つです。マスをタップして数字を選びます。メモをオンにすると下書きができ、ヒントでは次に入れるマスと、その理由がわかります。",
     name: "「数」（かず）は、数字やかずを表す、ふだんのことばです。「数を数える」のように使います。",
     nameLink: "名前について（英語）",
@@ -251,3 +251,6 @@ remember();
 put();
 render();
 host.dataset.ready = "true";
+
+import { attachDocsLink } from "./docs-link.js";
+attachDocsLink();

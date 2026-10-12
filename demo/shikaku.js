@@ -80,8 +80,8 @@ get("share").onclick = async () => {
 };
 setInterval(() => { const seconds = Math.floor(((stopped ?? Date.now()) - started) / 1000); get("clock").textContent = `${language === "ja" ? "時間" : "Time"} ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`; }, 1000);
 const pageLanguage = familyLanguage({ id: "kazu", words: {
-  en: { pitch: "Shikaku: divide the grid into rectangles, each holding one number equal to its area. Every generated puzzle has one proved answer.", name: "Kazu (数) is Japanese for “number”. Shikaku is its rectangle puzzle.", nameLink: "About the name", pageBack: "Number puzzles", pageApi: "API reference", foot: "Shikaku, a number puzzle played with rectangles." },
-  ja: { pitch: "四角に切れ。盤を長方形に分け、各長方形に、その面積と同じ数字を一つ入れます。作った問題の答えは一つだけ。", name: "Kazu（数）は数字のこと。四角に切れは長方形を作るパズルです。", nameLink: "名前について", pageBack: "数字のパズル", pageApi: "APIリファレンス", foot: "数字を手がかりに長方形を描くパズル。" }
+  en: { pitch: "Shikaku: divide the grid into rectangles, each holding one number equal to its area. Every generated puzzle has one proved answer.", name: "Kazu (数) is Japanese for “number”. Shikaku is its rectangle puzzle.", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "Shikaku, a number puzzle played with rectangles." },
+  ja: { pitch: "四角に切れ。盤を長方形に分け、各長方形に、その面積と同じ数字を一つ入れます。作った問題の答えは一つだけ。", name: "Kazu（数）は数字のこと。四角に切れは長方形を作るパズルです。", nameLink: "名前について", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "数字を手がかりに長方形を描くパズル。" }
 }, onChange: lang => { language = lang; translate(); if (handle) remember(handle.game()); } });
 language = pageLanguage.lang; translate();
 let saved;
@@ -90,3 +90,6 @@ const restored = !params.has("seed") && saved && decodeShikaku(saved.progress);
 if (params.has("pack") && ["square", "wide", "tall"].includes(params.get("pack"))) {
   get("pack").value = params.get("pack"); fillChallenges(); get("challenge").value = params.get("challenge") ?? "1"; playChallenge();
 } else if (restored) { if (!params.has("lang") && ["en", "ja"].includes(saved.language)) { pageLanguage.set(saved.language); } for (const id of ["size", "width", "height", "level", "seed", "material", "pieces"]) get(id).value = saved[id] ?? (id === "width" ? restored.board.width : id === "height" ? restored.board.height : "custom"); play(restored.board, saved.progress); } else make();
+
+import { attachDocsLink } from "./docs-link.js";
+attachDocsLink();

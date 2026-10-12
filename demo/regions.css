@@ -12,3 +12,6 @@
 #board{--kz-ink:var(--felt-ink);--kz-paper:var(--felt-paper);--kz-grid:rgba(255,255,255,.4)}
 .rules{margin-top:1.5rem}
 @media(max-width:700px){.regions-layout{grid-template-columns:1fr}.panel{padding:14px 10px}#setup{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}#new{grid-column:1/-1}}
+
+/* Keep navigation width stable across languages. */
+header nav a[data-say="pageDocs"] { inline-size: 8rem; justify-content: center; flex: none; }

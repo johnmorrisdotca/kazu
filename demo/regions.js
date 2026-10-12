@@ -16,8 +16,8 @@ let stoppedAt;
 const family = familyLanguage({
   id: "kazu",
   words: {
-    en: { pitch: "Regions: each connected region has as many cells as its number. Every generated puzzle has one proved answer.", name: "Kazu (数) is Japanese for number.", nameLink: "About the name", pageBack: "Number puzzles", pageApi: "API reference", foot: "Fill every region with its exact area." },
-    ja: { pitch: "フィロミノ。同じ数字がつながった領域のマス数を、その数字に合わせます。作った問題は答えが一つだけ。", name: "Kazu（数）は数字のことです。", nameLink: "名前について", pageBack: "数字のパズル", pageApi: "APIリファレンス", foot: "数字と同じ面積の領域を作ります。" },
+    en: { pitch: "Regions: each connected region has as many cells as its number. Every generated puzzle has one proved answer.", name: "Kazu (数) is Japanese for number.", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "Fill every region with its exact area." },
+    ja: { pitch: "フィロミノ。同じ数字がつながった領域のマス数を、その数字に合わせます。作った問題は答えが一つだけ。", name: "Kazu（数）は数字のことです。", nameLink: "名前について", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "数字と同じ面積の領域を作ります。" },
   },
   onChange: value => { language = value; translate(); player?.set({ language }); if (player) remember(player.game()); },
 });
@@ -116,3 +116,6 @@ if (restored) {
   if (!params.has("seed")) byId("seed").value = "17";
   generate();
 }
+
+import { attachDocsLink } from "./docs-link.js";
+attachDocsLink();

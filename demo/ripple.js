@@ -38,8 +38,11 @@ get("share").onclick = async () => {
   try { await navigator.clipboard.writeText(url); get("notice").textContent = words[language].copied; } catch { get("notice").textContent = url; }
 };
 setInterval(() => { const seconds = Math.floor(((stopped ?? Date.now()) - started) / 1000); get("clock").textContent = `${language === "ja" ? "時間" : "Time"} ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`; }, 1000);
-const pageLanguage = familyLanguage({ id: "kazu", words: { en: { pitch: "Ripple Effect: fill rooms with consecutive numbers and leave enough space between repeats.", name: "Kazu number puzzles", nameLink: "About the name", pageBack: "Number puzzles", pageApi: "API reference", foot: "A room-and-spacing puzzle played with numbers." }, ja: { pitch: "波及効果。部屋に数字を入れ、同じ数字の間隔を空けます。", name: "Kazu 数字のパズル", nameLink: "名前について", pageBack: "数字のパズル", pageApi: "APIリファレンス", foot: "部屋と数字の間隔を考えるパズル。" } }, onChange: lang => { language = lang; translate(); if (handle) handle.set({ language }); } });
+const pageLanguage = familyLanguage({ id: "kazu", words: { en: { pitch: "Ripple Effect: fill rooms with consecutive numbers and leave enough space between repeats.", name: "Kazu number puzzles", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "A room-and-spacing puzzle played with numbers." }, ja: { pitch: "波及効果。部屋に数字を入れ、同じ数字の間隔を空けます。", name: "Kazu 数字のパズル", nameLink: "名前について", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "部屋と数字の間隔を考えるパズル。" } }, onChange: lang => { language = lang; translate(); if (handle) handle.set({ language }); } });
 language = pageLanguage.lang; translate();
 let saved; try { saved = JSON.parse(localStorage.getItem("kazu-ripple-v1") ?? "null"); } catch { saved = null; }
 if (!params.has("seed") && saved?.seed && Number.isInteger(saved.seed)) { activeSeed = saved.seed; get("seed").value = String(activeSeed); for (const id of ["material", "pieces"]) get(id).value = saved[id] ?? get(id).value; if (!params.has("lang") && ["en", "ja"].includes(saved.language)) pageLanguage.set(saved.language); }
 start();
+
+import { attachDocsLink } from "./docs-link.js";
+attachDocsLink();

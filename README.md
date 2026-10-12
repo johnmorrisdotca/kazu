@@ -1,4 +1,4 @@
-<h1 align="center">Kazu <sub>数</sub></h1>
+<h1 align="center">Kazu <sub>数</sub> — Sudoku and grid number puzzles</h1>
 
 <p align="center"><strong>Grid number and logic puzzles for JavaScript and TypeScript.</strong><br>
 Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki, Skyscrapers, Shikaku, Hitori, Nurikabe, Akari, Juosan, Loop, Masyu, Yajilin, Ripple Effect, Cross Sums, Regions and Heyawake. Dedicated typed engines, independently checked puzzles, SVG drawing, saved progress, and English and Japanese players for touch, mouse and keyboard. No runtime dependencies.</p>
@@ -9,16 +9,18 @@ Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshik
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
+  <a href="https://johnmorrisdotca.github.io/kazu/docs/api/main/index.html"><img alt="64.5 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-64.5%20kB-2f5d4a"></a>
+  <a href="https://www.npmjs.com/package/@johnmorrisdotca/kazu#provenance"><img alt="Published with npm provenance" src="https://img.shields.io/badge/npm-provenance-2f5d4a"></a>
 </p>
 
-<p align="center"><a href="https://johnmorrisdotca.github.io/kazu/"><strong>Play a puzzle →</strong></a> · <a href="https://johnmorrisdotca.github.io/kazu/api.html">API reference</a></p>
+<p align="center"><a href="https://johnmorrisdotca.github.io/kazu/"><strong>Play a puzzle →</strong></a> · <a href="https://johnmorrisdotca.github.io/kazu/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/kazu/docs/guides/getting-started.html">Getting started</a> · <a href="https://johnmorrisdotca.github.io/kazu/api.html">API reference</a></p>
 
 <table align="center">
 <tr>
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hero-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English, with a 9×9 Killer Sudoku part filled in: the page header with the language chooser, the API reference link, five cloth patches and the Help switch, the choices of puzzle, size and level, then the board on green felt with dashed cages and their sums, the chosen cell and its row, column and box washed in colour, the number pad and the Undo, Pencil, Hint and Check buttons" width="600">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English, with a 9×9 Killer Sudoku part filled in: the page header with the language chooser, Docs, the API reference link, five cloth patches and the Help switch, the choices of puzzle, size and level, then the board on green felt with dashed cages and their sums, the chosen cell and its row, column and box washed in colour, the number pad and the Undo, Pencil, Hint and Check buttons" width="600">
 </picture>
 <br><em>The demo on a desk: a Killer Sudoku part filled in.</em>
 </td>
@@ -238,6 +240,17 @@ Each picture is the real puzzle, drawn and played by the package and taken from 
 ## Use it in your project
 
 Kazu is three things, each usable without the others: **the puzzles** (making, solving, checking and hinting, as plain functions over strings), **the drawing** (SVG text), and **the page** (a mounted board or a tag). The table under [The element](docs/PLAYING.md#the-element) says which entry holds which. The examples are one puzzle each time, written in `number-place` at 9×9.
+
+### Install under another name
+
+```sh
+npm install sudoku@npm:@johnmorrisdotca/kazu
+```
+
+```ts no-check
+import { KAZU_KINDS } from "sudoku";
+console.log(KAZU_KINDS);
+```
 
 ### Install
 
@@ -702,6 +715,8 @@ Shade squares so that no number repeats in a row or column among the unshaded, s
 Original 5×5 puzzles from seeded symmetric layouts, each proved to have exactly one solution. [More](docs/PUZZLES.md#nurikabe).
 
 ## API
+
+The [documentation](https://johnmorrisdotca.github.io/kazu/docs/) provides paired guides, local search and checked examples. The [API index](https://johnmorrisdotca.github.io/kazu/api.html) retains export anchors.
 
 The [API reference](https://johnmorrisdotca.github.io/kazu/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code.
 

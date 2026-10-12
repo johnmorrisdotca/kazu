@@ -1,0 +1,178 @@
+{
+  "job": "Sudoku and grid number puzzles",
+  "pitch": {
+    "en": "Generate checked Sudoku and logic puzzles, read native rules and hints, and draw or embed playable boards.",
+    "ja": "検証済みの数独や論理パズルを作り、標準の規則とヒントを読み、盤を描いたり埋め込んだりできます。"
+  },
+  "name": {
+    "en": "Kazu is the Japanese word 数 for number.",
+    "ja": "「数」は数字を表す言葉です。"
+  },
+  "icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232f5d4a'/%3E%3Ctext x='50' y='72' font-size='64' text-anchor='middle' fill='%23f3efe4'%3E数%3C/text%3E%3C/svg%3E",
+  "entries": {
+    ".": {
+      "en": "Number-puzzle engines",
+      "ja": "数字パズルのエンジン"
+    },
+    "./draw": {
+      "en": "Number-grid SVG",
+      "ja": "数字の盤のSVG"
+    },
+    "./play": {
+      "en": "Playable number grid",
+      "ja": "遊べる数字の盤"
+    },
+    "./element": {
+      "en": "Puzzle elements",
+      "ja": "パズルの要素"
+    },
+    "./element/define": {
+      "en": "Register puzzle elements",
+      "ja": "パズル要素の登録"
+    },
+    "./shikaku": {
+      "en": "Shikaku rules",
+      "ja": "四角に切れの規則"
+    },
+    "./shikaku/play": {
+      "en": "Shikaku player",
+      "ja": "四角に切れを遊ぶ"
+    },
+    "./shikaku/draw": {
+      "en": "Shikaku SVG",
+      "ja": "四角に切れのSVG"
+    },
+    "./hitori": {
+      "en": "Hitori rules",
+      "ja": "ひとりにしてくれの規則"
+    },
+    "./hitori/play": {
+      "en": "Hitori player",
+      "ja": "ひとりにしてくれを遊ぶ"
+    },
+    "./hitori/draw": {
+      "en": "Hitori SVG",
+      "ja": "ひとりにしてくれのSVG"
+    },
+    "./nurikabe": {
+      "en": "Nurikabe rules",
+      "ja": "ぬりかべの規則"
+    },
+    "./nurikabe/play": {
+      "en": "Nurikabe player",
+      "ja": "ぬりかべを遊ぶ"
+    },
+    "./nurikabe/draw": {
+      "en": "Nurikabe SVG",
+      "ja": "ぬりかべのSVG"
+    },
+    "./akari": {
+      "en": "Akari rules",
+      "ja": "美術館の規則"
+    },
+    "./akari/play": {
+      "en": "Akari player",
+      "ja": "美術館を遊ぶ"
+    },
+    "./akari/draw": {
+      "en": "Akari SVG",
+      "ja": "美術館のSVG"
+    },
+    "./juosan": {
+      "en": "Juosan rules",
+      "ja": "縦横の規則"
+    },
+    "./juosan/play": {
+      "en": "Juosan player",
+      "ja": "縦横を遊ぶ"
+    },
+    "./juosan/draw": {
+      "en": "Juosan SVG",
+      "ja": "縦横のSVG"
+    },
+    "./loop": {
+      "en": "Loop rules",
+      "ja": "ループの規則"
+    },
+    "./loop/play": {
+      "en": "Loop player",
+      "ja": "ループを遊ぶ"
+    },
+    "./loop/draw": {
+      "en": "Loop SVG",
+      "ja": "ループのSVG"
+    },
+    "./masyu": {
+      "en": "Masyu rules",
+      "ja": "ましゅの規則"
+    },
+    "./masyu/play": {
+      "en": "Masyu player",
+      "ja": "ましゅを遊ぶ"
+    },
+    "./masyu/draw": {
+      "en": "Masyu SVG",
+      "ja": "ましゅのSVG"
+    },
+    "./yajilin": {
+      "en": "Yajilin rules",
+      "ja": "ヤジリンの規則"
+    },
+    "./yajilin/play": {
+      "en": "Yajilin player",
+      "ja": "ヤジリンを遊ぶ"
+    },
+    "./yajilin/draw": {
+      "en": "Yajilin SVG",
+      "ja": "ヤジリンのSVG"
+    },
+    "./ripple": {
+      "en": "Ripple Effect rules",
+      "ja": "波及効果の規則"
+    },
+    "./ripple/play": {
+      "en": "Ripple Effect player",
+      "ja": "波及効果を遊ぶ"
+    },
+    "./ripple/draw": {
+      "en": "Ripple Effect SVG",
+      "ja": "波及効果のSVG"
+    },
+    "./cross-sums": {
+      "en": "Cross Sums rules",
+      "ja": "カックロの規則"
+    },
+    "./cross-sums/play": {
+      "en": "Cross Sums player",
+      "ja": "カックロを遊ぶ"
+    },
+    "./cross-sums/draw": {
+      "en": "Cross Sums SVG",
+      "ja": "カックロのSVG"
+    },
+    "./regions": {
+      "en": "Regions rules",
+      "ja": "領域の規則"
+    },
+    "./regions/play": {
+      "en": "Regions player",
+      "ja": "領域を遊ぶ"
+    },
+    "./regions/draw": {
+      "en": "Regions SVG",
+      "ja": "領域のSVG"
+    },
+    "./heyawake": {
+      "en": "Heyawake rules",
+      "ja": "へやわけの規則"
+    },
+    "./heyawake/play": {
+      "en": "Heyawake player",
+      "ja": "へやわけを遊ぶ"
+    },
+    "./heyawake/draw": {
+      "en": "Heyawake SVG",
+      "ja": "へやわけのSVG"
+    }
+  }
+}
