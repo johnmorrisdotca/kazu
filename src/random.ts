@@ -12,10 +12,30 @@
  * Not a credential: it is for fair-looking puzzles, never for secrets.
  */
 
-/** A number in [0, 1), like `Math.random`, from a stream a seed fixes. */
+/** A number in [0, 1), like `Math.random`, from a stream a seed fixes.
+ *
+ * @example
+ * ```ts
+ * import type { Random } from "@johnmorrisdotca/kazu";
+ * import { seededRandom } from "@johnmorrisdotca/kazu";
+ *
+ * const value: Random = seededRandom(42);
+ * console.log(value);
+ * ```
+ */
 export type Random = () => number;
 
-/** A stream of numbers in [0, 1) fixed by a seed. The seed is read as an unsigned 32-bit integer. */
+/** A stream of numbers in [0, 1) fixed by a seed. The seed is read as an unsigned 32-bit integer.
+ *
+ * @param seed - A reproducible integer seed from 1 to KAZU_SEED_MOST.
+ * @returns A stream of numbers in [0, 1) fixed by a seed. The seed is read as an unsigned 32-bit integer.
+ * @example
+ * ```ts
+ * import { seededRandom } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(seededRandom(42)());
+ * ```
+ */
 export function seededRandom(seed: number): Random {
   let state = seed >>> 0;
   return () => {
@@ -26,7 +46,18 @@ export function seededRandom(seed: number): Random {
   };
 }
 
-/** A copy of the list in a random order (Fisher–Yates, from the end); the list given is left alone. */
+/** A copy of the list in a random order (Fisher–Yates, from the end); the list given is left alone.
+ *
+ * @param items - Items to copy and shuffle.
+ * @param random - A random source returning values in [0,1).
+ * @returns A copy of the list in a random order (Fisher–Yates, from the end); the list given is left alone.
+ * @example
+ * ```ts
+ * import { seededRandom, shuffled } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(shuffled(["A","B","C"],seededRandom(42)));
+ * ```
+ */
 export function shuffled<T>(items: readonly T[], random: Random): T[] {
   const out = [...items];
   for (let i = out.length - 1; i > 0; i -= 1) {
@@ -36,15 +67,42 @@ export function shuffled<T>(items: readonly T[], random: Random): T[] {
   return out;
 }
 
-/** The most a seed can be: a whole number from 1 to 2³¹ − 1, so it travels in an address as a plain integer. */
+/** The most a seed can be: a whole number from 1 to 2³¹ − 1, so it travels in an address as a plain integer.
+ *
+ * @example
+ * ```ts
+ * import { KAZU_SEED_MOST } from "@johnmorrisdotca/kazu";
+ * console.log(KAZU_SEED_MOST);
+ * ```
+ */
 export const KAZU_SEED_MOST = 2 ** 31 - 1;
 
-/** Whether a value is a seed this package takes: a whole number from 1 to `KAZU_SEED_MOST`. */
+/** Whether a value is a seed this package takes: a whole number from 1 to `KAZU_SEED_MOST`.
+ *
+ * @param value - The value to validate, encode or enter specified by this signature.
+ * @returns Whether a value is a seed this package takes: a whole number from 1 to `KAZU_SEED_MOST`.
+ * @example
+ * ```ts
+ * import { isKazuSeed } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(isKazuSeed(42));
+ * ```
+ */
 export function isKazuSeed(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= KAZU_SEED_MOST;
 }
 
-/** A new seed, from `Math.random` or the stream given: anywhere in the range. */
+/** A new seed, from `Math.random` or the stream given: anywhere in the range.
+ *
+ * @param random - A random source returning values in [0,1).
+ * @returns A new seed, from `Math.random` or the stream given: anywhere in the range.
+ * @example
+ * ```ts
+ * import { freshKazuSeed, seededRandom } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(freshKazuSeed(seededRandom(42)));
+ * ```
+ */
 export function freshKazuSeed(random: Random = Math.random): number {
   return 1 + Math.floor(random() * KAZU_SEED_MOST);
 }

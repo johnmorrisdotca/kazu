@@ -3,7 +3,19 @@ import { regionsModel } from "./regions-logic.ts";
 import { decide, logicCsp, openSlots, solveCsp } from "./csp.ts";
 import type { RegionsBoard, RegionsRating } from "./regions.types.ts";
 
-/** Rates a board with one answer by solving it as a person would: with the rules, then by supposing one number at a time. */
+/** Rates a board with one answer by solving it as a person would: with the rules, then by supposing one number at a time.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Rates a board with one answer by solving it as a person would: with the rules, then by supposing one number at a time.
+ * @example
+ * ```ts
+ * import type { RegionsBoard } from "@johnmorrisdotca/kazu/regions";
+ * import { rateRegions } from "@johnmorrisdotca/kazu/regions";
+ *
+ * const regionsBoard: RegionsBoard = {"width":5,"height":5,"givens":[0,0,2,0,3,2,0,3,0,0,0,3,0,0,1,3,1,0,1,2,3,3,4,0,0]};
+ * console.log(rateRegions(regionsBoard));
+ * ```
+ */
 export function rateRegions(board: RegionsBoard): RegionsRating {
   if (!isRegionsBoard(board)) throw new RangeError("Invalid Regions board");
   const { csp, most } = regionsModel(board, board.givens);

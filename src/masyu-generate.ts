@@ -35,7 +35,18 @@ function makeEdges(board: MasyuBoard, path: readonly number[]): number[] | null 
   return edges.every((edge): edge is number => edge !== undefined) ? edges.sort((a, b) => a - b) : null;
 }
 
-/** Seeded original loop layouts; every output is accepted only after a completed uniqueness proof. */
+/** Seeded original loop layouts; every output is accepted only after a completed uniqueness proof.
+ *
+ * @param size - The supported square board side length.
+ * @param seed - The reproducible native puzzle seed.
+ * @returns Seeded original loop layouts; every output is accepted only after a completed uniqueness proof.
+ * @example
+ * ```ts no-run
+ * import { generateMasyu } from "@johnmorrisdotca/kazu/masyu";
+ *
+ * console.log(generateMasyu(5,42));
+ * ```
+ */
 export function generateMasyu(size: 5 = 5, seed = 1): MasyuPuzzle {
   if (size !== 5 || !isKazuSeed(seed)) throw new RangeError("Invalid Masyu settings");
   const random = seededRandom(seed), base = loops[Math.floor(random() * loops.length)]!;

@@ -4,7 +4,20 @@ import { loopModel } from "./loop-logic.ts";
 import { openSlots, solveCsp } from "./csp.ts";
 import type { LoopBoard, LoopSolve } from "./loop.types.ts";
 
-/** Counts loop solutions with the pruning in `loopLogic.ts` under explicit work bounds. */
+/** Counts loop solutions with the pruning in `loopLogic.ts` under explicit work bounds.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Counts loop solutions with the pruning in `loopLogic.ts` under explicit work bounds.
+ * @example
+ * ```ts
+ * import type { LoopBoard } from "@johnmorrisdotca/kazu/loop";
+ * import { solveLoop } from "@johnmorrisdotca/kazu/loop";
+ *
+ * const loopBoard: LoopBoard = {"width":5,"height":5,"clues":[2,3,1,null,null,3,1,1,null,null,3,2,2,null,null,3,0,2,2,null,2,2,1,2,3]};
+ * console.log(solveLoop(loopBoard,{limit:2,nodes:20000}));
+ * ```
+ */
 export function solveLoop(
   board: LoopBoard,
   options: { limit?: number; nodes?: number } = {},

@@ -19,6 +19,18 @@ type Cells = (number | null | false)[];
  * attempts, the next one down is tried; if none of the levels finds one, the same is tried again with more
  * black squares, which a large board needs to be solvable at all (see `AKARI_DENSER_CROWDS`). The fixed lattice
  * of the first generator is only what is left if even that fails, which no seed does at any size offered.
+ *
+ * @param width - The supported board width in cells.
+ * @param height - The supported board height in cells.
+ * @param seed - The reproducible native puzzle seed.
+ * @param level - The requested native difficulty tier.
+ * @returns Makes a seeded board and proves it has one answer. A random wall of black squares is lit by randomly placed bulbs, every black square that touches a white one is numbered, and then numbers are taken away for as long as the puzzle can still be solved the way the level asks: easy and medium by the rules alone (easy keeps most of its numbers), hard by supposing one square at a time, extra-hard for as long as the answer stays single, which leaves a board that needs more supposing than that. If no board of the level is found within the attempts, the next one down is tried; if none of the levels finds one, the same is tried again with more black squares, which a large board needs to be solvable at all (see `AKARI_DENSER_CROWDS`). The fixed lattice of the first generator is only what is left if even that fails, which no seed does at any size offered.
+ * @example
+ * ```ts no-run
+ * import { generateAkari } from "@johnmorrisdotca/kazu/akari";
+ *
+ * console.log(generateAkari(5,5,42,"easy"));
+ * ```
  */
 export function generateAkari(width = 7, height = width, seed = 1, level: AkariLevel = "medium"): AkariPuzzle {
   if (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= AKARI_MOST_SIDE)

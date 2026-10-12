@@ -1,3 +1,12 @@
+/** Scoped native Loop board and player CSS.
+ *
+ * @example
+ * ```ts
+ * import { LOOP_PLAY_STYLE } from "@johnmorrisdotca/kazu/loop/play";
+ *
+ * console.log(LOOP_PLAY_STYLE.length);
+ * ```
+ */
 export const LOOP_PLAY_STYLE = `
 .sl-root{color:var(--sl-ink,#1f2320);font:16px/1.5 var(--font,system-ui,sans-serif);max-width:760px;margin:auto}
 .sl-board{display:grid;position:relative;gap:0;width:100%;min-width:240px;touch-action:manipulation;user-select:none}

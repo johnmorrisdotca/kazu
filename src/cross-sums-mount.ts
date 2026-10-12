@@ -6,6 +6,24 @@ import { crossSumsWords } from "./cross-sums-strings.ts";
 import type { CrossSumsGame } from "./cross-sums.types.ts";
 import type { CrossSumsMount, CrossSumsMountOptions } from "./cross-sums-play.types.ts";
 
+/** Mount the native CrossSums player in a host element and return its cleanup and control handle.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mount the native CrossSums player in a host element and return its cleanup and control handle.
+ * @example
+ * ```ts no-run
+ * import type { CrossSumsBoard } from "@johnmorrisdotca/kazu/cross-sums";
+ * import { mountCrossSums } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * const crossSumsBoard: CrossSumsBoard = {"width":5,"height":5,"cells":[{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":10},{"kind":"black","across":null,"down":7},{"kind":"black","across":null,"down":12},{"kind":"black","across":null,"down":null},{"kind":"black","across":6,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":23,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null}]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountCrossSums(host,{board:crossSumsBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountCrossSums(host: HTMLElement, initial: CrossSumsMountOptions): CrossSumsMount {
   const doc = host.ownerDocument;
   let options = { ...initial };

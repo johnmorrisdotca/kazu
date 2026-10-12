@@ -19,10 +19,28 @@ import { seededRandom, type Random } from "./random.ts";
  * Deterministic in the seed.
  */
 
-/** The letters that name a cage in a code: up to sixty-two cages. */
+/** The letters that name a cage in a code: up to sixty-two cages.
+ *
+ * @example
+ * ```ts
+ * import { CAGE_LETTERS } from "@johnmorrisdotca/kazu";
+ * console.log(CAGE_LETTERS);
+ * ```
+ */
 export const CAGE_LETTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-/** A cage: the cells in it and the sum of the numbers inside. */
+/** A cage: the cells in it and the sum of the numbers inside.
+ *
+ * @example
+ * ```ts
+ * import { decodeKiller } from "@johnmorrisdotca/kazu";
+ * import type { Cage } from "@johnmorrisdotca/kazu";
+ *
+ * const killer = decodeKiller("2.....3..2................2...4.....012333412567882967aaa9bbccd9ebfgggee02050c0d03020309080e0c0a06020b040a",6)!;
+ * const value: Cage = killer.cages[0];
+ * console.log(value);
+ * ```
+ */
 export type Cage = { cells: number[]; sum: number };
 
 /**
@@ -32,6 +50,24 @@ export type Cage = { cells: number[]; sum: number };
  * cell is its own given). `cages` is size² characters, one per cell, naming its cage from
  * `CAGE_LETTERS`. `sums` is two base-36 characters a cage, in cage order. The cages ride in the
  * givens because they are the puzzle.
+ *
+ * @param cells - Row-major numeric cells, or expected cell count for step logs as specified by the signature.
+ * @param cages - The cage cell lists and required sums.
+ * @returns A Sum Cages puzzle's givens: the cells, then which cage each cell is in, then each cage's sum.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeKiller, encodeKiller, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const killer = decodeKiller("2.....3..2................2...4.....012333412567882967aaa9bbccd9ebfgggee02050c0d03020309080e0c0a06020b040a",6)!;
+ * console.log(encodeKiller(killer.cells,killer.cages));
+ * ```
  */
 export function encodeKiller(cells: readonly number[], cages: readonly Cage[]): string {
   const cageOf = new Array<number>(cells.length).fill(0);
@@ -45,6 +81,16 @@ export function encodeKiller(cells: readonly number[], cages: readonly Cage[]): 
 /**
  * The cells and cages a code says, or null for one that is not a whole, well-formed puzzle: every
  * cell named to a cage, every cage used, and a sum for each.
+ *
+ * @param code - The native encoded clues, entries or notes specified by the signature.
+ * @param size - The supported square grid side length.
+ * @returns The cells and cages a code says, or null for one that is not a whole, well-formed puzzle: every cell named to a cage, every cage used, and a sum for each.
+ * @example
+ * ```ts
+ * import { decodeKiller } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(decodeKiller("2.....3..2................2...4.....012333412567882967aaa9bbccd9ebfgggee02050c0d03020309080e0c0a06020b040a",6)?.cages.length);
+ * ```
  */
 export function decodeKiller(code: string, size: number): { cells: number[]; cages: Cage[] } | null {
   const area = size * size;
@@ -70,7 +116,16 @@ export function decodeKiller(code: string, size: number): { cells: number[]; cag
   return { cells, cages };
 }
 
-/** A line segment in cell units: where one part of a cage's dashed outline runs. */
+/** A line segment in cell units: where one part of a cage's dashed outline runs.
+ *
+ * @example
+ * ```ts
+ * import type { Segment } from "@johnmorrisdotca/kazu";
+ *
+ * const value: Segment = {x1:0,y1:0,x2:1,y2:0};
+ * console.log(value);
+ * ```
+ */
 export type Segment = { x1: number; y1: number; x2: number; y2: number };
 
 /**
@@ -83,6 +138,25 @@ export type Segment = { x1: number; y1: number; x2: number; y2: number };
  * cell's edge when the cage's edge carries on straight, and `inset` past it at an inside corner,
  * where the outline turns back into the cage. That is what makes the lines of one cage meet, with
  * no gap and no overshoot, whatever its shape.
+ *
+ * @param size - The supported square grid side length.
+ * @param cageOf - Map a cell index to its containing cage number, or undefined for none.
+ * @param inset - The outline inset in drawing units.
+ * @returns THE DASHED OUTLINE OF EVERY CAGE, as line segments in cell units: each cage drawn a little inside its own edge, the way a printed Killer Sudoku draws it, so a cage reads as a shape within the box rules rather than as one of them.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { cageOutline, decodeKiller, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const killer = decodeKiller("2.....3..2................2...4.....012333412567882967aaa9bbccd9ebfgggee02050c0d03020309080e0c0a06020b040a",6)!;
+ * console.log(cageOutline(6,index=>killer.cages.findIndex(cage=>cage.cells.includes(index))));
+ * ```
  */
 export function cageOutline(size: number, cageOf: (index: number) => number | undefined, inset = 0.12): Segment[] {
   const at = (row: number, col: number) => (row < 0 || col < 0 || row >= size || col >= size ? undefined : cageOf(row * size + col));
@@ -140,7 +214,22 @@ const JOINS_PER_CELL = 12;
  */
 const REFUSED_IN_A_ROW_PER_SIDE = 3;
 
-/** A Killer Sudoku (Sum Cages) of this side, level and seed: 6 or 9. */
+/** A Killer Sudoku (Sum Cages) of this side, level and seed: 6 or 9.
+ *
+ * @param size - The supported square grid side length.
+ * @param level - The native easy, medium or hard generation tier.
+ * @param seed - A reproducible integer seed from 1 to KAZU_SEED_MOST.
+ * @returns A Killer Sudoku (Sum Cages) of this side, level and seed: 6 or 9.
+ * @example
+ * ```ts no-run
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { generateSumCages } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const givens = puzzle.givens;
+ * console.log(generateSumCages(6,"easy",42).givens);
+ * ```
+ */
 export function generateSumCages(size: number, level: KazuLevel, seed: number): KazuPuzzle {
   const random = seededRandom(seed);
   for (;;) {

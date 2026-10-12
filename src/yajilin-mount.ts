@@ -5,6 +5,24 @@ import { YAJILIN_PLAY_STYLE } from "./yajilin-style.ts";
 import { YAJILIN_STRINGS } from "./yajilin-strings.ts";
 import type { YajilinMount, YajilinMountOptions } from "./yajilin.types.ts";
 
+/** Mount the native Yajilin player in a host element and return its cleanup and control handle.
+ *
+ * @param element - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mount the native Yajilin player in a host element and return its cleanup and control handle.
+ * @example
+ * ```ts no-run
+ * import type { YajilinBoard } from "@johnmorrisdotca/kazu/yajilin";
+ * import { mountYajilin } from "@johnmorrisdotca/kazu/yajilin/play";
+ *
+ * const yajilinBoard: YajilinBoard = {"width":5,"height":5,"clues":[{"direction":"left","count":0},null,{"direction":"right","count":1},null,{"direction":"up","count":0},null,null,null,null,null,{"direction":"right","count":0},null,{"direction":"left","count":0},null,{"direction":"down","count":1},{"direction":"left","count":0},null,null,null,null,null,{"direction":"up","count":1},{"direction":"down","count":0},null,{"direction":"down","count":0}]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountYajilin(host,{board:yajilinBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountYajilin(element: HTMLElement, initial: YajilinMountOptions): YajilinMount {
   const document = element.ownerDocument, style = document.createElement("style");
   style.textContent = YAJILIN_PLAY_STYLE;

@@ -1,3 +1,12 @@
+/** Scoped native Regions board and player CSS.
+ *
+ * @example
+ * ```ts
+ * import { REGIONS_PLAY_STYLE } from "@johnmorrisdotca/kazu/regions/play";
+ *
+ * console.log(REGIONS_PLAY_STYLE.length);
+ * ```
+ */
 export const REGIONS_PLAY_STYLE = `
 .regions-play{font:1rem/1.45 system-ui,sans-serif;color:var(--kz-ink,#202521);max-width:58rem;margin:auto}
 .regions-status{min-height:1.5em;text-align:center;font-weight:600}

@@ -2,7 +2,20 @@ import { RIPPLE_MAX_NODES } from "./ripple.constants.ts";
 import { isRippleBoard, rippleRoomSizes } from "./ripple-board.ts";
 import type { RippleBoard, RippleSolve } from "./ripple.types.ts";
 
-/** Counts rule-valid fillings within an explicit node budget. */
+/** Counts rule-valid fillings within an explicit node budget.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Counts rule-valid fillings within an explicit node budget.
+ * @example
+ * ```ts
+ * import type { RippleBoard } from "@johnmorrisdotca/kazu/ripple";
+ * import { solveRipple } from "@johnmorrisdotca/kazu/ripple";
+ *
+ * const rippleBoard: RippleBoard = {"width":9,"height":9,"rooms":[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8],"clues":[4,null,7,9,2,null,5,null,3,null,null,3,6,7,4,8,9,2,8,null,2,1,3,null,null,null,null,7,null,1,null,6,null,null,null,9,3,8,null,5,1,7,null,null,6,2,4,6,null,9,3,7,5,1,1,null,8,null,5,null,9,2,4,null,2,null,null,null,null,null,null,null,6,null,null,2,4,null,null,3,null]};
+ * console.log(solveRipple(rippleBoard,{limit:2,nodes:20000}));
+ * ```
+ */
 export function solveRipple(board: RippleBoard, options: { limit?: number; nodes?: number } = {}): RippleSolve {
   if (!isRippleBoard(board)) throw new RangeError("Invalid Ripple Effect board");
   const limit = options.limit ?? 2, budget = options.nodes ?? RIPPLE_MAX_NODES;

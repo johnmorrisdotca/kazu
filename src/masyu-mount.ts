@@ -5,6 +5,24 @@ import { MASYU_PLAY_STYLE } from "./masyu-style.ts";
 import { MASYU_STRINGS } from "./masyu-strings.ts";
 import type { MasyuMount, MasyuMountOptions } from "./masyu.types.ts";
 
+/** Mount the native Masyu player in a host element and return its cleanup and control handle.
+ *
+ * @param element - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mount the native Masyu player in a host element and return its cleanup and control handle.
+ * @example
+ * ```ts no-run
+ * import type { MasyuBoard } from "@johnmorrisdotca/kazu/masyu";
+ * import { mountMasyu } from "@johnmorrisdotca/kazu/masyu/play";
+ *
+ * const masyuBoard: MasyuBoard = {"width":5,"height":5,"pearls":[2,1,0,1,2,1,0,0,0,1,2,1,0,1,2,0,0,0,0,0,0,0,0,0,0]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountMasyu(host,{board:masyuBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountMasyu(element: HTMLElement, initial: MasyuMountOptions): MasyuMount {
   const document = element.ownerDocument, style = document.createElement("style");
   style.textContent = MASYU_PLAY_STYLE;

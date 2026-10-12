@@ -1,3 +1,12 @@
+/** Scoped native Hitori board and player CSS.
+ *
+ * @example
+ * ```ts
+ * import { HITORI_PLAY_STYLE } from "@johnmorrisdotca/kazu/hitori/play";
+ *
+ * console.log(HITORI_PLAY_STYLE.length);
+ * ```
+ */
 export const HITORI_PLAY_STYLE = `
 .kh-root{color:var(--ks-ink,#1f2320);font:16px/1.5 var(--font,system-ui,sans-serif);max-width:680px;margin:auto}
 .kh-board{position:relative;width:100%;min-width:240px;touch-action:manipulation}

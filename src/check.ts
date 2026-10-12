@@ -17,6 +17,25 @@ import { decodeTowers, lineFrom, TOWER_SIDES } from "./towers-code.ts";
  * The rules of each puzzle are restated here rather than shared with the solver on purpose: the
  * solver is what MADE the puzzle, and a check that reads the solver's mind proves only that the
  * solver agrees with itself.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param givens - The original native printed-clue code.
+ * @param answer - The complete native answer code.
+ * @returns Whether an answer solves a puzzle: O(cells), no search, nothing remembered between calls. A browser runs it to say "done"; a server runs it before it believes a solve, so a grid that is right is accepted and a grid that was merely posted is not. It refuses rather than repairs: a grid of the wrong size, a value out of range or a given moved is a "no" with its reason, never a best guess at what was meant.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { checkKazu, decodeCells } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const solution = decodeCells(answer,size)!;
+ * console.log(checkKazu(kind,size,givens,answer));
+ * ```
  */
 export function checkKazu(kind: KazuKind, size: number, givens: string, answer: string): KazuCheck {
   if (!isKazuSize(kind, size)) return { ok: false, reason: `no ${kind} at ${size}` };
@@ -162,7 +181,24 @@ function checkTowers(size: number, givens: string, answer: string): KazuCheck {
   return { ok: true };
 }
 
-/** Whether a puzzle's givens are a well-formed puzzle of that kind and side at all (a Jigsaw's regions sound, every code readable). */
+/** Whether a puzzle's givens are a well-formed puzzle of that kind and side at all (a Jigsaw's regions sound, every code readable).
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param givens - The original native printed-clue code.
+ * @returns Whether a puzzle's givens are a well-formed puzzle of that kind and side at all (a Jigsaw's regions sound, every code readable).
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { isKazuGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * console.log(isKazuGivens(kind,size,givens));
+ * ```
+ */
 export function isKazuGivens(kind: KazuKind, size: number, givens: string): boolean {
   const read = readGivens(kind, size, givens);
   if (read === null) return false;

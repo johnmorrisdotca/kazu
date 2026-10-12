@@ -6,7 +6,20 @@ import type { LoopBoard } from "./loop.types.ts";
 import type { LoopDrawOptions } from "./loop-play.types.ts";
 import { loopWords } from "./loop-strings.ts";
 
-/** Draws public clues and selected loop edges as an SVG board. */
+/** Draws public clues and selected loop edges as an SVG board.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Draws public clues and selected loop edges as an SVG board.
+ * @example
+ * ```ts
+ * import type { LoopBoard } from "@johnmorrisdotca/kazu/loop";
+ * import { drawLoop } from "@johnmorrisdotca/kazu/loop";
+ *
+ * const loopBoard: LoopBoard = {"width":5,"height":5,"clues":[2,3,1,null,null,3,1,1,null,null,3,2,2,null,null,3,0,2,2,null,2,2,1,2,3]};
+ * console.log(drawLoop(loopBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawLoop(board: LoopBoard, options: LoopDrawOptions = {}): string {
   if (!isLoopBoard(board)) throw new RangeError("Invalid Loop board");
   const words = loopWords(options.language);

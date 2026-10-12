@@ -6,6 +6,24 @@ import { rippleWords } from "./ripple-strings.ts";
 import type { RippleGame } from "./ripple.types.ts";
 import type { RippleDrawOptions, RippleMount, RippleMountOptions } from "./ripple-play.types.ts";
 
+/** Mount the native Ripple player in a host element and return its cleanup and control handle.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mount the native Ripple player in a host element and return its cleanup and control handle.
+ * @example
+ * ```ts no-run
+ * import type { RippleBoard } from "@johnmorrisdotca/kazu/ripple";
+ * import { mountRipple } from "@johnmorrisdotca/kazu/ripple";
+ *
+ * const rippleBoard: RippleBoard = {"width":9,"height":9,"rooms":[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8],"clues":[4,null,7,9,2,null,5,null,3,null,null,3,6,7,4,8,9,2,8,null,2,1,3,null,null,null,null,7,null,1,null,6,null,null,null,9,3,8,null,5,1,7,null,null,6,2,4,6,null,9,3,7,5,1,1,null,8,null,5,null,9,2,4,null,2,null,null,null,null,null,null,null,6,null,null,2,4,null,null,3,null]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountRipple(host,{board:rippleBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountRipple(host: HTMLElement, initial: RippleMountOptions): RippleMount {
   const doc = host.ownerDocument;
   let options = { ...initial };

@@ -13,7 +13,19 @@ const COMBOS = (length: number, sum: number): number => {
   return count;
 };
 
-/** Rates a board with one answer by solving it: with the single-run rules, with the digit-that-must-appear rule, then by supposing. */
+/** Rates a board with one answer by solving it: with the single-run rules, with the digit-that-must-appear rule, then by supposing.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Rates a board with one answer by solving it: with the single-run rules, with the digit-that-must-appear rule, then by supposing.
+ * @example
+ * ```ts
+ * import type { CrossSumsBoard } from "@johnmorrisdotca/kazu/cross-sums";
+ * import { rateCrossSums } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * const crossSumsBoard: CrossSumsBoard = {"width":5,"height":5,"cells":[{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":10},{"kind":"black","across":null,"down":7},{"kind":"black","across":null,"down":12},{"kind":"black","across":null,"down":null},{"kind":"black","across":6,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":23,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null}]};
+ * console.log(rateCrossSums(crossSumsBoard));
+ * ```
+ */
 export function rateCrossSums(board: CrossSumsBoard): CrossSumsRating {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
   const weak = crossSumsModel(board, 0), strong = crossSumsModel(board, 1);

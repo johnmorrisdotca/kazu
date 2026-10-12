@@ -1,6 +1,19 @@
 import { CROSS_SUMS_MAX_SIDE, CROSS_SUMS_MIN_SIDE } from "./cross-sums.constants.ts";
 import type { CrossSumsBoard, CrossSumsCheck, CrossSumsCell, CrossSumsRun } from "./cross-sums.types.ts";
 
+/** Whether the value has valid native CrossSums dimensions, clues and data.
+ *
+ * @param value - A candidate board, digit, mark or encoded game specified by this signature.
+ * @returns Whether the value has valid native CrossSums dimensions, clues and data.
+ * @example
+ * ```ts
+ * import type { CrossSumsBoard } from "@johnmorrisdotca/kazu/cross-sums";
+ * import { isCrossSumsBoard } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * const crossSumsBoard: CrossSumsBoard = {"width":5,"height":5,"cells":[{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":10},{"kind":"black","across":null,"down":7},{"kind":"black","across":null,"down":12},{"kind":"black","across":null,"down":null},{"kind":"black","across":6,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":23,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null}]};
+ * console.log(isCrossSumsBoard(crossSumsBoard));
+ * ```
+ */
 export function isCrossSumsBoard(value: unknown): value is CrossSumsBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as CrossSumsBoard;
@@ -25,6 +38,19 @@ function validCell(cell: CrossSumsCell): boolean {
     || Number.isInteger(value) && value >= 3 && value <= 45);
 }
 
+/** Read across and down digit runs with their clue cells and totals.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Read across and down digit runs with their clue cells and totals.
+ * @example
+ * ```ts
+ * import type { CrossSumsBoard } from "@johnmorrisdotca/kazu/cross-sums";
+ * import { crossSumsRuns } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * const crossSumsBoard: CrossSumsBoard = {"width":5,"height":5,"cells":[{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":10},{"kind":"black","across":null,"down":7},{"kind":"black","across":null,"down":12},{"kind":"black","across":null,"down":null},{"kind":"black","across":6,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":23,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null}]};
+ * console.log(crossSumsRuns(crossSumsBoard));
+ * ```
+ */
 export function crossSumsRuns(board: CrossSumsBoard): CrossSumsRun[] {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
   return collectRuns(board)!;
@@ -60,7 +86,21 @@ function collectRuns(board: CrossSumsBoard): CrossSumsRun[] | null {
   return runs;
 }
 
-/** Checks exact run sums and distinct digits independently of a stored answer. */
+/** Checks exact run sums and distinct digits independently of a stored answer.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param values - The current row-major cell values.
+ * @returns Checks exact run sums and distinct digits independently of a stored answer.
+ * @example
+ * ```ts
+ * import type { CrossSumsBoard, CrossSumsPuzzle } from "@johnmorrisdotca/kazu/cross-sums";
+ * import { checkCrossSums } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * const crossSumsBoard: CrossSumsBoard = {"width":5,"height":5,"cells":[{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":10},{"kind":"black","across":null,"down":7},{"kind":"black","across":null,"down":12},{"kind":"black","across":null,"down":null},{"kind":"black","across":6,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":23,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null}]};
+ * const crossSumsSolution: CrossSumsPuzzle["solution"] = [0,0,0,0,0,0,0,2,1,3,0,0,8,6,9,0,0,0,0,0,0,0,0,0,0];
+ * console.log(checkCrossSums(crossSumsBoard,crossSumsSolution));
+ * ```
+ */
 export function checkCrossSums(board: CrossSumsBoard, values: readonly number[]): CrossSumsCheck {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
   if (values.length !== board.cells.length) throw new RangeError("Invalid Cross Sums values");
@@ -80,12 +120,39 @@ export function checkCrossSums(board: CrossSumsBoard, values: readonly number[])
   return { ok: complete && errors.size === 0, complete, errors: [...errors].sort((a, b) => a - b) };
 }
 
-/** Allows unfinished runs while flagging duplicate digits and impossible remaining totals. */
+/** Allows unfinished runs while flagging duplicate digits and impossible remaining totals.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param values - The current row-major cell values.
+ * @returns Allows unfinished runs while flagging duplicate digits and impossible remaining totals.
+ * @example
+ * ```ts
+ * import type { CrossSumsBoard, CrossSumsPuzzle } from "@johnmorrisdotca/kazu/cross-sums";
+ * import { progressCrossSums } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * const crossSumsBoard: CrossSumsBoard = {"width":5,"height":5,"cells":[{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":10},{"kind":"black","across":null,"down":7},{"kind":"black","across":null,"down":12},{"kind":"black","across":null,"down":null},{"kind":"black","across":6,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":23,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null}]};
+ * const crossSumsSolution: CrossSumsPuzzle["solution"] = [0,0,0,0,0,0,0,2,1,3,0,0,8,6,9,0,0,0,0,0,0,0,0,0,0];
+ * console.log(progressCrossSums(crossSumsBoard,crossSumsSolution));
+ * ```
+ */
 export function progressCrossSums(board: CrossSumsBoard, values: readonly number[]): CrossSumsCheck {
   const result = checkCrossSums(board, values);
   return { ...result, ok: result.errors.length === 0 };
 }
 
+/** Whether the remaining distinct digits can reach the target sum in the given slots.
+ *
+ * @param target - The required digit total still to reach.
+ * @param slots - The number of remaining distinct digits.
+ * @param used - Digits already used in this run.
+ * @returns Whether the remaining distinct digits can reach the target sum in the given slots.
+ * @example
+ * ```ts
+ * import { canReach } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * console.log(canReach(10,2,[1]));
+ * ```
+ */
 export function canReach(target: number, slots: number, used: readonly number[]): boolean {
   if (slots === 0) return target === 0;
   if (target < 1 || slots > 9) return false;

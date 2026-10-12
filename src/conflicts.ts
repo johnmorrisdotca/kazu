@@ -13,6 +13,24 @@ import { lineFrom, TOWER_SIDES } from "./towers-code.ts";
  * Towers clue show more towers than the clue says (or, once the line is full, any other number).
  * An empty cell is never in conflict, and a grid with no conflict is not thereby right: it may
  * simply not be finished.
+ *
+ * @param givens - The original native printed-clue code.
+ * @param values - Replacement text/numbers or row-major entries specified by this signature.
+ * @returns THE CELLS THAT BREAK A RULE RIGHT NOW, read from the rules alone: no answer is needed, so it works on any puzzle, and it names a mistake the moment it is made rather than when it is checked.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { conflictsOf, decodeCells, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const printed = readGivens(kind,size,givens)!;
+ * const solution = decodeCells(answer,size)!;
+ * console.log(conflictsOf(printed,solution));
+ * ```
  */
 export function conflictsOf(givens: KazuGivens, values: readonly number[]): number[] {
   const { size } = givens;

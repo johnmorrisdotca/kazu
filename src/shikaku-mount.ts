@@ -6,7 +6,24 @@ import { SHIKAKU_PLAY_STYLE } from "./shikaku-style.ts";
 import { shikakuWords } from "./shikaku-strings.ts";
 import type { ShikakuDrawOptions, ShikakuMount, ShikakuMountOptions } from "./shikaku-play.types.ts";
 
-/** A rectangle player in any element; mount once, update appearance with set, destroy on unmount. */
+/** A rectangle player in any element; mount once, update appearance with set, destroy on unmount.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns A rectangle player in any element; mount once, update appearance with set, destroy on unmount.
+ * @example
+ * ```ts no-run
+ * import type { ShikakuBoard } from "@johnmorrisdotca/kazu/shikaku";
+ * import { mountShikaku } from "@johnmorrisdotca/kazu/play";
+ *
+ * const shikakuBoard: ShikakuBoard = {"width":5,"height":5,"clues":[3,0,0,0,2,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,4,3,6,0,0]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountShikaku(host,{board:shikakuBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountShikaku(host: HTMLElement, initial: ShikakuMountOptions): ShikakuMount {
   const doc = host.ownerDocument;
   let options = { ...initial }, game = initial.progress ? decodeShikaku(initial.progress) : null;

@@ -2,7 +2,21 @@ import { JUOSAN_MOST_NODES } from "./juosan.constants.ts";
 import { checkJuosan, isJuosanBoard } from "./juosan-board.ts";
 import type { JuosanBoard, JuosanMark, JuosanSolve } from "./juosan.types.ts";
 
-/** Counts labeled solutions up to a limit; `complete` distinguishes exhaustion from cutoff. */
+/** Counts labeled solutions up to a limit; `complete` distinguishes exhaustion from cutoff.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param limit - Stop after finding this many solutions.
+ * @param maxNodes - The maximum search-node work; exhaustion is inconclusive.
+ * @returns Counts labeled solutions up to a limit; `complete` distinguishes exhaustion from cutoff.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { solveJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * console.log(solveJuosan(juosanBoard,2,20000));
+ * ```
+ */
 export function solveJuosan(
   board: JuosanBoard,
   limit = 2,

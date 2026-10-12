@@ -22,12 +22,35 @@ import { seededRandom, type Random } from "./random.ts";
 
 const REGION_FIRST = "a".charCodeAt(0);
 
-/** The region of every cell as a letter, `a` for the first region and so on: one character a cell. */
+/** The region of every cell as a letter, `a` for the first region and so on: one character a cell.
+ *
+ * @param regions - The row-major region index of every cell.
+ * @returns The region of every cell as a letter, `a` for the first region and so on: one character a cell.
+ * @example
+ * ```ts
+ * import { decodeJigsaw, encodeRegions } from "@johnmorrisdotca/kazu";
+ *
+ * const jigsaw = decodeJigsaw(".1.34....33..12...45423..bbaaacbaaecbeeecbddeccddd",5)!;
+ * console.log(encodeRegions(jigsaw.regions));
+ * ```
+ */
 export function encodeRegions(regions: readonly number[]): string {
   return regions.map((region) => String.fromCharCode(REGION_FIRST + region)).join("");
 }
 
-/** Regions row-major, one letter each, or null for a string that is not that. */
+/** Regions row-major, one letter each, or null for a string that is not that.
+ *
+ * @param code - The native encoded clues, entries or notes specified by the signature.
+ * @param size - The supported square grid side length.
+ * @returns Regions row-major, one letter each, or null for a string that is not that.
+ * @example
+ * ```ts
+ * import { decodeJigsaw, decodeRegions, encodeRegions } from "@johnmorrisdotca/kazu";
+ *
+ * const jigsaw = decodeJigsaw(".1.34....33..12...45423..bbaaacbaaecbeeecbddeccddd",5)!;
+ * console.log(decodeRegions(encodeRegions(jigsaw.regions),5)?.length);
+ * ```
+ */
 export function decodeRegions(code: string, size: number): number[] | null {
   if (typeof code !== "string" || code.length !== size * size) return null;
   const regions: number[] = [];
@@ -43,12 +66,48 @@ export function decodeRegions(code: string, size: number): number[] | null {
  * A Jigsaw's givens: the cells, then the regions, one letter a cell. The regions ride in the givens
  * because they are the puzzle: a check reads a finished grid against the regions it was handed, in
  * one pass, and never has to make them again.
+ *
+ * @param cells - Row-major numeric cells, or expected cell count for step logs as specified by the signature.
+ * @param regions - The row-major region index of every cell.
+ * @returns A Jigsaw's givens: the cells, then the regions, one letter a cell. The regions ride in the givens because they are the puzzle: a check reads a finished grid against the regions it was handed, in one pass, and never has to make them again.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeJigsaw, encodeJigsaw, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const jigsaw = decodeJigsaw(".1.34....33..12...45423..bbaaacbaaecbeeecbddeccddd",5)!;
+ * console.log(encodeJigsaw(jigsaw.cells,jigsaw.regions));
+ * ```
  */
 export function encodeJigsaw(cells: readonly number[], regions: readonly number[]): string {
   return encodeCells(cells) + encodeRegions(regions);
 }
 
-/** The cells and regions a Jigsaw's givens say, or null for a string that is not a Jigsaw of this side. */
+/** The cells and regions a Jigsaw's givens say, or null for a string that is not a Jigsaw of this side.
+ *
+ * @param code - The native encoded clues, entries or notes specified by the signature.
+ * @param size - The supported square grid side length.
+ * @returns The cells and regions a Jigsaw's givens say, or null for a string that is not a Jigsaw of this side.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeJigsaw, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * console.log(decodeJigsaw(".1.34....33..12...45423..bbaaacbaaecbeeecbddeccddd",5)?.cells.length);
+ * ```
+ */
 export function decodeJigsaw(code: string, size: number): { cells: number[]; regions: number[] } | null {
   if (typeof code !== "string" || code.length !== 2 * size * size) return null;
   const cells = decodeCells(code.slice(0, size * size), size);
@@ -139,7 +198,22 @@ export function shakeRegions(size: number, random: Random): number[] {
   }
 }
 
-/** A Jigsaw Sudoku of this side, level and seed: 5, 6, 7 or 9. */
+/** A Jigsaw Sudoku of this side, level and seed: 5, 6, 7 or 9.
+ *
+ * @param size - The supported square grid side length.
+ * @param level - The native easy, medium or hard generation tier.
+ * @param seed - A reproducible integer seed from 1 to KAZU_SEED_MOST.
+ * @returns A Jigsaw Sudoku of this side, level and seed: 5, 6, 7 or 9.
+ * @example
+ * ```ts no-run
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { generateJigsaw } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const givens = puzzle.givens;
+ * console.log(generateJigsaw(5,"easy",42).givens);
+ * ```
+ */
 export function generateJigsaw(size: number, level: KazuLevel, seed: number): KazuPuzzle {
   const random = seededRandom(seed);
   for (let tried = 0; tried < LAYOUTS_TRIED; tried += 1) {

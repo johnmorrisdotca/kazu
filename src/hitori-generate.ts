@@ -14,6 +14,17 @@ import type { HitoriBoard, HitoriLevel, HitoriPuzzle } from "./hitori.types.ts";
  * repaired by renumbering a shaded square so that the other answer repeats a number, and the result is rated:
  * easy by the plain rules, medium once the whites must stay in one piece, hard by supposing, and extra-hard the
  * most-supposing of several boards.
+ *
+ * @param size - The supported square board side length.
+ * @param seed - The reproducible native puzzle seed.
+ * @param level - The requested native difficulty tier.
+ * @returns Makes a seeded puzzle and proves its answer is the only one. The shaded squares are chosen first (never touching, the rest in one piece), the white squares get numbers that repeat nowhere in their row or column, and every shaded square takes a number that a white square in its row or column already has. Boards with more than one answer are repaired by renumbering a shaded square so that the other answer repeats a number, and the result is rated: easy by the plain rules, medium once the whites must stay in one piece, hard by supposing, and extra-hard the most-supposing of several boards.
+ * @example
+ * ```ts no-run
+ * import { generateHitori } from "@johnmorrisdotca/kazu/hitori";
+ *
+ * console.log(generateHitori(5,42,"easy"));
+ * ```
  */
 export function generateHitori(size = 5, seed = 1, level: HitoriLevel = "medium"): HitoriPuzzle {
   if (!Number.isInteger(size) || size < HITORI_LEAST_SIDE || size > HITORI_MOST_SIDE || !isKazuSeed(seed) || !HITORI_LEVELS.includes(level)) {

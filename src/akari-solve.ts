@@ -4,7 +4,20 @@ import { akariModel } from "./akari-logic.ts";
 import { openSlots, solveCsp } from "./csp.ts";
 import type { AkariBoard, AkariSolve } from "./akari.types.ts";
 
-/** Bounded constraint search over the rules in `akariLogic.ts`; a stopped proof is always marked incomplete. */
+/** Bounded constraint search over the rules in `akariLogic.ts`; a stopped proof is always marked incomplete.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Bounded constraint search over the rules in `akariLogic.ts`; a stopped proof is always marked incomplete.
+ * @example
+ * ```ts
+ * import type { AkariBoard } from "@johnmorrisdotca/kazu/akari";
+ * import { solveAkari } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * console.log(solveAkari(akariBoard,{limit:2,nodes:20000}));
+ * ```
+ */
 export function solveAkari(
   board: AkariBoard,
   options: { limit?: number; nodes?: number } = {},

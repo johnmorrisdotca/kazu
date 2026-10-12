@@ -10,6 +10,15 @@ import type { KazuKind } from "./kinds.ts";
  * own original name, and the word Japanese publishers use); the others keep names of their own. The
  * keys the package uses are `number-place`, `sum-cages`, `more-or-less`, `towers`: what each one is, not
  * somebody's trademark.
+ *
+ * @example
+ * ```ts
+ * import type { KazuName } from "@johnmorrisdotca/kazu/draw";
+ * import { KAZU_NAMES } from "@johnmorrisdotca/kazu/draw";
+ *
+ * const value: KazuName = KAZU_NAMES["number-place"];
+ * console.log(value);
+ * ```
  */
 export type KazuName = {
   /** The name players search for. */
@@ -26,6 +35,14 @@ export type KazuName = {
   origin: { en: string; ja: string };
 };
 
+/** Bilingual puzzle names, aliases, rules, origins and introductory copy by native kind.
+ *
+ * @example
+ * ```ts
+ * import { KAZU_NAMES } from "@johnmorrisdotca/kazu/draw";
+ * console.log(KAZU_NAMES);
+ * ```
+ */
 export const KAZU_NAMES: Record<KazuKind, KazuName> = {
   "number-place": {
     en: "Sudoku",
@@ -181,7 +198,14 @@ export const KAZU_NAMES: Record<KazuKind, KazuName> = {
   },
 };
 
-/** What each side is for, under its size on a chooser: the quick one, the usual one, the long one. */
+/** What each side is for, under its size on a chooser: the quick one, the usual one, the long one.
+ *
+ * @example
+ * ```ts
+ * import { KAZU_SIZE_NAMES } from "@johnmorrisdotca/kazu/draw";
+ * console.log(KAZU_SIZE_NAMES);
+ * ```
+ */
 export const KAZU_SIZE_NAMES: Record<KazuKind, Record<number, { en: string; ja: string }>> = {
   "number-place": { 4: { en: "Quick", ja: "速" }, 6: { en: "Short", ja: "短" }, 9: { en: "Classic", ja: "定番" }, 16: { en: "Giant", ja: "特大" }, 25: { en: "Colossus", ja: "巨大" } },
   jigsaw: { 5: { en: "Quick", ja: "速" }, 6: { en: "Short", ja: "短" }, 7: { en: "Standard", ja: "定番" }, 9: { en: "Classic", ja: "本格" } },

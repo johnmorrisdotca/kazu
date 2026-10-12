@@ -9,6 +9,12 @@
  * `--kz-diagonal`, `--kz-peer`, `--kz-same`, `--kz-select`, `--kz-hint`, `--kz-conflict`, `--kz-wrong`,
  * `--kz-good`), so a page's own style needs to set only the ones it wants different. The paper follows
  * the page's light or dark. Nothing moves, so there is nothing for reduced motion to still.
+ *
+ * @example
+ * ```ts
+ * import { KAZU_STYLE } from "@johnmorrisdotca/kazu/draw";
+ * console.log(KAZU_STYLE.length);
+ * ```
  */
 export const KAZU_STYLE = `
 .kazu {

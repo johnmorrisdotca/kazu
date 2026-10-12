@@ -3,6 +3,20 @@ import type { HeyawakeBoard } from "./heyawake.types.ts";
 import type { HeyawakeDrawOptions } from "./heyawake-play.types.ts";
 import { heyawakeWords } from "./heyawake-strings.ts";
 
+/** Render the Heyawake board and supplied current state as native SVG text.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Render the Heyawake board and supplied current state as native SVG text.
+ * @example
+ * ```ts
+ * import type { HeyawakeBoard } from "@johnmorrisdotca/kazu/heyawake";
+ * import { drawHeyawake } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * const heyawakeBoard: HeyawakeBoard = {"width":5,"height":5,"rooms":[{"x":0,"y":0,"width":1,"height":1,"blacks":0},{"x":0,"y":1,"width":1,"height":2,"blacks":0},{"x":0,"y":3,"width":1,"height":2,"blacks":1},{"x":1,"y":0,"width":1,"height":4,"blacks":1},{"x":1,"y":4,"width":1,"height":1,"blacks":0},{"x":2,"y":0,"width":3,"height":5,"blacks":3}]};
+ * console.log(drawHeyawake(heyawakeBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawHeyawake(board: HeyawakeBoard, options: HeyawakeDrawOptions = {}): string {
   if (!isHeyawakeBoard(board)) throw new RangeError("Invalid Heyawake board");
   const words = heyawakeWords(options.language), size = 48;

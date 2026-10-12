@@ -1,6 +1,20 @@
 import { HEYAWAKE_MOST_SIDE } from "./heyawake.constants.ts";
 import type { HeyawakeBoard, HeyawakeCheck, HeyawakeRoom } from "./heyawake.types.ts";
 
+/** Read room cells, or null for a room outside this board.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param room - A rectangular room within this board.
+ * @returns Read room cells, or null for a room outside this board.
+ * @example
+ * ```ts
+ * import type { HeyawakeBoard } from "@johnmorrisdotca/kazu/heyawake";
+ * import { heyawakeCells } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * const heyawakeBoard: HeyawakeBoard = {"width":5,"height":5,"rooms":[{"x":0,"y":0,"width":1,"height":1,"blacks":0},{"x":0,"y":1,"width":1,"height":2,"blacks":0},{"x":0,"y":3,"width":1,"height":2,"blacks":1},{"x":1,"y":0,"width":1,"height":4,"blacks":1},{"x":1,"y":4,"width":1,"height":1,"blacks":0},{"x":2,"y":0,"width":3,"height":5,"blacks":3}]};
+ * console.log(heyawakeCells(heyawakeBoard,heyawakeBoard.rooms[0]));
+ * ```
+ */
 export function heyawakeCells(board: HeyawakeBoard, room: HeyawakeRoom): number[] | null {
   if (!room || ![room.x, room.y, room.width, room.height].every(Number.isInteger)
     || room.x < 0 || room.y < 0 || room.width < 1 || room.height < 1
@@ -9,6 +23,19 @@ export function heyawakeCells(board: HeyawakeBoard, room: HeyawakeRoom): number[
     (room.y + Math.floor(index / room.width)) * board.width + room.x + index % room.width);
 }
 
+/** Whether the value has valid native Heyawake dimensions, clues and data.
+ *
+ * @param value - A candidate board, digit, mark or encoded game specified by this signature.
+ * @returns Whether the value has valid native Heyawake dimensions, clues and data.
+ * @example
+ * ```ts
+ * import type { HeyawakeBoard } from "@johnmorrisdotca/kazu/heyawake";
+ * import { isHeyawakeBoard } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * const heyawakeBoard: HeyawakeBoard = {"width":5,"height":5,"rooms":[{"x":0,"y":0,"width":1,"height":1,"blacks":0},{"x":0,"y":1,"width":1,"height":2,"blacks":0},{"x":0,"y":3,"width":1,"height":2,"blacks":1},{"x":1,"y":0,"width":1,"height":4,"blacks":1},{"x":1,"y":4,"width":1,"height":1,"blacks":0},{"x":2,"y":0,"width":3,"height":5,"blacks":3}]};
+ * console.log(isHeyawakeBoard(heyawakeBoard));
+ * ```
+ */
 export function isHeyawakeBoard(value: unknown): value is HeyawakeBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as HeyawakeBoard;
@@ -27,6 +54,20 @@ export function isHeyawakeBoard(value: unknown): value is HeyawakeBoard {
   return occupied.size === board.width * board.height;
 }
 
+/** Read orthogonally adjacent Heyawake cells.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Read orthogonally adjacent Heyawake cells.
+ * @example
+ * ```ts
+ * import type { HeyawakeBoard } from "@johnmorrisdotca/kazu/heyawake";
+ * import { heyawakeNeighbours } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * const heyawakeBoard: HeyawakeBoard = {"width":5,"height":5,"rooms":[{"x":0,"y":0,"width":1,"height":1,"blacks":0},{"x":0,"y":1,"width":1,"height":2,"blacks":0},{"x":0,"y":3,"width":1,"height":2,"blacks":1},{"x":1,"y":0,"width":1,"height":4,"blacks":1},{"x":1,"y":4,"width":1,"height":1,"blacks":0},{"x":2,"y":0,"width":3,"height":5,"blacks":3}]};
+ * console.log(heyawakeNeighbours(heyawakeBoard,0));
+ * ```
+ */
 export function heyawakeNeighbours(board: HeyawakeBoard, cell: number): number[] {
   const x = cell % board.width, y = Math.floor(cell / board.width);
   return [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]
@@ -34,12 +75,40 @@ export function heyawakeNeighbours(board: HeyawakeBoard, cell: number): number[]
     .map(([nx, ny]) => ny! * board.width + nx!);
 }
 
+/** Read the containing room index for each Heyawake cell.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Read the containing room index for each Heyawake cell.
+ * @example
+ * ```ts
+ * import type { HeyawakeBoard } from "@johnmorrisdotca/kazu/heyawake";
+ * import { roomForCell } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * const heyawakeBoard: HeyawakeBoard = {"width":5,"height":5,"rooms":[{"x":0,"y":0,"width":1,"height":1,"blacks":0},{"x":0,"y":1,"width":1,"height":2,"blacks":0},{"x":0,"y":3,"width":1,"height":2,"blacks":1},{"x":1,"y":0,"width":1,"height":4,"blacks":1},{"x":1,"y":4,"width":1,"height":1,"blacks":0},{"x":2,"y":0,"width":3,"height":5,"blacks":3}]};
+ * console.log(roomForCell(heyawakeBoard));
+ * ```
+ */
 export function roomForCell(board: HeyawakeBoard): number[] {
   const lookup = Array(board.width * board.height).fill(-1) as number[];
   board.rooms.forEach((room, index) => heyawakeCells(board, room)?.forEach(cell => { lookup[cell] = index; }));
   return lookup;
 }
 
+/** Validate a Heyawake answer against the printed clues and complete native rules.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param entries - Current row-major entries; omit to search from printed clues.
+ * @returns Validate a Heyawake answer against the printed clues and complete native rules.
+ * @example
+ * ```ts
+ * import type { HeyawakeBoard, HeyawakePuzzle } from "@johnmorrisdotca/kazu/heyawake";
+ * import { checkHeyawake } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * const heyawakeBoard: HeyawakeBoard = {"width":5,"height":5,"rooms":[{"x":0,"y":0,"width":1,"height":1,"blacks":0},{"x":0,"y":1,"width":1,"height":2,"blacks":0},{"x":0,"y":3,"width":1,"height":2,"blacks":1},{"x":1,"y":0,"width":1,"height":4,"blacks":1},{"x":1,"y":4,"width":1,"height":1,"blacks":0},{"x":2,"y":0,"width":3,"height":5,"blacks":3}]};
+ * const heyawakeSolution: HeyawakePuzzle["solution"] = [false,false,true,false,false,false,true,false,false,false,false,false,true,false,false,true,false,false,false,false,false,false,true,false,false];
+ * console.log(checkHeyawake(heyawakeBoard,heyawakeSolution));
+ * ```
+ */
 export function checkHeyawake(board: HeyawakeBoard, entries: readonly (boolean | null)[]): HeyawakeCheck {
   if (!isHeyawakeBoard(board)) throw new RangeError("Invalid Heyawake board");
   if (!Array.isArray(entries) || entries.length !== board.width * board.height
@@ -73,6 +142,25 @@ export function checkHeyawake(board: HeyawakeBoard, entries: readonly (boolean |
   return { ok: errors.size === 0 && complete, complete, errors: [...errors].sort((a, b) => a - b) };
 }
 
+/** Add unshaded straight-line room-span violations to the supplied error set.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param entries - Current row-major entries; omit to search from printed clues.
+ * @param roomIds - Optional precomputed room index for each cell.
+ * @param errors - The set receiving cells violating room-span rules.
+ * @returns Add unshaded straight-line room-span violations to the supplied error set.
+ * @example
+ * ```ts
+ * import type { HeyawakeBoard, HeyawakePuzzle } from "@johnmorrisdotca/kazu/heyawake";
+ * import { checkRoomSpans, roomForCell } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * const heyawakeBoard: HeyawakeBoard = {"width":5,"height":5,"rooms":[{"x":0,"y":0,"width":1,"height":1,"blacks":0},{"x":0,"y":1,"width":1,"height":2,"blacks":0},{"x":0,"y":3,"width":1,"height":2,"blacks":1},{"x":1,"y":0,"width":1,"height":4,"blacks":1},{"x":1,"y":4,"width":1,"height":1,"blacks":0},{"x":2,"y":0,"width":3,"height":5,"blacks":3}]};
+ * const heyawakeSolution: HeyawakePuzzle["solution"] = [false,false,true,false,false,false,true,false,false,false,false,false,true,false,false,true,false,false,false,false,false,false,true,false,false];
+ * const errors = new Set<number>();
+ * checkRoomSpans(heyawakeBoard,heyawakeSolution,roomForCell(heyawakeBoard),errors);
+ * console.log([...errors]);
+ * ```
+ */
 export function checkRoomSpans(board: HeyawakeBoard, entries: readonly (boolean | null)[], roomIds = roomForCell(board), errors = new Set<number>()): void {
   for (let y = 0; y < board.height; y += 1) {
     let rooms = new Set<number>(), cells: number[] = [];

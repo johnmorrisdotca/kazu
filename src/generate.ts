@@ -23,6 +23,21 @@ const GENERATORS: Record<KazuKind, (size: number, level: KazuLevel, seed: number
  *
  * Throws a RangeError for a kind, size, level or seed it does not make, rather than a puzzle made
  * from something else.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param level - The native easy, medium or hard generation tier.
+ * @param seed - A reproducible integer seed from 1 to KAZU_SEED_MOST.
+ * @returns A puzzle of any of the six, from a seed: the one door. The same kind, size, level and seed make the same puzzle in every browser and every Node, for ever, which is what lets a solve be kept as those four and a race be handed one number. Every puzzle has exactly one answer, and an easy one yields to singles alone.
+ * @example
+ * ```ts no-run
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { generateKazu } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const givens = puzzle.givens;
+ * console.log(generateKazu("number-place",4,"easy",42).givens);
+ * ```
  */
 export function generateKazu(kind: KazuKind, size: number, level: KazuLevel, seed: number): KazuPuzzle {
   if (!isKazuKind(kind)) throw new RangeError(`Kazu has no puzzle called ${String(kind)}.`);

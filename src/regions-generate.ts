@@ -14,6 +14,18 @@ import type { Random } from "./random.ts";
  * the puzzle can still be solved the way the level asks: easy and medium by the rules alone (easy keeps most givens),
  * hard by supposing one number at a time, extra-hard for as long as the answer stays single. If no board of the level
  * is found within the attempts the next level down is tried, and a puzzle that gives every square is the last resort.
+ *
+ * @param width - The supported board width in cells.
+ * @param height - The supported board height in cells.
+ * @param level - The requested native difficulty tier.
+ * @param seed - The reproducible native puzzle seed.
+ * @returns Makes a seeded puzzle and proves its answer is the only one. The board is cut into connected regions, each holding its own size, with no two of one size touching; every square starts given, and givens are taken away for as long as the puzzle can still be solved the way the level asks: easy and medium by the rules alone (easy keeps most givens), hard by supposing one number at a time, extra-hard for as long as the answer stays single. If no board of the level is found within the attempts the next level down is tried, and a puzzle that gives every square is the last resort.
+ * @example
+ * ```ts no-run
+ * import { generateRegions } from "@johnmorrisdotca/kazu/regions";
+ *
+ * console.log(generateRegions(5,5,"easy",42));
+ * ```
  */
 export function generateRegions(
   width = 5,

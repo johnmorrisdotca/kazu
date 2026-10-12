@@ -5,7 +5,24 @@ import { KAZU_STYLE } from "./style.ts";
 import { NURIKABE_PLAY_STYLE } from "./nurikabe-style.ts";
 import { nurikabeWords } from "./nurikabe-strings.ts";
 import type { NurikabeDrawOptions, NurikabeMount, NurikabeMountOptions } from "./nurikabe-play.types.ts";
-/** A keyboard- and touch-friendly Nurikabe player, mounted in any host element. */
+/** A keyboard- and touch-friendly Nurikabe player, mounted in any host element.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns A keyboard- and touch-friendly Nurikabe player, mounted in any host element.
+ * @example
+ * ```ts no-run
+ * import type { NurikabeBoard } from "@johnmorrisdotca/kazu/nurikabe";
+ * import { mountNurikabe } from "@johnmorrisdotca/kazu/nurikabe/play";
+ *
+ * const nurikabeBoard: NurikabeBoard = {"size":5,"clues":[1,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,2,0,0,3,0,0]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountNurikabe(host,{board:nurikabeBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountNurikabe(host: HTMLElement, initial: NurikabeMountOptions): NurikabeMount {
   const doc = host.ownerDocument;
   let options = { ...initial }, game = initial.progress ? decodeNurikabe(initial.progress) : null;

@@ -1,7 +1,19 @@
 import { SHIKAKU_MOST_SIDE } from "./shikaku.constants.ts";
 import type { ShikakuBoard, ShikakuCheck, ShikakuRectangle } from "./shikaku.types.ts";
 
-/** Whether dimensions and area clues describe a possible partition. */
+/** Whether dimensions and area clues describe a possible partition.
+ *
+ * @param value - A candidate board, digit, mark or encoded game specified by this signature.
+ * @returns Whether dimensions and area clues describe a possible partition.
+ * @example
+ * ```ts
+ * import type { ShikakuBoard } from "@johnmorrisdotca/kazu/shikaku";
+ * import { isShikakuBoard } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const shikakuBoard: ShikakuBoard = {"width":5,"height":5,"clues":[3,0,0,0,2,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,4,3,6,0,0]};
+ * console.log(isShikakuBoard(shikakuBoard));
+ * ```
+ */
 export function isShikakuBoard(value: unknown): value is ShikakuBoard {
   if (!value || typeof value !== "object") return false;
   const b = value as ShikakuBoard;
@@ -11,7 +23,21 @@ export function isShikakuBoard(value: unknown): value is ShikakuBoard {
     && b.clues.every(n => Number.isInteger(n) && n >= 0 && n <= b.clues.length)
     && b.clues.reduce((a, n) => a + n, 0) === b.clues.length;
 }
-/** Cells of a bounded rectangle, or null for invalid coordinates. */
+/** Cells of a bounded rectangle, or null for invalid coordinates.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param r - A zero-based rectangle with its width and height.
+ * @returns Cells of a bounded rectangle, or null for invalid coordinates.
+ * @example
+ * ```ts
+ * import type { ShikakuBoard, ShikakuPuzzle } from "@johnmorrisdotca/kazu/shikaku";
+ * import { shikakuCells } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const shikakuBoard: ShikakuBoard = {"width":5,"height":5,"clues":[3,0,0,0,2,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,4,3,6,0,0]};
+ * const shikakuSolution: ShikakuPuzzle["solution"] = [{"x":0,"y":0,"width":3,"height":1},{"x":3,"y":0,"width":2,"height":1},{"x":1,"y":1,"width":4,"height":1},{"x":4,"y":2,"width":1,"height":3},{"x":0,"y":1,"width":1,"height":4},{"x":1,"y":2,"width":1,"height":3},{"x":2,"y":2,"width":2,"height":3}];
+ * console.log(shikakuCells(shikakuBoard,shikakuSolution[0]));
+ * ```
+ */
 export function shikakuCells(board: ShikakuBoard, r: ShikakuRectangle): number[] | null {
   if (!r || ![r.x, r.y, r.width, r.height].every(Number.isInteger)
     || r.x < 0 || r.y < 0 || r.width < 1 || r.height < 1
@@ -19,7 +45,21 @@ export function shikakuCells(board: ShikakuBoard, r: ShikakuRectangle): number[]
   return Array.from({ length: r.width * r.height }, (_, i) =>
     (r.y + Math.floor(i / r.width)) * board.width + r.x + i % r.width);
 }
-/** A finished partition is checked against the rules, never against a stored answer. */
+/** A finished partition is checked against the rules, never against a stored answer.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param rectangles - The placed rectangles to validate.
+ * @returns A finished partition is checked against the rules, never against a stored answer.
+ * @example
+ * ```ts
+ * import type { ShikakuBoard, ShikakuPuzzle } from "@johnmorrisdotca/kazu/shikaku";
+ * import { checkShikaku } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const shikakuBoard: ShikakuBoard = {"width":5,"height":5,"clues":[3,0,0,0,2,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,4,3,6,0,0]};
+ * const shikakuSolution: ShikakuPuzzle["solution"] = [{"x":0,"y":0,"width":3,"height":1},{"x":3,"y":0,"width":2,"height":1},{"x":1,"y":1,"width":4,"height":1},{"x":4,"y":2,"width":1,"height":3},{"x":0,"y":1,"width":1,"height":4},{"x":1,"y":2,"width":1,"height":3},{"x":2,"y":2,"width":2,"height":3}];
+ * console.log(checkShikaku(shikakuBoard,shikakuSolution));
+ * ```
+ */
 export function checkShikaku(board: ShikakuBoard, rectangles: readonly ShikakuRectangle[]): ShikakuCheck {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
   const occupied = new Set<number>(), errors: number[] = [];
@@ -32,7 +72,20 @@ export function checkShikaku(board: ShikakuBoard, rectangles: readonly ShikakuRe
   });
   return { ok: errors.length === 0 && occupied.size === board.clues.length, covered: occupied.size, errors };
 }
-/** All legal rectangles for a numbered cell, in a stable order. */
+/** All legal rectangles for a numbered cell, in a stable order.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param cell - A zero-based row-major cell index.
+ * @returns All legal rectangles for a numbered cell, in a stable order.
+ * @example
+ * ```ts
+ * import type { ShikakuBoard } from "@johnmorrisdotca/kazu/shikaku";
+ * import { shikakuCandidates } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const shikakuBoard: ShikakuBoard = {"width":5,"height":5,"clues":[3,0,0,0,2,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,4,3,6,0,0]};
+ * console.log(shikakuCandidates(shikakuBoard,0));
+ * ```
+ */
 export function shikakuCandidates(board: ShikakuBoard, cell: number): ShikakuRectangle[] {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
   const area = board.clues[cell], out: ShikakuRectangle[] = [];

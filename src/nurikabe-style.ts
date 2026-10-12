@@ -1,3 +1,12 @@
+/** Scoped native Nurikabe board and player CSS.
+ *
+ * @example
+ * ```ts
+ * import { NURIKABE_PLAY_STYLE } from "@johnmorrisdotca/kazu/nurikabe/play";
+ *
+ * console.log(NURIKABE_PLAY_STYLE.length);
+ * ```
+ */
 export const NURIKABE_PLAY_STYLE = `
 .kn-root{font:16px/1.5 var(--font,system-ui,sans-serif);max-width:680px;margin:auto;color:var(--ks-ink,#1f2320)}
 .kn-board{position:relative;width:100%;touch-action:manipulation}

@@ -1,3 +1,12 @@
+/** Native English and Japanese labels and announcements for Juosan.
+ *
+ * @example
+ * ```ts
+ * import { JUOSAN_STRINGS } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * console.log(Object.keys(JUOSAN_STRINGS.en));
+ * ```
+ */
 export const JUOSAN_STRINGS = {
   en: {
     title: "Juosan",

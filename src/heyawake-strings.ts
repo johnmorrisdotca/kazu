@@ -1,3 +1,14 @@
+/** Read the native English or Japanese Heyawake labels.
+ *
+ * @param language - The native English or Japanese display language.
+ * @returns Read the native English or Japanese Heyawake labels.
+ * @example
+ * ```ts
+ * import { heyawakeWords } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * console.log(heyawakeWords("ja").title);
+ * ```
+ */
 export function heyawakeWords(language: "en" | "ja" = "en") {
   return language === "ja" ? {
     title: "へやわけ", ready: "マスを選び、白・黒・空白を切り替えます", wrong: "ルールに合わないマスがあります", checked: "今のところ矛盾はありません", won: "完成しました", helped: "ヒントを使って完成しました", undo: "元に戻す", check: "確認", hint: "ヒント", restart: "やり直す", help: "黒マスは辺でつながらず、白マスは一続きです。白い直線は部屋を二つまで通ります。", black: "黒", white: "白", blank: "未入力", row: "行", column: "列", noHint: "一意に解ける状態ではありません"

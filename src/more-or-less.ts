@@ -59,7 +59,22 @@ function everyMark(solution: Grid, size: number): Mark[] {
   return marks;
 }
 
-/** A Futoshiki (More or Less) of this side, level and seed: 4, 5, 6 or 7. */
+/** A Futoshiki (More or Less) of this side, level and seed: 4, 5, 6 or 7.
+ *
+ * @param size - The supported square grid side length.
+ * @param level - The native easy, medium or hard generation tier.
+ * @param seed - A reproducible integer seed from 1 to KAZU_SEED_MOST.
+ * @returns A Futoshiki (More or Less) of this side, level and seed: 4, 5, 6 or 7.
+ * @example
+ * ```ts no-run
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { generateMoreOrLess } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const givens = puzzle.givens;
+ * console.log(generateMoreOrLess(4,"easy",42).givens);
+ * ```
+ */
 export function generateMoreOrLess(size: number, level: KazuLevel, seed: number): KazuPuzzle {
   const random = seededRandom(seed);
   const solution = latinSquare(size, random);

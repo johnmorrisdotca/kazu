@@ -2,6 +2,20 @@ import { rippleRoomSizes } from "./ripple-board.ts";
 import type { RippleBoard } from "./ripple.types.ts";
 import type { RippleDrawOptions } from "./ripple-play.types.ts";
 
+/** Render the Ripple board and supplied current state as native SVG text.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Render the Ripple board and supplied current state as native SVG text.
+ * @example
+ * ```ts
+ * import type { RippleBoard } from "@johnmorrisdotca/kazu/ripple";
+ * import { drawRipple } from "@johnmorrisdotca/kazu/ripple";
+ *
+ * const rippleBoard: RippleBoard = {"width":9,"height":9,"rooms":[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8],"clues":[4,null,7,9,2,null,5,null,3,null,null,3,6,7,4,8,9,2,8,null,2,1,3,null,null,null,null,7,null,1,null,6,null,null,null,9,3,8,null,5,1,7,null,null,6,2,4,6,null,9,3,7,5,1,1,null,8,null,5,null,9,2,4,null,2,null,null,null,null,null,null,null,6,null,null,2,4,null,null,3,null]};
+ * console.log(drawRipple(rippleBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawRipple(board: RippleBoard, options: RippleDrawOptions = {}): string {
   const size = 56, margin = 8, width = board.width * size, height = board.height * size;
   const ink = options.material === "slate" ? "#f1eee5" : options.material === "wood" ? "#382d20" : "#252824";

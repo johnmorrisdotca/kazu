@@ -1,5 +1,18 @@
 import type { NurikabeBoard } from "./nurikabe.types.ts";
 
+/** Whether the value has valid native Nurikabe dimensions, clues and data.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Whether the value has valid native Nurikabe dimensions, clues and data.
+ * @example
+ * ```ts
+ * import type { NurikabeBoard } from "@johnmorrisdotca/kazu/nurikabe";
+ * import { isNurikabeBoard } from "@johnmorrisdotca/kazu/nurikabe";
+ *
+ * const nurikabeBoard: NurikabeBoard = {"size":5,"clues":[1,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,2,0,0,3,0,0]};
+ * console.log(isNurikabeBoard(nurikabeBoard));
+ * ```
+ */
 export function isNurikabeBoard(board: NurikabeBoard): boolean {
   return !!board && board.size === 5 && Array.isArray(board.clues)
     && board.clues.length === board.size * board.size
@@ -8,6 +21,20 @@ export function isNurikabeBoard(board: NurikabeBoard): boolean {
     && board.clues.reduce((sum, value) => sum + value, 0) < board.size * board.size;
 }
 
+/** Read orthogonally adjacent cells on a square Nurikabe board.
+ *
+ * @param size - The supported square board side length.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Read orthogonally adjacent cells on a square Nurikabe board.
+ * @example
+ * ```ts
+ * import type { NurikabeBoard } from "@johnmorrisdotca/kazu/nurikabe";
+ * import { nurikabeNeighbors } from "@johnmorrisdotca/kazu/nurikabe";
+ *
+ * const nurikabeBoard: NurikabeBoard = {"size":5,"clues":[1,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,2,0,0,3,0,0]};
+ * console.log(nurikabeNeighbors(nurikabeBoard.size,0));
+ * ```
+ */
 export function nurikabeNeighbors(size: number, cell: number): number[] {
   const x = cell % size, y = Math.floor(cell / size), neighbors: number[] = [];
   if (x > 0) neighbors.push(cell - 1);
@@ -17,7 +44,21 @@ export function nurikabeNeighbors(size: number, cell: number): number[] {
   return neighbors;
 }
 
-/** Checks island areas and separation, the connected sea, and the ban on 2×2 sea blocks. */
+/** Checks island areas and separation, the connected sea, and the ban on 2×2 sea blocks.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param sea - The current sea-cell flags in row-major order.
+ * @returns Checks island areas and separation, the connected sea, and the ban on 2×2 sea blocks.
+ * @example
+ * ```ts
+ * import type { NurikabeBoard, NurikabePuzzle } from "@johnmorrisdotca/kazu/nurikabe";
+ * import { checkNurikabe } from "@johnmorrisdotca/kazu/nurikabe";
+ *
+ * const nurikabeBoard: NurikabeBoard = {"size":5,"clues":[1,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,2,0,0,3,0,0]};
+ * const nurikabeSolution: NurikabePuzzle["solution"] = [false,true,true,true,false,true,true,false,false,false,true,false,false,true,true,true,true,true,true,false,false,false,false,true,false];
+ * console.log(checkNurikabe(nurikabeBoard,nurikabeSolution));
+ * ```
+ */
 export function checkNurikabe(board: NurikabeBoard, sea: readonly boolean[]): { ok: boolean; errors: readonly number[] } {
   if (!isNurikabeBoard(board) || sea.length !== board.size * board.size || !sea.every(value => typeof value === "boolean")) return { ok: false, errors: [] };
   const size = board.size, total = size * size, errors = new Set<number>();

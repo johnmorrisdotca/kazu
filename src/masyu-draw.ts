@@ -2,6 +2,20 @@ import { isMasyuBoard, masyuNeighbors } from "./masyu-board.ts";
 import type { MasyuBoard, MasyuDrawOptions } from "./masyu.types.ts";
 import { MASYU_STRINGS } from "./masyu-strings.ts";
 
+/** Render the Masyu board and supplied current state as native SVG text.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Render the Masyu board and supplied current state as native SVG text.
+ * @example
+ * ```ts
+ * import type { MasyuBoard } from "@johnmorrisdotca/kazu/masyu";
+ * import { drawMasyu } from "@johnmorrisdotca/kazu/masyu/draw";
+ *
+ * const masyuBoard: MasyuBoard = {"width":5,"height":5,"pearls":[2,1,0,1,2,1,0,0,0,1,2,1,0,1,2,0,0,0,0,0,0,0,0,0,0]};
+ * console.log(drawMasyu(masyuBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawMasyu(board: MasyuBoard, options: MasyuDrawOptions = {}): string {
   if (!isMasyuBoard(board)) throw new RangeError("Invalid Masyu board");
   const words = MASYU_STRINGS[options.language ?? "en"], step = 52, pad = 14;

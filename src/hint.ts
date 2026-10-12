@@ -21,6 +21,24 @@ import { cluedLines, narrowEdges } from "./towers-solve.ts";
  * When neither is left (a hard puzzle asks for a guess here) it says so (`answer`): the tightest
  * cell, whose number is the answer's, with no reason a single step gives. Null when every cell is
  * already right.
+ *
+ * @example
+ * ```ts
+ * import type { KazuHint, KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeCells, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const solution = decodeCells(answer,size)!;
+ * const blank = cells.findIndex(value=>value===0);
+ * const value: KazuHint = {cell:blank,value:solution[blank],why:"answer",replaces:false};
+ * console.log(value);
+ * ```
  */
 export type KazuHint = {
   cell: number;
@@ -115,6 +133,27 @@ function candidatesFor(givens: KazuGivens, grid: number[]): { masks: number[]; b
  * written, row-major (0 for empty; printed cells are ignored). `answer` is the puzzle's solution as a
  * cells code; left out, it is worked out from the givens. Null when every cell is right, or when
  * the givens are not a puzzle with exactly one answer: there is nothing true to say.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param givens - The original native printed-clue code.
+ * @param entries - The player entries, row-major, zero for blanks and printed cells.
+ * @param answer - The complete native answer code.
+ * @returns An actionable cell/value hint, or null for invalid input, unavailable answer or a complete grid.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeCells, hintKazu, newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const solution = decodeCells(answer,size)!;
+ * const game = newKazuGame(kind,size,givens)!;
+ * console.log(hintKazu(kind,size,givens,game.entries,answer));
+ * ```
  */
 export function hintKazu(kind: KazuKind, size: number, givens: string, entries: readonly number[], answer?: string): KazuHint | null {
   const read = readGivens(kind, size, givens);

@@ -1,6 +1,19 @@
 import { REGIONS_MOST_SIDE } from "./regions.constants.ts";
 import type { RegionsBoard, RegionsCheck } from "./regions.types.ts";
 
+/** Whether the value has valid native Regions dimensions, clues and data.
+ *
+ * @param value - A candidate board, digit, mark or encoded game specified by this signature.
+ * @returns Whether the value has valid native Regions dimensions, clues and data.
+ * @example
+ * ```ts
+ * import type { RegionsBoard } from "@johnmorrisdotca/kazu/regions";
+ * import { isRegionsBoard } from "@johnmorrisdotca/kazu/regions";
+ *
+ * const regionsBoard: RegionsBoard = {"width":5,"height":5,"givens":[0,0,2,0,3,2,0,3,0,0,0,3,0,0,1,3,1,0,1,2,3,3,4,0,0]};
+ * console.log(isRegionsBoard(regionsBoard));
+ * ```
+ */
 export function isRegionsBoard(value: unknown): value is RegionsBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as RegionsBoard;
@@ -11,6 +24,20 @@ export function isRegionsBoard(value: unknown): value is RegionsBoard {
     && board.givens.every(value => Number.isInteger(value) && value >= 0 && value <= cells);
 }
 
+/** Read orthogonally adjacent Regions cells.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Read orthogonally adjacent Regions cells.
+ * @example
+ * ```ts
+ * import type { RegionsBoard } from "@johnmorrisdotca/kazu/regions";
+ * import { regionsNeighbours } from "@johnmorrisdotca/kazu/regions";
+ *
+ * const regionsBoard: RegionsBoard = {"width":5,"height":5,"givens":[0,0,2,0,3,2,0,3,0,0,0,3,0,0,1,3,1,0,1,2,3,3,4,0,0]};
+ * console.log(regionsNeighbours(regionsBoard,0));
+ * ```
+ */
 export function regionsNeighbours(board: RegionsBoard, cell: number): number[] {
   const x = cell % board.width;
   const y = Math.floor(cell / board.width);
@@ -22,6 +49,21 @@ export function regionsNeighbours(board: RegionsBoard, cell: number): number[] {
   return neighbours;
 }
 
+/** Group connected cells carrying the same entry into candidate regions.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param entries - Current row-major entries; omit to search from printed clues.
+ * @returns Group connected cells carrying the same entry into candidate regions.
+ * @example
+ * ```ts
+ * import type { RegionsBoard, RegionsPuzzle } from "@johnmorrisdotca/kazu/regions";
+ * import { entryRegions } from "@johnmorrisdotca/kazu/regions";
+ *
+ * const regionsBoard: RegionsBoard = {"width":5,"height":5,"givens":[0,0,2,0,3,2,0,3,0,0,0,3,0,0,1,3,1,0,1,2,3,3,4,0,0]};
+ * const regionsSolution: RegionsPuzzle["solution"] = [1,2,2,3,3,2,3,3,2,3,2,3,4,2,1,3,1,4,1,2,3,3,4,4,2];
+ * console.log(entryRegions(regionsBoard,regionsSolution));
+ * ```
+ */
 export function entryRegions(board: RegionsBoard, entries: readonly number[]): number[][] {
   const seen = new Set<number>();
   const regions: number[][] = [];
@@ -46,7 +88,21 @@ export function entryRegions(board: RegionsBoard, entries: readonly number[]): n
   return regions;
 }
 
-/** Checks region connectivity and area without consulting a generated answer. */
+/** Checks region connectivity and area without consulting a generated answer.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param entries - Current row-major entries; omit to search from printed clues.
+ * @returns Checks region connectivity and area without consulting a generated answer.
+ * @example
+ * ```ts
+ * import type { RegionsBoard, RegionsPuzzle } from "@johnmorrisdotca/kazu/regions";
+ * import { checkRegions } from "@johnmorrisdotca/kazu/regions";
+ *
+ * const regionsBoard: RegionsBoard = {"width":5,"height":5,"givens":[0,0,2,0,3,2,0,3,0,0,0,3,0,0,1,3,1,0,1,2,3,3,4,0,0]};
+ * const regionsSolution: RegionsPuzzle["solution"] = [1,2,2,3,3,2,3,3,2,3,2,3,4,2,1,3,1,4,1,2,3,3,4,4,2];
+ * console.log(checkRegions(regionsBoard,regionsSolution));
+ * ```
+ */
 export function checkRegions(
   board: RegionsBoard,
   entries: readonly number[],

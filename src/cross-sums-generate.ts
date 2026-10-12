@@ -17,6 +17,17 @@ const MOST_ATTEMPTS = 400;
  * that must appear has to be traced, hard by supposing, and extra-hard the most-supposing of several boards.
  * If no board of the level is found within the attempts the next level down is tried, and the first generator
  * (a 10×10 only) is the last resort, so a seed never throws.
+ *
+ * @param seed - The reproducible native puzzle seed.
+ * @param level - The requested native difficulty tier.
+ * @param size - The supported square board side length.
+ * @returns Makes a seeded board of `size` squares a side (counting the row and column of totals) and proves it has one answer. A random pattern of black squares sets the runs, random digits fill them, and digits are changed until the answer is single. The board is then rated by solving it: easy by the single-run rules, medium once a digit that must appear has to be traced, hard by supposing, and extra-hard the most-supposing of several boards. If no board of the level is found within the attempts the next level down is tried, and the first generator (a 10×10 only) is the last resort, so a seed never throws.
+ * @example
+ * ```ts no-run
+ * import { generateCrossSums } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * console.log(generateCrossSums(42,"easy",5));
+ * ```
  */
 export function generateCrossSums(seed = 1, level: CrossSumsLevel = "medium", size = 10): CrossSumsPuzzle {
   if (!isKazuSeed(seed) || !CROSS_SUMS_LEVELS.includes(level) || !Number.isInteger(size)

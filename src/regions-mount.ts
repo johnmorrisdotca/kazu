@@ -7,6 +7,24 @@ import { regionsWords } from "./regions-strings.ts";
 import type { RegionsGame } from "./regions.types.ts";
 import type { RegionsDrawOptions, RegionsMount, RegionsMountOptions } from "./regions-play.types.ts";
 
+/** Mount the native Regions player in a host element and return its cleanup and control handle.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mount the native Regions player in a host element and return its cleanup and control handle.
+ * @example
+ * ```ts no-run
+ * import type { RegionsBoard } from "@johnmorrisdotca/kazu/regions";
+ * import { mountRegions } from "@johnmorrisdotca/kazu/regions/play";
+ *
+ * const regionsBoard: RegionsBoard = {"width":5,"height":5,"givens":[0,0,2,0,3,2,0,3,0,0,0,3,0,0,1,3,1,0,1,2,3,3,4,0,0]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountRegions(host,{board:regionsBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountRegions(host: HTMLElement, initial: RegionsMountOptions): RegionsMount {
   const document = host.ownerDocument;
   let options = { ...initial };

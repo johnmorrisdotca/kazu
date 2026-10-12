@@ -24,7 +24,20 @@ function islandShapes(board: NurikabeBoard, clue: Clue): number[][] {
   return [...shapes.values()].map(shape => [...shape]);
 }
 
-/** Counts valid island placements and checks the remaining cells as the sea under a finite budget. */
+/** Counts valid island placements and checks the remaining cells as the sea under a finite budget.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Counts valid island placements and checks the remaining cells as the sea under a finite budget.
+ * @example
+ * ```ts
+ * import type { NurikabeBoard } from "@johnmorrisdotca/kazu/nurikabe";
+ * import { solveNurikabe } from "@johnmorrisdotca/kazu/nurikabe";
+ *
+ * const nurikabeBoard: NurikabeBoard = {"size":5,"clues":[1,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,2,0,0,3,0,0]};
+ * console.log(solveNurikabe(nurikabeBoard,{limit:2,nodes:20000}));
+ * ```
+ */
 export function solveNurikabe(board: NurikabeBoard, options: { limit?: number; nodes?: number } = {}): NurikabeSolve {
   if (!isNurikabeBoard(board)) throw new RangeError("Invalid Nurikabe board");
   const total = board.size ** 2, limit = Math.max(1, Math.floor(options.limit ?? 2)), budget = Math.max(1, Math.floor(options.nodes ?? NURIKABE_MAX_NODES));

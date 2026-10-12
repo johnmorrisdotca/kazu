@@ -3,6 +3,20 @@ import type { YajilinBoard, YajilinDrawOptions } from "./yajilin.types.ts";
 import { YAJILIN_STRINGS } from "./yajilin-strings.ts";
 
 const arrows = { up: "↑", right: "→", down: "↓", left: "←" } as const;
+/** Render the Yajilin board and supplied current state as native SVG text.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Render the Yajilin board and supplied current state as native SVG text.
+ * @example
+ * ```ts
+ * import type { YajilinBoard } from "@johnmorrisdotca/kazu/yajilin";
+ * import { drawYajilin } from "@johnmorrisdotca/kazu/yajilin/draw";
+ *
+ * const yajilinBoard: YajilinBoard = {"width":5,"height":5,"clues":[{"direction":"left","count":0},null,{"direction":"right","count":1},null,{"direction":"up","count":0},null,null,null,null,null,{"direction":"right","count":0},null,{"direction":"left","count":0},null,{"direction":"down","count":1},{"direction":"left","count":0},null,null,null,null,null,{"direction":"up","count":1},{"direction":"down","count":0},null,{"direction":"down","count":0}]};
+ * console.log(drawYajilin(yajilinBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawYajilin(board: YajilinBoard, options: YajilinDrawOptions = {}): string {
   if (!isYajilinBoard(board)) throw new RangeError("Invalid Yajilin board");
   const words = YAJILIN_STRINGS[options.language ?? "en"], size = 52, pad = 14;

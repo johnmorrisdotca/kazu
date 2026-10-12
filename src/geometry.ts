@@ -4,6 +4,15 @@ import type { KazuKind } from "./kinds.ts";
  * WHERE EVERYTHING IS IN A DRAWING, so a page of your own can play it: the drawing is a square of
  * `side` units, every cell `cell` units across, and a Towers square sits inside a ring one cell deep
  * that holds its clues. Pure arithmetic, no page needed.
+ *
+ * @example
+ * ```ts
+ * import type { KazuGeometry } from "@johnmorrisdotca/kazu/draw";
+ * import { kazuGeometry } from "@johnmorrisdotca/kazu/draw";
+ *
+ * const value: KazuGeometry = kazuGeometry("number-place",4);
+ * console.log(value);
+ * ```
  */
 export type KazuGeometry = {
   /** The side of the drawing, in its own units (the viewBox is `0 0 side side`). */
@@ -23,11 +32,29 @@ export type KazuGeometry = {
   cellAt: (x: number, y: number) => number;
 };
 
-/** The units of a cell, and the margin round the drawing. */
+/** The units of a cell, and the margin round the drawing.
+ *
+ * @example
+ * ```ts
+ * import { KAZU_CELL } from "@johnmorrisdotca/kazu/draw";
+ * console.log(KAZU_CELL);
+ * ```
+ */
 export const KAZU_CELL = 100;
 const MARGIN = 10;
 
-/** Where everything is in the drawing of a puzzle of this kind and side. */
+/** Where everything is in the drawing of a puzzle of this kind and side.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @returns Where everything is in the drawing of a puzzle of this kind and side.
+ * @example
+ * ```ts
+ * import { kazuGeometry } from "@johnmorrisdotca/kazu/draw";
+ *
+ * console.log(kazuGeometry("number-place",4).centre(0));
+ * ```
+ */
 export function kazuGeometry(kind: KazuKind, size: number): KazuGeometry {
   const ring = kind === "towers" ? 1 : 0;
   const origin = MARGIN + ring * KAZU_CELL;

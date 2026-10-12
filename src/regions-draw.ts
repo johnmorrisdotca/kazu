@@ -3,6 +3,20 @@ import type { RegionsBoard } from "./regions.types.ts";
 import type { RegionsDrawOptions } from "./regions-play.types.ts";
 import { regionsWords } from "./regions-strings.ts";
 
+/** Render the Regions board and supplied current state as native SVG text.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Render the Regions board and supplied current state as native SVG text.
+ * @example
+ * ```ts
+ * import type { RegionsBoard } from "@johnmorrisdotca/kazu/regions";
+ * import { drawRegions } from "@johnmorrisdotca/kazu/regions";
+ *
+ * const regionsBoard: RegionsBoard = {"width":5,"height":5,"givens":[0,0,2,0,3,2,0,3,0,0,0,3,0,0,1,3,1,0,1,2,3,3,4,0,0]};
+ * console.log(drawRegions(regionsBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawRegions(board: RegionsBoard, options: RegionsDrawOptions = {}): string {
   if (!isRegionsBoard(board)) throw new RangeError("Invalid Regions board");
   const words = regionsWords(options.language);

@@ -8,9 +8,25 @@ import { KAZU_NAMES } from "./names.ts";
  *
  * `{name}` in a line is a value filled in; a line `foo` that has a `fooOne` beside it is said as
  * `fooOne` when its `{n}` is 1.
+ *
+ * @example
+ * ```ts
+ * import type { KazuLanguage } from "@johnmorrisdotca/kazu/draw";
+ *
+ * const value: KazuLanguage = "ja";
+ * console.log(value);
+ * ```
  */
 export type KazuLanguage = "en" | "ja";
 
+/** Native English and Japanese labels, announcements and interpolation templates for the number grid.
+ *
+ * @example
+ * ```ts
+ * import { KAZU_STRINGS } from "@johnmorrisdotca/kazu/draw";
+ * console.log(KAZU_STRINGS);
+ * ```
+ */
 export const KAZU_STRINGS: Record<KazuLanguage, Record<string, string>> = {
   en: {
     board: "{name} puzzle, {size} by {size}",
@@ -141,7 +157,19 @@ export const KAZU_STRINGS: Record<KazuLanguage, Record<string, string>> = {
   },
 };
 
-/** A line in a language, with its values filled in; the line itself if there is none by that name. */
+/** A line in a language, with its values filled in; the line itself if there is none by that name.
+ *
+ * @param language - The native English or Japanese display language.
+ * @param key - The native localized label identifier.
+ * @param values - Replacement text/numbers or row-major entries specified by this signature.
+ * @returns A line in a language, with its values filled in; the line itself if there is none by that name.
+ * @example
+ * ```ts
+ * import { kazuSay } from "@johnmorrisdotca/kazu/draw";
+ *
+ * console.log(kazuSay("en","undo"));
+ * ```
+ */
 export function kazuSay(language: KazuLanguage, key: string, values: Record<string, string | number> = {}): string {
   const table = KAZU_STRINGS[language] ?? KAZU_STRINGS.en;
   const one = values.n === 1 || values.wrong === 1 ? table[`${key}One`] : undefined;
@@ -149,12 +177,33 @@ export function kazuSay(language: KazuLanguage, key: string, values: Record<stri
   return line.replace(/\{(\w+)\}/g, (whole, name: string) => (name in values ? String(values[name]) : whole));
 }
 
-/** The language a piece of text is in: Japanese for anything starting `ja`, English for everything else. */
+/** The language a piece of text is in: Japanese for anything starting `ja`, English for everything else.
+ *
+ * @param tag - An optional language tag, such as ja-JP.
+ * @returns The language a piece of text is in: Japanese for anything starting `ja`, English for everything else.
+ * @example
+ * ```ts
+ * import { kazuLanguageOf } from "@johnmorrisdotca/kazu/draw";
+ *
+ * console.log(kazuLanguageOf("ja-JP"));
+ * ```
+ */
 export function kazuLanguageOf(tag: string | null | undefined): KazuLanguage {
   return String(tag ?? "").toLowerCase().startsWith("ja") ? "ja" : "en";
 }
 
-/** What a puzzle is called in a language, as a screen reader says it. */
+/** What a puzzle is called in a language, as a screen reader says it.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param language - The native English or Japanese display language.
+ * @returns What a puzzle is called in a language, as a screen reader says it.
+ * @example
+ * ```ts
+ * import { kazuNameOf } from "@johnmorrisdotca/kazu/draw";
+ *
+ * console.log(kazuNameOf("number-place","en"));
+ * ```
+ */
 export function kazuNameOf(kind: KazuKind, language: KazuLanguage): string {
   return KAZU_NAMES[kind][language];
 }

@@ -1,6 +1,19 @@
 import { RIPPLE_MAX_SIDE, RIPPLE_MIN_SIDE } from "./ripple.constants.ts";
 import type { RippleBoard, RippleCheck } from "./ripple.types.ts";
 
+/** Whether the value has valid native Ripple dimensions, clues and data.
+ *
+ * @param value - A candidate board, digit, mark or encoded game specified by this signature.
+ * @returns Whether the value has valid native Ripple dimensions, clues and data.
+ * @example
+ * ```ts
+ * import type { RippleBoard } from "@johnmorrisdotca/kazu/ripple";
+ * import { isRippleBoard } from "@johnmorrisdotca/kazu/ripple";
+ *
+ * const rippleBoard: RippleBoard = {"width":9,"height":9,"rooms":[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8],"clues":[4,null,7,9,2,null,5,null,3,null,null,3,6,7,4,8,9,2,8,null,2,1,3,null,null,null,null,7,null,1,null,6,null,null,null,9,3,8,null,5,1,7,null,null,6,2,4,6,null,9,3,7,5,1,1,null,8,null,5,null,9,2,4,null,2,null,null,null,null,null,null,null,6,null,null,2,4,null,null,3,null]};
+ * console.log(isRippleBoard(rippleBoard));
+ * ```
+ */
 export function isRippleBoard(value: unknown): value is RippleBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as RippleBoard;
@@ -31,13 +44,40 @@ function connected(board: RippleBoard, room: number, cells: readonly number[]): 
   return reached.size === cells.length;
 }
 
+/** Read the size of each room in a Ripple Effect board.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Read the size of each room in a Ripple Effect board.
+ * @example
+ * ```ts
+ * import type { RippleBoard } from "@johnmorrisdotca/kazu/ripple";
+ * import { rippleRoomSizes } from "@johnmorrisdotca/kazu/ripple";
+ *
+ * const rippleBoard: RippleBoard = {"width":9,"height":9,"rooms":[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8],"clues":[4,null,7,9,2,null,5,null,3,null,null,3,6,7,4,8,9,2,8,null,2,1,3,null,null,null,null,7,null,1,null,6,null,null,null,9,3,8,null,5,1,7,null,null,6,2,4,6,null,9,3,7,5,1,1,null,8,null,5,null,9,2,4,null,2,null,null,null,null,null,null,null,6,null,null,2,4,null,null,3,null]};
+ * console.log(rippleRoomSizes(rippleBoard));
+ * ```
+ */
 export function rippleRoomSizes(board: RippleBoard): number[] {
   const sizes: number[] = [];
   board.rooms.forEach(id => { sizes[id] = (sizes[id] ?? 0) + 1; });
   return sizes;
 }
 
-/** Checks room permutations and the at-least-N-cell gap between equal N clues in a line. */
+/** Checks room permutations and the at-least-N-cell gap between equal N clues in a line.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param values - The current row-major cell values.
+ * @returns Checks room permutations and the at-least-N-cell gap between equal N clues in a line.
+ * @example
+ * ```ts
+ * import type { RippleBoard, RipplePuzzle } from "@johnmorrisdotca/kazu/ripple";
+ * import { checkRipple } from "@johnmorrisdotca/kazu/ripple";
+ *
+ * const rippleBoard: RippleBoard = {"width":9,"height":9,"rooms":[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8],"clues":[4,null,7,9,2,null,5,null,3,null,null,3,6,7,4,8,9,2,8,null,2,1,3,null,null,null,null,7,null,1,null,6,null,null,null,9,3,8,null,5,1,7,null,null,6,2,4,6,null,9,3,7,5,1,1,null,8,null,5,null,9,2,4,null,2,null,null,null,null,null,null,null,6,null,null,2,4,null,null,3,null]};
+ * const rippleSolution: RipplePuzzle["solution"] = [4,6,7,9,2,8,5,1,3,5,1,3,6,7,4,8,9,2,8,9,2,1,3,5,4,6,7,7,5,1,4,6,2,3,8,9,3,8,9,5,1,7,2,4,6,2,4,6,8,9,3,7,5,1,1,3,8,7,5,6,9,2,4,9,2,4,3,8,1,6,7,5,6,7,5,2,4,9,1,3,8];
+ * console.log(checkRipple(rippleBoard,rippleSolution));
+ * ```
+ */
 export function checkRipple(board: RippleBoard, values: readonly number[]): RippleCheck {
   if (!isRippleBoard(board)) throw new RangeError("Invalid Ripple Effect board");
   if (values.length !== board.rooms.length) throw new RangeError("Invalid Ripple Effect values");
@@ -75,7 +115,21 @@ export function checkRipple(board: RippleBoard, values: readonly number[]): Ripp
   return { ok: errors.size === 0 && complete, errors: [...errors].sort((a, b) => a - b), complete };
 }
 
-/** Partial progress check; missing entries are allowed, but impossible room/ripple pairs are flagged. */
+/** Partial progress check; missing entries are allowed, but impossible room/ripple pairs are flagged.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param values - The current row-major cell values.
+ * @returns Partial progress check; missing entries are allowed, but impossible room/ripple pairs are flagged.
+ * @example
+ * ```ts
+ * import type { RippleBoard, RipplePuzzle } from "@johnmorrisdotca/kazu/ripple";
+ * import { progressRipple } from "@johnmorrisdotca/kazu/ripple";
+ *
+ * const rippleBoard: RippleBoard = {"width":9,"height":9,"rooms":[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8,6,6,6,7,7,7,8,8,8],"clues":[4,null,7,9,2,null,5,null,3,null,null,3,6,7,4,8,9,2,8,null,2,1,3,null,null,null,null,7,null,1,null,6,null,null,null,9,3,8,null,5,1,7,null,null,6,2,4,6,null,9,3,7,5,1,1,null,8,null,5,null,9,2,4,null,2,null,null,null,null,null,null,null,6,null,null,2,4,null,null,3,null]};
+ * const rippleSolution: RipplePuzzle["solution"] = [4,6,7,9,2,8,5,1,3,5,1,3,6,7,4,8,9,2,8,9,2,1,3,5,4,6,7,7,5,1,4,6,2,3,8,9,3,8,9,5,1,7,2,4,6,2,4,6,8,9,3,7,5,1,1,3,8,7,5,6,9,2,4,9,2,4,3,8,1,6,7,5,6,7,5,2,4,9,1,3,8];
+ * console.log(progressRipple(rippleBoard,rippleSolution));
+ * ```
+ */
 export function progressRipple(board: RippleBoard, values: readonly number[]): RippleCheck {
   const result = checkRipple(board, values);
   return { ...result, ok: result.errors.length === 0 };

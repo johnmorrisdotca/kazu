@@ -15,7 +15,24 @@ import { JUOSAN_PLAY_STYLE } from "./juosan-style.ts";
 import { juosanWords } from "./juosan-strings.ts";
 import type { JuosanDrawOptions, JuosanMount, JuosanMountOptions } from "./juosan-play.types.ts";
 
-/** Mounts a touch, mouse, and keyboard player into an existing page element. */
+/** Mounts a touch, mouse, and keyboard player into an existing page element.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mounts a touch, mouse, and keyboard player into an existing page element.
+ * @example
+ * ```ts no-run
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { mountJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountJuosan(host,{board:juosanBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountJuosan(host: HTMLElement, initial: JuosanMountOptions): JuosanMount {
   const doc = host.ownerDocument;
   let options = { ...initial };

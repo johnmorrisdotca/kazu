@@ -1,5 +1,14 @@
 import type { RegionsLanguage } from "./regions-play.types.ts";
 
+/** Native English and Japanese labels and announcements for Regions.
+ *
+ * @example
+ * ```ts
+ * import { REGIONS_STRINGS } from "@johnmorrisdotca/kazu/regions/play";
+ *
+ * console.log(Object.keys(REGIONS_STRINGS.en));
+ * ```
+ */
 export const REGIONS_STRINGS = {
   en: {
     title: "Regions", help: "Fill every cell with a number. Connected regions of equal numbers must have exactly that many cells. Regions of the same size cannot touch. Arrow keys move; type a number to fill a cell. Clear removes your entry.",

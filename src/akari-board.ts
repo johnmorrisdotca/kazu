@@ -1,7 +1,19 @@
 import { AKARI_MOST_SIDE } from "./akari.constants.ts";
 import type { AkariBoard, AkariCheck, AkariProgress } from "./akari.types.ts";
 
-/** Validates dimensions and the three public square kinds. */
+/** Validates dimensions and the three public square kinds.
+ *
+ * @param value - A candidate board, digit, mark or encoded game specified by this signature.
+ * @returns Validates dimensions and the three public square kinds.
+ * @example
+ * ```ts
+ * import type { AkariBoard } from "@johnmorrisdotca/kazu/akari";
+ * import { isAkariBoard } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * console.log(isAkariBoard(akariBoard));
+ * ```
+ */
 export function isAkariBoard(value: unknown): value is AkariBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as AkariBoard;
@@ -13,7 +25,20 @@ export function isAkariBoard(value: unknown): value is AkariBoard {
     && board.cells.some(cell => cell === null);
 }
 
-/** Returns the orthogonally adjacent cells to a board position. */
+/** Returns the orthogonally adjacent cells to a board position.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Returns the orthogonally adjacent cells to a board position.
+ * @example
+ * ```ts
+ * import type { AkariBoard } from "@johnmorrisdotca/kazu/akari";
+ * import { akariNeighbours } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * console.log(akariNeighbours(akariBoard,0));
+ * ```
+ */
 export function akariNeighbours(board: AkariBoard, cell: number): number[] {
   if (!Number.isInteger(cell) || cell < 0 || cell >= board.cells.length) return [];
   const x = cell % board.width;
@@ -24,7 +49,20 @@ export function akariNeighbours(board: AkariBoard, cell: number): number[] {
     .map(([cx, cy]) => cy! * board.width + cx!);
 }
 
-/** White squares visible from a cell, including itself, stopping at black squares and edges. */
+/** White squares visible from a cell, including itself, stopping at black squares and edges.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param cell - A zero-based row-major cell index.
+ * @returns White squares visible from a cell, including itself, stopping at black squares and edges.
+ * @example
+ * ```ts
+ * import type { AkariBoard } from "@johnmorrisdotca/kazu/akari";
+ * import { akariVisible } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * console.log(akariVisible(akariBoard,0));
+ * ```
+ */
 export function akariVisible(board: AkariBoard, cell: number): number[] {
   if (!Number.isInteger(cell) || cell < 0 || cell >= board.cells.length || board.cells[cell] !== null) return [];
   const x = cell % board.width;
@@ -87,12 +125,40 @@ function evaluate(board: AkariBoard, bulbs: readonly number[], complete: boolean
   };
 }
 
-/** Checks a complete placement from the public rules, without consulting a stored answer. */
+/** Checks a complete placement from the public rules, without consulting a stored answer.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param bulbs - The current bulb flags in row-major order.
+ * @returns Checks a complete placement from the public rules, without consulting a stored answer.
+ * @example
+ * ```ts
+ * import type { AkariBoard, AkariPuzzle } from "@johnmorrisdotca/kazu/akari";
+ * import { checkAkari } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * const akariSolution: AkariPuzzle["solution"] = [1,7,15,19,23];
+ * console.log(checkAkari(akariBoard,akariSolution));
+ * ```
+ */
 export function checkAkari(board: AkariBoard, bulbs: readonly number[]): AkariCheck {
   return evaluate(board, bulbs, true);
 }
 
-/** Reports immediate contradictions while allowing required clues to remain unsatisfied during play. */
+/** Reports immediate contradictions while allowing required clues to remain unsatisfied during play.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param bulbs - The current bulb flags in row-major order.
+ * @returns Reports immediate contradictions while allowing required clues to remain unsatisfied during play.
+ * @example
+ * ```ts
+ * import type { AkariBoard, AkariPuzzle } from "@johnmorrisdotca/kazu/akari";
+ * import { progressAkari } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * const akariSolution: AkariPuzzle["solution"] = [1,7,15,19,23];
+ * console.log(progressAkari(akariBoard,akariSolution));
+ * ```
+ */
 export function progressAkari(board: AkariBoard, bulbs: readonly number[]): AkariProgress {
   return evaluate(board, bulbs, false);
 }

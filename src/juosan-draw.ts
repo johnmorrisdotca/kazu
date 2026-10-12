@@ -3,7 +3,20 @@ import type { JuosanBoard } from "./juosan.types.ts";
 import type { JuosanDrawOptions } from "./juosan-play.types.ts";
 import { juosanWords } from "./juosan-strings.ts";
 
-/** Draws a public Juosan board as an SVG string. */
+/** Draws a public Juosan board as an SVG string.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Draws a public Juosan board as an SVG string.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { drawJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * console.log(drawJuosan(juosanBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawJuosan(board: JuosanBoard, options: JuosanDrawOptions = {}): string {
   if (!isJuosanBoard(board)) throw new RangeError("Invalid Juosan board");
 

@@ -13,6 +13,18 @@ import type { ShikakuBoard, ShikakuLevel, ShikakuPuzzle } from "./shikaku.types.
  * is rated by solving it: easy by the first two rules (a number with one fitting rectangle, a square one rectangle can
  * cover), medium once the third rule is needed too, hard by supposing, extra-hard the most-supposing of several boards. If no board of the level is found within the attempts
  * the next level down is tried, and the first generator is the last resort.
+ *
+ * @param width - The supported board width in cells.
+ * @param height - The supported board height in cells.
+ * @param level - The requested native difficulty tier.
+ * @param seed - The reproducible native puzzle seed.
+ * @returns Seeded rectangles packed into the board, one number each, with an independently counted, unique answer. The board is rated by solving it: easy by the first two rules (a number with one fitting rectangle, a square one rectangle can cover), medium once the third rule is needed too, hard by supposing, extra-hard the most-supposing of several boards. If no board of the level is found within the attempts the next level down is tried, and the first generator is the last resort.
+ * @example
+ * ```ts no-run
+ * import { generateShikaku } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * console.log(generateShikaku(5,5,"easy",42));
+ * ```
  */
 export function generateShikaku(width = 7, height = width, level: ShikakuLevel = "medium", seed = 1): ShikakuPuzzle {
   if (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= SHIKAKU_MOST_SIDE)

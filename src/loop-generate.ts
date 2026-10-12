@@ -15,6 +15,18 @@ import type { Random } from "./random.ts";
  * supposing one edge at a time, extra-hard the most-supposing of several such boards. Numbers that say 0 are
  * taken away first, because they say least. If no board of the level is found within the attempts the next level
  * down is tried, and the first generator, which cannot fail, is the last.
+ *
+ * @param width - The supported board width in cells.
+ * @param height - The supported board height in cells.
+ * @param seed - The reproducible native puzzle seed.
+ * @param level - The requested native difficulty tier.
+ * @returns Makes a seeded puzzle and proves it has one answer. A random winding loop is grown cell by cell, every square is numbered with how many of its edges the loop uses, and then numbers are taken away for as long as the puzzle can still be solved the way the level asks: easy and medium by the rules alone (easy keeps most numbers), hard by supposing one edge at a time, extra-hard the most-supposing of several such boards. Numbers that say 0 are taken away first, because they say least. If no board of the level is found within the attempts the next level down is tried, and the first generator, which cannot fail, is the last.
+ * @example
+ * ```ts no-run
+ * import { generateLoop } from "@johnmorrisdotca/kazu/loop";
+ *
+ * console.log(generateLoop(5,5,42,"easy"));
+ * ```
  */
 export function generateLoop(width = 5, height = width, seed = 1, level: LoopLevel = "medium"): LoopPuzzle {
   if (![width, height].every(side => Number.isInteger(side) && side >= 2 && side <= LOOP_MOST_SIDE)

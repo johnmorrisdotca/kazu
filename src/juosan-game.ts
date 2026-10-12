@@ -2,7 +2,19 @@ import { checkJuosan, isJuosanBoard } from "./juosan-board.ts";
 import { solveJuosan } from "./juosan-solve.ts";
 import type { JuosanBoard, JuosanGame, JuosanMark } from "./juosan.types.ts";
 
-/** Starts a game with a copy of its public board and no generated answer. */
+/** Starts a game with a copy of its public board and no generated answer.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Starts a game with a copy of its public board and no generated answer.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { newJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * console.log(newJuosan(juosanBoard));
+ * ```
+ */
 export function newJuosan(board: JuosanBoard): JuosanGame {
   if (!isJuosanBoard(board)) throw new RangeError("Invalid Juosan board");
   return {
@@ -20,7 +32,22 @@ export function newJuosan(board: JuosanBoard): JuosanGame {
   };
 }
 
-/** Writes a mark and records the previous state; invalid or unchanged moves are ignored. */
+/** Writes a mark and records the previous state; invalid or unchanged moves are ignored.
+ *
+ * @param game - The current immutable game state.
+ * @param cell - A zero-based row-major cell index.
+ * @param mark - The native blank, horizontal or vertical cell mark.
+ * @returns Writes a mark and records the previous state; invalid or unchanged moves are ignored.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { newJuosan, setJuosanMark } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * const juosanGame = newJuosan(juosanBoard);
+ * console.log(setJuosanMark(juosanGame,0,1));
+ * ```
+ */
 export function setJuosanMark(
   game: JuosanGame,
   cell: number,
@@ -41,7 +68,20 @@ export function setJuosanMark(
   return { ...game, marks, history: [...game.history, [...game.marks]] };
 }
 
-/** Restores the preceding mark state, if one exists. */
+/** Restores the preceding mark state, if one exists.
+ *
+ * @param game - The current immutable game state.
+ * @returns Restores the preceding mark state, if one exists.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { newJuosan, undoJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * const juosanGame = newJuosan(juosanBoard);
+ * console.log(undoJuosan(juosanGame));
+ * ```
+ */
 export function undoJuosan(game: JuosanGame): JuosanGame {
   const previous = game.history.at(-1);
   return previous
@@ -49,12 +89,38 @@ export function undoJuosan(game: JuosanGame): JuosanGame {
     : game;
 }
 
-/** Clears the board while retaining whether the player used a hint. */
+/** Clears the board while retaining whether the player used a hint.
+ *
+ * @param game - The current immutable game state.
+ * @returns Clears the board while retaining whether the player used a hint.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { newJuosan, restartJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * const juosanGame = newJuosan(juosanBoard);
+ * console.log(restartJuosan(juosanGame));
+ * ```
+ */
 export function restartJuosan(game: JuosanGame): JuosanGame {
   return { ...newJuosan(game.board), helped: game.helped };
 }
 
-/** Whether every cell is filled and the independent checker accepts the board. */
+/** Whether every cell is filled and the independent checker accepts the board.
+ *
+ * @param game - The current immutable game state.
+ * @returns Whether every cell is filled and the independent checker accepts the board.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { juosanFinished, newJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * const juosanGame = newJuosan(juosanBoard);
+ * console.log(juosanFinished(juosanGame));
+ * ```
+ */
 export function juosanFinished(game: JuosanGame): boolean {
   return (
     game.marks.every(mark => mark !== 0) &&
@@ -62,7 +128,20 @@ export function juosanFinished(game: JuosanGame): boolean {
   );
 }
 
-/** Returns one next mark only when the public clues prove a unique answer. */
+/** Returns one next mark only when the public clues prove a unique answer.
+ *
+ * @param game - The current immutable game state.
+ * @returns Find a native Juosan hint, or null when no actionable hint is available.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { hintJuosan, newJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * const juosanGame = newJuosan(juosanBoard);
+ * console.log(hintJuosan(juosanGame));
+ * ```
+ */
 export function hintJuosan(
   game: JuosanGame,
 ): { cell: number; mark: JuosanMark } | null {
@@ -73,7 +152,20 @@ export function hintJuosan(
   return cell < 0 ? null : { cell, mark: counted.solution[cell] };
 }
 
-/** Serializes public clues, placements, and assisted status. */
+/** Serializes public clues, placements, and assisted status.
+ *
+ * @param game - The current immutable game state.
+ * @returns Serializes public clues, placements, and assisted status.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { encodeJuosan, newJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * const juosanGame = newJuosan(juosanBoard);
+ * console.log(encodeJuosan(juosanGame));
+ * ```
+ */
 export function encodeJuosan(game: JuosanGame): string {
   return JSON.stringify({
     version: 1,
@@ -83,7 +175,17 @@ export function encodeJuosan(game: JuosanGame): string {
   });
 }
 
-/** Reads a bounded public save; malformed or incompatible data returns null. */
+/** Reads a bounded public save; malformed or incompatible data returns null.
+ *
+ * @param code - Native saved board and progress text.
+ * @returns Reads a bounded public save; malformed or incompatible data returns null.
+ * @example
+ * ```ts
+ * import { decodeJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * console.log(decodeJuosan("{\"version\":1,\"board\":{\"width\":3,\"height\":2,\"territories\":[{\"cells\":[0,1,2],\"difference\":3},{\"cells\":[3,4,5],\"difference\":3}]},\"marks\":[0,0,0,0,0,0],\"helped\":false}"));
+ * ```
+ */
 export function decodeJuosan(code: string): JuosanGame | null {
   try {
     if (code.length > 40_000) return null;

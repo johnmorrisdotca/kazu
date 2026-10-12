@@ -11,12 +11,28 @@
  * `diagonal` says the diagonals are groups too, so the grid can shade them.
  */
 
-/** Where the boxes are on a Sudoku grid: how many rows and columns of cells each box holds. */
+/** Where the boxes are on a Sudoku grid: how many rows and columns of cells each box holds.
+ *
+ * @example
+ * ```ts
+ * import type { Boxes } from "@johnmorrisdotca/kazu";
+ * import { KAZU_BOXES } from "@johnmorrisdotca/kazu";
+ *
+ * const value: Boxes = KAZU_BOXES[6];
+ * console.log(value);
+ * ```
+ */
 export type Boxes = { rows: number; cols: number };
 
 /**
  * A 9×9 has 3×3 boxes and a 4×4 has 2×2; a 6×6 has boxes two rows tall and three columns wide,
  * which is the one people get wrong and the reason this is a table rather than a square root.
+ *
+ * @example
+ * ```ts
+ * import { KAZU_BOXES } from "@johnmorrisdotca/kazu";
+ * console.log(KAZU_BOXES);
+ * ```
  */
 export const KAZU_BOXES: Record<number, Boxes> = {
   4: { rows: 2, cols: 2 },
@@ -26,7 +42,18 @@ export const KAZU_BOXES: Record<number, Boxes> = {
   25: { rows: 5, cols: 5 },
 };
 
-/** The box a cell is in, numbered row-major from 0. */
+/** The box a cell is in, numbered row-major from 0.
+ *
+ * @param size - The supported square grid side length.
+ * @param index - The zero-based row-major cell index.
+ * @returns The box a cell is in, numbered row-major from 0.
+ * @example
+ * ```ts
+ * import { boxOf } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(boxOf(6,12));
+ * ```
+ */
 export function boxOf(size: number, index: number): number {
   const boxes = KAZU_BOXES[size]!;
   const row = Math.floor(index / size);
@@ -72,7 +99,18 @@ function build(size: number, region: number[], regionWord: Layout["regionWord"],
 
 const CLASSIC = new Map<string, Layout>();
 
-/** Rows, columns and boxes; with `diagonal`, the two long diagonals as well. */
+/** Rows, columns and boxes; with `diagonal`, the two long diagonals as well.
+ *
+ * @param size - The supported square grid side length.
+ * @param diagonal - Whether to include both long diagonal groups.
+ * @returns Rows, columns and boxes; with `diagonal`, the two long diagonals as well.
+ * @example
+ * ```ts
+ * import { boxedLayout } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(boxedLayout(4).groups.length);
+ * ```
+ */
 export function boxedLayout(size: number, diagonal = false): Layout {
   const key = `${size}:${diagonal}`;
   const known = CLASSIC.get(key);
@@ -104,7 +142,18 @@ export function cagedLayout(size: number, cages: readonly { cells: readonly numb
   };
 }
 
-/** The cells sharing an edge with `index`. */
+/** The cells sharing an edge with `index`.
+ *
+ * @param size - The supported square grid side length.
+ * @param index - The zero-based row-major cell index.
+ * @returns The cells sharing an edge with `index`.
+ * @example
+ * ```ts
+ * import { neighbours } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(neighbours(4,0));
+ * ```
+ */
 export function neighbours(size: number, index: number): number[] {
   const row = Math.floor(index / size);
   const col = index % size;
@@ -119,6 +168,16 @@ export function neighbours(size: number, index: number): number[] {
 /**
  * Whether `region` divides a size×size grid into `size` regions of `size` cells each, every one of
  * them joined edge to edge. O(cells): a check of a Jigsaw asks it of whatever regions it was sent.
+ *
+ * @param size - The supported square grid side length.
+ * @param region - The row-major region number of every cell.
+ * @returns Whether `region` divides a size×size grid into `size` regions of `size` cells each, every one of them joined edge to edge. O(cells): a check of a Jigsaw asks it of whatever regions it was sent.
+ * @example
+ * ```ts
+ * import { boxedLayout, regionsAreSound } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(regionsAreSound(4,boxedLayout(4).region));
+ * ```
  */
 export function regionsAreSound(size: number, region: readonly number[]): boolean {
   if (region.length !== size * size) return false;

@@ -1,9 +1,48 @@
 import { MASYU_SIZES } from "./masyu.constants.ts";
 import type { MasyuBoard, MasyuCheck } from "./masyu.types.ts";
 
+/** Count cells in a Masyu board.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Count cells in a Masyu board.
+ * @example
+ * ```ts
+ * import type { MasyuBoard } from "@johnmorrisdotca/kazu/masyu";
+ * import { masyuCellCount } from "@johnmorrisdotca/kazu/masyu";
+ *
+ * const masyuBoard: MasyuBoard = {"width":5,"height":5,"pearls":[2,1,0,1,2,1,0,0,0,1,2,1,0,1,2,0,0,0,0,0,0,0,0,0,0]};
+ * console.log(masyuCellCount(masyuBoard));
+ * ```
+ */
 export const masyuCellCount = (board: MasyuBoard) => board.width * board.height;
+/** Count native Masyu edges.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Count native Masyu edges.
+ * @example
+ * ```ts
+ * import type { MasyuBoard } from "@johnmorrisdotca/kazu/masyu";
+ * import { masyuEdgeCount } from "@johnmorrisdotca/kazu/masyu";
+ *
+ * const masyuBoard: MasyuBoard = {"width":5,"height":5,"pearls":[2,1,0,1,2,1,0,0,0,1,2,1,0,1,2,0,0,0,0,0,0,0,0,0,0]};
+ * console.log(masyuEdgeCount(masyuBoard));
+ * ```
+ */
 export const masyuEdgeCount = (board: MasyuBoard) => board.height * (board.width - 1) + board.width * (board.height - 1);
 
+/** Whether the value has valid native Masyu dimensions, clues and data.
+ *
+ * @param value - A candidate board, digit, mark or encoded game specified by this signature.
+ * @returns Whether the value has valid native Masyu dimensions, clues and data.
+ * @example
+ * ```ts
+ * import type { MasyuBoard } from "@johnmorrisdotca/kazu/masyu";
+ * import { isMasyuBoard } from "@johnmorrisdotca/kazu/masyu";
+ *
+ * const masyuBoard: MasyuBoard = {"width":5,"height":5,"pearls":[2,1,0,1,2,1,0,0,0,1,2,1,0,1,2,0,0,0,0,0,0,0,0,0,0]};
+ * console.log(isMasyuBoard(masyuBoard));
+ * ```
+ */
 export function isMasyuBoard(value: unknown): value is MasyuBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as MasyuBoard;
@@ -13,6 +52,20 @@ export function isMasyuBoard(value: unknown): value is MasyuBoard {
     && board.pearls.some(Boolean);
 }
 
+/** Read adjacent Masyu cells with the joining edge and direction.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Read adjacent Masyu cells with the joining edge and direction.
+ * @example
+ * ```ts
+ * import type { MasyuBoard } from "@johnmorrisdotca/kazu/masyu";
+ * import { masyuNeighbors } from "@johnmorrisdotca/kazu/masyu";
+ *
+ * const masyuBoard: MasyuBoard = {"width":5,"height":5,"pearls":[2,1,0,1,2,1,0,0,0,1,2,1,0,1,2,0,0,0,0,0,0,0,0,0,0]};
+ * console.log(masyuNeighbors(masyuBoard,0));
+ * ```
+ */
 export function masyuNeighbors(board: MasyuBoard, cell: number): { cell: number; edge: number; direction: number }[] {
   const x = cell % board.width, y = Math.floor(cell / board.width), horizontal = board.height * (board.width - 1);
   const result = [];
@@ -46,6 +99,21 @@ function pearlRule(board: MasyuBoard, edges: ReadonlySet<number>, cell: number):
   return true;
 }
 
+/** Validate a Masyu answer against the printed clues and complete native rules.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param lines - The current native loop-edge states.
+ * @returns Validate a Masyu answer against the printed clues and complete native rules.
+ * @example
+ * ```ts
+ * import type { MasyuBoard, MasyuPuzzle } from "@johnmorrisdotca/kazu/masyu";
+ * import { checkMasyu } from "@johnmorrisdotca/kazu/masyu";
+ *
+ * const masyuBoard: MasyuBoard = {"width":5,"height":5,"pearls":[2,1,0,1,2,1,0,0,0,1,2,1,0,1,2,0,0,0,0,0,0,0,0,0,0]};
+ * const masyuSolution: MasyuPuzzle["solution"] = [0,1,2,3,8,9,10,11,20,24,25,29];
+ * console.log(checkMasyu(masyuBoard,masyuSolution));
+ * ```
+ */
 export function checkMasyu(board: MasyuBoard, lines: readonly number[]): MasyuCheck {
   if (!isMasyuBoard(board)) throw new RangeError("Invalid Masyu board");
   const edgeCount = masyuEdgeCount(board), edges = new Set(lines), errors = new Set<number>();

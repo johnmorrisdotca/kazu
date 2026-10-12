@@ -12,11 +12,51 @@ import { decodeCells, encodeCells } from "./cells.ts";
  * smaller number). `.` is no mark. A 7×7 is 49 + 42 + 42 characters.
  */
 
-/** A mark: the cell at `less` holds a smaller number than the cell at `more`. Both are indexes, always adjacent. */
+/** A mark: the cell at `less` holds a smaller number than the cell at `more`. Both are indexes, always adjacent.
+ *
+ * @example
+ * ```ts
+ * import { decodeMoreOrLess } from "@johnmorrisdotca/kazu";
+ * import type { Mark } from "@johnmorrisdotca/kazu";
+ *
+ * const inequalities = decodeMoreOrLess("1.........2......>...>...........^......",4)!;
+ * const value: Mark = inequalities.marks[0];
+ * console.log(value);
+ * ```
+ */
 export type Mark = { less: number; more: number };
 
+/** The native code character for an absent Futoshiki relation.
+ *
+ * @example
+ * ```ts
+ * import { NO_MARK } from "@johnmorrisdotca/kazu";
+ * console.log(NO_MARK);
+ * ```
+ */
 export const NO_MARK = ".";
 
+/** Encode grid numbers and less-than relations as the native Futoshiki givens code.
+ *
+ * @param cells - Row-major numeric cells, or expected cell count for step logs as specified by the signature.
+ * @param marks - The ordered less-than relations between cells.
+ * @param size - The supported square grid side length.
+ * @returns Encode grid numbers and less-than relations as the native Futoshiki givens code.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeMoreOrLess, encodeMoreOrLess, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const inequalities = decodeMoreOrLess("1.........2......>...>...........^......",4)!;
+ * console.log(encodeMoreOrLess(inequalities.cells,inequalities.marks,4));
+ * ```
+ */
 export function encodeMoreOrLess(cells: readonly number[], marks: readonly Mark[], size: number): string {
   const horizontal = new Array<string>(size * (size - 1)).fill(NO_MARK);
   const vertical = new Array<string>((size - 1) * size).fill(NO_MARK);
@@ -34,6 +74,18 @@ export function encodeMoreOrLess(cells: readonly number[], marks: readonly Mark[
   return `${encodeCells(cells)}${horizontal.join("")}${vertical.join("")}`;
 }
 
+/** Decode native Futoshiki numbers and less-than relations, or null for an invalid code.
+ *
+ * @param code - The native encoded clues, entries or notes specified by the signature.
+ * @param size - The supported square grid side length.
+ * @returns Decode native Futoshiki numbers and less-than relations, or null for an invalid code.
+ * @example
+ * ```ts
+ * import { decodeMoreOrLess } from "@johnmorrisdotca/kazu";
+ *
+ * console.log(decodeMoreOrLess("1.........2......>...>...........^......",4)?.marks.length);
+ * ```
+ */
 export function decodeMoreOrLess(code: string, size: number): { cells: number[]; marks: Mark[] } | null {
   const cellsLength = size * size;
   const horizontalLength = size * (size - 1);

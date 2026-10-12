@@ -6,6 +6,7 @@
  * and a game in play as pure functions. The drawing is `@johnmorrisdotca/kazu/draw`, playing in a page
  * is `@johnmorrisdotca/kazu/play`, and the tag is `@johnmorrisdotca/kazu/element/define`.
  */
+
 export * from "./kinds.ts";
 export * from "./generate.ts";
 export * from "./solve.ts";

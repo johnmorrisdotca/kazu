@@ -2,7 +2,20 @@ import { isHitoriBoard } from "./hitori-board.ts";
 import type { HitoriBoard } from "./hitori.types.ts";
 import type { HitoriDrawOptions } from "./hitori-play.types.ts";
 
-/** SVG text contains only the public numbers and the player's marks. */
+/** SVG text contains only the public numbers and the player's marks.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns SVG text contains only the public numbers and the player's marks.
+ * @example
+ * ```ts
+ * import type { HitoriBoard } from "@johnmorrisdotca/kazu/hitori";
+ * import { drawHitori } from "@johnmorrisdotca/kazu/hitori/draw";
+ *
+ * const hitoriBoard: HitoriBoard = {"size":5,"numbers":[4,5,5,1,2,5,2,3,2,1,2,5,4,2,2,3,1,2,5,4,2,3,1,3,4]};
+ * console.log(drawHitori(hitoriBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawHitori(board: HitoriBoard, options: HitoriDrawOptions = {}): string {
   if (!isHitoriBoard(board)) throw new RangeError("Invalid Hitori board");
   const size = board.size, cellSize = 52;

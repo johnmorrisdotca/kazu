@@ -4,6 +4,20 @@ import { solveHeyawake } from "./heyawake-solve.ts";
 import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
 import type { HeyawakeBoard, HeyawakeLevel, HeyawakePuzzle, HeyawakeRoom } from "./heyawake.types.ts";
 
+/** Generate a seeded Heyawake puzzle with a verified unique answer; unsupported inputs or exhausted attempts throw.
+ *
+ * @param width - The supported board width in cells.
+ * @param height - The supported board height in cells.
+ * @param level - The requested native difficulty tier.
+ * @param seed - The reproducible native puzzle seed.
+ * @returns Generate a seeded Heyawake puzzle with a verified unique answer; unsupported inputs or exhausted attempts throw.
+ * @example
+ * ```ts no-run
+ * import { generateHeyawake } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * console.log(generateHeyawake(5,5,"easy",42));
+ * ```
+ */
 export function generateHeyawake(width = 4, height = width, level: HeyawakeLevel = "easy", seed = 1): HeyawakePuzzle {
   if (![width, height].every(value => Number.isInteger(value) && value >= 4 && value <= 8) || width * height > HEYAWAKE_GENERATOR_MOST_CELLS
     || !HEYAWAKE_LEVELS.includes(level) || !isKazuSeed(seed)) throw new RangeError("Heyawake generation supports 4–8 cells per side and a valid level and seed");

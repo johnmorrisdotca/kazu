@@ -1,3 +1,12 @@
+/** Scoped native Shikaku board and player CSS.
+ *
+ * @example
+ * ```ts
+ * import { SHIKAKU_PLAY_STYLE } from "@johnmorrisdotca/kazu/play";
+ *
+ * console.log(SHIKAKU_PLAY_STYLE.length);
+ * ```
+ */
 export const SHIKAKU_PLAY_STYLE = `
 .ks-root{color:var(--ks-ink,#1f2320);font:16px/1.5 var(--font,system-ui,sans-serif);max-width:680px;margin:auto}
 .ks-board{position:relative;width:100%;min-width:240px;touch-action:manipulation}

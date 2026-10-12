@@ -1,3 +1,12 @@
+/** Scoped native Yajilin board and player CSS.
+ *
+ * @example
+ * ```ts
+ * import { YAJILIN_PLAY_STYLE } from "@johnmorrisdotca/kazu/yajilin/play";
+ *
+ * console.log(YAJILIN_PLAY_STYLE.length);
+ * ```
+ */
 export const YAJILIN_PLAY_STYLE = `
 .kazu-yajilin { color:var(--kz-ink,#1f2320); font:16px/1.4 system-ui,sans-serif; }
 .kazu-yajilin .ky-board { position:relative; max-width:440px; margin:auto; }

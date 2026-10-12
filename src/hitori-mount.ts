@@ -6,7 +6,24 @@ import { HITORI_PLAY_STYLE } from "./hitori-style.ts";
 import { hitoriWords } from "./hitori-strings.ts";
 import type { HitoriDrawOptions, HitoriMount, HitoriMountOptions } from "./hitori-play.types.ts";
 
-/** A keyboard- and touch-friendly Hitori player, mounted in any host element. */
+/** A keyboard- and touch-friendly Hitori player, mounted in any host element.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns A keyboard- and touch-friendly Hitori player, mounted in any host element.
+ * @example
+ * ```ts no-run
+ * import type { HitoriBoard } from "@johnmorrisdotca/kazu/hitori";
+ * import { mountHitori } from "@johnmorrisdotca/kazu/hitori/play";
+ *
+ * const hitoriBoard: HitoriBoard = {"size":5,"numbers":[4,5,5,1,2,5,2,3,2,1,2,5,4,2,2,3,1,2,5,4,2,3,1,3,4]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountHitori(host,{board:hitoriBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountHitori(host: HTMLElement, initial: HitoriMountOptions): HitoriMount {
   const doc = host.ownerDocument;
   let options = { ...initial }, game = initial.progress ? decodeHitori(initial.progress) : null;

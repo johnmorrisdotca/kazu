@@ -2,7 +2,20 @@ import { YAJILIN_NODE_BUDGET } from "./yajilin.constants.ts";
 import { checkYajilin, isYajilinBoard, yajilinNeighbors, yajilinRay } from "./yajilin-board.ts";
 import type { YajilinBoard, YajilinSolve, YajilinSolution } from "./yajilin.types.ts";
 
-/** Counts public shade patterns whose remaining cells form the single required loop. */
+/** Counts public shade patterns whose remaining cells form the single required loop.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Counts public shade patterns whose remaining cells form the single required loop.
+ * @example
+ * ```ts
+ * import type { YajilinBoard } from "@johnmorrisdotca/kazu/yajilin";
+ * import { solveYajilin } from "@johnmorrisdotca/kazu/yajilin";
+ *
+ * const yajilinBoard: YajilinBoard = {"width":5,"height":5,"clues":[{"direction":"left","count":0},null,{"direction":"right","count":1},null,{"direction":"up","count":0},null,null,null,null,null,{"direction":"right","count":0},null,{"direction":"left","count":0},null,{"direction":"down","count":1},{"direction":"left","count":0},null,null,null,null,null,{"direction":"up","count":1},{"direction":"down","count":0},null,{"direction":"down","count":0}]};
+ * console.log(solveYajilin(yajilinBoard,{limit:2,nodes:20000}));
+ * ```
+ */
 export function solveYajilin(board: YajilinBoard, options: { limit?: number; nodes?: number } = {}): YajilinSolve {
   if (!isYajilinBoard(board)) throw new RangeError("Invalid Yajilin board");
   const limit = options.limit ?? 2, budget = options.nodes ?? YAJILIN_NODE_BUDGET;

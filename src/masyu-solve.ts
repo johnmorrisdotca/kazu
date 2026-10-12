@@ -2,7 +2,20 @@ import { MASYU_NODE_BUDGET } from "./masyu.constants.ts";
 import { checkMasyu, isMasyuBoard, masyuEdgeCount, masyuNeighbors } from "./masyu-board.ts";
 import type { MasyuBoard, MasyuSolve } from "./masyu.types.ts";
 
-/** Counts distinct single loops with local pearl rules; budget stops never claim a proof. */
+/** Counts distinct single loops with local pearl rules; budget stops never claim a proof.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Counts distinct single loops with local pearl rules; budget stops never claim a proof.
+ * @example
+ * ```ts
+ * import type { MasyuBoard } from "@johnmorrisdotca/kazu/masyu";
+ * import { solveMasyu } from "@johnmorrisdotca/kazu/masyu";
+ *
+ * const masyuBoard: MasyuBoard = {"width":5,"height":5,"pearls":[2,1,0,1,2,1,0,0,0,1,2,1,0,1,2,0,0,0,0,0,0,0,0,0,0]};
+ * console.log(solveMasyu(masyuBoard,{limit:2,nodes:20000}));
+ * ```
+ */
 export function solveMasyu(board: MasyuBoard, options: { limit?: number; nodes?: number } = {}): MasyuSolve {
   if (!isMasyuBoard(board)) throw new RangeError("Invalid Masyu board");
   const limit = options.limit ?? 2, budget = options.nodes ?? MASYU_NODE_BUDGET;

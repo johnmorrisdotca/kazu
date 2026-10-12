@@ -3,7 +3,19 @@ import { hitoriModel } from "./hitori-logic.ts";
 import { logicCsp, openSlots, solveCsp } from "./csp.ts";
 import type { HitoriBoard, HitoriRating } from "./hitori.types.ts";
 
-/** Rates a board with one answer by solving it: with the plain rules, with the whites-stay-together rule, then by supposing. */
+/** Rates a board with one answer by solving it: with the plain rules, with the whites-stay-together rule, then by supposing.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Rates a board with one answer by solving it: with the plain rules, with the whites-stay-together rule, then by supposing.
+ * @example
+ * ```ts
+ * import type { HitoriBoard } from "@johnmorrisdotca/kazu/hitori";
+ * import { rateHitori } from "@johnmorrisdotca/kazu/hitori";
+ *
+ * const hitoriBoard: HitoriBoard = {"size":5,"numbers":[4,5,5,1,2,5,2,3,2,1,2,5,4,2,2,3,1,2,5,4,2,3,1,3,4]};
+ * console.log(rateHitori(hitoriBoard));
+ * ```
+ */
 export function rateHitori(board: HitoriBoard): HitoriRating {
   if (!isHitoriBoard(board)) throw new RangeError("Invalid Hitori board");
   const strong = hitoriModel(board, 2).csp;

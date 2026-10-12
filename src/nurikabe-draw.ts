@@ -1,7 +1,20 @@
 import { isNurikabeBoard } from "./nurikabe-board.ts";
 import type { NurikabeBoard } from "./nurikabe.types.ts";
 import type { NurikabeDrawOptions } from "./nurikabe-play.types.ts";
-/** SVG text contains the numbered clues and the player's sea marks only. */
+/** SVG text contains the numbered clues and the player's sea marks only.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns SVG text contains the numbered clues and the player's sea marks only.
+ * @example
+ * ```ts
+ * import type { NurikabeBoard } from "@johnmorrisdotca/kazu/nurikabe";
+ * import { drawNurikabe } from "@johnmorrisdotca/kazu/nurikabe/draw";
+ *
+ * const nurikabeBoard: NurikabeBoard = {"size":5,"clues":[1,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,2,0,0,3,0,0]};
+ * console.log(drawNurikabe(nurikabeBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawNurikabe(board: NurikabeBoard, options: NurikabeDrawOptions = {}): string {
   if (!isNurikabeBoard(board)) throw new RangeError("Invalid Nurikabe board");
   const n = board.size, cell = 52;

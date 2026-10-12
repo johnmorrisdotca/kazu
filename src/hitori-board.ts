@@ -1,6 +1,19 @@
 import { HITORI_LEAST_SIDE, HITORI_MOST_SIDE } from "./hitori.constants.ts";
 import type { HitoriBoard } from "./hitori.types.ts";
 
+/** Whether the value has valid native Hitori dimensions, clues and data.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Whether the value has valid native Hitori dimensions, clues and data.
+ * @example
+ * ```ts
+ * import type { HitoriBoard } from "@johnmorrisdotca/kazu/hitori";
+ * import { isHitoriBoard } from "@johnmorrisdotca/kazu/hitori";
+ *
+ * const hitoriBoard: HitoriBoard = {"size":5,"numbers":[4,5,5,1,2,5,2,3,2,1,2,5,4,2,2,3,1,2,5,4,2,3,1,3,4]};
+ * console.log(isHitoriBoard(hitoriBoard));
+ * ```
+ */
 export function isHitoriBoard(board: HitoriBoard): boolean {
   return !!board && Number.isInteger(board.size) && board.size >= HITORI_LEAST_SIDE && board.size <= HITORI_MOST_SIDE
     && Array.isArray(board.numbers)
@@ -8,6 +21,20 @@ export function isHitoriBoard(board: HitoriBoard): boolean {
     && board.numbers.every(value => Number.isInteger(value) && value >= 1 && value <= board.size);
 }
 
+/** Read orthogonally adjacent cells on a square Hitori board.
+ *
+ * @param size - The supported square board side length.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Read orthogonally adjacent cells on a square Hitori board.
+ * @example
+ * ```ts
+ * import type { HitoriBoard } from "@johnmorrisdotca/kazu/hitori";
+ * import { hitoriNeighbors } from "@johnmorrisdotca/kazu/hitori";
+ *
+ * const hitoriBoard: HitoriBoard = {"size":5,"numbers":[4,5,5,1,2,5,2,3,2,1,2,5,4,2,2,3,1,2,5,4,2,3,1,3,4]};
+ * console.log(hitoriNeighbors(hitoriBoard.size,0));
+ * ```
+ */
 export function hitoriNeighbors(size: number, cell: number): number[] {
   const x = cell % size, y = Math.floor(cell / size), neighbors: number[] = [];
   if (x > 0) neighbors.push(cell - 1);
@@ -17,7 +44,21 @@ export function hitoriNeighbors(size: number, cell: number): number[] {
   return neighbors;
 }
 
-/** Checks unshaded row and column duplicates, adjacent shades, and white connectivity. */
+/** Checks unshaded row and column duplicates, adjacent shades, and white connectivity.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param shaded - The current shaded-cell flags in row-major order.
+ * @returns Checks unshaded row and column duplicates, adjacent shades, and white connectivity.
+ * @example
+ * ```ts
+ * import type { HitoriBoard, HitoriPuzzle } from "@johnmorrisdotca/kazu/hitori";
+ * import { checkHitori } from "@johnmorrisdotca/kazu/hitori";
+ *
+ * const hitoriBoard: HitoriBoard = {"size":5,"numbers":[4,5,5,1,2,5,2,3,2,1,2,5,4,2,2,3,1,2,5,4,2,3,1,3,4]};
+ * const hitoriSolution: HitoriPuzzle["solution"] = [false,true,false,false,false,false,false,false,true,false,true,false,false,false,true,false,false,false,false,false,false,true,false,false,true];
+ * console.log(checkHitori(hitoriBoard,hitoriSolution));
+ * ```
+ */
 export function checkHitori(board: HitoriBoard, shaded: readonly boolean[]): { ok: boolean; errors: readonly number[] } {
   if (!isHitoriBoard(board)) return { ok: false, errors: [] };
   const size = board.size, total = size * size;

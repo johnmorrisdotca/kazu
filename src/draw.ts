@@ -8,7 +8,16 @@ import { KAZU_STYLE } from "./style.ts";
 import { cageOutline } from "./sum-cages.ts";
 import { lineFrom, TOWER_SIDES } from "./towers-code.ts";
 
-/** What a drawing shows beyond the puzzle itself. Every part is optional: a puzzle alone is its printed grid. */
+/** What a drawing shows beyond the puzzle itself. Every part is optional: a puzzle alone is its printed grid.
+ *
+ * @example
+ * ```ts
+ * import type { KazuDrawOptions } from "@johnmorrisdotca/kazu/draw";
+ *
+ * const value: KazuDrawOptions = {language:"en",peers:true};
+ * console.log(value);
+ * ```
+ */
 export type KazuDrawOptions = {
   /** What the player has written, row-major, 0 for empty. */
   entries?: readonly number[];
@@ -50,12 +59,35 @@ const WHERE_KEY: Record<KazuKind, string> = {
   towers: "whereTowers",
 };
 
-/** The words for the groups a number is ruled out by, for a hint's line: "its row, column and box". */
+/** The words for the groups a number is ruled out by, for a hint's line: "its row, column and box".
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param language - The native English or Japanese display language.
+ * @returns The words for the groups a number is ruled out by, for a hint's line: "its row, column and box".
+ * @example
+ * ```ts
+ * import { kazuWhere } from "@johnmorrisdotca/kazu/draw";
+ *
+ * console.log(kazuWhere("number-place","ja"));
+ * ```
+ */
 export function kazuWhere(kind: KazuKind, language: KazuLanguage): string {
   return kazuSay(language, WHERE_KEY[kind]);
 }
 
-/** A cell as a screen reader names it: "row 3, column 5". */
+/** A cell as a screen reader names it: "row 3, column 5".
+ *
+ * @param size - The supported square grid side length.
+ * @param index - The zero-based row-major cell index.
+ * @param language - The native English or Japanese display language.
+ * @returns A cell as a screen reader names it: "row 3, column 5".
+ * @example
+ * ```ts
+ * import { kazuCellName } from "@johnmorrisdotca/kazu/draw";
+ *
+ * console.log(kazuCellName(4,0,"en"));
+ * ```
+ */
 export function kazuCellName(size: number, index: number, language: KazuLanguage): string {
   return kazuSay(language, "cell", { row: Math.floor(index / size) + 1, col: (index % size) + 1 });
 }
@@ -108,6 +140,23 @@ function markShape(size: number, less: number, more: number, x0: number, y0: num
  * Returns the `<svg>` as a string: put it in a page, a file or an image, with nothing to load. It is
  * one steady square whatever is drawn, so nothing moves as numbers are written. Nothing in it can be
  * selected or dragged. Null for givens that are not a puzzle of that kind and side.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param givensCode - The original native printed-clue code.
+ * @param options - Native drawing or restored-game choices.
+ * @returns Native SVG text, or null for invalid kind, size or printed-clue code.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { drawKazu } from "@johnmorrisdotca/kazu/draw";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * console.log(drawKazu(kind,size,givens,{language:"en"})?.startsWith("<svg"));
+ * ```
  */
 export function drawKazu(kind: KazuKind, size: number, givensCode: string, options: KazuDrawOptions = {}): string | null {
   const givens = readGivens(kind, size, givensCode);

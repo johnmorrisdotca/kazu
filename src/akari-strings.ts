@@ -1,5 +1,14 @@
 import type { AkariLanguage } from "./akari-play.types.ts";
 
+/** Native English and Japanese labels and announcements for Akari.
+ *
+ * @example
+ * ```ts
+ * import { AKARI_STRINGS } from "@johnmorrisdotca/kazu/akari";
+ *
+ * console.log(Object.keys(AKARI_STRINGS.en));
+ * ```
+ */
 export const AKARI_STRINGS = {
   en: {
     title: "Akari",

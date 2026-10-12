@@ -11,6 +11,24 @@ import { countSolutions as countClues, guessDepth as cluesDepth, solutionOf as c
  * for givens that are not a puzzle of this kind and side, and for a search that ran past `budget`
  * steps (Sudoku, Jigsaw, Diagonal and Sum Cages count steps; the other two have no budget): "I
  * could not say" is not "there are none".
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param givens - The original native printed-clue code.
+ * @param limit - Stop after finding this many solutions.
+ * @param budget - The maximum bounded solver work.
+ * @returns The bounded answer count, or null for invalid kind, size or givens; a budget-limited count alone does not prove uniqueness.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { countKazuSolutions } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * console.log(countKazuSolutions(kind,size,givens,2,20000));
+ * ```
  */
 export function countKazuSolutions(kind: KazuKind, size: number, givens: string, limit = 2, budget = Infinity): number | null {
   const read = readGivens(kind, size, givens);
@@ -25,6 +43,23 @@ export function countKazuSolutions(kind: KazuKind, size: number, givens: string,
  * The one answer a puzzle's givens allow, as a cells code, or null when they allow none, more than
  * one, or the search ran past `budget` steps (Sudoku, Jigsaw, Diagonal and Sum Cages). A grid this
  * cannot vouch for is never handed back as though it were the answer.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param givens - The original native printed-clue code.
+ * @param budget - The maximum bounded solver work.
+ * @returns A native answer code, or null for invalid inputs or no answer found within the search budget.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { solveKazu } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * console.log(solveKazu(kind,size,givens,20000));
+ * ```
  */
 export function solveKazu(kind: KazuKind, size: number, givens: string, budget = 2_000_000): string | null {
   const read = readGivens(kind, size, givens);
@@ -44,6 +79,22 @@ export function solveKazu(kind: KazuKind, size: number, givens: string, budget =
  * puzzle: 0 when reasoning alone finishes it (easy), 1 when one guess does (medium), more when more
  * (hard); Infinity when there is no answer. Null for givens that are not a puzzle. Meant for a
  * puzzle already known to have exactly one answer.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param givens - The original native printed-clue code.
+ * @returns The native guess-depth measure, or null for invalid or unsolved givens.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { kazuGuessDepth } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * console.log(kazuGuessDepth(kind,size,givens));
+ * ```
  */
 export function kazuGuessDepth(kind: KazuKind, size: number, givens: string): number | null {
   const read = readGivens(kind, size, givens);

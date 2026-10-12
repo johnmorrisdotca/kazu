@@ -3,7 +3,20 @@ import type { ShikakuBoard } from "./shikaku.types.ts";
 import type { ShikakuDrawOptions } from "./shikaku-play.types.ts";
 import { shikakuWords } from "./shikaku-strings.ts";
 
-/** SVG text with only the public clues and the player's rectangles. */
+/** SVG text with only the public clues and the player's rectangles.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns SVG text with only the public clues and the player's rectangles.
+ * @example
+ * ```ts
+ * import type { ShikakuBoard } from "@johnmorrisdotca/kazu/shikaku";
+ * import { drawShikaku } from "@johnmorrisdotca/kazu/draw";
+ *
+ * const shikakuBoard: ShikakuBoard = {"width":5,"height":5,"clues":[3,0,0,0,2,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,4,3,6,0,0]};
+ * console.log(drawShikaku(shikakuBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawShikaku(board: ShikakuBoard, options: ShikakuDrawOptions = {}): string {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
   const words = shikakuWords(options.language), size = 48;

@@ -3,7 +3,19 @@ import { shikakuModel } from "./shikaku-logic.ts";
 import { logicCsp, openSlots, solveCsp } from "./csp.ts";
 import type { ShikakuBoard, ShikakuRating } from "./shikaku.types.ts";
 
-/** Rates a board with one answer by solving it with the first rule, with the first two, with all three, then by supposing. */
+/** Rates a board with one answer by solving it with the first rule, with the first two, with all three, then by supposing.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Rates a board with one answer by solving it with the first rule, with the first two, with all three, then by supposing.
+ * @example
+ * ```ts
+ * import type { ShikakuBoard } from "@johnmorrisdotca/kazu/shikaku";
+ * import { rateShikaku } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const shikakuBoard: ShikakuBoard = {"width":5,"height":5,"clues":[3,0,0,0,2,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,4,3,6,0,0]};
+ * console.log(rateShikaku(shikakuBoard));
+ * ```
+ */
 export function rateShikaku(board: ShikakuBoard): ShikakuRating {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
   const first = shikakuModel(board, 0), second = shikakuModel(board, 1), strong = shikakuModel(board, 2);

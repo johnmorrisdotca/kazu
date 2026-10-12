@@ -1,7 +1,19 @@
 import { JUOSAN_MOST_SIDE } from "./juosan.constants.ts";
 import type { JuosanBoard, JuosanCheck, JuosanMark } from "./juosan.types.ts";
 
-/** Whether territories partition a bounded board and each territory is connected. */
+/** Whether territories partition a bounded board and each territory is connected.
+ *
+ * @param value - A candidate board, digit, mark or encoded game specified by this signature.
+ * @returns Whether territories partition a bounded board and each territory is connected.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { isJuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * console.log(isJuosanBoard(juosanBoard));
+ * ```
+ */
 export function isJuosanBoard(value: unknown): value is JuosanBoard {
   if (!value || typeof value !== "object") return false;
 
@@ -73,12 +85,39 @@ export function isJuosanBoard(value: unknown): value is JuosanBoard {
   return occupied.size === cellCount;
 }
 
-/** Returns the index of the territory containing a cell, or -1 when absent. */
+/** Returns the index of the territory containing a cell, or -1 when absent.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Returns the index of the territory containing a cell, or -1 when absent.
+ * @example
+ * ```ts
+ * import type { JuosanBoard } from "@johnmorrisdotca/kazu/juosan";
+ * import { juosanTerritoryAt } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * console.log(juosanTerritoryAt(juosanBoard,0));
+ * ```
+ */
 export function juosanTerritoryAt(board: JuosanBoard, cell: number): number {
   return board.territories.findIndex(territory => territory.cells.includes(cell));
 }
 
-/** Checks public rules directly, independently of the solver and stored answer. */
+/** Checks public rules directly, independently of the solver and stored answer.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param marks - The current horizontal, vertical or blank Juosan marks.
+ * @returns Checks public rules directly, independently of the solver and stored answer.
+ * @example
+ * ```ts
+ * import type { JuosanBoard, JuosanPuzzle } from "@johnmorrisdotca/kazu/juosan";
+ * import { checkJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * const juosanBoard: JuosanBoard = {"width":3,"height":2,"territories":[{"cells":[0,1,2],"difference":3},{"cells":[3,4,5],"difference":3}]};
+ * const juosanSolution: JuosanPuzzle["solution"] = [1,1,1,1,1,1];
+ * console.log(checkJuosan(juosanBoard,juosanSolution));
+ * ```
+ */
 export function checkJuosan(
   board: JuosanBoard,
   marks: readonly JuosanMark[],

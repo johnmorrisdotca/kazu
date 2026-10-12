@@ -14,7 +14,24 @@ import { AKARI_PLAY_STYLE } from "./akari-style.ts";
 import { akariWords } from "./akari-strings.ts";
 import type { AkariDrawOptions, AkariMount, AkariMountOptions } from "./akari-play.types.ts";
 
-/** Mounts the player in a host element; call destroy when the host is removed. */
+/** Mounts the player in a host element; call destroy when the host is removed.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mounts the player in a host element; call destroy when the host is removed.
+ * @example
+ * ```ts no-run
+ * import type { AkariBoard } from "@johnmorrisdotca/kazu/akari";
+ * import { mountAkari } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountAkari(host,{board:akariBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountAkari(host: HTMLElement, initial: AkariMountOptions): AkariMount {
   const doc = host.ownerDocument;
   let options = { ...initial };

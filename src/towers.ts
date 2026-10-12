@@ -19,7 +19,22 @@ import { countSolutions, guessDepth, type Grid } from "./towers-solve.ts";
 
 const LEVELS: Record<KazuLevel, number> = { easy: 0, medium: 1, hard: Infinity };
 
-/** A Skyscrapers (Towers) puzzle of this side, level and seed: 4, 5, 6 or 7. */
+/** A Skyscrapers (Towers) puzzle of this side, level and seed: 4, 5, 6 or 7.
+ *
+ * @param size - The supported square grid side length.
+ * @param level - The native easy, medium or hard generation tier.
+ * @param seed - A reproducible integer seed from 1 to KAZU_SEED_MOST.
+ * @returns A Skyscrapers (Towers) puzzle of this side, level and seed: 4, 5, 6 or 7.
+ * @example
+ * ```ts no-run
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { generateTowers } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const givens = puzzle.givens;
+ * console.log(generateTowers(4,"easy",42).givens);
+ * ```
+ */
 export function generateTowers(size: number, level: KazuLevel, seed: number): KazuPuzzle {
   const random = seededRandom(seed);
   const solution = latinSquare(size, random);

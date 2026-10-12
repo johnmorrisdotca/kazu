@@ -32,7 +32,25 @@ import { kazuLanguageOf, kazuNameOf, kazuSay, type KazuLanguage } from "./string
 /** From this side up the letter N is a number (A is 10, so N is 23), and Pencil moves to the slash key. */
 const NOTES_KEY_IS_A_NUMBER = 23;
 
-/** What every event tells of the board. */
+/** What every event tells of the board.
+ *
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { answerOf, decodeCells, encodeNotes, encodeRun, isSolved, kazuProgress, newKazuGame } from "@johnmorrisdotca/kazu";
+ * import type { KazuEventDetail } from "@johnmorrisdotca/kazu/play";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const solution = decodeCells(answer,size)!;
+ * const game = newKazuGame(kind,size,givens)!;
+ * const value: KazuEventDetail = {kind,size,run:encodeRun(game.entries),notes:encodeNotes(game.notes),answer:answerOf(game),progress:kazuProgress(game),elapsedMs:0,hints:0,checks:0,helped:false,solved:isSolved(game)};
+ * console.log(value);
+ * ```
+ */
 export type KazuEventDetail = {
   kind: KazuKind;
   size: number;
@@ -56,6 +74,24 @@ export type KazuEventDetail = {
   hint?: KazuHint;
 };
 
+/** The puzzle, optional solution/progress, assistance, controls and event callbacks for mounting a number grid.
+ *
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeCells } from "@johnmorrisdotca/kazu";
+ * import type { KazuMountOptions } from "@johnmorrisdotca/kazu/play";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const solution = decodeCells(answer,size)!;
+ * const value: KazuMountOptions = {kind,size,givens,solution:answer,hints:"show"};
+ * console.log(value);
+ * ```
+ */
 export type KazuMountOptions = {
   kind: KazuKind;
   size: number;
@@ -96,9 +132,40 @@ export type KazuMountOptions = {
   onSolve?: (detail: KazuEventDetail) => void;
 };
 
-/** Everything about how a mounted board plays that can change while it is on the page. */
+/** Everything about how a mounted board plays that can change while it is on the page.
+ *
+ * @example
+ * ```ts
+ * import type { KazuMountSettings } from "@johnmorrisdotca/kazu/play";
+ *
+ * const value: KazuMountSettings = {language:"ja",hints:"off"};
+ * console.log(value);
+ * ```
+ */
 export type KazuMountSettings = Pick<KazuMountOptions, "hints" | "check" | "conflicts" | "peers" | "tidy" | "tapToStep" | "language" | "clock" | "controls">;
 
+/** The native mounted number grid, its current game/detail, controls and cleanup methods.
+ *
+ * @example
+ * ```ts no-run
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeCells } from "@johnmorrisdotca/kazu";
+ * import type { KazuMount } from "@johnmorrisdotca/kazu/play";
+ * import { mountKazu } from "@johnmorrisdotca/kazu/play";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const solution = decodeCells(answer,size)!;
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const board: KazuMount | null = mountKazu(host,{kind,size,givens,solution:answer});
+ * console.log(board?.detail().progress);
+ * board?.destroy();
+ * ```
+ */
 export type KazuMount = {
   readonly host: HTMLElement;
   /** The game as it stands. */
@@ -124,7 +191,19 @@ export type KazuMount = {
   destroy: () => void;
 };
 
-/** Put the style in the page once: in the document's head, or in the shadow root the host is in. */
+/** Put the style in the page once: in the document's head, or in the shadow root the host is in.
+ *
+ * @param host - The DOM element receiving scoped styles or the native player.
+ * @returns Nothing; the native scoped player styles are installed for the host.
+ * @example
+ * ```ts no-run
+ * import { ensureKazuPlayStyle } from "@johnmorrisdotca/kazu/play";
+ *
+ * const host = document.createElement("div");
+ * ensureKazuPlayStyle(host);
+ * console.log(host.tagName);
+ * ```
+ */
 export function ensureKazuPlayStyle(host: Element): void {
   const root = host.getRootNode();
   const target: ParentNode = typeof ShadowRoot !== "undefined" && root instanceof ShadowRoot ? root : host.ownerDocument.head;

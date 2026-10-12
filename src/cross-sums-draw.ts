@@ -1,7 +1,31 @@
 import { isCrossSumsBoard } from "./cross-sums-board.ts";
 import type { CrossSumsBoard, CrossSumsMaterial, CrossSumsPieces } from "./cross-sums.types.ts";
 
+/** Current CrossSums marks or entries, selection, errors and native SVG appearance choices.
+ *
+ * @example
+ * ```ts
+ * import type { CrossSumsDrawOptions } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * const value: CrossSumsDrawOptions = {material:"ivory"};
+ * console.log(value);
+ * ```
+ */
 export type CrossSumsDrawOptions = { values?: readonly number[]; notes?: readonly (readonly number[])[]; selected?: number; material?: CrossSumsMaterial; pieces?: CrossSumsPieces; errors?: readonly number[] };
+/** Render the CrossSums board and supplied current state as native SVG text.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Render the CrossSums board and supplied current state as native SVG text.
+ * @example
+ * ```ts
+ * import type { CrossSumsBoard } from "@johnmorrisdotca/kazu/cross-sums";
+ * import { drawCrossSums } from "@johnmorrisdotca/kazu/cross-sums";
+ *
+ * const crossSumsBoard: CrossSumsBoard = {"width":5,"height":5,"cells":[{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":10},{"kind":"black","across":null,"down":7},{"kind":"black","across":null,"down":12},{"kind":"black","across":null,"down":null},{"kind":"black","across":6,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":23,"down":null},{"kind":"white"},{"kind":"white"},{"kind":"white"},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null},{"kind":"black","across":null,"down":null}]};
+ * console.log(drawCrossSums(crossSumsBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawCrossSums(board: CrossSumsBoard, options: CrossSumsDrawOptions = {}): string {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
   const size = 56, paper = options.material === "slate" ? "#262a27" : options.material === "wood" ? "#e5cda6" : "var(--kz-paper,#fbf8f1)";

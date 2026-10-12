@@ -112,7 +112,22 @@ export function carve(solution: Grid, layout: Layout, level: KazuLevel, floor: n
   return givens;
 }
 
-/** A Sudoku (Number Place) of this side, level and seed: 4, 6, 9, 16 or 25. */
+/** A Sudoku (Number Place) of this side, level and seed: 4, 6, 9, 16 or 25.
+ *
+ * @param size - The supported square grid side length.
+ * @param level - The native easy, medium or hard generation tier.
+ * @param seed - A reproducible integer seed from 1 to KAZU_SEED_MOST.
+ * @returns A Sudoku (Number Place) of this side, level and seed: 4, 6, 9, 16 or 25.
+ * @example
+ * ```ts no-run
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { generateNumberPlace } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const givens = puzzle.givens;
+ * console.log(generateNumberPlace(4,"easy",42).givens);
+ * ```
+ */
 export function generateNumberPlace(size: number, level: KazuLevel, seed: number): KazuPuzzle {
   const random = seededRandom(seed);
   const layout = boxedLayout(size);
@@ -128,7 +143,22 @@ const DIAGONAL_FLOOR: Record<KazuLevel, Record<number, number>> = {
   hard: { 6: 9, 9: 21 },
 };
 
-/** A Diagonal Sudoku (Sudoku X): Sudoku with the two long diagonals as groups too. 6 or 9. */
+/** A Diagonal Sudoku (Sudoku X): Sudoku with the two long diagonals as groups too. 6 or 9.
+ *
+ * @param size - The supported square grid side length.
+ * @param level - The native easy, medium or hard generation tier.
+ * @param seed - A reproducible integer seed from 1 to KAZU_SEED_MOST.
+ * @returns A Diagonal Sudoku (Sudoku X): Sudoku with the two long diagonals as groups too. 6 or 9.
+ * @example
+ * ```ts no-run
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { generateDiagonal } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const givens = puzzle.givens;
+ * console.log(generateDiagonal(6,"easy",42).givens);
+ * ```
+ */
 export function generateDiagonal(size: number, level: KazuLevel, seed: number): KazuPuzzle {
   const random = seededRandom(seed);
   const layout = boxedLayout(size, true);

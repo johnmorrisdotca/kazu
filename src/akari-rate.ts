@@ -6,6 +6,17 @@ import type { AkariBoard, AkariRating } from "./akari.types.ts";
 /**
  * Rates a board by solving it as a person would: with the rules alone (depth 0), then with one supposition at
  * a time (depth 1), and anything beyond that is depth 2. A board with no single answer cannot be rated.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @returns Rates a board by solving it as a person would: with the rules alone (depth 0), then with one supposition at a time (depth 1), and anything beyond that is depth 2. A board with no single answer cannot be rated.
+ * @example
+ * ```ts
+ * import type { AkariBoard } from "@johnmorrisdotca/kazu/akari";
+ * import { rateAkari } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * console.log(rateAkari(akariBoard));
+ * ```
  */
 export function rateAkari(board: AkariBoard): AkariRating {
   if (!isAkariBoard(board)) throw new RangeError("Invalid Akari board");

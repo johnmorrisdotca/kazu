@@ -4,7 +4,19 @@ import { solveRipple } from "./ripple-solve.ts";
 import { isKazuSeed, seededRandom } from "./random.ts";
 import type { RipplePuzzle } from "./ripple.types.ts";
 
-/** Builds a seeded block-room family and accepts it only after a bounded uniqueness proof. */
+/** Builds a seeded block-room family and accepts it only after a bounded uniqueness proof.
+ *
+ * @param width - The supported board width in cells.
+ * @param height - The supported board height in cells.
+ * @param seed - The reproducible native puzzle seed.
+ * @returns Builds a seeded block-room family and accepts it only after a bounded uniqueness proof.
+ * @example
+ * ```ts no-run
+ * import { generateRipple } from "@johnmorrisdotca/kazu/ripple";
+ *
+ * console.log(generateRipple(9,9,42));
+ * ```
+ */
 export function generateRipple(width = 9, height = width, seed = 1): RipplePuzzle {
   if (width !== 9 || height !== 9 || !isKazuSeed(seed)) {
     throw new RangeError("Ripple Effect currently supports original 9×9 boards and valid integer seeds.");

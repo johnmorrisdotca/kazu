@@ -9,6 +9,12 @@ import { KAZU_STYLE } from "./style.ts";
  * Nothing moves when something is chosen: the board is one square box, the lines of words keep the room
  * their longest wording takes, and the buttons are one size. Nothing the player touches can be
  * selected, and no tap on it zooms the page.
+ *
+ * @example
+ * ```ts
+ * import { KAZU_PLAY_STYLE } from "@johnmorrisdotca/kazu/play";
+ * console.log(KAZU_PLAY_STYLE.length);
+ * ```
  */
 export const KAZU_PLAY_STYLE = `${KAZU_STYLE}
 .kazu-play {

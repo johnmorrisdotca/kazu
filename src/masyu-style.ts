@@ -1,3 +1,12 @@
+/** Scoped native Masyu board and player CSS.
+ *
+ * @example
+ * ```ts
+ * import { MASYU_PLAY_STYLE } from "@johnmorrisdotca/kazu/masyu/play";
+ *
+ * console.log(MASYU_PLAY_STYLE.length);
+ * ```
+ */
 export const MASYU_PLAY_STYLE = `
 .kazu-masyu { color:var(--kz-ink,#1f2320); font:16px/1.4 system-ui,sans-serif; }
 .kazu-masyu .km-board { position:relative; max-width:440px; margin:auto; }

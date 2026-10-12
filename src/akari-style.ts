@@ -1,3 +1,12 @@
+/** Scoped native Akari board and player CSS.
+ *
+ * @example
+ * ```ts
+ * import { AKARI_PLAY_STYLE } from "@johnmorrisdotca/kazu/akari";
+ *
+ * console.log(AKARI_PLAY_STYLE.length);
+ * ```
+ */
 export const AKARI_PLAY_STYLE = `
 .ka-root{color:var(--ka-ink,#1f2320);font:16px/1.5 var(--font,system-ui,sans-serif);max-width:680px;margin:auto}
 .ka-board{position:relative;width:100%;min-width:240px;touch-action:manipulation}.ka-cells{position:absolute;inset:0;display:grid;padding:2px}

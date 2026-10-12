@@ -4,7 +4,20 @@ import { solveJuosan } from "./juosan-solve.ts";
 import { isKazuSeed } from "./random.ts";
 import type { JuosanBoard, JuosanLevel, JuosanMark, JuosanPuzzle } from "./juosan.types.ts";
 
-/** Makes an original small training puzzle and returns it only after uniqueness is proved. */
+/** Makes an original small training puzzle and returns it only after uniqueness is proved.
+ *
+ * @param width - The supported board width in cells.
+ * @param height - The supported board height in cells.
+ * @param level - The requested native difficulty tier.
+ * @param seed - The reproducible native puzzle seed.
+ * @returns Makes an original small training puzzle and returns it only after uniqueness is proved.
+ * @example
+ * ```ts no-run
+ * import { generateJuosan } from "@johnmorrisdotca/kazu/juosan";
+ *
+ * console.log(generateJuosan(3,2,"easy",42));
+ * ```
+ */
 export function generateJuosan(
   width = 3,
   height = 2,

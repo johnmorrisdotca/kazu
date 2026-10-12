@@ -3,7 +3,20 @@ import type { AkariBoard } from "./akari.types.ts";
 import type { AkariDrawOptions } from "./akari-play.types.ts";
 import { akariWords } from "./akari-strings.ts";
 
-/** Draws the public clues and current bulbs as SVG. */
+/** Draws the public clues and current bulbs as SVG.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Draws the public clues and current bulbs as SVG.
+ * @example
+ * ```ts
+ * import type { AkariBoard } from "@johnmorrisdotca/kazu/akari";
+ * import { drawAkari } from "@johnmorrisdotca/kazu/akari";
+ *
+ * const akariBoard: AkariBoard = {"width":5,"height":5,"cells":[1,null,null,null,null,0,null,null,null,0,1,0,null,null,null,null,false,null,null,null,null,false,null,null,2]};
+ * console.log(drawAkari(akariBoard).startsWith("<svg"));
+ * ```
+ */
 export function drawAkari(board: AkariBoard, options: AkariDrawOptions = {}): string {
   if (!isAkariBoard(board)) throw new RangeError("Invalid Akari board");
 

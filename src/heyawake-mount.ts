@@ -6,6 +6,24 @@ import { HEYAWAKE_PLAY_STYLE } from "./heyawake-style.ts";
 import { heyawakeWords } from "./heyawake-strings.ts";
 import type { HeyawakeDrawOptions, HeyawakeMount, HeyawakeMountOptions } from "./heyawake-play.types.ts";
 
+/** Mount the native Heyawake player in a host element and return its cleanup and control handle.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mount the native Heyawake player in a host element and return its cleanup and control handle.
+ * @example
+ * ```ts no-run
+ * import type { HeyawakeBoard } from "@johnmorrisdotca/kazu/heyawake";
+ * import { mountHeyawake } from "@johnmorrisdotca/kazu/heyawake";
+ *
+ * const heyawakeBoard: HeyawakeBoard = {"width":5,"height":5,"rooms":[{"x":0,"y":0,"width":1,"height":1,"blacks":0},{"x":0,"y":1,"width":1,"height":2,"blacks":0},{"x":0,"y":3,"width":1,"height":2,"blacks":1},{"x":1,"y":0,"width":1,"height":4,"blacks":1},{"x":1,"y":4,"width":1,"height":1,"blacks":0},{"x":2,"y":0,"width":3,"height":5,"blacks":3}]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountHeyawake(host,{board:heyawakeBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountHeyawake(host: HTMLElement, initial: HeyawakeMountOptions): HeyawakeMount {
   if (!isHeyawakeBoard(initial.board)) throw new RangeError("Invalid Heyawake board");
   const doc = host.ownerDocument;

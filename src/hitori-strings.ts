@@ -1,5 +1,14 @@
 import type { HitoriLanguage } from "./hitori-play.types.ts";
 
+/** Native English and Japanese labels and announcements for Hitori.
+ *
+ * @example
+ * ```ts
+ * import { HITORI_STRINGS } from "@johnmorrisdotca/kazu/hitori/play";
+ *
+ * console.log(Object.keys(HITORI_STRINGS.en));
+ * ```
+ */
 export const HITORI_STRINGS = {
   en: {
     title: "Hitori",

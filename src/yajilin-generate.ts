@@ -200,7 +200,18 @@ function edgesFromLoop(board: YajilinBoard, loop: readonly number[]): number[] {
   }).sort((a, b) => a - b);
 }
 
-/** Seeded original 5×5 families, accepted only after a completed uniqueness proof. */
+/** Seeded original 5×5 families, accepted only after a completed uniqueness proof.
+ *
+ * @param size - The supported square board side length.
+ * @param seed - The reproducible native puzzle seed.
+ * @returns Seeded original 5×5 families, accepted only after a completed uniqueness proof.
+ * @example
+ * ```ts no-run
+ * import { generateYajilin } from "@johnmorrisdotca/kazu/yajilin";
+ *
+ * console.log(generateYajilin(5,42));
+ * ```
+ */
 export function generateYajilin(size: 5 = 5, seed = 1): YajilinPuzzle {
   if (size !== 5 || !isKazuSeed(seed)) throw new RangeError("Invalid Yajilin settings");
   const random = seededRandom(seed), layout = layouts[Math.floor(random() * layouts.length)]!;

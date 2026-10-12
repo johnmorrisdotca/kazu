@@ -4,7 +4,21 @@ import { regionsModel } from "./regions-logic.ts";
 import { decide, openSlots, solveCsp } from "./csp.ts";
 import type { RegionsBoard, RegionsSolve } from "./regions.types.ts";
 
-/** Counts completed partitions. `complete` is false when a bound, including the answer limit, stops search. */
+/** Counts completed partitions. `complete` is false when a bound, including the answer limit, stops search.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param entries - Current row-major entries; omit to search from printed clues.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Counts completed partitions. `complete` is false when a bound, including the answer limit, stops search.
+ * @example
+ * ```ts
+ * import type { RegionsBoard } from "@johnmorrisdotca/kazu/regions";
+ * import { solveRegions } from "@johnmorrisdotca/kazu/regions";
+ *
+ * const regionsBoard: RegionsBoard = {"width":5,"height":5,"givens":[0,0,2,0,3,2,0,3,0,0,0,3,0,0,1,3,1,0,1,2,3,3,4,0,0]};
+ * console.log(solveRegions(regionsBoard,undefined,{limit:2,nodes:20000}));
+ * ```
+ */
 export function solveRegions(
   board: RegionsBoard,
   entries: readonly number[] = board.givens,

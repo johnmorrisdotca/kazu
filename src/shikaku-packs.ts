@@ -1,7 +1,27 @@
 import { generateShikaku } from "./shikaku-generate.ts";
 import type { ShikakuLevel, ShikakuPuzzle } from "./shikaku.types.ts";
 
+/** One of the square, wide or tall native Shikaku challenge routes.
+ *
+ * @example
+ * ```ts
+ * import type { ShikakuPackKey } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const value: ShikakuPackKey = "square";
+ * console.log(value);
+ * ```
+ */
 export type ShikakuPackKey = "square" | "wide" | "tall";
+/** The named route, board shape, difficulty and seed of one Shikaku challenge.
+ *
+ * @example
+ * ```ts
+ * import type { ShikakuChallenge } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const value: ShikakuChallenge = {pack:"square",packTitle:"The Courtyard",name:"First Cut",level:"easy",width:7,height:7,seed:1};
+ * console.log(value);
+ * ```
+ */
 export type ShikakuChallenge = {
   pack: ShikakuPackKey;
   packTitle: string;
@@ -11,9 +31,28 @@ export type ShikakuChallenge = {
   height: number;
   seed: number;
 };
+/** A named Shikaku challenge paired with its generated unique puzzle.
+ *
+ * @example
+ * ```ts no-run
+ * import type { ShikakuChallengePuzzle } from "@johnmorrisdotca/kazu/shikaku";
+ * import { generateShikakuChallenge } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const value: ShikakuChallengePuzzle = generateShikakuChallenge("square",1);
+ * console.log(value);
+ * ```
+ */
 export type ShikakuChallengePuzzle = ShikakuChallenge & { puzzle: ShikakuPuzzle };
 
-/** Three short, named challenge routes using the regular seeded unique-puzzle generator. */
+/** Three short, named challenge routes using the regular seeded unique-puzzle generator.
+ *
+ * @example
+ * ```ts
+ * import { SHIKAKU_CHALLENGE_PACKS } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * console.log(Object.keys(SHIKAKU_CHALLENGE_PACKS));
+ * ```
+ */
 export const SHIKAKU_CHALLENGE_PACKS: Readonly<Record<ShikakuPackKey, {
   title: string;
   description: string;
@@ -35,6 +74,18 @@ export const SHIKAKU_CHALLENGE_PACKS: Readonly<Record<ShikakuPackKey, {
   },
 };
 
+/** Generate a seeded Shikaku puzzle with a verified unique answer; unsupported inputs or exhausted attempts throw.
+ *
+ * @param pack - The square, wide or tall named challenge route.
+ * @param challenge - The one-based challenge number within the route.
+ * @returns Generate a seeded Shikaku puzzle with a verified unique answer; unsupported inputs or exhausted attempts throw.
+ * @example
+ * ```ts no-run
+ * import { generateShikakuChallenge } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * console.log(generateShikakuChallenge("square",1));
+ * ```
+ */
 export function generateShikakuChallenge(pack: ShikakuPackKey, challenge = 1): ShikakuChallengePuzzle {
   const definition = SHIKAKU_CHALLENGE_PACKS[pack], entry = definition?.challenges[challenge - 1];
   if (!definition || !entry) throw new RangeError("Unknown Shikaku challenge");

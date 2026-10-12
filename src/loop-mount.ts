@@ -23,7 +23,24 @@ import type {
 } from "./loop-play.types.ts";
 import type { LoopBoard } from "./loop.types.ts";
 
-/** Mounts an accessible dot-and-edge loop player in the given host element. */
+/** Mounts an accessible dot-and-edge loop player in the given host element.
+ *
+ * @param host - The DOM host receiving the native player.
+ * @param initial - The valid board, optional native progress, appearance and callbacks.
+ * @returns Mounts an accessible dot-and-edge loop player in the given host element.
+ * @example
+ * ```ts no-run
+ * import type { LoopBoard } from "@johnmorrisdotca/kazu/loop";
+ * import { mountLoop } from "@johnmorrisdotca/kazu/loop";
+ *
+ * const loopBoard: LoopBoard = {"width":5,"height":5,"clues":[2,3,1,null,null,3,1,1,null,null,3,2,2,null,null,3,0,2,2,null,2,2,1,2,3]};
+ * const host = document.createElement("div");
+ * document.body.append(host);
+ * const player = mountLoop(host,{board:loopBoard});
+ * console.log(player.progress());
+ * player.destroy();
+ * ```
+ */
 export function mountLoop(host: HTMLElement, initial: LoopMountOptions): LoopMount {
   const doc = host.ownerDocument;
   let options = { ...initial };

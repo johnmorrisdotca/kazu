@@ -4,7 +4,21 @@ import { shikakuModel } from "./shikaku-logic.ts";
 import { decide, openSlots, solveCsp } from "./csp.ts";
 import type { ShikakuBoard, ShikakuRectangle, ShikakuSolve } from "./shikaku.types.ts";
 
-/** Exact cover over squares. A bounded search reports incompleteness instead of claiming uniqueness. */
+/** Exact cover over squares. A bounded search reports incompleteness instead of claiming uniqueness.
+ *
+ * @param board - The valid native board with its printed clues and dimensions.
+ * @param placed - Rectangles already placed, to constrain the remaining search.
+ * @param options - Solution/node limits or native SVG choices specified by the signature.
+ * @returns Exact cover over squares. A bounded search reports incompleteness instead of claiming uniqueness.
+ * @example
+ * ```ts
+ * import type { ShikakuBoard } from "@johnmorrisdotca/kazu/shikaku";
+ * import { solveShikaku } from "@johnmorrisdotca/kazu/shikaku";
+ *
+ * const shikakuBoard: ShikakuBoard = {"width":5,"height":5,"clues":[3,0,0,0,2,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,4,3,6,0,0]};
+ * console.log(solveShikaku(shikakuBoard,[],{limit:2,nodes:20000}));
+ * ```
+ */
 export function solveShikaku(board: ShikakuBoard, placed: readonly ShikakuRectangle[] = [],
   options: { limit?: number; nodes?: number } = {}): ShikakuSolve {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");

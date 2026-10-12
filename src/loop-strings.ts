@@ -1,5 +1,14 @@
 import type { LoopLanguage } from "./loop-play.types.ts";
 
+/** Native English and Japanese labels and announcements for Loop.
+ *
+ * @example
+ * ```ts
+ * import { LOOP_STRINGS } from "@johnmorrisdotca/kazu/loop/play";
+ *
+ * console.log(Object.keys(LOOP_STRINGS.en));
+ * ```
+ */
 export const LOOP_STRINGS = {
   en: {
     title: "Loop",

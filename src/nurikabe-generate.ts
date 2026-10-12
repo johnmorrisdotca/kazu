@@ -10,7 +10,17 @@ const originals = [
   { clues: [0,0,0,0,1,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,2,0,6,0], solution: [false,true,true,true,false,false,true,false,true,true,false,true,false,false,true,true,true,true,false,true,false,false,true,false,false] },
   { clues: [0,0,0,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,5,0,1,0,0,0], solution: [true,true,true,false,true,true,false,false,true,true,true,false,true,true,false,true,true,true,false,false,true,false,true,false,false] },
 ];
-/** Seeded symmetries of original 5×5 layouts are returned only after the solver proves uniqueness. */
+/** Seeded symmetries of original 5×5 layouts are returned only after the solver proves uniqueness.
+ *
+ * @param seed - The reproducible native puzzle seed.
+ * @returns Seeded symmetries of original 5×5 layouts are returned only after the solver proves uniqueness.
+ * @example
+ * ```ts no-run
+ * import { generateNurikabe } from "@johnmorrisdotca/kazu/nurikabe";
+ *
+ * console.log(generateNurikabe(42));
+ * ```
+ */
 export function generateNurikabe(seed = 1): NurikabePuzzle {
   if (!isKazuSeed(seed)) throw new RangeError("Invalid Nurikabe seed");
   const random = seededRandom(seed), sample = originals[Math.floor(random() * originals.length)]!, rotation = Math.floor(random() * 4), reflect = random() < 0.5;

@@ -9,6 +9,20 @@ import type { KazuKind } from "./kinds.ts";
  * step back. Every function returns a new game and leaves the one it was given as it was, so a page
  * can keep them as its history, and a server can replay a solve with no page at all. `mountKazu`
  * is these functions with a drawing and a finger on them.
+ *
+ * @example
+ * ```ts
+ * import type { KazuGame, KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * const value: KazuGame = game;
+ * console.log(value);
+ * ```
  */
 export type KazuGame = {
   kind: KazuKind;
@@ -25,6 +39,22 @@ export type KazuGame = {
   past: readonly { entries: readonly number[]; notes: readonly number[] }[];
 };
 
+/** Optional entries and pencil-note masks to restore when creating a native number-grid game.
+ *
+ * @example
+ * ```ts
+ * import type { KazuGameOptions, KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * const value: KazuGameOptions = {entries:game.entries,notes:game.notes};
+ * console.log(value);
+ * ```
+ */
 export type KazuGameOptions = {
   /** Entries to start from: a run kept half done (`decodeRun`). Printed cells are ignored. */
   entries?: readonly number[];
@@ -35,7 +65,25 @@ export type KazuGameOptions = {
 /** The most steps Undo goes back. */
 const UNDO_MOST = 1000;
 
-/** A game of a puzzle, or null for givens that are not a puzzle of that kind and side. */
+/** A game of a puzzle, or null for givens that are not a puzzle of that kind and side.
+ *
+ * @param kind - The native number-grid puzzle key.
+ * @param size - The supported square grid side length.
+ * @param givens - The original native printed-clue code.
+ * @param options - Native drawing or restored-game choices.
+ * @returns A game of a puzzle, or null for givens that are not a puzzle of that kind and side.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * console.log(newKazuGame(kind,size,givens)?.entries.length);
+ * ```
+ */
 export function newKazuGame(kind: KazuKind, size: number, givens: string, options: KazuGameOptions = {}): KazuGame | null {
   const printed = readGivens(kind, size, givens);
   if (printed === null) return null;
@@ -45,12 +93,45 @@ export function newKazuGame(kind: KazuKind, size: number, givens: string, option
   return { kind, size, givens, printed, entries, notes, past: [] };
 }
 
-/** The whole grid as it stands: the printed numbers, and the player's where nothing is printed. */
+/** The whole grid as it stands: the printed numbers, and the player's where nothing is printed.
+ *
+ * @param game - The current immutable number-grid game.
+ * @returns The whole grid as it stands: the printed numbers, and the player's where nothing is printed.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { newKazuGame, valuesOf } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * console.log(valuesOf(game));
+ * ```
+ */
 export function valuesOf(game: KazuGame): number[] {
   return game.printed.cells.map((printed, index) => (printed !== 0 ? printed : game.entries[index]!));
 }
 
-/** Whether a cell was printed with its number: it never changes. */
+/** Whether a cell was printed with its number: it never changes.
+ *
+ * @param game - The current immutable number-grid game.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Whether a cell was printed with its number: it never changes.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { isPrinted, newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * console.log(isPrinted(game,0));
+ * ```
+ */
 export function isPrinted(game: KazuGame, cell: number): boolean {
   return game.printed.cells[cell] !== 0;
 }
@@ -83,6 +164,29 @@ function peersOf(game: KazuGame, cell: number): Set<number> {
  * the number comes out of the pencil marks of every cell that shares a group with it, as a person
  * with a pencil would rub it out. Nothing happens to a printed cell, or when the cell already holds
  * that number.
+ *
+ * @param game - The current immutable number-grid game.
+ * @param cell - A zero-based row-major cell index.
+ * @param value - The value to validate, encode or enter specified by this signature.
+ * @param tidy - Whether to clear notes affected by the entered number.
+ * @returns Write a number into a cell (0 empties it). Its own pencil marks go, and with `tidy` (the default) the number comes out of the pencil marks of every cell that shares a group with it, as a person with a pencil would rub it out. Nothing happens to a printed cell, or when the cell already holds that number.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeCells, enterNumber, newKazuGame, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const solution = decodeCells(answer,size)!;
+ * const game = newKazuGame(kind,size,givens)!;
+ * const blank = cells.findIndex(value=>value===0);
+ * console.log(enterNumber(game,blank,solution[blank]).entries[blank]);
+ * ```
  */
 export function enterNumber(game: KazuGame, cell: number, value: number, tidy = true): KazuGame {
   if (cell < 0 || cell >= game.size * game.size || isPrinted(game, cell) || !Number.isInteger(value) || value < 0 || value > game.size) return game;
@@ -95,7 +199,28 @@ export function enterNumber(game: KazuGame, cell: number, value: number, tidy = 
   return remembered(game, entries, notes);
 }
 
-/** Turn the pencil mark `value` on or off in a cell. Nothing happens to a printed cell or a cell that holds a number. */
+/** Turn the pencil mark `value` on or off in a cell. Nothing happens to a printed cell or a cell that holds a number.
+ *
+ * @param game - The current immutable number-grid game.
+ * @param cell - A zero-based row-major cell index.
+ * @param value - The value to validate, encode or enter specified by this signature.
+ * @returns Turn the pencil mark `value` on or off in a cell. Nothing happens to a printed cell or a cell that holds a number.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { newKazuGame, readGivens, toggleNote } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const game = newKazuGame(kind,size,givens)!;
+ * const blank = cells.findIndex(value=>value===0);
+ * console.log(toggleNote(game,blank,1).notes[blank]);
+ * ```
+ */
 export function toggleNote(game: KazuGame, cell: number, value: number): KazuGame {
   if (cell < 0 || cell >= game.size * game.size || isPrinted(game, cell) || game.entries[cell] !== 0 || !Number.isInteger(value) || value < 1 || value > game.size) return game;
   const notes = [...game.notes];
@@ -103,7 +228,29 @@ export function toggleNote(game: KazuGame, cell: number, value: number): KazuGam
   return remembered(game, game.entries, notes);
 }
 
-/** Empty a cell of its number and its pencil marks. */
+/** Empty a cell of its number and its pencil marks.
+ *
+ * @param game - The current immutable number-grid game.
+ * @param cell - A zero-based row-major cell index.
+ * @returns Empty a cell of its number and its pencil marks.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { clearCell, decodeCells, enterNumber, newKazuGame, readGivens } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const solution = decodeCells(answer,size)!;
+ * const game = newKazuGame(kind,size,givens)!;
+ * const blank = cells.findIndex(value=>value===0);
+ * console.log(clearCell(enterNumber(game,blank,solution[blank]),blank).entries[blank]);
+ * ```
+ */
 export function clearCell(game: KazuGame, cell: number): KazuGame {
   if (cell < 0 || cell >= game.size * game.size || isPrinted(game, cell) || (game.entries[cell] === 0 && game.notes[cell] === 0)) return game;
   const entries = [...game.entries];
@@ -113,39 +260,161 @@ export function clearCell(game: KazuGame, cell: number): KazuGame {
   return remembered(game, entries, notes);
 }
 
-/** Take back the last change. The same game when there is nothing to take back. */
+/** Take back the last change. The same game when there is nothing to take back.
+ *
+ * @param game - The current immutable number-grid game.
+ * @returns Take back the last change. The same game when there is nothing to take back.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeCells, enterNumber, newKazuGame, readGivens, undoKazu } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const solution = decodeCells(answer,size)!;
+ * const game = newKazuGame(kind,size,givens)!;
+ * const blank = cells.findIndex(value=>value===0);
+ * console.log(undoKazu(enterNumber(game,blank,solution[blank])).entries[blank]);
+ * ```
+ */
 export function undoKazu(game: KazuGame): KazuGame {
   const last = game.past.at(-1);
   return last === undefined ? game : { ...game, entries: last.entries, notes: last.notes, past: game.past.slice(0, -1) };
 }
 
-/** Start again: every entry and pencil mark gone, and nothing to undo. */
+/** Start again: every entry and pencil mark gone, and nothing to undo.
+ *
+ * @param game - The current immutable number-grid game.
+ * @returns Start again: every entry and pencil mark gone, and nothing to undo.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { decodeCells, enterNumber, newKazuGame, readGivens, restartKazu } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const answer = puzzle.solution;
+ * const printed = readGivens(kind,size,givens)!;
+ * const cells = printed.cells;
+ * const solution = decodeCells(answer,size)!;
+ * const game = newKazuGame(kind,size,givens)!;
+ * const blank = cells.findIndex(value=>value===0);
+ * console.log(restartKazu(enterNumber(game,blank,solution[blank])).entries[blank]);
+ * ```
+ */
 export function restartKazu(game: KazuGame): KazuGame {
   return { ...game, entries: game.entries.map(() => 0), notes: game.notes.map(() => 0), past: [] };
 }
 
-/** How far along it is: cells with a number (printed or written) out of all of them. */
+/** How far along it is: cells with a number (printed or written) out of all of them.
+ *
+ * @param game - The current immutable number-grid game.
+ * @returns How far along it is: cells with a number (printed or written) out of all of them.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { kazuProgress, newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * console.log(kazuProgress(game));
+ * ```
+ */
 export function kazuProgress(game: KazuGame): { filled: number; total: number } {
   const values = valuesOf(game);
   return { filled: values.filter((value) => value !== 0).length, total: values.length };
 }
 
-/** The whole grid as a cells code: what `checkKazu` takes as an answer. */
+/** The whole grid as a cells code: what `checkKazu` takes as an answer.
+ *
+ * @param game - The current immutable number-grid game.
+ * @returns The whole grid as a cells code: what `checkKazu` takes as an answer.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { answerOf, newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * console.log(answerOf(game));
+ * ```
+ */
 export function answerOf(game: KazuGame): string {
   return encodeCells(valuesOf(game));
 }
 
-/** Whether the grid is full and right, by the rules alone (`checkKazu`): every puzzle has exactly one answer, so a grid that keeps every rule IS that answer. */
+/** Whether the grid is full and right, by the rules alone (`checkKazu`): every puzzle has exactly one answer, so a grid that keeps every rule IS that answer.
+ *
+ * @param game - The current immutable number-grid game.
+ * @returns Whether the grid is full and right, by the rules alone (`checkKazu`): every puzzle has exactly one answer, so a grid that keeps every rule IS that answer.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { isSolved, newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * console.log(isSolved(game));
+ * ```
+ */
 export function isSolved(game: KazuGame): boolean {
   return kazuProgress(game).filled === game.size * game.size && checkKazu(game.kind, game.size, game.givens, answerOf(game)).ok;
 }
 
-/** The cells that break a rule now (`conflictsOf`). */
+/** The cells that break a rule now (`conflictsOf`).
+ *
+ * @param game - The current immutable number-grid game.
+ * @returns The cells that break a rule now (`conflictsOf`).
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { gameConflicts, newKazuGame } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * console.log(gameConflicts(game));
+ * ```
+ */
 export function gameConflicts(game: KazuGame): number[] {
   return conflictsOf(game.printed, valuesOf(game));
 }
 
-/** The numbers 1 up to the side, each with how many of it are on the grid: a pad greys a number that is all placed. */
+/** The numbers 1 up to the side, each with how many of it are on the grid: a pad greys a number that is all placed.
+ *
+ * @param game - The current immutable number-grid game.
+ * @returns The numbers 1 up to the side, each with how many of it are on the grid: a pad greys a number that is all placed.
+ * @example
+ * ```ts
+ * import type { KazuPuzzle } from "@johnmorrisdotca/kazu";
+ * import { newKazuGame, numberCounts } from "@johnmorrisdotca/kazu";
+ *
+ * const puzzle: KazuPuzzle = {"kind":"number-place","size":4,"level":"easy","seed":42,"givens":"14..2..1412.3..4","solution":"1432234141233214"};
+ * const kind = puzzle.kind;
+ * const size = puzzle.size;
+ * const givens = puzzle.givens;
+ * const game = newKazuGame(kind,size,givens)!;
+ * console.log(numberCounts(game));
+ * ```
+ */
 export function numberCounts(game: KazuGame): number[] {
   const counts = new Array<number>(game.size + 1).fill(0);
   for (const value of valuesOf(game)) if (value !== 0) counts[value]! += 1;
