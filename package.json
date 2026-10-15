@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/kazu",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Kazu 数 — Sudoku and grid number puzzles: Sudoku and its variants, Futoshiki, Skyscrapers, Cross Sums, Loop, Nurikabe and more. Typed engines, checked seeded puzzles, SVG boards and bilingual players. Zero runtime dependencies.",
   "keywords": [
     "akari",

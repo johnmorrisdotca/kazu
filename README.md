@@ -9,7 +9,7 @@ Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshik
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
-  <a href="https://johnmorrisdotca.github.io/kazu/docs/api/main/index.html"><img alt="64.5 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-64.5%20kB-2f5d4a"></a>
+  <a href="https://johnmorrisdotca.github.io/kazu/docs/api/main/index.html"><img alt="64.8 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-64.8%20kB-2f5d4a"></a>
   <a href="https://www.npmjs.com/package/@johnmorrisdotca/kazu#provenance"><img alt="Published with npm provenance" src="https://img.shields.io/badge/npm-provenance-2f5d4a"></a>
 </p>
 
@@ -597,39 +597,10 @@ only one place left in a row, column, box, region or diagonal (`only-place`). Wh
 step, which a hard puzzle asks for, it says so (`answer`). `mountKazu` puts the reason into words.
 ## Drawing a puzzle
 
-```ts no-check
-import { drawKazu, KAZU_STYLE } from "@johnmorrisdotca/kazu/draw";
+<!-- moved: docs/DRAWING.md -->
 
-const svg = drawKazu("sum-cages", 9, givens, { entries, notes, selected: 40, peers: true, conflicts: [3, 4], language: "ja" });
-```
+`drawKazu(kind, size, givens, options)` returns SVG text for any of the puzzles, with its printed numbers and whatever has been written, and nothing to load. [Drawing a puzzle](docs/DRAWING.md#drawing-a-puzzle) has the options, the classes and data attributes to style it, and `kazuGeometry`.
 
-`drawKazu` returns SVG text: put it in a page, a file or an image, with nothing to load. It draws the grid with
-its printed numbers and whatever has been written, pencil marks in a small grid in the cell, the heavier rules
-round boxes or a Jigsaw's regions, the shaded diagonals, a cage's dashed outline with its sum in the corner,
-the more-than marks as chevrons between cells, and the clues of a Towers puzzle round the edge. Null for givens
-that are not a puzzle.
-
-| Option | What it does |
-| --- | --- |
-| `entries` | what the player has written, row-major, 0 for empty |
-| `notes` | pencil marks, a bit mask a cell: bit `v` is the note `v` |
-| `selected`, `peers` | the chosen cell, and with `peers` its row, column and group and every cell holding its number washed |
-| `conflicts` | cells that break a rule, in red with their numbers (`conflictsOf` finds them from the rules alone) |
-| `wrong`, `hint` | the cells Check flagged, and the cell a hint pointed at |
-| `done` | a faint wash of green, and `data-solved="true"` |
-| `interactive` | a transparent square over every cell with its `data-cell`, for a page to press on (`mountKazu` does) |
-| `language`, `label` | what a screen reader hears, and a description instead of "Sudoku puzzle, 9 by 9" |
-| `style`, `frame` | `style: true` puts `KAZU_STYLE` inside, so the drawing stands alone as an image; `frame` draws a wooden frame round the paper |
-
-Generic colours, no branding: every colour is a custom property on `.kazu` (`--kz-paper`, `--kz-ink`,
-`--kz-given`, `--kz-entry`, `--kz-note`, `--kz-grid`, `--kz-box`, `--kz-frame`, `--kz-cage`, `--kz-clue`,
-`--kz-diagonal`, `--kz-peer`, `--kz-same`, `--kz-select`, `--kz-hint`, `--kz-conflict`, `--kz-wrong`,
-`--kz-good`), so a page sets only what it wants different, and the paper follows the page's light or dark. The parts carry classes
-and data attributes to style or find them: `kz-given`, `kz-entry`, `kz-note`, `kz-cage-sum`, `kz-clue`, `kz-mark`,
-`kz-conflict`, `kz-hit` (`data-cell`). It is one steady square whatever is drawn, so nothing moves as numbers
-are written, and nothing in it can be selected, dragged or double-tapped into a selection.
-`kazuGeometry(kind, size)` says where every cell is in the drawing and which cell a point is over, so a page of
-your own can play it.
 ## Playing it in a page
 
 <!-- moved: docs/PLAYING.md -->
@@ -879,7 +850,7 @@ Using Kazu in something? Open an *Add my project* issue and we will add you.
 ### The family
 
 <!-- family:start (made by scripts/family-readme.mjs from scripts/family-template.mjs; change those, not this) -->
-Kazu is one of twenty-eight packages, each made for the same site, each at
+Kazu is one of thirty-two packages, each made for the same site, each at
 [github.com/johnmorrisdotca](https://github.com/johnmorrisdotca) or [github.com/spxis](https://github.com/spxis). The code of every one is MIT.
 
 **Games — board**
@@ -927,12 +898,19 @@ Kazu is one of twenty-eight packages, each made for the same site, each at
 - [Hata](https://github.com/johnmorrisdotca/hata) (旗): country and regional flags as SVG, at their true proportions and keyed by ISO code. [Demo](https://johnmorrisdotca.github.io/hata/).
 - [Kuni](https://github.com/johnmorrisdotca/kuni) (国): countries and their regions, with ISO codes and names in English and Japanese. [Demo](https://johnmorrisdotca.github.io/kuni/).
 
+**Sports**
+
+- [Dougu Sports](https://github.com/johnmorrisdotca/dougu-sports) (道具): sports emblems as SVG: trophies, medals, crests, and the ball and gear of every sport, with optional 3D turning. [Demo](https://johnmorrisdotca.github.io/dougu-sports/).
+- [Kyogijo Stadiums](https://github.com/johnmorrisdotca/kyogijo-stadiums) (競技場): sports fields, rinks, courts and ballparks drawn to scale as SVG, with each team and the score on them. [Demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/).
+- [Senshu Jerseys](https://github.com/johnmorrisdotca/senshu-jerseys) (選手): sports jerseys, sweaters, kits, caps, helmets and retired-number banners as SVG, front and back, with optional 2.5D turning. [Demo](https://johnmorrisdotca.github.io/senshu-jerseys/).
+- [Taisen Brackets](https://github.com/johnmorrisdotca/taisen-brackets) (対戦): a sport-agnostic tournament bracket, drawn as SVG, from a list of ties. [Demo](https://johnmorrisdotca.github.io/taisen-brackets/).
+
 **Developer tools**
 
 - [REST in Pieces](https://github.com/spxis/rest-in-pieces) (レスト・イン・ピーシーズ): seeded test data and REST APIs for frontend development, with latency and error drills. [Demo](https://spxis.github.io/rest-in-pieces/).
 
 
-**This package is Kazu.** The demos of all twenty-eight share one header and footer, so each links the rest.
+**This package is Kazu.** The demos of all thirty-two share one header and footer, so each links the rest.
 <!-- family:end -->
 ## Development
 
@@ -953,7 +931,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). The commands are under [Development](#
 Please follow the [code of conduct](./CODE_OF_CONDUCT.md). A way to make the check or the solver run for long, or markup that gets out of the drawing, is for the [security policy](./SECURITY.md), not a public issue.
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The latest release, 2.0.1, adds no code: it is this README in full, with pictures of every puzzle, examples that are run on every change, an Accessibility section, and the reference for the puzzles with a page of their own moved to pages under `docs/`.
+See [CHANGELOG.md](./CHANGELOG.md). The latest release, 2.1.0, adds the puzzle boards' standard embed attributes, the shared embed builder, and the documentation site with a checked example for every export.
 
 ## Licence
 

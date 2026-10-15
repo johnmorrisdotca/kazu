@@ -6,4 +6,4 @@
  * console.log(VERSION);
  * ```
  */
-export const VERSION = "2.0.1";
+export const VERSION = "2.1.0";

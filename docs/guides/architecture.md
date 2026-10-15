@@ -9,7 +9,7 @@ description: "Keep rules, seeded puzzles and players in their native layers."
 
 The rules are plain functions over strings with no DOM; the drawing is a separate entry, so a server that only checks answers never loads it; and each puzzle has its own engine, drawing and player in its own entry. Tests sit beside the code they test. [Architecture](../ARCHITECTURE.md#architecture) lists every source file and what it does.
 
-The complete [source tree](../ARCHITECTURE.md) stays in its established page. The README's moved-section markers are preserved so existing upkeep checks can reconstruct the full reference. No public engine or generated puzzle data changes in this documentation rollout.
+The complete [source tree](../ARCHITECTURE.md) stays in its established page. The README's moved-section markers are preserved so existing upkeep checks can reconstruct the full reference.
 
 ## Constraints and search
 

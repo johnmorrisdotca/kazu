@@ -7,7 +7,7 @@ import "./dist/element-define.js";
 import { familyEmbedBuilder, FAMILY_EMBED_BUILDER_WORDS } from "./family-embed-builder.js";
 const words = {
   en: {
-    ...FAMILY_EMBED_BUILDER_WORDS.en,pageDocs:"Docs",pageApi:"API reference",
+    ...FAMILY_EMBED_BUILDER_WORDS.en,pageDocs:"Docs",pageApi: "API",
     pitch: "Choose a number puzzle or a UTC daily puzzle, preview it, and copy the code for your page.",
     name: "Kazu means number in Japanese.",
     nameLink: "About the name",
@@ -23,14 +23,14 @@ const words = {
   ja: {
     ...FAMILY_EMBED_BUILDER_WORDS.ja,pageDocs:"ドキュメント",pageApi:"API（英語）",
     pitch: "数のパズル、またはUTCの日替わり問題を選び、表示を確認して、ページに埋め込むコードをコピーできます。",
-    name: "「数」は英語の number に当たる日本語です。",
+    name: "「数」は英語のnumberに当たる日本語です。",
     nameLink: "名前について",
     foot: "設定はリンクに入ります。ゲームや個人情報は保存しません。",
     toGallery: "パズルの一覧",
     makerBoard: "盤",
     makerBoardSays: "6種類の数のパズルを、答えが1つになるようにシードから作ります。",
     copyLink: "このパズルへのリンクをコピー",
-    badDay: "実在する日付をYYYY-MM-DD形式で入力するか、today または off を指定してください。UTCの日付を使います。",
+    badDay: "実在する日付をYYYY-MM-DD形式で入力するか、todayまたはoffを指定してください。UTCの日付を使います。",
     badGrid: "この種類のパズルに対応する盤の大きさを選んでください。",
     badSeed: "表示された範囲の整数をシードに指定してください。"
   },

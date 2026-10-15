@@ -6,23 +6,24 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
-- Synchronize documentation tooling for repository layouts, generated type references, Node entry points and repository-specific README links.
+## [2.1.0] - 2026-10-14
 
-- Keep complete resource catalogues on the documentation entry index and the active resource beside core navigation; render valid default imports in HTML and Markdown.
-
-- Add the bilingual documentation site, checked public examples, paired guides, local search and machine-readable pages.
-
-- Add a shared builder and validated, storage-free iframe for seeded and UTC daily number puzzles.
-- Add display sizes, grid, width, theme and spoken label while retaining numeric size aliases and existing methods. Native events now cross shadow boundaries with JSON-safe detail.
+The puzzle boards are custom elements with the family's standard embed attributes and a shared builder, and the package has an English and Japanese documentation site with a checked example for every export. The rules, generators, puzzle codes and saved progress are unchanged.
 
 ### Added
 
+- Add the bilingual documentation site, checked public examples, paired guides, local search and machine-readable pages.
+- Add a shared builder and validated, storage-free iframe for seeded and UTC daily number puzzles.
+- Add display sizes, grid, width, theme and spoken label while retaining numeric size aliases and existing methods. Native events now cross shadow boundaries with JSON-safe detail.
 - Share a package-independent embed builder for option controls, preview adapters, code tabs and shareable links.
 
 ### Changed
 
+- The README's section on drawing a puzzle moved to `docs/DRAWING.md`, so that the README, which now lists the sports packages too, stays under npm's 65,536 characters; the README keeps a summary and a link.
+- The API link in the header reads "API" in English, so that the header takes the same number of rows in English and in Japanese on a phone, as the demo's test of a language change asks.
+- Synchronize documentation tooling for repository layouts, generated type references, Node entry points and repository-specific README links.
+- Keep complete resource catalogues on the documentation entry index and the active resource beside core navigation; render valid default imports in HTML and Markdown.
 - Group the package family by kind, alphabetize each group, and include the geography packages and REST in Pieces in the shared footer and README.
-
 - Update the shared family description for addresses in all seven supported countries, including France and Germany.
 
 ## [2.0.1] - 2026-10-06

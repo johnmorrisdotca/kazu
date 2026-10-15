@@ -4,7 +4,7 @@ let player;
 familyLanguage({
   id: "kazu",
   words: {
-    en: { pitch: "Shade the sea around numbered islands. Each island has the numbered area; sea cells connect and never form a 2×2 square.", name: "Kazu (数) is Japanese for number.", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "Nurikabe: islands and a connected sea." },
+    en: { pitch: "Shade the sea around numbered islands. Each island has the numbered area; sea cells connect and never form a 2×2 square.", name: "Kazu (数) is Japanese for number.", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API", foot: "Nurikabe: islands and a connected sea." },
     ja: { pitch: "数字の面積を持つ島の周りを海として塗ります。海はつながり、2×2の塗りつぶしを作りません。", name: "Kazu（数）は数字を表す言葉です。", nameLink: "名前について", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "ぬりかべ。島とつながる海のパズルです。" },
   },
   onChange: language => player?.set({ language }),

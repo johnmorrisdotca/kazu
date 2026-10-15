@@ -9,7 +9,7 @@ import { mountKazu } from "./dist/play-entry.js";
 // The page's own words, in the two languages it speaks. Set as text, never as HTML.
 const WORDS = {
   en: {
-    pageDocs: "Docs", pageApi: "API reference",
+    pageDocs: "Docs", pageApi: "API",
     pitch: "Six number puzzles on one square grid: Sudoku, Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Every puzzle has exactly one answer. Tap a cell, then a number; turn Pencil on to make notes; ask for a Hint to be told which cell to fill next, and why.",
     name: "Kazu (数) is Japanese for “number”, the everyday word, as in 数を数える, to count numbers.",
     nameLink: "About the name",

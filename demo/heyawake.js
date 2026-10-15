@@ -53,7 +53,7 @@ setInterval(() => {
   get("clock").textContent = `${language === "ja" ? "時間" : "Time"} ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }, 1000);
 const pageLanguage = familyLanguage({ id: "kazu", words: {
-  en: { pitch: "Heyawake: mark black cells in numbered rooms. Blacks cannot touch; whites stay connected and straight white runs span at most two rooms.", name: "Kazu (数) is Japanese for number. Heyawake is a room-and-cell logic puzzle.", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "Heyawake, a puzzle of rooms and connected white cells." },
+  en: { pitch: "Heyawake: mark black cells in numbered rooms. Blacks cannot touch; whites stay connected and straight white runs span at most two rooms.", name: "Kazu (数) is Japanese for number. Heyawake is a room-and-cell logic puzzle.", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API", foot: "Heyawake, a puzzle of rooms and connected white cells." },
   ja: { pitch: "へやわけ。部屋の黒マス数を手がかりに、黒マスを塗ります。黒マスは辺でつながらず、白マスは一続きで、白い直線は二部屋までです。", name: "Kazu（数）は数字のこと。へやわけは部屋とマスを使う推理パズルです。", nameLink: "名前について", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "へやわけ。部屋と白マスのつながりを考えるパズル。" }
 }, onChange: lang => { language = lang; translate(); if (handle) remember(handle.game()); } });
 language = pageLanguage.lang; translate();

@@ -3,167 +3,167 @@
   "entries": {
     ".": {
       "minified": 202872,
-      "gzip": 64524
+      "gzip": 64768
     },
     "./draw": {
       "minified": 42254,
-      "gzip": 12623
+      "gzip": 12723
     },
     "./play": {
       "minified": 82694,
-      "gzip": 27139
+      "gzip": 27337
     },
     "./element": {
       "minified": 85975,
-      "gzip": 27554
+      "gzip": 27706
     },
     "./element/define": {
       "minified": 85980,
-      "gzip": 27556
+      "gzip": 27707
     },
     "./shikaku": {
       "minified": 13233,
-      "gzip": 5271
+      "gzip": 5309
     },
     "./shikaku/play": {
       "minified": 19150,
-      "gzip": 7219
+      "gzip": 7311
     },
     "./shikaku/draw": {
       "minified": 5157,
-      "gzip": 2195
+      "gzip": 2227
     },
     "./hitori": {
       "minified": 10925,
-      "gzip": 4449
+      "gzip": 4475
     },
     "./hitori/play": {
       "minified": 15957,
-      "gzip": 6269
+      "gzip": 6344
     },
     "./hitori/draw": {
       "minified": 1377,
-      "gzip": 839
+      "gzip": 847
     },
     "./nurikabe": {
       "minified": 5344,
-      "gzip": 2234
+      "gzip": 2247
     },
     "./nurikabe/play": {
       "minified": 12971,
-      "gzip": 5229
+      "gzip": 5303
     },
     "./nurikabe/draw": {
       "minified": 1390,
-      "gzip": 839
+      "gzip": 847
     },
     "./akari": {
       "minified": 23462,
-      "gzip": 9006
+      "gzip": 9115
     },
     "./akari/play": {
       "minified": 18754,
-      "gzip": 7138
+      "gzip": 7228
     },
     "./akari/draw": {
       "minified": 5056,
-      "gzip": 2301
+      "gzip": 2337
     },
     "./juosan": {
       "minified": 15519,
-      "gzip": 6041
+      "gzip": 6094
     },
     "./juosan/play": {
       "minified": 14292,
-      "gzip": 5515
+      "gzip": 5568
     },
     "./juosan/draw": {
       "minified": 4338,
-      "gzip": 2003
+      "gzip": 2036
     },
     "./loop": {
       "minified": 29448,
-      "gzip": 11089
+      "gzip": 11226
     },
     "./loop/play": {
       "minified": 21982,
-      "gzip": 8215
+      "gzip": 8318
     },
     "./loop/draw": {
       "minified": 4923,
-      "gzip": 2190
+      "gzip": 2226
     },
     "./masyu": {
       "minified": 5984,
-      "gzip": 2544
+      "gzip": 2558
     },
     "./masyu/play": {
       "minified": 10524,
-      "gzip": 4463
+      "gzip": 4510
     },
     "./masyu/draw": {
       "minified": 3393,
-      "gzip": 1613
+      "gzip": 1637
     },
     "./yajilin": {
       "minified": 8674,
-      "gzip": 3226
+      "gzip": 3239
     },
     "./yajilin/play": {
       "minified": 12507,
-      "gzip": 5038
+      "gzip": 5085
     },
     "./yajilin/draw": {
       "minified": 3887,
-      "gzip": 1812
+      "gzip": 1839
     },
     "./ripple": {
       "minified": 21296,
-      "gzip": 8079
+      "gzip": 8162
     },
     "./ripple/play": {
       "minified": 17629,
-      "gzip": 6560
+      "gzip": 6617
     },
     "./ripple/draw": {
       "minified": 1930,
-      "gzip": 969
+      "gzip": 983
     },
     "./cross-sums": {
       "minified": 26728,
-      "gzip": 10339
+      "gzip": 10437
     },
     "./cross-sums/play": {
       "minified": 16518,
-      "gzip": 6715
+      "gzip": 6798
     },
     "./cross-sums/draw": {
       "minified": 3321,
-      "gzip": 1491
+      "gzip": 1514
     },
     "./regions": {
       "minified": 15433,
-      "gzip": 6374
+      "gzip": 6451
     },
     "./regions/play": {
       "minified": 15880,
-      "gzip": 6441
+      "gzip": 6529
     },
     "./regions/draw": {
       "minified": 4309,
-      "gzip": 1986
+      "gzip": 2028
     },
     "./heyawake": {
       "minified": 18149,
-      "gzip": 6990
+      "gzip": 7049
     },
     "./heyawake/play": {
       "minified": 14986,
-      "gzip": 5707
+      "gzip": 5763
     },
     "./heyawake/draw": {
       "minified": 3924,
-      "gzip": 1876
+      "gzip": 1896
     }
   }
 }

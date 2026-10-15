@@ -5,7 +5,7 @@ const get = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 let language = params.get("lang") === "ja" ? "ja" : "en", player;
 const words = {
-  en: { intro: "Draw a single loop through every pearl. Use the white and black pearls to work out where the line bends and goes straight.", seed: "Seed", material: "Board", pieces: "Pearls", new: "New puzzle", origin: "Masyu is a loop puzzle. These original boards are generated here; no Nikoli puzzle grids are used.", pitch: "Masyu: one loop passes through every pearl, obeying its straight and turn rules.", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "A loop puzzle with white and black pearls." },
+  en: { intro: "Draw a single loop through every pearl. Use the white and black pearls to work out where the line bends and goes straight.", seed: "Seed", material: "Board", pieces: "Pearls", new: "New puzzle", origin: "Masyu is a loop puzzle. These original boards are generated here; no Nikoli puzzle grids are used.", pitch: "Masyu: one loop passes through every pearl, obeying its straight and turn rules.", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API", foot: "A loop puzzle with white and black pearls." },
   ja: { intro: "すべての真珠を通る一つの輪を描きます。白と黒の真珠を手がかりに、直進と曲がり方を考えます。", seed: "シード", material: "盤の素材", pieces: "真珠", new: "新しい問題", origin: "ましゅは輪を描くパズルです。盤はここで作り、ニコリの問題図は使いません。", pitch: "ましゅ。白と黒の真珠のルールに従い、一つの輪ですべてを通ります。", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "白真珠と黒真珠を通る輪のパズル。" },
 };
 const labels = ["intro", "seed-label", "material-label", "pieces-label", "new", "origin"];

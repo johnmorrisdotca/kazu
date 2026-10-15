@@ -9,7 +9,7 @@ description: "Use the published version-2 names and preserve old native formats.
 
 Kazu's current public major is 2. [The changelog](../../CHANGELOG.md) records the actual 1→2 changes. Use the current kebab-case source/entry names (`number-place`, `sum-cages`, `cross-sums`, and named family `/draw`/`play` paths) shown in the exported reference. Existing site-kind camel names can be mapped through `KAZU_KIND_OF_SITE_KIND`; the native public puzzle keys stay explicit.
 
-This docs rollout changes comments, titles and navigation while preserving SDK behavior, package version and native puzzle values. Each direct family entry lets a host choose only its engine; importing the root exposes the larger family. Existing stored codes should be decoded through their matching native readers, not renamed or trimmed because a filename changed.
+Each direct family entry lets a host choose only its engine; importing the root exposes the larger family. Existing stored codes should be decoded through their matching native readers, not renamed or trimmed because a filename changed.
 
 ## Migrating another host
 

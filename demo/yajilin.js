@@ -5,7 +5,7 @@ const get = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 let language = params.get("lang") === "ja" ? "ja" : "en", player;
 const words = {
-  en: { intro: "Shade the cells each arrow counts, then draw one loop through every other unshaded cell.", seed: "Seed", material: "Board", pieces: "Clues", new: "New puzzle", origin: "Yajilin is a loop puzzle. These original boards are generated here; no Nikoli puzzle grids are used.", pitch: "Yajilin: match each arrow's shaded-cell count and draw one loop through every other open cell.", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "Arrows, shaded cells and a single loop." },
+  en: { intro: "Shade the cells each arrow counts, then draw one loop through every other unshaded cell.", seed: "Seed", material: "Board", pieces: "Clues", new: "New puzzle", origin: "Yajilin is a loop puzzle. These original boards are generated here; no Nikoli puzzle grids are used.", pitch: "Yajilin: match each arrow's shaded-cell count and draw one loop through every other open cell.", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API", foot: "Arrows, shaded cells and a single loop." },
   ja: { intro: "矢印が示す数だけマスを黒くし、残りの空きマスすべてを一つの輪にします。", seed: "シード", material: "盤の素材", pieces: "手がかり", new: "新しい問題", origin: "やじりんは輪を描くパズルです。盤はここで作り、ニコリの問題図は使いません。", pitch: "やじりん。矢印の数だけ黒くし、残りの空きマスを一つの輪にします。", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "矢印と黒マスで輪を描くパズル。" },
 };
 const labels = ["intro", "seed-label", "material-label", "pieces-label", "new", "origin"];

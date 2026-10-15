@@ -59,7 +59,7 @@ get("share").onclick = async () => {
   const url = `${location.origin}${location.pathname}?${params}`;
   try { await navigator.clipboard.writeText(url); get("notice").textContent = text[language].copied; } catch { get("notice").textContent = url; }
 };
-const family = familyLanguage({ id: "kazu", words: { en: { pitch: "Loop: connect dots into one loop, following the numbers around the cells.", name: "Kazu number puzzles", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API reference", foot: "A loop puzzle played on a grid of dots." }, ja: { pitch: "スリザーリンク。数字を手がかりに点を線で結び、一本の輪を作ります。", name: "Kazu 数字のパズル", nameLink: "名前について", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "点を線で結び一本の輪を作るパズル。" } }, onChange: lang => { language = lang; translate(); } });
+const family = familyLanguage({ id: "kazu", words: { en: { pitch: "Loop: connect dots into one loop, following the numbers around the cells.", name: "Kazu number puzzles", nameLink: "About the name", pageBack: "Number puzzles", pageDocs: "Docs", pageApi: "API", foot: "A loop puzzle played on a grid of dots." }, ja: { pitch: "スリザーリンク。数字を手がかりに点を線で結び、一本の輪を作ります。", name: "Kazu 数字のパズル", nameLink: "名前について", pageBack: "数字のパズル", pageDocs: "ドキュメント", pageApi: "APIリファレンス", foot: "点を線で結び一本の輪を作るパズル。" } }, onChange: lang => { language = lang; translate(); } });
 language = family.lang; translate();
 if (query.has("seed")) start(); else start();
 
