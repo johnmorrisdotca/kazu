@@ -38,7 +38,9 @@ describe("the 25×25 Sudoku", () => {
         expect(puzzle.solution).not.toContain(".");
         // Every printed number is the solution's.
         [...puzzle.givens].forEach((c, at) => c === "." || expect(c).toBe(puzzle.solution[at]));
-        expect(kazuGuessDepth("number-place", 25, puzzle.givens)!).toBeLessThanOrEqual({ easy: 0, medium: 1, hard: 2 }[level]);
+        expect(kazuGuessDepth("number-place", 25, puzzle.givens)!).toBeLessThanOrEqual(
+          { easy: 0, medium: 1, hard: 2 }[level],
+        );
         expect(generateKazu("number-place", 25, level, seed)).toEqual(puzzle);
       }
     });
@@ -48,7 +50,9 @@ describe("the 25×25 Sudoku", () => {
     const counts = KAZU_LEVELS.map((level) => given(generateKazu("number-place", 25, level, 5).givens));
     expect(counts[0]).toBeGreaterThan(counts[1]!);
     expect(counts[1]).toBeGreaterThan(counts[2]!);
-    expect(generateKazu("number-place", 25, "medium", 5).solution).not.toBe(generateKazu("number-place", 25, "medium", 6).solution);
+    expect(generateKazu("number-place", 25, "medium", 5).solution).not.toBe(
+      generateKazu("number-place", 25, "medium", 6).solution,
+    );
   });
 
   it("spots a wrong answer in the words the smaller sizes use", () => {
@@ -56,7 +60,12 @@ describe("the 25×25 Sudoku", () => {
     const solution = decodeCells(puzzle.solution, 25)!;
     const twice = [...solution];
     twice[1] = twice[0]!;
-    const verdict = checkKazu("number-place", 25, puzzle.givens, twice.map((v) => (v === 0 ? "." : v <= 9 ? String(v) : String.fromCharCode(55 + v))).join(""));
+    const verdict = checkKazu(
+      "number-place",
+      25,
+      puzzle.givens,
+      twice.map((v) => (v === 0 ? "." : v <= 9 ? String(v) : String.fromCharCode(55 + v))).join(""),
+    );
     expect(verdict.ok).toBe(false);
   });
 

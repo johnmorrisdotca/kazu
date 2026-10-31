@@ -67,7 +67,13 @@ export type RippleSolve = { count: number; solution: readonly number[] | null; c
  * console.log(value);
  * ```
  */
-export type RippleGame = { board: RippleBoard; values: readonly number[]; notes: readonly (readonly number[])[]; history: readonly { values: readonly number[]; notes: readonly (readonly number[])[] }[]; helped: boolean };
+export type RippleGame = {
+  board: RippleBoard;
+  values: readonly number[];
+  notes: readonly (readonly number[])[];
+  history: readonly { values: readonly number[]; notes: readonly (readonly number[])[] }[];
+  helped: boolean;
+};
 /** The native English or Japanese display language for Ripple.
  *
  * @example

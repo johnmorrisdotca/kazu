@@ -33,19 +33,29 @@ const rows = (text) =>
   text
     .split("\n")
     .filter((line) => line.startsWith("|") && !/^\|[\s|:-]+\|$/.test(line))
-    .map((line) => line.split(/(?<!\\)\|/).slice(1, -1).map((cell) => cell.replace(/\\\|/g, "|").trim()));
+    .map((line) =>
+      line
+        .split(/(?<!\\)\|/)
+        .slice(1, -1)
+        .map((cell) => cell.replace(/\\\|/g, "|").trim()),
+    );
 
 /** The custom properties a block of CSS declares: { name: value }. */
-const declarations = (css) => Object.fromEntries([...css.matchAll(/(--[a-z0-9-]+):\s*([^;}]+)[;}]/g)].map((match) => [match[1], match[2].trim()]));
+const declarations = (css) =>
+  Object.fromEntries([...css.matchAll(/(--[a-z0-9-]+):\s*([^;}]+)[;}]/g)].map((match) => [match[1], match[2].trim()]));
 
 describe("the documents", () => {
   it("say the version package.json says, in the code and at the top of the changelog", () => {
     expect(VERSION).toBe(pkg.version);
-    expect(readFileSync("CHANGELOG.md", "utf8")).toMatch(new RegExp(`^## \\[${pkg.version.replace(/\./g, "\\.")}\\] `, "m"));
+    expect(readFileSync("CHANGELOG.md", "utf8")).toMatch(
+      new RegExp(`^## \\[${pkg.version.replace(/\./g, "\\.")}\\] `, "m"),
+    );
   });
 
   it("name in the README every entry package.json exports, and no other", () => {
-    const exported = Object.keys(pkg.exports).filter((key) => key !== ".").map((key) => `${pkg.name}/${key.slice(2)}`);
+    const exported = Object.keys(pkg.exports)
+      .filter((key) => key !== ".")
+      .map((key) => `${pkg.name}/${key.slice(2)}`);
     for (const entry of exported) expect(readme, entry).toContain(`\`${entry}\``);
   });
 
@@ -57,7 +67,8 @@ describe("the documents", () => {
       for (const size of KAZU_SPECS[kind].sizes) expect(row, `${kind} ${size}`).toContain(`${size}×${size}`);
     }
     for (const level of KAZU_LEVELS) expect(readme, level).toContain(`\`${level}\``);
-    for (const attribute of KazuBoard.observedAttributes) expect(readme, attribute).toMatch(new RegExp(`\`${attribute}[\`=]|\`${attribute}\``));
+    for (const attribute of KazuBoard.observedAttributes)
+      expect(readme, attribute).toMatch(new RegExp(`\`${attribute}[\`=]|\`${attribute}\``));
   });
 
   it("keep the family's stylesheet byte for byte, as its first line's hash says", () => {
@@ -73,7 +84,25 @@ describe("the documents", () => {
 
 describe("the README's promises", () => {
   it("has the sections a package of this family has, each with something in it", () => {
-    for (const heading of ["In 30 seconds", "Who it is for", "Features", "Use it in your project", "API", "Theming", "Limits", "Browser support", "Languages", "Roadmap", "Architecture", "The name", "Where it comes from, and where it is used", "Development", "Contributing", "Changes", "Licence"]) {
+    for (const heading of [
+      "In 30 seconds",
+      "Who it is for",
+      "Features",
+      "Use it in your project",
+      "API",
+      "Theming",
+      "Limits",
+      "Browser support",
+      "Languages",
+      "Roadmap",
+      "Architecture",
+      "The name",
+      "Where it comes from, and where it is used",
+      "Development",
+      "Contributing",
+      "Changes",
+      "Licence",
+    ]) {
       expect(section(heading).length, heading).toBeGreaterThan(heading.length + 40);
     }
   });
@@ -96,9 +125,46 @@ describe("the README's promises", () => {
   it("lists every package of the family, with its kana, as the demo's footer does", () => {
     const family = FAMILY;
     expect(family.length).toBeGreaterThanOrEqual(16);
-    const block = readme.slice(readme.indexOf("### The family"), readme.indexOf("\n## ", readme.indexOf("### The family")));
+    const block = readme.slice(
+      readme.indexOf("### The family"),
+      readme.indexOf("\n## ", readme.indexOf("### The family")),
+    );
     for (const { id, name, kana } of family) expect(block, id).toContain(`- [${name}](${familyRepo(id)}) (${kana}`);
-    const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "twenty-one", "twenty-two", "twenty-three", "twenty-four", "twenty-five", "twenty-six", "twenty-seven", "twenty-eight", "twenty-nine", "thirty", "thirty-one", "thirty-two"];
+    const words = [
+      "zero",
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven",
+      "eight",
+      "nine",
+      "ten",
+      "eleven",
+      "twelve",
+      "thirteen",
+      "fourteen",
+      "fifteen",
+      "sixteen",
+      "seventeen",
+      "eighteen",
+      "nineteen",
+      "twenty",
+      "twenty-one",
+      "twenty-two",
+      "twenty-three",
+      "twenty-four",
+      "twenty-five",
+      "twenty-six",
+      "twenty-seven",
+      "twenty-eight",
+      "twenty-nine",
+      "thirty",
+      "thirty-one",
+      "thirty-two",
+    ];
     expect(block).toContain(`one of ${words[family.length]} packages`);
     expect([...block.matchAll(/^- \[/gm)]).toHaveLength(family.length);
   });
@@ -109,7 +175,11 @@ describe("the README's promises", () => {
     const play = KAZU_PLAY_STYLE.slice(KAZU_STYLE.length);
     const playLight = declarations(play.slice(0, play.indexOf("@media")));
     const playDark = declarations(play.slice(play.indexOf(':root[data-theme="dark"]')).split("}")[0]);
-    const table = Object.fromEntries(rows(section("Theming")).filter((row) => row[0].startsWith("`--")).map((row) => [row[0].replace(/`/g, ""), row]));
+    const table = Object.fromEntries(
+      rows(section("Theming"))
+        .filter((row) => row[0].startsWith("`--"))
+        .map((row) => [row[0].replace(/`/g, ""), row]),
+    );
     expect(Object.keys(table).sort()).toEqual([...Object.keys(light), ...Object.keys(playLight)].sort());
     for (const [name, value] of Object.entries({ ...light, ...playLight })) {
       if (name === "--kz-font") continue;
@@ -134,19 +204,42 @@ describe("the README's promises", () => {
 
   it("keeps docs/strings-ja.md as the board's words, English beside Japanese (pnpm docs:make rewrites it)", () => {
     const cell = (text) => text.replace(/\|/g, "\\|").replace(/\n/g, " ");
-    const lines = ["# Kazu's words, in English and Japanese", "", "Made from `src/strings.ts` by `pnpm docs:make`; a test fails if the two differ, so this list is never out of date.", "", "**The Japanese has not yet been reviewed by a native reader.** If a line reads wrongly or unnaturally, please", "open a *Fix a translation* issue with the string's name. `{name}` and the other braces are filled in when shown. A line\nwith `One` at the end of its name is the singular, said in English when the count is 1.", "", "| Name | English | Japanese |", "| --- | --- | --- |"];
-    for (const key of Object.keys(KAZU_STRINGS.en).filter((name) => !/One$/.test(name))) lines.push(`| \`${key}\` | ${cell(KAZU_STRINGS.en[key])} | ${cell(KAZU_STRINGS.ja[key] ?? "")} |`);
+    const lines = [
+      "# Kazu's words, in English and Japanese",
+      "",
+      "Made from `src/strings.ts` by `pnpm docs:make`; a test fails if the two differ, so this list is never out of date.",
+      "",
+      "**The Japanese has not yet been reviewed by a native reader.** If a line reads wrongly or unnaturally, please",
+      "open a *Fix a translation* issue with the string's name. `{name}` and the other braces are filled in when shown. A line\nwith `One` at the end of its name is the singular, said in English when the count is 1.",
+      "",
+      "| Name | English | Japanese |",
+      "| --- | --- | --- |",
+    ];
+    for (const key of Object.keys(KAZU_STRINGS.en).filter((name) => !/One$/.test(name)))
+      lines.push(`| \`${key}\` | ${cell(KAZU_STRINGS.en[key])} | ${cell(KAZU_STRINGS.ja[key] ?? "")} |`);
     const made = `${lines.join("\n")}\n`;
     if (process.env.UPDATE_DOCS === "1") writeFileSync("docs/strings-ja.md", made);
     expect(readFileSync("docs/strings-ja.md", "utf8")).toBe(made);
   });
 
   it("has the files a visitor looks for: issue templates, a pull request template, a security policy", () => {
-    for (const file of [".github/ISSUE_TEMPLATE/report-a-bug.md", ".github/ISSUE_TEMPLATE/suggest-a-feature.md", ".github/ISSUE_TEMPLATE/fix-a-translation.md", ".github/ISSUE_TEMPLATE/add-my-project.md", ".github/ISSUE_TEMPLATE/config.yml", ".github/pull_request_template.md", "SECURITY.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md"]) expect(existsSync(file), file).toBe(true);
+    for (const file of [
+      ".github/ISSUE_TEMPLATE/report-a-bug.md",
+      ".github/ISSUE_TEMPLATE/suggest-a-feature.md",
+      ".github/ISSUE_TEMPLATE/fix-a-translation.md",
+      ".github/ISSUE_TEMPLATE/add-my-project.md",
+      ".github/ISSUE_TEMPLATE/config.yml",
+      ".github/pull_request_template.md",
+      "SECURITY.md",
+      "CONTRIBUTING.md",
+      "CODE_OF_CONDUCT.md",
+    ])
+      expect(existsSync(file), file).toBe(true);
     expect(readme).toContain("issues/new?template=fix-a-translation.md");
   });
 
   it("keeps SECURITY.md and CODE_OF_CONDUCT.md equal to the family's master text, a copy of which is kept in scripts/community", () => {
-    for (const file of ["SECURITY.md", "CODE_OF_CONDUCT.md"]) expect(readFileSync(file, "utf8"), file).toBe(readFileSync(`scripts/community/${file}`, "utf8"));
+    for (const file of ["SECURITY.md", "CODE_OF_CONDUCT.md"])
+      expect(readFileSync(file, "utf8"), file).toBe(readFileSync(`scripts/community/${file}`, "utf8"));
   });
 });

@@ -2,14 +2,15 @@ import { expect, test } from "@playwright/test";
 
 import { serve } from "./demo.mjs";
 
-const savedGame = async (page) => page.evaluate(() => {
-  const saved = JSON.parse(localStorage.getItem("kazu-hitori-progress"));
-  return JSON.parse(saved.progress);
-});
+const savedGame = async (page) =>
+  page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("kazu-hitori-progress"));
+    return JSON.parse(saved.progress);
+  });
 
 test("Hitori plays, saves public progress, and restores it", async ({ page }) => {
   const errors = [];
-  page.on("pageerror", error => errors.push(String(error)));
+  page.on("pageerror", (error) => errors.push(String(error)));
 
   await serve(page);
   await page.goto("http://kazu.test/hitori.html");
@@ -31,8 +32,6 @@ test("Hitori plays, saves public progress, and restores it", async ({ page }) =>
   const restoredGame = await savedGame(page);
   expect(restoredGame.helped).toBe(true);
   expect(restoredGame.shaded).toEqual(helpedGame.shaded);
-  await expect(page.locator('.kh-cell[aria-pressed="true"]')).toHaveCount(
-    helpedGame.shaded.filter(Boolean).length,
-  );
+  await expect(page.locator('.kh-cell[aria-pressed="true"]')).toHaveCount(helpedGame.shaded.filter(Boolean).length);
   expect(errors).toEqual([]);
 });

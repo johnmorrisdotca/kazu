@@ -39,7 +39,10 @@ export function conflictsOf(givens: KazuGivens, values: readonly number[]): numb
   const groups =
     layout !== null
       ? layout.groups
-      : [...Array.from({ length: size }, (_, r) => Array.from({ length: size }, (_, c) => r * size + c)), ...Array.from({ length: size }, (_, c) => Array.from({ length: size }, (_, r) => r * size + c))];
+      : [
+          ...Array.from({ length: size }, (_, r) => Array.from({ length: size }, (_, c) => r * size + c)),
+          ...Array.from({ length: size }, (_, c) => Array.from({ length: size }, (_, r) => r * size + c)),
+        ];
   for (const group of groups) {
     const first = new Map<number, number>();
     for (const index of group) {
@@ -56,7 +59,8 @@ export function conflictsOf(givens: KazuGivens, values: readonly number[]): numb
   for (const cage of givens.cages ?? []) {
     const filled = cage.cells.filter((index) => values[index]! !== 0);
     const total = filled.reduce((sum, index) => sum + values[index]!, 0);
-    if (total > cage.sum || (filled.length === cage.cells.length && total !== cage.sum)) for (const index of filled) bad.add(index);
+    if (total > cage.sum || (filled.length === cage.cells.length && total !== cage.sum))
+      for (const index of filled) bad.add(index);
   }
   for (const mark of givens.marks) {
     const less = values[mark.less]!;
@@ -84,7 +88,8 @@ export function conflictsOf(givens: KazuGivens, values: readonly number[]): numb
             seen += 1;
           }
         }
-        if (seen > clue || (reached === size && seen !== clue)) for (const index of line.slice(0, reached)) bad.add(index);
+        if (seen > clue || (reached === size && seen !== clue))
+          for (const index of line.slice(0, reached)) bad.add(index);
       }
     }
   }

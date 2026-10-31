@@ -42,7 +42,14 @@ export type AkariLanguage = "en" | "ja";
  * console.log(value);
  * ```
  */
-export type AkariDrawOptions = { bulbs?: AkariGame["bulbs"]; selected?: number | null; errors?: readonly number[]; material?: AkariMaterial; pieces?: AkariPieces; language?: AkariLanguage };
+export type AkariDrawOptions = {
+  bulbs?: AkariGame["bulbs"];
+  selected?: number | null;
+  errors?: readonly number[];
+  material?: AkariMaterial;
+  pieces?: AkariPieces;
+  language?: AkariLanguage;
+};
 /** The initial Akari board, native progress, appearance and host event callbacks.
  *
  * @example
@@ -54,7 +61,12 @@ export type AkariDrawOptions = { bulbs?: AkariGame["bulbs"]; selected?: number |
  * console.log(value);
  * ```
  */
-export type AkariMountOptions = AkariDrawOptions & { board: AkariBoard; progress?: string; onChange?: (game: AkariGame) => void; onFinish?: (game: AkariGame) => void };
+export type AkariMountOptions = AkariDrawOptions & {
+  board: AkariBoard;
+  progress?: string;
+  onChange?: (game: AkariGame) => void;
+  onFinish?: (game: AkariGame) => void;
+};
 /** The mounted Akari game and progress, native controls and cleanup handle.
  *
  * @example
@@ -70,4 +82,10 @@ export type AkariMountOptions = AkariDrawOptions & { board: AkariBoard; progress
  * player.destroy();
  * ```
  */
-export type AkariMount = { game: () => AkariGame; progress: () => string; set: (options: AkariDrawOptions) => void; restart: () => void; destroy: () => void };
+export type AkariMount = {
+  game: () => AkariGame;
+  progress: () => string;
+  set: (options: AkariDrawOptions) => void;
+  restart: () => void;
+  destroy: () => void;
+};

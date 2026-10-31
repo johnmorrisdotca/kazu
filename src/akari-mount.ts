@@ -1,13 +1,5 @@
 import { akariVisible, checkAkari } from "./akari-board.ts";
-import {
-  akariFinished,
-  decodeAkari,
-  encodeAkari,
-  hintAkari,
-  newAkari,
-  toggleAkari,
-  undoAkari,
-} from "./akari-game.ts";
+import { akariFinished, decodeAkari, encodeAkari, hintAkari, newAkari, toggleAkari, undoAkari } from "./akari-game.ts";
 import { drawAkari } from "./akari-draw.ts";
 import { KAZU_STYLE } from "./style.ts";
 import { AKARI_PLAY_STYLE } from "./akari-style.ts";
@@ -38,7 +30,7 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
   let game = initial.progress ? decodeAkari(initial.progress) : null;
   game ??= newAkari(initial.board);
 
-  let selected = game.board.cells.findIndex(cell => cell === null);
+  let selected = game.board.cells.findIndex((cell) => cell === null);
   let errors: number[] = [];
   let message = "";
   let finished = akariFinished(game);
@@ -65,7 +57,7 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
     ...game!,
     board: { ...game!.board, cells: [...game!.board.cells] },
     bulbs: [...game!.bulbs],
-    history: game!.history.map(turn => [...turn]),
+    history: game!.history.map((turn) => [...turn]),
   });
   const words = () => akariWords(options.language);
 
@@ -102,7 +94,7 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
   const restart = () => {
     game = newAkari(game!.board);
     finished = false;
-    selected = game.board.cells.findIndex(cell => cell === null);
+    selected = game.board.cells.findIndex((cell) => cell === null);
     changed();
   };
 
@@ -124,10 +116,10 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
     for (let cellIndex = 0; cellIndex < current.cells.length; cellIndex += 1) {
       const white = current.cells[cellIndex] === null;
       const bulb = game!.bulbs.includes(cellIndex);
-      const lit = white && game!.bulbs.some(on => akariVisible(current, on).includes(cellIndex));
+      const lit = white && game!.bulbs.some((on) => akariVisible(current, on).includes(cellIndex));
       const control = doc.createElement("button");
       const row = Math.floor(cellIndex / current.width) + 1;
-      const column = cellIndex % current.width + 1;
+      const column = (cellIndex % current.width) + 1;
 
       control.type = "button";
       control.className = "ka-cell";
@@ -138,7 +130,7 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
       control.setAttribute("aria-pressed", String(bulb));
       control.setAttribute("aria-label", cellLabel(w, current.cells[cellIndex]!, row, column, lit, bulb, white));
       control.onclick = () => toggle(cellIndex);
-      control.onkeydown = event => handleKey(event, cellIndex, current.width, current.cells);
+      control.onkeydown = (event) => handleKey(event, cellIndex, current.width, current.cells);
       cells.append(control);
     }
 
@@ -148,28 +140,36 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
     help.textContent = w.help;
     tools.replaceChildren();
 
-    button(w.undo, () => {
-      game = undoAkari(game!);
-      finished = akariFinished(game!);
-      changed();
-    }, !game!.history.length);
+    button(
+      w.undo,
+      () => {
+        game = undoAkari(game!);
+        finished = akariFinished(game!);
+        changed();
+      },
+      !game!.history.length,
+    );
     button(w.check, () => {
       errors = [...new Set([...check.dark, ...check.numbered, ...check.conflicts])];
       message = check.ok ? w.won : w.wrong;
       render();
     });
-    button(w.hint, () => {
-      const cell = hintAkari(game!);
-      if (cell === null) {
-        message = w.noHint;
+    button(
+      w.hint,
+      () => {
+        const cell = hintAkari(game!);
+        if (cell === null) {
+          message = w.noHint;
+          render();
+          return;
+        }
+        game = { ...toggleAkari(game!, cell), helped: true };
+        changed();
+        message = w.hintWhy;
         render();
-        return;
-      }
-      game = { ...toggleAkari(game!, cell), helped: true };
-      changed();
-      message = w.hintWhy;
-      render();
-    }, finished);
+      },
+      finished,
+    );
     button(w.restart, restart);
     button(w.expand, expand);
   };
@@ -188,12 +188,7 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
     return `${position}: ${w.white}${lit ? `, ${w.lit}` : `, ${w.dark}`}${bulb ? `, ${w.bulb}` : ""}`;
   }
 
-  function handleKey(
-    event: KeyboardEvent,
-    cell: number,
-    width: number,
-    values: readonly (number | null | false)[],
-  ) {
+  function handleKey(event: KeyboardEvent, cell: number, width: number, values: readonly (number | null | false)[]) {
     const steps: Record<string, number> = {
       ArrowLeft: -1,
       ArrowRight: 1,

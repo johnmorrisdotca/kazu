@@ -18,10 +18,7 @@ import type { LoopBoard, LoopSolve } from "./loop.types.ts";
  * console.log(solveLoop(loopBoard,{limit:2,nodes:20000}));
  * ```
  */
-export function solveLoop(
-  board: LoopBoard,
-  options: { limit?: number; nodes?: number } = {},
-): LoopSolve {
+export function solveLoop(board: LoopBoard, options: { limit?: number; nodes?: number } = {}): LoopSolve {
   if (!isLoopBoard(board)) throw new RangeError("Invalid Loop board");
   const limit = options.limit ?? 2;
   const budget = options.nodes ?? LOOP_MOST_NODES;
@@ -31,6 +28,8 @@ export function solveLoop(
   const { csp } = loopModel(board);
   const found = solveCsp(csp, openSlots(csp), limit, budget);
   const edges = loopEdgeCount(board);
-  const solution = found.solution ? Array.from({ length: edges }, (_, edge) => edge).filter(edge => found.solution![2 * edge + 1] === 1) : null;
+  const solution = found.solution
+    ? Array.from({ length: edges }, (_, edge) => edge).filter((edge) => found.solution![2 * edge + 1] === 1)
+    : null;
   return { count: found.count, solution, complete: !found.exhausted && !found.stopped, nodes: found.nodes };
 }

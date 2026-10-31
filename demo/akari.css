@@ -23,7 +23,7 @@
   gap: 6px;
   margin-bottom: 12px;
   color: var(--muted);
-  font-size: .85rem;
+  font-size: 0.85rem;
 }
 
 #setup input,
@@ -51,13 +51,13 @@
   border: 1px solid var(--rule);
   border-radius: 999px;
   background: var(--surface);
-  font-size: .85rem;
+  font-size: 0.85rem;
 }
 
 #notice,
 #unique {
   color: var(--muted);
-  font-size: .8rem;
+  font-size: 0.8rem;
   line-height: 1.5;
 }
 
@@ -75,14 +75,14 @@
 
 #summary,
 #clock {
-  font-size: .8rem;
-  opacity: .8;
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
 
 #board {
   --ka-ink: var(--felt-ink);
-  --ka-surface: rgba(0, 0, 0, .28);
-  --ka-rule: rgba(255, 255, 255, .35);
+  --ka-surface: rgba(0, 0, 0, 0.28);
+  --ka-rule: rgba(255, 255, 255, 0.35);
 }
 
 .akari-dimensions {
@@ -133,4 +133,8 @@
 }
 
 /* Keep navigation width stable across languages. */
-header nav a[data-say="pageDocs"] { inline-size: 8rem; justify-content: center; flex: none; }
+header nav a[data-say="pageDocs"] {
+  inline-size: 8rem;
+  justify-content: center;
+  flex: none;
+}

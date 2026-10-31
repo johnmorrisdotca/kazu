@@ -1,20 +1,19 @@
 import { LOOP_MOST_SIDE } from "./loop.constants.ts";
-import {
-  checkLoop,
-  isLoopBoard,
-  loopCellEdges,
-} from "./loop-board.ts";
+import { checkLoop, isLoopBoard, loopCellEdges } from "./loop-board.ts";
 import { solveLoop } from "./loop-solve.ts";
 import { isKazuSeed, seededRandom } from "./random.ts";
 import type { LoopBoard, LoopPuzzle } from "./loop.types.ts";
 
 /** The first generator, kept as the fallback that cannot fail: a proved puzzle from a seeded rectangle or L-shaped tile-region loop. */
 export function templateLoop(width = 5, height = width, seed = 1): Omit<LoopPuzzle, "level"> {
-  if (![width, height].every(side => Number.isInteger(side) && side >= 2 && side <= LOOP_MOST_SIDE)
-    || !isKazuSeed(seed)) throw new RangeError("Invalid Loop settings");
+  if (
+    ![width, height].every((side) => Number.isInteger(side) && side >= 2 && side <= LOOP_MOST_SIDE) ||
+    !isKazuSeed(seed)
+  )
+    throw new RangeError("Invalid Loop settings");
 
   const random = seededRandom(seed);
-  const useL = width >= 3 && height >= 3 && random() < .5;
+  const useL = width >= 3 && height >= 3 && random() < 0.5;
   const region: number[] = [];
   let x0: number;
   let y0: number;
@@ -57,14 +56,16 @@ export function templateLoop(width = 5, height = width, seed = 1): Omit<LoopPuzz
   let board: LoopBoard = {
     width,
     height,
-    clues: Array.from({ length: width * height }, (_, cell) =>
-      loopCellEdges(blank, cell)!.filter(edge => edges.has(edge)).length),
+    clues: Array.from(
+      { length: width * height },
+      (_, cell) => loopCellEdges(blank, cell)!.filter((edge) => edges.has(edge)).length,
+    ),
   };
   let answer = [...edges];
 
   // Seeded axis reflections give each selected shape more than one orientation.
-  const reflectX = random() < .5;
-  const reflectY = random() < .5;
+  const reflectX = random() < 0.5;
+  const reflectY = random() < 0.5;
   if (reflectX || reflectY) {
     const horizontalCount = width * (height + 1);
     const mapEdge = (edge: number) => {

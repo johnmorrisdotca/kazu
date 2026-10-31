@@ -12,20 +12,28 @@ const OTHER = "#board svg, #board button";
 const address = (query, lang = "en") => `/?lang=${lang}&help=off&${query}`;
 
 /** Fill every `every`th empty cell of a number puzzle from its answer (a number tapped on the pad), and choose one more cell. */
-const fill = ({ kind, size, level, seed, every }) => async (page) => {
-  const puzzle = generateKazu(kind, size, level, seed);
-  const answer = decodeCells(puzzle.solution, size);
-  const printed = readGivens(kind, size, puzzle.givens).cells;
-  const empty = printed.flatMap((value, index) => (value === 0 ? [index] : []));
-  const filled = empty.filter((_, at) => at % every === 0);
-  for (const index of filled) {
-    await page.locator(`#board .kz-hit[data-cell="${index}"]`).click();
-    await page.locator(`#board .kzp-key[data-value="${answer[index]}"]`).click();
-  }
-  await page.locator(`#board .kz-hit[data-cell="${empty.find((index) => !filled.includes(index))}"]`).click();
-  await page.waitForFunction((count) => Number(document.getElementById("board").dataset.filled) >= count, filled.length);
-};
-const scrollTo = (selector) => (page) => page.locator(selector).evaluate((element) => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - 4));
+const fill =
+  ({ kind, size, level, seed, every }) =>
+  async (page) => {
+    const puzzle = generateKazu(kind, size, level, seed);
+    const answer = decodeCells(puzzle.solution, size);
+    const printed = readGivens(kind, size, puzzle.givens).cells;
+    const empty = printed.flatMap((value, index) => (value === 0 ? [index] : []));
+    const filled = empty.filter((_, at) => at % every === 0);
+    for (const index of filled) {
+      await page.locator(`#board .kz-hit[data-cell="${index}"]`).click();
+      await page.locator(`#board .kzp-key[data-value="${answer[index]}"]`).click();
+    }
+    await page.locator(`#board .kz-hit[data-cell="${empty.find((index) => !filled.includes(index))}"]`).click();
+    await page.waitForFunction(
+      (count) => Number(document.getElementById("board").dataset.filled) >= count,
+      filled.length,
+    );
+  };
+const scrollTo = (selector) => (page) =>
+  page
+    .locator(selector)
+    .evaluate((element) => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - 4));
 
 /** A number puzzle on the main page, part filled in. */
 const number = (subject, kind, size, level, seed) => ({
@@ -37,7 +45,13 @@ const number = (subject, kind, size, level, seed) => ({
   prepare: fill({ kind, size, level, seed, every: 3 }),
 });
 /** A puzzle with a page of its own, as it opens on a seed. */
-const page = (subject, file, query = "seed=42") => ({ subject, views: ["desk"], url: `/${file}.html?lang=en&help=off&${query}`, ready: OTHER, target: "section.panel" });
+const page = (subject, file, query = "seed=42") => ({
+  subject,
+  views: ["desk"],
+  url: `/${file}.html?lang=en&help=off&${query}`,
+  ready: OTHER,
+  target: "section.panel",
+});
 
 await takePictures({
   shots: [

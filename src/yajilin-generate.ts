@@ -3,7 +3,11 @@ import { checkYajilin, isYajilinBoard, yajilinNeighbors } from "./yajilin-board.
 import { solveYajilin } from "./yajilin-solve.ts";
 import type { YajilinBoard, YajilinDirection, YajilinPuzzle } from "./yajilin.types.ts";
 
-type Layout = { loop: readonly number[]; shaded: readonly number[]; clues: readonly (readonly [number, YajilinDirection, number])[] };
+type Layout = {
+  loop: readonly number[];
+  shaded: readonly number[];
+  clues: readonly (readonly [number, YajilinDirection, number])[];
+};
 const layouts: readonly Layout[] = [
   {
     loop: [6, 7, 8, 13, 18, 17, 16, 11],
@@ -181,23 +185,32 @@ const layouts: readonly Layout[] = [
 ];
 
 function transformCell(cell: number, turns: number, reflect: boolean): number {
-  let x = cell % 5, y = Math.floor(cell / 5);
+  let x = cell % 5,
+    y = Math.floor(cell / 5);
   if (reflect) x = 4 - x;
   for (let turn = 0; turn < turns; turn += 1) [x, y] = [4 - y, x];
   return y * 5 + x;
 }
 function transformDirection(direction: YajilinDirection, turns: number, reflect: boolean): YajilinDirection {
-  const vector: Record<YajilinDirection, [number, number]> = { up: [0, -1], right: [1, 0], down: [0, 1], left: [-1, 0] };
+  const vector: Record<YajilinDirection, [number, number]> = {
+    up: [0, -1],
+    right: [1, 0],
+    down: [0, 1],
+    left: [-1, 0],
+  };
   let [x, y] = vector[direction];
   if (reflect) x = -x;
   for (let turn = 0; turn < turns; turn += 1) [x, y] = [-y, x];
-  return (Object.entries(vector).find(([, value]) => value[0] === x && value[1] === y)?.[0] ?? "up") as YajilinDirection;
+  return (Object.entries(vector).find(([, value]) => value[0] === x && value[1] === y)?.[0] ??
+    "up") as YajilinDirection;
 }
 function edgesFromLoop(board: YajilinBoard, loop: readonly number[]): number[] {
-  return loop.map((cell, index) => {
-    const next = loop[(index + 1) % loop.length]!;
-    return yajilinNeighbors(board, cell).find(item => item.cell === next)!.edge;
-  }).sort((a, b) => a - b);
+  return loop
+    .map((cell, index) => {
+      const next = loop[(index + 1) % loop.length]!;
+      return yajilinNeighbors(board, cell).find((item) => item.cell === next)!.edge;
+    })
+    .sort((a, b) => a - b);
 }
 
 /** Seeded original 5×5 families, accepted only after a completed uniqueness proof.
@@ -214,9 +227,11 @@ function edgesFromLoop(board: YajilinBoard, loop: readonly number[]): number[] {
  */
 export function generateYajilin(size: 5 = 5, seed = 1): YajilinPuzzle {
   if (size !== 5 || !isKazuSeed(seed)) throw new RangeError("Invalid Yajilin settings");
-  const random = seededRandom(seed), layout = layouts[Math.floor(random() * layouts.length)]!;
-  const turns = Math.floor(random() * 4), reflect = random() < 0.5;
-  const clues: (YajilinBoard["clues"][number])[] = Array(25).fill(null);
+  const random = seededRandom(seed),
+    layout = layouts[Math.floor(random() * layouts.length)]!;
+  const turns = Math.floor(random() * 4),
+    reflect = random() < 0.5;
+  const clues: YajilinBoard["clues"][number][] = Array(25).fill(null);
   for (const [cell, direction, count] of layout.clues) {
     const transformed = transformCell(cell, turns, reflect);
     clues[transformed] = { direction: transformDirection(direction, turns, reflect), count };
@@ -224,9 +239,14 @@ export function generateYajilin(size: 5 = 5, seed = 1): YajilinPuzzle {
   const board: YajilinBoard = { width: 5, height: 5, clues };
   const shaded = Array(25).fill(false) as boolean[];
   for (const cell of layout.shaded) shaded[transformCell(cell, turns, reflect)] = true;
-  const expectedEdges = edgesFromLoop(board, layout.loop.map(cell => transformCell(cell, turns, reflect)));
-  if (!isYajilinBoard(board) || !checkYajilin(board, shaded, expectedEdges).ok) throw new Error("Invalid Yajilin layout");
+  const expectedEdges = edgesFromLoop(
+    board,
+    layout.loop.map((cell) => transformCell(cell, turns, reflect)),
+  );
+  if (!isYajilinBoard(board) || !checkYajilin(board, shaded, expectedEdges).ok)
+    throw new Error("Invalid Yajilin layout");
   const proof = solveYajilin(board);
-  if (!proof.complete || proof.count !== 1 || !proof.solution) throw new Error("No uniquely proved Yajilin found within the generation budget; try another seed");
+  if (!proof.complete || proof.count !== 1 || !proof.solution)
+    throw new Error("No uniquely proved Yajilin found within the generation budget; try another seed");
   return { ...board, seed, solution: proof.solution };
 }

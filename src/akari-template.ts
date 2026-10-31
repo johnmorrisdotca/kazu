@@ -10,13 +10,13 @@ import type { AkariPuzzle } from "./akari.types.ts";
  * vary each layout. Generation returns only after the independent counter proves uniqueness.
  */
 export function templateAkari(width = 7, height = width, seed = 1): Omit<AkariPuzzle, "level"> {
-  if (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= AKARI_MOST_SIDE)
-    || !isKazuSeed(seed)) throw new RangeError("Invalid Akari settings");
+  if (![width, height].every((n) => Number.isInteger(n) && n >= 2 && n <= AKARI_MOST_SIDE) || !isKazuSeed(seed))
+    throw new RangeError("Invalid Akari settings");
 
   const random = seededRandom(seed);
   const cells: (number | null | false)[] = Array(width * height).fill(false);
   const bulbs: number[] = [];
-  const horizontal = random() < .5;
+  const horizontal = random() < 0.5;
 
   if (horizontal) {
     const firstRow = height > 2 ? 1 : 0;
@@ -25,7 +25,7 @@ export function templateAkari(width = 7, height = width, seed = 1): Omit<AkariPu
       for (let x = 0; x < width; x += 3) {
         const room = y * width + x;
         if (x + 1 < width) {
-          const bulbX = random() < .5 ? x : x + 1;
+          const bulbX = random() < 0.5 ? x : x + 1;
           cells[room] = null;
           cells[room + 1] = null;
           cells[clueY * width + bulbX] = 1;
@@ -44,7 +44,7 @@ export function templateAkari(width = 7, height = width, seed = 1): Omit<AkariPu
       for (let y = 0; y < height; y += 3) {
         const room = y * width + x;
         if (y + 1 < height) {
-          const bulbY = random() < .5 ? y : y + 1;
+          const bulbY = random() < 0.5 ? y : y + 1;
           cells[room] = null;
           cells[room + width] = null;
           cells[bulbY * width + clueX] = 1;
@@ -59,10 +59,12 @@ export function templateAkari(width = 7, height = width, seed = 1): Omit<AkariPu
   }
 
   // Reflections are applied to the board and the construction answer together.
-  const reflectX = random() < .5, reflectY = random() < .5;
+  const reflectX = random() < 0.5,
+    reflectY = random() < 0.5;
   const original = [...cells];
   const map = (cell: number) => {
-    const x = cell % width, y = Math.floor(cell / width);
+    const x = cell % width,
+      y = Math.floor(cell / width);
     return (reflectY ? height - 1 - y : y) * width + (reflectX ? width - 1 - x : x);
   };
   for (let cell = 0; cell < original.length; cell += 1) cells[map(cell)] = original[cell]!;

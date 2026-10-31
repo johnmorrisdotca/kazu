@@ -1,7 +1,15 @@
 import { checkRegions } from "./regions-board.ts";
 import { regionsMostValue } from "./regions-logic.ts";
 import { drawRegions } from "./regions-draw.ts";
-import { decodeRegionsGame, encodeRegionsGame, hintRegions, newRegions, restartRegions, setRegionsCell, undoRegions } from "./regions-game.ts";
+import {
+  decodeRegionsGame,
+  encodeRegionsGame,
+  hintRegions,
+  newRegions,
+  restartRegions,
+  setRegionsCell,
+  undoRegions,
+} from "./regions-game.ts";
 import { REGIONS_PLAY_STYLE } from "./regions-style.ts";
 import { regionsWords } from "./regions-strings.ts";
 import type { RegionsGame } from "./regions.types.ts";
@@ -53,7 +61,7 @@ export function mountRegions(host: HTMLElement, initial: RegionsMountOptions): R
   const copyGame = (state = game): RegionsGame => ({
     board: { ...state.board, givens: [...state.board.givens] },
     entries: [...state.entries],
-    history: state.history.map(entries => [...entries]),
+    history: state.history.map((entries) => [...entries]),
     helped: state.helped,
   });
   const emit = () => {
@@ -74,7 +82,15 @@ export function mountRegions(host: HTMLElement, initial: RegionsMountOptions): R
     if (destroyed) return;
     const words = regionsWords(language());
     const checked = checkRegions(game.board, game.entries);
-    status.textContent = message || (checked.ok ? game.helped ? words.helped : words.solved : checked.errors.length ? words.wrong : words.remaining);
+    status.textContent =
+      message ||
+      (checked.ok
+        ? game.helped
+          ? words.helped
+          : words.solved
+        : checked.errors.length
+          ? words.wrong
+          : words.remaining);
     board.replaceChildren();
     board.style.setProperty("--regions-width", String(game.board.width));
     board.style.setProperty("--regions-height", String(game.board.height));
@@ -102,7 +118,10 @@ export function mountRegions(host: HTMLElement, initial: RegionsMountOptions): R
       control.className = "regions-cell";
       control.dataset.cell = String(cell);
       control.setAttribute("role", "gridcell");
-      control.setAttribute("aria-label", `${words.row} ${y + 1}, ${words.column} ${x + 1}, ${value || words.empty}${value ? `, ${words.filled}` : ""}${given ? `, ${words.clue}` : ""}`);
+      control.setAttribute(
+        "aria-label",
+        `${words.row} ${y + 1}, ${words.column} ${x + 1}, ${value || words.empty}${value ? `, ${words.filled}` : ""}${given ? `, ${words.clue}` : ""}`,
+      );
       control.setAttribute("aria-pressed", String(selected === cell));
       control.tabIndex = selected === cell || (selected === null && cell === 0) ? 0 : -1;
       control.addEventListener("click", () => {
@@ -110,7 +129,7 @@ export function mountRegions(host: HTMLElement, initial: RegionsMountOptions): R
         message = "";
         update();
       });
-      control.addEventListener("keydown", event => moveByKeyboard(event, cell));
+      control.addEventListener("keydown", (event) => moveByKeyboard(event, cell));
       cells.append(control);
     }
     drawing.append(cells);
@@ -133,15 +152,23 @@ export function mountRegions(host: HTMLElement, initial: RegionsMountOptions): R
     }
     label.append(number);
     controls.append(label);
-    button(words.fill, () => applySelected(Number(number.value)), selected === null || Boolean(game.board.givens[selected]));
+    button(
+      words.fill,
+      () => applySelected(Number(number.value)),
+      selected === null || Boolean(game.board.givens[selected]),
+    );
     button(words.clear, () => applySelected(0), selected === null || Boolean(game.board.givens[selected]));
-    button(words.undo, () => {
-      game = undoRegions(game);
-      errors = [];
-      message = "";
-      emit();
-      update();
-    }, game.history.length === 0);
+    button(
+      words.undo,
+      () => {
+        game = undoRegions(game);
+        errors = [];
+        message = "";
+        emit();
+        update();
+      },
+      game.history.length === 0,
+    );
     button(words.check, checkBoard);
     button(words.hint, giveHint);
     button(words.restart, restart);
@@ -194,8 +221,13 @@ export function mountRegions(host: HTMLElement, initial: RegionsMountOptions): R
   const checkBoard = () => {
     const checked = checkRegions(game.board, game.entries);
     errors = checked.errors;
-    message = checked.ok ? game.helped ? regionsWords(language()).helped : regionsWords(language()).solved
-      : checked.errors.length ? regionsWords(language()).wrong : regionsWords(language()).checked;
+    message = checked.ok
+      ? game.helped
+        ? regionsWords(language()).helped
+        : regionsWords(language()).solved
+      : checked.errors.length
+        ? regionsWords(language()).wrong
+        : regionsWords(language()).checked;
     update();
   };
 
@@ -228,16 +260,25 @@ export function mountRegions(host: HTMLElement, initial: RegionsMountOptions): R
   return {
     game: () => copyGame(),
     progress: () => encodeRegionsGame(game),
-    set: (next: RegionsDrawOptions) => { options = { ...options, ...next }; update(); },
+    set: (next: RegionsDrawOptions) => {
+      options = { ...options, ...next };
+      update();
+    },
     restart,
-    destroy: () => { destroyed = true; root.remove(); style.remove(); },
+    destroy: () => {
+      destroyed = true;
+      root.remove();
+      style.remove();
+    },
   };
 }
 
 function restoreGame(source: RegionsMountOptions): RegionsGame {
   const saved = source.progress ? decodeRegionsGame(source.progress) : null;
-  return saved && saved.board.width === source.board.width && saved.board.height === source.board.height
-    && saved.board.givens.every((given, cell) => given === source.board.givens[cell])
+  return saved &&
+    saved.board.width === source.board.width &&
+    saved.board.height === source.board.height &&
+    saved.board.givens.every((given, cell) => given === source.board.givens[cell])
     ? saved
     : newRegions(source.board);
 }

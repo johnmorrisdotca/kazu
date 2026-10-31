@@ -124,7 +124,13 @@ export type CrossSumsSolve = { count: number; solution: readonly number[] | null
  * console.log(value);
  * ```
  */
-export type CrossSumsGame = { board: CrossSumsBoard; values: readonly number[]; notes: readonly (readonly number[])[]; history: readonly { values: readonly number[]; notes: readonly (readonly number[])[] }[]; helped: boolean };
+export type CrossSumsGame = {
+  board: CrossSumsBoard;
+  values: readonly number[];
+  notes: readonly (readonly number[])[];
+  history: readonly { values: readonly number[]; notes: readonly (readonly number[])[] }[];
+  helped: boolean;
+};
 /** The native English or Japanese display language for CrossSums.
  *
  * @example

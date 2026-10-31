@@ -96,4 +96,9 @@ export type JuosanSolve = { count: number; solution: readonly JuosanMark[] | nul
  * console.log(value);
  * ```
  */
-export type JuosanGame = { board: JuosanBoard; marks: readonly JuosanMark[]; history: readonly (readonly JuosanMark[])[]; helped: boolean };
+export type JuosanGame = {
+  board: JuosanBoard;
+  marks: readonly JuosanMark[];
+  history: readonly (readonly JuosanMark[])[];
+  helped: boolean;
+};

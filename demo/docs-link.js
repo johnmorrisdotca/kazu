@@ -7,7 +7,7 @@ export function attachDocsLink() {
     link.href = japanese ? "docs/ja/index.html" : "docs/index.html";
     link.textContent = japanese ? "ドキュメント" : "Docs";
   };
-  document.querySelector("header")?.addEventListener("click", event => {
+  document.querySelector("header")?.addEventListener("click", (event) => {
     if (event.target?.closest?.("button[data-lang]")) refresh();
   });
   refresh();

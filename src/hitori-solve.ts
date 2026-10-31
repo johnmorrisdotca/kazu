@@ -26,6 +26,8 @@ export function solveHitori(board: HitoriBoard, options: { limit?: number; nodes
   const budget = Math.max(1, Math.floor(options.nodes ?? HITORI_MAX_NODES));
   const { csp } = hitoriModel(board);
   const found = solveCsp(csp, openSlots(csp), limit, budget);
-  const solution = found.solution ? Array.from({ length: board.size ** 2 }, (_, cell) => found.solution![2 * cell + 1] === 1) : null;
+  const solution = found.solution
+    ? Array.from({ length: board.size ** 2 }, (_, cell) => found.solution![2 * cell + 1] === 1)
+    : null;
   return { count: found.count, solution, complete: !found.exhausted && !found.stopped, nodes: found.nodes };
 }

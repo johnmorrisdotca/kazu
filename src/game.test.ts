@@ -1,7 +1,21 @@
 import { describe, expect, it } from "vitest";
 
 import { decodeCells } from "./cells.ts";
-import { answerOf, clearCell, enterNumber, gameConflicts, isPrinted, isSolved, kazuProgress, newKazuGame, numberCounts, restartKazu, toggleNote, undoKazu, valuesOf } from "./game.ts";
+import {
+  answerOf,
+  clearCell,
+  enterNumber,
+  gameConflicts,
+  isPrinted,
+  isSolved,
+  kazuProgress,
+  newKazuGame,
+  numberCounts,
+  restartKazu,
+  toggleNote,
+  undoKazu,
+  valuesOf,
+} from "./game.ts";
 import { notesOf } from "./progress.ts";
 import { generateKazu } from "./generate.ts";
 
@@ -37,8 +51,16 @@ describe("a game in play", () => {
     let game = fresh();
     const cell = empty(game);
     const row = Math.floor(cell / 9);
-    const peer = game.printed.cells.findIndex((value, index) => value === 0 && index !== cell && Math.floor(index / 9) === row);
-    const elsewhere = game.printed.cells.findIndex((value, index) => value === 0 && Math.floor(index / 9) !== row && index % 9 !== cell % 9 && Math.floor(index / 27) !== Math.floor(cell / 27));
+    const peer = game.printed.cells.findIndex(
+      (value, index) => value === 0 && index !== cell && Math.floor(index / 9) === row,
+    );
+    const elsewhere = game.printed.cells.findIndex(
+      (value, index) =>
+        value === 0 &&
+        Math.floor(index / 9) !== row &&
+        index % 9 !== cell % 9 &&
+        Math.floor(index / 27) !== Math.floor(cell / 27),
+    );
     game = toggleNote(toggleNote(toggleNote(game, cell, 4), peer, 4), elsewhere, 4);
     game = toggleNote(game, peer, 5);
     expect(notesOf(game.notes[peer]!)).toEqual([4, 5]);
@@ -69,7 +91,11 @@ describe("a game in play", () => {
     let game = fresh();
     const cell = empty(game);
     const a = enterNumber(game, cell, 3);
-    const b = toggleNote(a, cell + 1 === cell ? cell : game.entries.findIndex((_, i) => i > cell && !isPrinted(game, i)), 5);
+    const b = toggleNote(
+      a,
+      cell + 1 === cell ? cell : game.entries.findIndex((_, i) => i > cell && !isPrinted(game, i)),
+      5,
+    );
     const c = clearCell(b, cell);
     expect(undoKazu(c).entries).toEqual(b.entries);
     expect(undoKazu(undoKazu(c)).entries).toEqual(a.entries);
@@ -108,6 +134,8 @@ describe("a game in play", () => {
     const entries = solution.map((value) => value);
     const game = newKazuGame("number-place", 9, puzzle.givens, { entries })!;
     expect(isSolved(game)).toBe(true);
-    expect(game.entries.every((value, index) => (printed[index] !== 0 ? value === 0 : value === solution[index]))).toBe(true);
+    expect(game.entries.every((value, index) => (printed[index] !== 0 ? value === 0 : value === solution[index]))).toBe(
+      true,
+    );
   });
 });

@@ -26,7 +26,9 @@ test("a first visit draws the puzzle its address names, with the numbers the pac
   const m = made("number-place", 9, "easy", 3);
   await expect(grid(page)).toHaveAttribute("data-kind", "number-place");
   await expect(page.locator(`${at("board")} .kz-hit`)).toHaveCount(81);
-  const printed = await page.locator(`${at("board")} text.kz-given`).evaluateAll((nodes) => nodes.map((node) => [Number(node.dataset.cell), node.textContent]));
+  const printed = await page
+    .locator(`${at("board")} text.kz-given`)
+    .evaluateAll((nodes) => nodes.map((node) => [Number(node.dataset.cell), node.textContent]));
   expect(printed).toEqual(m.printed.flatMap((value, index) => (value === 0 ? [] : [[index, String(value)]])));
   await expect(page.locator(at("board"))).toHaveAttribute("data-seed", "3");
   await expect(page.locator(at("seed"))).toHaveText("Seed 3");
@@ -34,14 +36,18 @@ test("a first visit draws the puzzle its address names, with the numbers the pac
   await noSidewaysScroll(page);
 });
 
-test("a cell tapped and a number tapped writes it, and the puzzle is solved when every cell is right", async ({ page }, testInfo) => {
+test("a cell tapped and a number tapped writes it, and the puzzle is solved when every cell is right", async ({
+  page,
+}, testInfo) => {
   await open(page, "?kind=number-place&size=4&level=easy&seed=3");
   const m = made("number-place", 4, "easy", 3);
   const cells = emptyCells(m);
   for (const index of cells.slice(0, -1)) {
     await tap(page, cell(page, index), testInfo);
     await tap(page, key(page, m.answer[index]), testInfo);
-    await expect(page.locator(`${at("board")} text.kz-entry[data-cell="${index}"]`)).toHaveText(String(m.answer[index]));
+    await expect(page.locator(`${at("board")} text.kz-entry[data-cell="${index}"]`)).toHaveText(
+      String(m.answer[index]),
+    );
   }
   await expect(grid(page)).not.toHaveAttribute("data-solved", "true");
   const last = cells.at(-1);
@@ -53,7 +59,9 @@ test("a cell tapped and a number tapped writes it, and the puzzle is solved when
   await expect(key(page, 1)).toBeDisabled();
 });
 
-test("a number that breaks a rule is drawn in red as it is written, and goes when it is taken away", async ({ page }, testInfo) => {
+test("a number that breaks a rule is drawn in red as it is written, and goes when it is taken away", async ({
+  page,
+}, testInfo) => {
   await open(page, "?kind=number-place&size=9&level=easy&seed=3");
   const m = made("number-place", 9, "easy", 3);
   const [a] = emptyCells(m);
@@ -62,12 +70,19 @@ test("a number that breaks a rule is drawn in red as it is written, and goes whe
   const twin = m.printed.findIndex((value, index) => value !== 0 && Math.floor(index / 9) === row);
   await tap(page, cell(page, a), testInfo);
   await tap(page, key(page, m.printed[twin]), testInfo);
-  await expect(page.locator(`${at("board")} .kz-conflict`)).toHaveCount(conflictsOf(readGivens("number-place", 9, made("number-place", 9, "easy", 3).puzzle.givens), m.printed.map((value, index) => (index === a ? m.printed[twin] : value))).length);
+  await expect(page.locator(`${at("board")} .kz-conflict`)).toHaveCount(
+    conflictsOf(
+      readGivens("number-place", 9, made("number-place", 9, "easy", 3).puzzle.givens),
+      m.printed.map((value, index) => (index === a ? m.printed[twin] : value)),
+    ).length,
+  );
   await tap(page, button(page, "erase"), testInfo);
   await expect(page.locator(`${at("board")} .kz-conflict`)).toHaveCount(0);
 });
 
-test("Pencil writes small notes instead of a number, a number written takes itself out of the notes beside it, and Undo takes each back", async ({ page }, testInfo) => {
+test("Pencil writes small notes instead of a number, a number written takes itself out of the notes beside it, and Undo takes each back", async ({
+  page,
+}, testInfo) => {
   await open(page, "?kind=number-place&size=9&level=easy&seed=3");
   const m = made("number-place", 9, "easy", 3);
   const [a] = emptyCells(m);
@@ -100,7 +115,9 @@ test("tapping the chosen cell again steps its number on, and round to empty", as
   }
 });
 
-test("Hint fills in the next cell and says why, and a hint that only points leaves the cell empty", async ({ page }, testInfo) => {
+test("Hint fills in the next cell and says why, and a hint that only points leaves the cell empty", async ({
+  page,
+}, testInfo) => {
   await open(page, "?kind=number-place&size=9&level=easy&seed=3");
   const m = made("number-place", 9, "easy", 3);
   const hint = hintKazu("number-place", 9, m.puzzle.givens, new Array(81).fill(0), m.puzzle.solution);
@@ -112,7 +129,13 @@ test("Hint fills in the next cell and says why, and a hint that only points leav
   // Points only.
   await tap(page, page.locator(`${at("hints")} button[data-value="show"]`), testInfo);
   await tap(page, button(page, "hint"), testInfo);
-  const next = hintKazu("number-place", 9, m.puzzle.givens, [...new Array(81).fill(0).map((_, i) => (i === hint.cell ? hint.value : 0))], m.puzzle.solution);
+  const next = hintKazu(
+    "number-place",
+    9,
+    m.puzzle.givens,
+    [...new Array(81).fill(0).map((_, i) => (i === hint.cell ? hint.value : 0))],
+    m.puzzle.solution,
+  );
   expect(await valueAt(page, next.cell)).toBeNull();
   await expect(page.locator(`${at("board")} .kz-hint`)).toHaveCount(1);
 });
@@ -133,7 +156,9 @@ test("Check says how many cells are wrong, never which, until it is asked to mar
   await expect(page.locator(`${at("board")} .kz-wrong`)).toHaveCount(1);
 });
 
-test("the arrows move, a number key fills, Backspace empties and N turns Pencil on, from the keyboard", async ({ page }, testInfo) => {
+test("the arrows move, a number key fills, Backspace empties and N turns Pencil on, from the keyboard", async ({
+  page,
+}, testInfo) => {
   test.skip(testInfo.project.use.hasTouch === true, "a keyboard");
   await open(page, "?kind=number-place&size=4&level=easy&seed=3");
   const m = made("number-place", 4, "easy", 3);
@@ -153,7 +178,9 @@ test("the arrows move, a number key fills, Backspace empties and N turns Pencil 
   await expect(notesIn(page)).toHaveCount(0);
 });
 
-test("the 25×25 takes its letters from the keyboard up to P, N is a number there, and the slash key turns Pencil on", async ({ page }, testInfo) => {
+test("the 25×25 takes its letters from the keyboard up to P, N is a number there, and the slash key turns Pencil on", async ({
+  page,
+}, testInfo) => {
   test.skip(testInfo.project.use.hasTouch === true, "a keyboard");
   await open(page, "?kind=number-place&size=25&level=easy&seed=3");
   const m = made("number-place", 25, "easy", 3);
@@ -164,7 +191,11 @@ test("the 25×25 takes its letters from the keyboard up to P, N is a number ther
     await tap(page, cell(page, index), testInfo);
   };
   // P is 25, N is 23: both are numbers on this board, and neither turns Pencil on.
-  for (const [value, letter] of [[25, "p"], [23, "n"], [17, "h"]]) {
+  for (const [value, letter] of [
+    [25, "p"],
+    [23, "n"],
+    [17, "h"],
+  ]) {
     const index = withValue(value);
     await walkTo(index);
     await page.keyboard.press(letter);
@@ -194,7 +225,9 @@ test("the clock starts on the first entry, and Restart empties the grid and the 
 });
 
 for (const kind of KAZU_KINDS) {
-  test(`${kind} is chosen, drawn at each of its sizes, with what it prints, and fits the page`, async ({ page }, testInfo) => {
+  test(`${kind} is chosen, drawn at each of its sizes, with what it prints, and fits the page`, async ({
+    page,
+  }, testInfo) => {
     const errors = await open(page);
     await tap(page, page.locator(`${at("kinds")} button[data-value="${kind}"]`), testInfo);
     await expect(grid(page)).toHaveAttribute("data-kind", kind);
@@ -211,13 +244,20 @@ for (const kind of KAZU_KINDS) {
           .poll(async () => {
             const { seed, level, marks } = await page.evaluate((board) => {
               const host = document.querySelector(board);
-              return { seed: Number(host.dataset.seed), level: document.querySelector('[data-testid="levels"] [aria-pressed="true"]').dataset.value, marks: host.querySelectorAll("svg.kazu .kz-mark").length };
+              return {
+                seed: Number(host.dataset.seed),
+                level: document.querySelector('[data-testid="levels"] [aria-pressed="true"]').dataset.value,
+                marks: host.querySelectorAll("svg.kazu .kz-mark").length,
+              };
             }, at("board"));
             return marks === readGivens(kind, size, generateKazu(kind, size, level, seed).givens).marks.length;
           })
           .toBe(true);
       }
-      if (kind === "diagonal") expect(await page.locator(`${at("board")} .kz-diagonal`).count()).toBe(size % 2 === 1 ? 2 * size - 1 : 2 * size);
+      if (kind === "diagonal")
+        expect(await page.locator(`${at("board")} .kz-diagonal`).count()).toBe(
+          size % 2 === 1 ? 2 * size - 1 : 2 * size,
+        );
       await noSidewaysScroll(page);
     }
     expect(errors).toEqual([]);
@@ -226,7 +266,9 @@ for (const kind of KAZU_KINDS) {
   });
 }
 
-test("New puzzle makes another from a new seed and puts it in the address; the same address makes the same puzzle again", async ({ page }, testInfo) => {
+test("New puzzle makes another from a new seed and puts it in the address; the same address makes the same puzzle again", async ({
+  page,
+}, testInfo) => {
   await open(page, "?kind=jigsaw&size=6&level=easy&seed=11");
   const before = await grid(page).innerHTML();
   await tap(page, page.locator(at("new")), testInfo);

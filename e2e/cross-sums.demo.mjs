@@ -1,9 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { serve, noSidewaysScroll } from "./demo.mjs";
 
-test("Cross Sums totals, keyboard entry, pencil, undo, hint, appearance, language and saved progress", async ({ page }) => {
+test("Cross Sums totals, keyboard entry, pencil, undo, hint, appearance, language and saved progress", async ({
+  page,
+}) => {
   const errors = [];
-  page.on("pageerror", error => errors.push(String(error)));
+  page.on("pageerror", (error) => errors.push(String(error)));
   await serve(page);
   await page.goto("http://kazu.test/cross-sums.html?seed=42");
   await expect(page.locator(".kk-cell")).toHaveCount(100);

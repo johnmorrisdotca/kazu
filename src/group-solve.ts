@@ -64,7 +64,8 @@ function cageAllows(layout: Layout, index: number, work: Grid, open: number): nu
   for (let left = open; left !== 0; left &= left - 1) {
     const value = lowestBit(left);
     const rest = cage.sum - placed - value;
-    if (others === 0 ? rest === 0 : reachable(rest, others, ALL(layout.size) & ~inCage & ~(1 << value), layout.size)) allowed |= 1 << value;
+    if (others === 0 ? rest === 0 : reachable(rest, others, ALL(layout.size) & ~inCage & ~(1 << value), layout.size))
+      allowed |= 1 << value;
   }
   return allowed;
 }
@@ -142,7 +143,13 @@ export function countSolutions(grid: Grid, layout: Layout, limit = 2): number {
  * asks this of layouts that are sometimes slow to settle, and draws another
  * rather than keeping a browser waiting.
  */
-export function countSolutionsWithin(grid: Grid, layout: Layout, limit: number, budget: number, first?: (answer: Grid) => void): number | null {
+export function countSolutionsWithin(
+  grid: Grid,
+  layout: Layout,
+  limit: number,
+  budget: number,
+  first?: (answer: Grid) => void,
+): number | null {
   if (layout.size > LARGEST_SEARCHED_BARE) return countByReasoning(grid, layout, limit, budget, first);
   const work = [...grid];
   const taken = used(work, layout);
@@ -180,7 +187,13 @@ export function countSolutionsWithin(grid: Grid, layout: Layout, limit: number, 
 const LARGEST_SEARCHED_BARE = 16;
 
 /** The same count for a large grid: at every step all the singles are filled in first, and only what they leave is guessed at. */
-function countByReasoning(grid: Grid, layout: Layout, limit: number, budget: number, first?: (answer: Grid) => void): number | null {
+function countByReasoning(
+  grid: Grid,
+  layout: Layout,
+  limit: number,
+  budget: number,
+  first?: (answer: Grid) => void,
+): number | null {
   let found = 0;
   let steps = 0;
   const step = (from: Grid): void => {

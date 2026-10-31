@@ -9,7 +9,15 @@ import type { RippleBoard, RippleGame, RippleLanguage, RippleMaterial, RipplePie
  * console.log(value);
  * ```
  */
-export type RippleDrawOptions = { values?: readonly number[]; notes?: readonly (readonly number[])[]; errors?: readonly number[]; selected?: number | null; material?: RippleMaterial; pieces?: RipplePieces; language?: RippleLanguage };
+export type RippleDrawOptions = {
+  values?: readonly number[];
+  notes?: readonly (readonly number[])[];
+  errors?: readonly number[];
+  selected?: number | null;
+  material?: RippleMaterial;
+  pieces?: RipplePieces;
+  language?: RippleLanguage;
+};
 /** The initial Ripple board, native progress, appearance and host event callbacks.
  *
  * @example
@@ -21,7 +29,12 @@ export type RippleDrawOptions = { values?: readonly number[]; notes?: readonly (
  * console.log(value);
  * ```
  */
-export type RippleMountOptions = RippleDrawOptions & { board: RippleBoard; progress?: string; onChange?: (game: RippleGame) => void; onFinish?: (game: RippleGame) => void };
+export type RippleMountOptions = RippleDrawOptions & {
+  board: RippleBoard;
+  progress?: string;
+  onChange?: (game: RippleGame) => void;
+  onFinish?: (game: RippleGame) => void;
+};
 /** The mounted Ripple game and progress, native controls and cleanup handle.
  *
  * @example
@@ -37,4 +50,10 @@ export type RippleMountOptions = RippleDrawOptions & { board: RippleBoard; progr
  * player.destroy();
  * ```
  */
-export type RippleMount = { game: () => RippleGame; progress: () => string; set: (options: RippleDrawOptions) => void; restart: () => void; destroy: () => void };
+export type RippleMount = {
+  game: () => RippleGame;
+  progress: () => string;
+  set: (options: RippleDrawOptions) => void;
+  restart: () => void;
+  destroy: () => void;
+};

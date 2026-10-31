@@ -7,21 +7,25 @@ import { solveMasyu } from "./masyu-solve.ts";
 
 describe("Masyu rules", () => {
   it("checks pearl-neighbor turns, straight runs, connectedness and boundaries", () => {
-    const puzzle = generateMasyu(), solution = [...puzzle.solution];
+    const puzzle = generateMasyu(),
+      solution = [...puzzle.solution];
     expect(checkMasyu(puzzle, solution).ok).toBe(true);
-    const broken = solution.filter(edge => edge !== solution[0]);
+    const broken = solution.filter((edge) => edge !== solution[0]);
     expect(checkMasyu(puzzle, broken).ok).toBe(false);
-    expect(masyuNeighbors(puzzle, 4).some(next => next.cell === 5)).toBe(false);
-    expect(masyuNeighbors(puzzle, 5).some(next => next.cell === 4)).toBe(false);
+    expect(masyuNeighbors(puzzle, 4).some((next) => next.cell === 5)).toBe(false);
+    expect(masyuNeighbors(puzzle, 5).some((next) => next.cell === 4)).toBe(false);
   });
 
   it("rejects branches, repeated edges, and disjoint loops", () => {
-    const puzzle = generateMasyu(), loop = [...puzzle.solution];
+    const puzzle = generateMasyu(),
+      loop = [...puzzle.solution];
     expect(checkMasyu(puzzle, [...loop, loop[0]!]).ok).toBe(false);
     const outer = loop;
     const innerCells = [6, 7, 8, 13, 18, 17, 16, 11];
-    const inner = innerCells.map((cell, index) => masyuNeighbors(puzzle, cell)
-      .find(next => next.cell === innerCells[(index + 1) % innerCells.length])!.edge);
+    const inner = innerCells.map(
+      (cell, index) =>
+        masyuNeighbors(puzzle, cell).find((next) => next.cell === innerCells[(index + 1) % innerCells.length])!.edge,
+    );
     expect(checkMasyu(puzzle, [...outer, ...inner]).ok).toBe(false);
     expect(masyuEdgeCount(puzzle)).toBe(40);
   });
@@ -50,7 +54,8 @@ describe("Masyu rules", () => {
   });
 
   it("keeps play immutable and progress public", () => {
-    const puzzle = generateMasyu(), game = newMasyu(puzzle);
+    const puzzle = generateMasyu(),
+      game = newMasyu(puzzle);
     const moved = toggleMasyuEdge(game, puzzle.solution[0]!);
     expect(game.edges).toEqual([]);
     expect(undoMasyu(moved).edges).toEqual([]);

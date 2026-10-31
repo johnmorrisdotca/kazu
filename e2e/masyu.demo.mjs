@@ -4,24 +4,32 @@ import { serve } from "./demo.mjs";
 
 test("Masyu draws a loop edge, saves it, and restores progress", async ({ page }) => {
   const errors = [];
-  page.on("pageerror", error => errors.push(String(error)));
+  page.on("pageerror", (error) => errors.push(String(error)));
   await serve(page);
   await page.goto("http://kazu.test/masyu.html?seed=3");
   const cells = page.locator(".km-cell");
   await expect(cells).toHaveCount(25);
   await cells.nth(0).click();
   await cells.nth(1).click();
-  await expect.poll(async () => page.evaluate(() => {
-    const saved = JSON.parse(localStorage.getItem("kazu-masyu-progress"));
-    return JSON.parse(saved.progress).edges.length;
-  })).toBe(1);
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const saved = JSON.parse(localStorage.getItem("kazu-masyu-progress"));
+        return JSON.parse(saved.progress).edges.length;
+      }),
+    )
+    .toBe(1);
 
   await page.reload();
   await expect(page.locator(".kazu-masyu svg line")).toHaveCount(1);
-  await expect.poll(async () => page.evaluate(() => {
-    const saved = JSON.parse(localStorage.getItem("kazu-masyu-progress"));
-    return JSON.parse(saved.progress).edges.length;
-  })).toBe(1);
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const saved = JSON.parse(localStorage.getItem("kazu-masyu-progress"));
+        return JSON.parse(saved.progress).edges.length;
+      }),
+    )
+    .toBe(1);
   expect(errors).toEqual([]);
 });
 

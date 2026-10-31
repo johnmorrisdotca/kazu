@@ -38,14 +38,18 @@ export function solveRegions(
     if (board.givens[cell] && value !== board.givens[cell]) return -1;
     return value || board.givens[cell]!;
   });
-  if (fixed.some(value => value < 0)) return { count: 0, solution: null, complete: true, nodes: 0 };
+  if (fixed.some((value) => value < 0)) return { count: 0, solution: null, complete: true, nodes: 0 };
   const { csp, most } = regionsModel(board, fixed);
   const start = openSlots(csp);
-  fixed.forEach((value, cell) => { if (value) decide(csp, start, cell, cell * most + value - 1); });
+  fixed.forEach((value, cell) => {
+    if (value) decide(csp, start, cell, cell * most + value - 1);
+  });
   const found = solveCsp(csp, start, limit, budget);
-  const solution = found.solution ? Array.from({ length: fixed.length }, (_, cell) => {
-    for (let v = 0; v < most; v += 1) if (found.solution![cell * most + v]) return v + 1;
-    return 0;
-  }) : null;
+  const solution = found.solution
+    ? Array.from({ length: fixed.length }, (_, cell) => {
+        for (let v = 0; v < most; v += 1) if (found.solution![cell * most + v]) return v + 1;
+        return 0;
+      })
+    : null;
   return { count: found.count, solution, complete: !found.exhausted && !found.stopped, nodes: found.nodes };
 }

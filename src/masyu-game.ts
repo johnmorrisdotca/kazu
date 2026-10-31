@@ -17,7 +17,12 @@ import type { MasyuBoard, MasyuGame } from "./masyu.types.ts";
  */
 export function newMasyu(board: MasyuBoard): MasyuGame {
   if (!isMasyuBoard(board)) throw new RangeError("Invalid Masyu board");
-  return { board: { width: board.width, height: board.height, pearls: [...board.pearls] }, edges: [], history: [], helped: false };
+  return {
+    board: { width: board.width, height: board.height, pearls: [...board.pearls] },
+    edges: [],
+    history: [],
+    helped: false,
+  };
 }
 /** Apply the requested native Masyu entry or mark to a new immutable game; invalid or fixed targets stay unchanged.
  *
@@ -36,7 +41,9 @@ export function newMasyu(board: MasyuBoard): MasyuGame {
  */
 export function toggleMasyuEdge(game: MasyuGame, edge: number): MasyuGame {
   if (!Number.isInteger(edge) || edge < 0 || edge >= masyuEdgeCount(game.board)) return game;
-  const edges = game.edges.includes(edge) ? game.edges.filter(value => value !== edge) : [...game.edges, edge].sort((a, b) => a - b);
+  const edges = game.edges.includes(edge)
+    ? game.edges.filter((value) => value !== edge)
+    : [...game.edges, edge].sort((a, b) => a - b);
   return { ...game, edges, history: [...game.history, [...game.edges]] };
 }
 /** Return the Masyu game with its previous marks or entries restored, or unchanged when there is no undo history.
@@ -71,7 +78,9 @@ export function undoMasyu(game: MasyuGame): MasyuGame {
  * console.log(restartMasyu(masyuGame));
  * ```
  */
-export function restartMasyu(game: MasyuGame): MasyuGame { return { ...newMasyu(game.board), helped: false }; }
+export function restartMasyu(game: MasyuGame): MasyuGame {
+  return { ...newMasyu(game.board), helped: false };
+}
 /** Find a native Masyu hint, or null when no actionable hint is available.
  *
  * @param game - The current immutable game state.
@@ -89,7 +98,7 @@ export function restartMasyu(game: MasyuGame): MasyuGame { return { ...newMasyu(
 export function hintMasyu(game: MasyuGame): number | null {
   const result = solveMasyu(game.board);
   if (!result.complete || result.count !== 1) return null;
-  return result.solution!.find(edge => !game.edges.includes(edge)) ?? null;
+  return result.solution!.find((edge) => !game.edges.includes(edge)) ?? null;
 }
 /** Whether this Masyu game satisfies its complete native rules.
  *
@@ -105,7 +114,9 @@ export function hintMasyu(game: MasyuGame): number | null {
  * console.log(masyuFinished(masyuGame));
  * ```
  */
-export function masyuFinished(game: MasyuGame): boolean { return checkMasyu(game.board, game.edges).ok; }
+export function masyuFinished(game: MasyuGame): boolean {
+  return checkMasyu(game.board, game.edges).ok;
+}
 /** Encode the Masyu board and current game as native resumable text.
  *
  * @param game - The current immutable game state.
@@ -138,11 +149,20 @@ export function decodeMasyu(code: string): MasyuGame | null {
   try {
     if (code.length > 40_000) return null;
     const value = JSON.parse(code);
-    if (value.version !== 1 || !isMasyuBoard(value.board) || !Array.isArray(value.edges)
-      || typeof value.helped !== "boolean" || !value.edges.every((edge: unknown) => Number.isInteger(edge))) return null;
+    if (
+      value.version !== 1 ||
+      !isMasyuBoard(value.board) ||
+      !Array.isArray(value.edges) ||
+      typeof value.helped !== "boolean" ||
+      !value.edges.every((edge: unknown) => Number.isInteger(edge))
+    )
+      return null;
     const rawEdges = value.edges as number[];
     const edges = [...new Set(rawEdges)].sort((a, b) => a - b);
-    if (edges.length !== rawEdges.length || edges.some(edge => edge < 0 || edge >= masyuEdgeCount(value.board))) return null;
+    if (edges.length !== rawEdges.length || edges.some((edge) => edge < 0 || edge >= masyuEdgeCount(value.board)))
+      return null;
     return { ...newMasyu(value.board), edges, helped: value.helped };
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }

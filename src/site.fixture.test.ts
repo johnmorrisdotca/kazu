@@ -25,8 +25,11 @@ const rows = sitePuzzles;
 describe("the puzzles itsutsu.com made", () => {
   it("covers every kind, every size and every level, with sixty seeds each", () => {
     const seen = new Map<string, number>();
-    for (const [kind, size, level] of rows) seen.set(`${kind}/${size}/${level}`, (seen.get(`${kind}/${size}/${level}`) ?? 0) + 1);
-    const wanted = Object.entries(KAZU_KIND_OF_SITE_KIND).flatMap(([site, kind]) => recordedSizes(kind).flatMap((size) => KAZU_LEVELS.map((level) => `${site}/${size}/${level}`)));
+    for (const [kind, size, level] of rows)
+      seen.set(`${kind}/${size}/${level}`, (seen.get(`${kind}/${size}/${level}`) ?? 0) + 1);
+    const wanted = Object.entries(KAZU_KIND_OF_SITE_KIND).flatMap(([site, kind]) =>
+      recordedSizes(kind).flatMap((size) => KAZU_LEVELS.map((level) => `${site}/${size}/${level}`)),
+    );
     expect([...seen.keys()].sort()).toEqual(wanted.sort());
     for (const [key, count] of seen) expect(count, key).toBe(60);
     expect(rows).toHaveLength(3600);
@@ -39,7 +42,15 @@ describe("the puzzles itsutsu.com made", () => {
       expect(read, `${kind} ${size} ${level} ${seed}`).not.toBeNull();
       const cells = encodeCells(read!.cells);
       const written =
-        kind === "jigsaw" ? encodeJigsaw(read!.cells, read!.regions!) : kind === "sum-cages" ? encodeKiller(read!.cells, read!.cages!) : kind === "more-or-less" ? encodeMoreOrLess(read!.cells, read!.marks, size) : kind === "towers" ? encodeTowers(read!.cells, read!.clues!) : cells;
+        kind === "jigsaw"
+          ? encodeJigsaw(read!.cells, read!.regions!)
+          : kind === "sum-cages"
+            ? encodeKiller(read!.cells, read!.cages!)
+            : kind === "more-or-less"
+              ? encodeMoreOrLess(read!.cells, read!.marks, size)
+              : kind === "towers"
+                ? encodeTowers(read!.cells, read!.clues!)
+                : cells;
       expect(written).toBe(givens);
     }
   });

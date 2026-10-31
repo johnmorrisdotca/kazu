@@ -3,7 +3,7 @@ import { serve, noSidewaysScroll } from "./demo.mjs";
 
 test("Heyawake marks, undo, proved hint, language and saved progress", async ({ page }) => {
   const errors = [];
-  page.on("pageerror", error => errors.push(String(error)));
+  page.on("pageerror", (error) => errors.push(String(error)));
   await serve(page);
   await page.goto("http://kazu.test/heyawake.html?seed=17");
   await expect(page.locator(".kh-cell")).toHaveCount(20);

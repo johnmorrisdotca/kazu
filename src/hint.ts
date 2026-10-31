@@ -59,12 +59,16 @@ function groupInfo(givens: KazuGivens, g: number): NonNullable<KazuHint["group"]
   const { size } = givens;
   if (g < size) return { type: "row", index: g };
   if (g < 2 * size) return { type: "column", index: g - size };
-  if (givens.regions !== null && g < 3 * size) return { type: givens.kind === "jigsaw" ? "region" : "box", index: g - 2 * size };
+  if (givens.regions !== null && g < 3 * size)
+    return { type: givens.kind === "jigsaw" ? "region" : "box", index: g - 2 * size };
   return { type: "diagonal", index: g - 3 * size };
 }
 
 /** Candidate masks for every cell of a grid, and which rule beyond the groups narrowed each. */
-function candidatesFor(givens: KazuGivens, grid: number[]): { masks: number[]; by: (KazuHint["by"] | undefined)[]; groups: number[][] } | null {
+function candidatesFor(
+  givens: KazuGivens,
+  grid: number[],
+): { masks: number[]; by: (KazuHint["by"] | undefined)[]; groups: number[][] } | null {
   const { size } = givens;
   const layout = layoutOfGivens(givens);
   if (layout !== null) {
@@ -75,7 +79,9 @@ function candidatesFor(givens: KazuGivens, grid: number[]): { masks: number[]; b
       let blocked = 0;
       for (const group of layout.groupsOf[index]!) blocked |= taken[group]!;
       const open = ALL(size) & ~blocked;
-      return bitCount(open) > 1 && bitCount(masks[index]!) === 1 && layout.cages !== undefined ? ("cage" as const) : undefined;
+      return bitCount(open) > 1 && bitCount(masks[index]!) === 1 && layout.cages !== undefined
+        ? ("cage" as const)
+        : undefined;
     });
     return { masks, by, groups: layout.groups };
   }
@@ -110,7 +116,15 @@ function candidatesFor(givens: KazuGivens, grid: number[]): { masks: number[]; b
       }
       if (candidates.some((mask) => mask === 0)) return null;
     }
-    return { masks: grid.map((value, index) => (value !== 0 ? 0 : candidates[index]!)), by: grid.map((value, index) => (value === 0 && bitCount(plain[index]!) > 1 && bitCount(candidates[index]!) === 1 ? ("marks" as const) : undefined)), groups };
+    return {
+      masks: grid.map((value, index) => (value !== 0 ? 0 : candidates[index]!)),
+      by: grid.map((value, index) =>
+        value === 0 && bitCount(plain[index]!) > 1 && bitCount(candidates[index]!) === 1
+          ? ("marks" as const)
+          : undefined,
+      ),
+      groups,
+    };
   }
   if (givens.clues !== null) {
     const candidates = grid.map((value, index) => (value !== 0 ? 1 << value : masks[index]!));
@@ -123,7 +137,15 @@ function candidatesFor(givens: KazuGivens, grid: number[]): { masks: number[]; b
         if (narrowed) changed = true;
       }
     }
-    return { masks: grid.map((value, index) => (value !== 0 ? 0 : candidates[index]!)), by: grid.map((value, index) => (value === 0 && bitCount(plain[index]!) > 1 && bitCount(candidates[index]!) === 1 ? ("clues" as const) : undefined)), groups };
+    return {
+      masks: grid.map((value, index) => (value !== 0 ? 0 : candidates[index]!)),
+      by: grid.map((value, index) =>
+        value === 0 && bitCount(plain[index]!) > 1 && bitCount(candidates[index]!) === 1
+          ? ("clues" as const)
+          : undefined,
+      ),
+      groups,
+    };
   }
   return { masks, by: grid.map(() => undefined), groups };
 }
@@ -155,12 +177,20 @@ function candidatesFor(givens: KazuGivens, grid: number[]): { masks: number[]; b
  * console.log(hintKazu(kind,size,givens,game.entries,answer));
  * ```
  */
-export function hintKazu(kind: KazuKind, size: number, givens: string, entries: readonly number[], answer?: string): KazuHint | null {
+export function hintKazu(
+  kind: KazuKind,
+  size: number,
+  givens: string,
+  entries: readonly number[],
+  answer?: string,
+): KazuHint | null {
   const read = readGivens(kind, size, givens);
   if (read === null) return null;
   const solved = decodeCells(answer ?? solveKazu(kind, size, givens) ?? "", size);
   if (solved === null) return null;
-  const right = read.cells.map((printed, index) => (printed !== 0 ? printed : entries[index] === solved[index] ? solved[index]! : 0));
+  const right = read.cells.map((printed, index) =>
+    printed !== 0 ? printed : entries[index] === solved[index] ? solved[index]! : 0,
+  );
   if (right.every((value) => value !== 0)) return null;
   const replaces = (cell: number) => (entries[cell] ?? 0) !== 0 && read.cells[cell] === 0;
   const found = candidatesFor(read, right);
@@ -169,7 +199,14 @@ export function hintKazu(kind: KazuKind, size: number, givens: string, entries: 
     // A cell that is empty is a gentler hint than one that holds a wrong number, so those come first.
     const ordered = [...empty.filter((cell) => !replaces(cell)), ...empty.filter(replaces)];
     for (const cell of ordered) {
-      if (bitCount(found.masks[cell]!) === 1) return { cell, value: lowestBit(found.masks[cell]!), why: "only-number", by: found.by[cell], replaces: replaces(cell) };
+      if (bitCount(found.masks[cell]!) === 1)
+        return {
+          cell,
+          value: lowestBit(found.masks[cell]!),
+          why: "only-number",
+          by: found.by[cell],
+          replaces: replaces(cell),
+        };
     }
     for (const rank of [false, true]) {
       for (const [g, group] of found.groups.entries()) {
@@ -180,7 +217,8 @@ export function hintKazu(kind: KazuKind, size: number, givens: string, entries: 
         for (let value = 1; value <= size; value += 1) {
           if (present & (1 << value)) continue;
           const places = group.filter((index) => right[index] === 0 && (found.masks[index]! & (1 << value)) !== 0);
-          if (places.length === 1 && replaces(places[0]!) === rank) return { cell: places[0]!, value, why: "only-place", group: groupInfo(read, g), replaces: rank };
+          if (places.length === 1 && replaces(places[0]!) === rank)
+            return { cell: places[0]!, value, why: "only-place", group: groupInfo(read, g), replaces: rank };
         }
       }
     }

@@ -133,7 +133,9 @@ function startingRegions(size: number): number[] {
   return Array.from({ length: size * size }, (_, index) => {
     const row = Math.floor(index / size);
     const col = index % size;
-    return boxes === undefined ? row : Math.floor(row / boxes.rows) * (size / boxes.cols) + Math.floor(col / boxes.cols);
+    return boxes === undefined
+      ? row
+      : Math.floor(row / boxes.rows) * (size / boxes.cols) + Math.floor(col / boxes.cols);
   });
 }
 
@@ -222,7 +224,14 @@ export function generateJigsaw(size: number, level: KazuLevel, seed: number): Ka
     const solution = fillLayout(layout, random);
     if (solution === null) continue;
     const givens = carve(solution, layout, level, FLOOR[level][size]!, random);
-    return { kind: "jigsaw", size, level, seed, givens: encodeJigsaw(givens, regions), solution: encodeCells(solution) };
+    return {
+      kind: "jigsaw",
+      size,
+      level,
+      seed,
+      givens: encodeJigsaw(givens, regions),
+      solution: encodeCells(solution),
+    };
   }
   throw new Error(`No jigsaw could be filled from seed ${seed} at ${size}×${size}.`);
 }

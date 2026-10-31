@@ -21,7 +21,7 @@ export function newJuosan(board: JuosanBoard): JuosanGame {
     board: {
       width: board.width,
       height: board.height,
-      territories: board.territories.map(territory => ({
+      territories: board.territories.map((territory) => ({
         cells: [...territory.cells],
         difference: territory.difference,
       })),
@@ -48,11 +48,7 @@ export function newJuosan(board: JuosanBoard): JuosanGame {
  * console.log(setJuosanMark(juosanGame,0,1));
  * ```
  */
-export function setJuosanMark(
-  game: JuosanGame,
-  cell: number,
-  mark: JuosanMark,
-): JuosanGame {
+export function setJuosanMark(game: JuosanGame, cell: number, mark: JuosanMark): JuosanGame {
   if (
     !Number.isInteger(cell) ||
     cell < 0 ||
@@ -84,9 +80,7 @@ export function setJuosanMark(
  */
 export function undoJuosan(game: JuosanGame): JuosanGame {
   const previous = game.history.at(-1);
-  return previous
-    ? { ...game, marks: [...previous], history: game.history.slice(0, -1) }
-    : game;
+  return previous ? { ...game, marks: [...previous], history: game.history.slice(0, -1) } : game;
 }
 
 /** Clears the board while retaining whether the player used a hint.
@@ -122,10 +116,7 @@ export function restartJuosan(game: JuosanGame): JuosanGame {
  * ```
  */
 export function juosanFinished(game: JuosanGame): boolean {
-  return (
-    game.marks.every(mark => mark !== 0) &&
-    checkJuosan(game.board, game.marks).ok
-  );
+  return game.marks.every((mark) => mark !== 0) && checkJuosan(game.board, game.marks).ok;
 }
 
 /** Returns one next mark only when the public clues prove a unique answer.
@@ -142,9 +133,7 @@ export function juosanFinished(game: JuosanGame): boolean {
  * console.log(hintJuosan(juosanGame));
  * ```
  */
-export function hintJuosan(
-  game: JuosanGame,
-): { cell: number; mark: JuosanMark } | null {
+export function hintJuosan(game: JuosanGame): { cell: number; mark: JuosanMark } | null {
   const counted = solveJuosan(game.board, 2);
   if (!counted.complete || counted.count !== 1 || !counted.solution) return null;
 

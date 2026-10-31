@@ -23,7 +23,7 @@ export function rateLoop(board: LoopBoard): LoopRating {
   if (proof.count !== 1 || proof.exhausted) throw new RangeError("Loop rating needs a board with one answer");
   const plain = logicCsp(csp, openSlots(csp), 0);
   const probing = plain.solved ? plain : logicCsp(csp, openSlots(csp), 1);
-  const numbered = board.clues.filter(clue => clue !== null);
+  const numbered = board.clues.filter((clue) => clue !== null);
   let loop = 0;
   for (let at = 1; at < proof.solution!.length; at += 2) loop += proof.solution![at]!;
   return {
@@ -31,7 +31,7 @@ export function rateLoop(board: LoopBoard): LoopRating {
     probes: plain.solved ? 0 : probing.probes,
     clues: numbered.length,
     clueShare: numbered.length / board.clues.length,
-    zeroShare: numbered.length ? numbered.filter(clue => clue === 0).length / numbered.length : 0,
+    zeroShare: numbered.length ? numbered.filter((clue) => clue === 0).length / numbered.length : 0,
     loop,
   };
 }

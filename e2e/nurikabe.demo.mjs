@@ -3,7 +3,7 @@ import { serve } from "./demo.mjs";
 
 test("Nurikabe plays, saves progress and restores the same board", async ({ page }) => {
   const errors = [];
-  page.on("pageerror", error => errors.push(String(error)));
+  page.on("pageerror", (error) => errors.push(String(error)));
   await serve(page);
   await page.goto("http://kazu.test/nurikabe.html");
   await expect(page.locator(".kn-cell")).toHaveCount(25);

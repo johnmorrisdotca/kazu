@@ -33,13 +33,19 @@ describe("drawing a puzzle", () => {
     expect(count(svg, "kz-cage-sum")).toBe(read.cages!.length);
     expect(svg).toContain(`class="kz-cage"`);
     const more = generateKazu("more-or-less", 5, "easy", 2);
-    expect(count(drawKazu("more-or-less", 5, more.givens)!, "kz-mark")).toBe(readGivens("more-or-less", 5, more.givens)!.marks.length);
+    expect(count(drawKazu("more-or-less", 5, more.givens)!, "kz-mark")).toBe(
+      readGivens("more-or-less", 5, more.givens)!.marks.length,
+    );
     const towers = generateKazu("towers", 5, "easy", 2);
-    const clues = Object.values(readGivens("towers", 5, towers.givens)!.clues!).flat().filter((clue) => clue !== 0).length;
+    const clues = Object.values(readGivens("towers", 5, towers.givens)!.clues!)
+      .flat()
+      .filter((clue) => clue !== 0).length;
     expect(count(drawKazu("towers", 5, towers.givens)!, "kz-clue")).toBe(clues);
     const diagonal = drawKazu("diagonal", 9, generateKazu("diagonal", 9, "easy", 1).givens, {})!;
     expect(count(diagonal, "kz-diagonal")).toBe(17);
-    expect(drawKazu("number-place", 9, generateKazu("number-place", 9, "easy", 1).givens)!).not.toContain("kz-diagonal");
+    expect(drawKazu("number-place", 9, generateKazu("number-place", 9, "easy", 1).givens)!).not.toContain(
+      "kz-diagonal",
+    );
   });
 
   it("draws entries, notes, the chosen cell and its lines, conflicts, wrong cells and a hint, each washed or marked", () => {
@@ -50,7 +56,16 @@ describe("drawing a puzzle", () => {
     entries[open[0]!] = 5;
     const notes = new Array<number>(81).fill(0);
     notes[open[1]!] = (1 << 2) | (1 << 9);
-    const svg = drawKazu("number-place", 9, puzzle.givens, { entries, notes, selected: open[2]!, peers: true, conflicts: [open[0]!], wrong: [open[3]!], hint: open[4]!, interactive: true })!;
+    const svg = drawKazu("number-place", 9, puzzle.givens, {
+      entries,
+      notes,
+      selected: open[2]!,
+      peers: true,
+      conflicts: [open[0]!],
+      wrong: [open[3]!],
+      hint: open[4]!,
+      interactive: true,
+    })!;
     expect(count(svg, "kz-digit kz-entry")).toBe(1);
     expect(count(svg, "kz-digit kz-entry kz-bad")).toBe(1);
     expect(count(svg, "kz-note")).toBe(2);
@@ -67,7 +82,10 @@ describe("drawing a puzzle", () => {
     const puzzle = generateKazu("jigsaw", 7, "medium", 5);
     const a = drawKazu("jigsaw", 7, puzzle.givens, { entries: new Array<number>(49).fill(0) });
     expect(drawKazu("jigsaw", 7, puzzle.givens)).toBe(a);
-    const full = drawKazu("jigsaw", 7, puzzle.givens, { entries: Array.from({ length: 49 }, (_, i) => (i % 7) + 1), done: true })!;
+    const full = drawKazu("jigsaw", 7, puzzle.givens, {
+      entries: Array.from({ length: 49 }, (_, i) => (i % 7) + 1),
+      done: true,
+    })!;
     expect(full.match(/viewBox="[^"]+"/)![0]).toBe(a!.match(/viewBox="[^"]+"/)![0]);
     expect(full).toContain(`data-solved="true"`);
   });
@@ -77,7 +95,9 @@ describe("drawing a puzzle", () => {
     expect(drawKazu("number-place", 4, puzzle.givens, { style: true })).toContain(KAZU_STYLE.slice(0, 40));
     expect(drawKazu("number-place", 4, puzzle.givens, { language: "ja" })).toContain(`aria-label="ナンプレ、4×4"`);
     expect(drawKazu("number-place", 4, puzzle.givens)).toContain(`aria-label="Sudoku puzzle, 4 by 4"`);
-    expect(drawKazu("number-place", 4, puzzle.givens, { label: `a "<b>"` })).toContain(`aria-label="a &quot;&lt;b&gt;&quot;"`);
+    expect(drawKazu("number-place", 4, puzzle.givens, { label: `a "<b>"` })).toContain(
+      `aria-label="a &quot;&lt;b&gt;&quot;"`,
+    );
   });
 
   it("makes the style one that cannot be selected, and says null for givens that are not a puzzle", () => {

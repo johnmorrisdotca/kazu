@@ -41,7 +41,16 @@ describe("a hint", () => {
   it("names the group a number has one place in, and the rule that left a cell one number", () => {
     const seen = new Set<string>();
     for (const kind of KAZU_KINDS) {
-      for (const [seed, level] of [[1, "easy"], [2, "easy"], [3, "medium"], [4, "medium"], [5, "hard"], [6, "hard"], [7, "medium"], [8, "easy"]] as const) {
+      for (const [seed, level] of [
+        [1, "easy"],
+        [2, "easy"],
+        [3, "medium"],
+        [4, "medium"],
+        [5, "hard"],
+        [6, "hard"],
+        [7, "medium"],
+        [8, "easy"],
+      ] as const) {
         const size = KAZU_SPECS[kind].sizes.at(-2)!;
         const puzzle = generateKazu(kind, size, level, seed);
         const entries = new Array<number>(size * size).fill(0);
@@ -97,7 +106,9 @@ describe("a hint", () => {
         if (hint.why === "answer") fell = true;
         entries[hint.cell] = hint.value;
       }
-      expect(entries.filter((value) => value === 0).length).toBe(readGivens("number-place", 9, puzzle.givens)!.cells.filter((value) => value !== 0).length);
+      expect(entries.filter((value) => value === 0).length).toBe(
+        readGivens("number-place", 9, puzzle.givens)!.cells.filter((value) => value !== 0).length,
+      );
     }
     expect(fell).toBe(true);
   });

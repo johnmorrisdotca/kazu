@@ -44,9 +44,7 @@ export function toggleAkari(game: AkariGame, cell: number): AkariGame {
   if (!Number.isInteger(cell) || cell < 0 || cell >= game.board.cells.length || game.board.cells[cell] !== null) {
     return game;
   }
-  const bulbs = game.bulbs.includes(cell)
-    ? game.bulbs.filter(placed => placed !== cell)
-    : [...game.bulbs, cell];
+  const bulbs = game.bulbs.includes(cell) ? game.bulbs.filter((placed) => placed !== cell) : [...game.bulbs, cell];
   return { ...game, bulbs, history: [...game.history, [...game.bulbs]] };
 }
 
@@ -66,9 +64,7 @@ export function toggleAkari(game: AkariGame, cell: number): AkariGame {
  */
 export function undoAkari(game: AkariGame): AkariGame {
   const previous = game.history.at(-1);
-  return previous
-    ? { ...game, bulbs: [...previous], history: game.history.slice(0, -1) }
-    : game;
+  return previous ? { ...game, bulbs: [...previous], history: game.history.slice(0, -1) } : game;
 }
 
 /** A game is finished only when its bulbs satisfy every rule and light every white square.
@@ -106,9 +102,11 @@ export function akariFinished(game: AkariGame): boolean {
 export function hintAkari(game: AkariGame): number | null {
   const solved = solveAkari(game.board);
   if (!solved.complete || solved.count !== 1 || !solved.solution) return null;
-  return solved.solution.find(cell => !game.bulbs.includes(cell))
-    ?? game.bulbs.find(cell => !solved.solution!.includes(cell))
-    ?? null;
+  return (
+    solved.solution.find((cell) => !game.bulbs.includes(cell)) ??
+    game.bulbs.find((cell) => !solved.solution!.includes(cell)) ??
+    null
+  );
 }
 
 /** Encodes only public clues and player placements.
@@ -144,8 +142,14 @@ export function decodeAkari(code: string): AkariGame | null {
   try {
     if (code.length > 40_000) return null;
     const value = JSON.parse(code);
-    if (value.version !== 1 || !isAkariBoard(value.board) || !Array.isArray(value.bulbs)
-      || value.bulbs.length > value.board.cells.length || typeof value.helped !== "boolean") return null;
+    if (
+      value.version !== 1 ||
+      !isAkariBoard(value.board) ||
+      !Array.isArray(value.bulbs) ||
+      value.bulbs.length > value.board.cells.length ||
+      typeof value.helped !== "boolean"
+    )
+      return null;
     if (new Set(value.bulbs).size !== value.bulbs.length) return null;
 
     let game = newAkari(value.board);

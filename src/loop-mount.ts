@@ -1,26 +1,9 @@
-import {
-  progressLoop,
-  loopCellEdges,
-  loopHorizontalCount,
-  loopVertexEdges,
-} from "./loop-board.ts";
-import {
-  decodeLoop,
-  encodeLoop,
-  hintLoop,
-  newLoop,
-  loopFinished,
-  toggleLoop,
-  undoLoop,
-} from "./loop-game.ts";
+import { progressLoop, loopCellEdges, loopHorizontalCount, loopVertexEdges } from "./loop-board.ts";
+import { decodeLoop, encodeLoop, hintLoop, newLoop, loopFinished, toggleLoop, undoLoop } from "./loop-game.ts";
 import { KAZU_STYLE } from "./style.ts";
 import { LOOP_PLAY_STYLE } from "./loop-style.ts";
 import { loopWords } from "./loop-strings.ts";
-import type {
-  LoopDrawOptions,
-  LoopMount,
-  LoopMountOptions,
-} from "./loop-play.types.ts";
+import type { LoopDrawOptions, LoopMount, LoopMountOptions } from "./loop-play.types.ts";
 import type { LoopBoard } from "./loop.types.ts";
 
 /** Mounts an accessible dot-and-edge loop player in the given host element.
@@ -73,7 +56,7 @@ export function mountLoop(host: HTMLElement, initial: LoopMountOptions): LoopMou
     ...game!,
     board: { ...game!.board, clues: [...game!.board.clues] },
     edges: [...game!.edges],
-    history: game!.history.map(turn => [...turn]),
+    history: game!.history.map((turn) => [...turn]),
   });
   const words = () => loopWords(options.language);
 
@@ -172,7 +155,7 @@ export function mountLoop(host: HTMLElement, initial: LoopMountOptions): LoopMou
       control.setAttribute("aria-pressed", String(on));
       control.setAttribute("aria-label", `${w.edge} ${edge.id + 1}, ${on ? "on" : "off"}`);
       control.onclick = () => toggle(edge.id);
-      control.onkeydown = event => {
+      control.onkeydown = (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           toggle(edge.id);
@@ -192,28 +175,36 @@ export function mountLoop(host: HTMLElement, initial: LoopMountOptions): LoopMou
     help.textContent = w.help;
     tools.replaceChildren();
 
-    button(w.undo, () => {
-      game = undoLoop(game!);
-      finished = loopFinished(game!);
-      changed();
-    }, !game!.history.length);
+    button(
+      w.undo,
+      () => {
+        game = undoLoop(game!);
+        finished = loopFinished(game!);
+        changed();
+      },
+      !game!.history.length,
+    );
     button(w.check, () => {
       errors = progressEdges(current, game!.edges, clues.clues, clues.vertices, clues.loops);
       message = loopFinished(game!) ? w.won : w.wrong;
       render();
     });
-    button(w.hint, () => {
-      const edge = hintLoop(game!);
-      if (edge === null) {
-        message = w.noHint;
+    button(
+      w.hint,
+      () => {
+        const edge = hintLoop(game!);
+        if (edge === null) {
+          message = w.noHint;
+          render();
+          return;
+        }
+        game = { ...toggleLoop(game!, edge), helped: true };
+        changed();
+        message = w.hintWhy;
         render();
-        return;
-      }
-      game = { ...toggleLoop(game!, edge), helped: true };
-      changed();
-      message = w.hintWhy;
-      render();
-    }, finished);
+      },
+      finished,
+    );
     button(w.restart, restart);
     button(w.expand, expand);
   };
@@ -222,7 +213,7 @@ export function mountLoop(host: HTMLElement, initial: LoopMountOptions): LoopMou
     const origin = geometry[edge]!;
     const dx = direction === "ArrowLeft" ? -1 : direction === "ArrowRight" ? 1 : 0;
     const dy = direction === "ArrowUp" ? -1 : direction === "ArrowDown" ? 1 : 0;
-    const candidates = geometry.filter(candidate => {
+    const candidates = geometry.filter((candidate) => {
       const deltaX = candidate.cx - origin.cx;
       const deltaY = candidate.cy - origin.cy;
       return dx ? deltaX * dx > 0 : deltaY * dy > 0;
@@ -290,12 +281,12 @@ function edgeGeometry(board: LoopBoard) {
     if (id < horizontal) {
       const x = id % board.width;
       const y = Math.floor(id / board.width);
-      return { id, orientation: "horizontal" as const, x, y, cx: x + .5, cy: y };
+      return { id, orientation: "horizontal" as const, x, y, cx: x + 0.5, cy: y };
     }
     const local = id - horizontal;
     const x = local % (board.width + 1);
     const y = Math.floor(local / (board.width + 1));
-    return { id, orientation: "vertical" as const, x, y, cx: x, cy: y + .5 };
+    return { id, orientation: "vertical" as const, x, y, cx: x, cy: y + 0.5 };
   });
   return edges;
 }
@@ -309,7 +300,7 @@ function progressEdges(
 ): number[] {
   if (loops > 1) return [...edges];
   const result = new Set<number>();
-  clueErrors.forEach(cell => loopCellEdges(board, cell)?.forEach(edge => result.add(edge)));
-  vertexErrors.forEach(vertex => loopVertexEdges(board, vertex).forEach(edge => result.add(edge)));
+  clueErrors.forEach((cell) => loopCellEdges(board, cell)?.forEach((edge) => result.add(edge)));
+  vertexErrors.forEach((vertex) => loopVertexEdges(board, vertex).forEach((edge) => result.add(edge)));
   return [...result];
 }

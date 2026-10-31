@@ -18,10 +18,17 @@ export function isRegionsBoard(value: unknown): value is RegionsBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as RegionsBoard;
   const cells = board.width * board.height;
-  return Number.isInteger(board.width) && board.width >= 2 && board.width <= REGIONS_MOST_SIDE
-    && Number.isInteger(board.height) && board.height >= 2 && board.height <= REGIONS_MOST_SIDE
-    && Array.isArray(board.givens) && board.givens.length === cells
-    && board.givens.every(value => Number.isInteger(value) && value >= 0 && value <= cells);
+  return (
+    Number.isInteger(board.width) &&
+    board.width >= 2 &&
+    board.width <= REGIONS_MOST_SIDE &&
+    Number.isInteger(board.height) &&
+    board.height >= 2 &&
+    board.height <= REGIONS_MOST_SIDE &&
+    Array.isArray(board.givens) &&
+    board.givens.length === cells &&
+    board.givens.every((value) => Number.isInteger(value) && value >= 0 && value <= cells)
+  );
 }
 
 /** Read orthogonally adjacent Regions cells.
@@ -103,12 +110,10 @@ export function entryRegions(board: RegionsBoard, entries: readonly number[]): n
  * console.log(checkRegions(regionsBoard,regionsSolution));
  * ```
  */
-export function checkRegions(
-  board: RegionsBoard,
-  entries: readonly number[],
-): RegionsCheck {
+export function checkRegions(board: RegionsBoard, entries: readonly number[]): RegionsCheck {
   if (!isRegionsBoard(board)) throw new RangeError("Invalid Regions board");
-  if (!Array.isArray(entries) || entries.length !== board.givens.length) throw new RangeError("Invalid Regions entries");
+  if (!Array.isArray(entries) || entries.length !== board.givens.length)
+    throw new RangeError("Invalid Regions entries");
   const errors = new Set<number>();
   let filled = 0;
   entries.forEach((value, cell) => {
@@ -122,11 +127,11 @@ export function checkRegions(
   const regions = entryRegions(board, entries);
   for (const region of regions) {
     const number = entries[region[0]!]!;
-    if (region.length > number) region.forEach(cell => errors.add(cell));
+    if (region.length > number) region.forEach((cell) => errors.add(cell));
   }
   const componentErrors = errors.size > 0;
   const complete = filled === entries.length;
-  const validAreas = regions.every(region => region.length === entries[region[0]!]!);
+  const validAreas = regions.every((region) => region.length === entries[region[0]!]!);
   return {
     ok: complete && !componentErrors && validAreas,
     complete,

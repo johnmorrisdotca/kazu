@@ -43,9 +43,7 @@ export function newLoop(board: LoopBoard): LoopGame {
 export function toggleLoop(game: LoopGame, edge: number): LoopGame {
   const maximum = (game.board.height + 1) * game.board.width + game.board.height * (game.board.width + 1);
   if (!Number.isInteger(edge) || edge < 0 || edge >= maximum) return game;
-  const edges = game.edges.includes(edge)
-    ? game.edges.filter(selected => selected !== edge)
-    : [...game.edges, edge];
+  const edges = game.edges.includes(edge) ? game.edges.filter((selected) => selected !== edge) : [...game.edges, edge];
   return { ...game, edges, history: [...game.history, [...game.edges]] };
 }
 
@@ -65,9 +63,7 @@ export function toggleLoop(game: LoopGame, edge: number): LoopGame {
  */
 export function undoLoop(game: LoopGame): LoopGame {
   const previous = game.history.at(-1);
-  return previous
-    ? { ...game, edges: [...previous], history: game.history.slice(0, -1) }
-    : game;
+  return previous ? { ...game, edges: [...previous], history: game.history.slice(0, -1) } : game;
 }
 
 /** Whether this Loop game satisfies its complete native rules.
@@ -105,9 +101,11 @@ export function loopFinished(game: LoopGame): boolean {
 export function hintLoop(game: LoopGame): number | null {
   const solved = solveLoop(game.board);
   if (!solved.complete || solved.count !== 1 || !solved.solution) return null;
-  return solved.solution.find(edge => !game.edges.includes(edge))
-    ?? game.edges.find(edge => !solved.solution!.includes(edge))
-    ?? null;
+  return (
+    solved.solution.find((edge) => !game.edges.includes(edge)) ??
+    game.edges.find((edge) => !solved.solution!.includes(edge)) ??
+    null
+  );
 }
 
 /** Encode the Loop board and current game as native resumable text.
@@ -143,9 +141,15 @@ export function decodeLoop(code: string): LoopGame | null {
   try {
     if (code.length > 40_000) return null;
     const value = JSON.parse(code);
-    if (value.version !== 1 || !isLoopBoard(value.board) || !Array.isArray(value.edges)
-      || value.edges.length > (value.board.width + 1) * (value.board.height + 1) * 2
-      || typeof value.helped !== "boolean" || new Set(value.edges).size !== value.edges.length) return null;
+    if (
+      value.version !== 1 ||
+      !isLoopBoard(value.board) ||
+      !Array.isArray(value.edges) ||
+      value.edges.length > (value.board.width + 1) * (value.board.height + 1) * 2 ||
+      typeof value.helped !== "boolean" ||
+      new Set(value.edges).size !== value.edges.length
+    )
+      return null;
     let game = newLoop(value.board);
     for (const edge of value.edges) {
       const next = toggleLoop(game, edge);

@@ -60,7 +60,10 @@ describe("seeded original Regions generation", () => {
   });
 
   it("proves seeded wide and tall layouts as well", () => {
-    for (const [width, height, seed] of [[6, 4, 2], [4, 6, 17]] as const) {
+    for (const [width, height, seed] of [
+      [6, 4, 2],
+      [4, 6, 17],
+    ] as const) {
       const puzzle = generateRegions(width, height, "easy", seed);
       expect(checkRegions(puzzle, puzzle.solution).ok).toBe(true);
       expect(solveRegions(puzzle, puzzle.givens)).toMatchObject({ count: 1, complete: true });

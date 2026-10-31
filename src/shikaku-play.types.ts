@@ -42,7 +42,15 @@ export type ShikakuLanguage = "en" | "ja";
  * console.log(value);
  * ```
  */
-export type ShikakuDrawOptions = { rectangles?: ShikakuGame["rectangles"]; selected?: number | null; anchor?: number | null; errors?: readonly number[]; material?: ShikakuMaterial; pieces?: ShikakuPieces; language?: ShikakuLanguage };
+export type ShikakuDrawOptions = {
+  rectangles?: ShikakuGame["rectangles"];
+  selected?: number | null;
+  anchor?: number | null;
+  errors?: readonly number[];
+  material?: ShikakuMaterial;
+  pieces?: ShikakuPieces;
+  language?: ShikakuLanguage;
+};
 /** The initial Shikaku board, native progress, appearance and host event callbacks.
  *
  * @example
@@ -55,7 +63,12 @@ export type ShikakuDrawOptions = { rectangles?: ShikakuGame["rectangles"]; selec
  * console.log(value);
  * ```
  */
-export type ShikakuMountOptions = ShikakuDrawOptions & { board: ShikakuBoard; progress?: string; onChange?: (game: ShikakuGame) => void; onFinish?: (game: ShikakuGame) => void };
+export type ShikakuMountOptions = ShikakuDrawOptions & {
+  board: ShikakuBoard;
+  progress?: string;
+  onChange?: (game: ShikakuGame) => void;
+  onFinish?: (game: ShikakuGame) => void;
+};
 /** The mounted Shikaku game and progress, native controls and cleanup handle.
  *
  * @example
@@ -72,4 +85,10 @@ export type ShikakuMountOptions = ShikakuDrawOptions & { board: ShikakuBoard; pr
  * player.destroy();
  * ```
  */
-export type ShikakuMount = { game: () => ShikakuGame; progress: () => string; set: (options: ShikakuDrawOptions) => void; restart: () => void; destroy: () => void };
+export type ShikakuMount = {
+  game: () => ShikakuGame;
+  progress: () => string;
+  set: (options: ShikakuDrawOptions) => void;
+  restart: () => void;
+  destroy: () => void;
+};

@@ -84,12 +84,19 @@ const UNDO_MOST = 1000;
  * console.log(newKazuGame(kind,size,givens)?.entries.length);
  * ```
  */
-export function newKazuGame(kind: KazuKind, size: number, givens: string, options: KazuGameOptions = {}): KazuGame | null {
+export function newKazuGame(
+  kind: KazuKind,
+  size: number,
+  givens: string,
+  options: KazuGameOptions = {},
+): KazuGame | null {
   const printed = readGivens(kind, size, givens);
   if (printed === null) return null;
   const area = size * size;
   const entries = Array.from({ length: area }, (_, i) => (printed.cells[i] !== 0 ? 0 : (options.entries?.[i] ?? 0)));
-  const notes = Array.from({ length: area }, (_, i) => (printed.cells[i] !== 0 || entries[i] !== 0 ? 0 : (options.notes?.[i] ?? 0)));
+  const notes = Array.from({ length: area }, (_, i) =>
+    printed.cells[i] !== 0 || entries[i] !== 0 ? 0 : (options.notes?.[i] ?? 0),
+  );
   return { kind, size, givens, printed, entries, notes, past: [] };
 }
 
@@ -146,7 +153,8 @@ function peersOf(game: KazuGame, cell: number): Set<number> {
   const { size } = game;
   const layout = layoutOfGivens(game.printed);
   const peers = new Set<number>();
-  if (layout !== null) for (const group of layout.groupsOf[cell]!) for (const index of layout.groups[group]!) peers.add(index);
+  if (layout !== null)
+    for (const group of layout.groupsOf[cell]!) for (const index of layout.groups[group]!) peers.add(index);
   else {
     const row = Math.floor(cell / size);
     const col = cell % size;
@@ -189,7 +197,15 @@ function peersOf(game: KazuGame, cell: number): Set<number> {
  * ```
  */
 export function enterNumber(game: KazuGame, cell: number, value: number, tidy = true): KazuGame {
-  if (cell < 0 || cell >= game.size * game.size || isPrinted(game, cell) || !Number.isInteger(value) || value < 0 || value > game.size) return game;
+  if (
+    cell < 0 ||
+    cell >= game.size * game.size ||
+    isPrinted(game, cell) ||
+    !Number.isInteger(value) ||
+    value < 0 ||
+    value > game.size
+  )
+    return game;
   if (game.entries[cell] === value && (value !== 0 || game.notes[cell] === 0)) return game;
   const entries = [...game.entries];
   entries[cell] = value;
@@ -222,7 +238,16 @@ export function enterNumber(game: KazuGame, cell: number, value: number, tidy = 
  * ```
  */
 export function toggleNote(game: KazuGame, cell: number, value: number): KazuGame {
-  if (cell < 0 || cell >= game.size * game.size || isPrinted(game, cell) || game.entries[cell] !== 0 || !Number.isInteger(value) || value < 1 || value > game.size) return game;
+  if (
+    cell < 0 ||
+    cell >= game.size * game.size ||
+    isPrinted(game, cell) ||
+    game.entries[cell] !== 0 ||
+    !Number.isInteger(value) ||
+    value < 1 ||
+    value > game.size
+  )
+    return game;
   const notes = [...game.notes];
   notes[cell]! ^= 1 << value;
   return remembered(game, game.entries, notes);
@@ -252,7 +277,13 @@ export function toggleNote(game: KazuGame, cell: number, value: number): KazuGam
  * ```
  */
 export function clearCell(game: KazuGame, cell: number): KazuGame {
-  if (cell < 0 || cell >= game.size * game.size || isPrinted(game, cell) || (game.entries[cell] === 0 && game.notes[cell] === 0)) return game;
+  if (
+    cell < 0 ||
+    cell >= game.size * game.size ||
+    isPrinted(game, cell) ||
+    (game.entries[cell] === 0 && game.notes[cell] === 0)
+  )
+    return game;
   const entries = [...game.entries];
   const notes = [...game.notes];
   entries[cell] = 0;
@@ -284,7 +315,9 @@ export function clearCell(game: KazuGame, cell: number): KazuGame {
  */
 export function undoKazu(game: KazuGame): KazuGame {
   const last = game.past.at(-1);
-  return last === undefined ? game : { ...game, entries: last.entries, notes: last.notes, past: game.past.slice(0, -1) };
+  return last === undefined
+    ? game
+    : { ...game, entries: last.entries, notes: last.notes, past: game.past.slice(0, -1) };
 }
 
 /** Start again: every entry and pencil mark gone, and nothing to undo.
@@ -374,7 +407,10 @@ export function answerOf(game: KazuGame): string {
  * ```
  */
 export function isSolved(game: KazuGame): boolean {
-  return kazuProgress(game).filled === game.size * game.size && checkKazu(game.kind, game.size, game.givens, answerOf(game)).ok;
+  return (
+    kazuProgress(game).filled === game.size * game.size &&
+    checkKazu(game.kind, game.size, game.givens, answerOf(game)).ok
+  );
 }
 
 /** The cells that break a rule now (`conflictsOf`).

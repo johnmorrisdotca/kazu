@@ -20,9 +20,16 @@ describe("Hitori's solver", () => {
       const board = { size: 4, numbers: Array.from({ length: 16 }, () => 1 + Math.floor(random() * 4)) };
       let brute = 0;
       for (let mask = 0; mask < 1 << 16; mask += 1) {
-        const shaded = Array.from({ length: 16 }, (_, cell) => (mask >> cell & 1) === 1);
+        const shaded = Array.from({ length: 16 }, (_, cell) => ((mask >> cell) & 1) === 1);
         if (!checkHitori(board, shaded).ok) continue;
-        const minimal = shaded.every((on, cell) => !on || !checkHitori(board, shaded.map((value, at) => at === cell ? false : value)).ok);
+        const minimal = shaded.every(
+          (on, cell) =>
+            !on ||
+            !checkHitori(
+              board,
+              shaded.map((value, at) => (at === cell ? false : value)),
+            ).ok,
+        );
         if (minimal) brute += 1;
       }
       expect(solveHitori(board, { limit: 1000 })).toMatchObject({ count: brute, complete: true });
@@ -36,21 +43,31 @@ describe("Cross Sums' solver", () => {
     let compared = 0;
     for (let round = 0; round < 150; round += 1) {
       // A 3 × 4 board with up to four white squares in the corner block, and totals read from random digits.
-      const width = 4, height = 3, white = [5, 6, 7, 9, 10, 11].filter(() => random() < .7);
+      const width = 4,
+        height = 3,
+        white = [5, 6, 7, 9, 10, 11].filter(() => random() < 0.7);
       const digits = white.map(() => 1 + Math.floor(random() * 9));
-      const cells = Array.from({ length: width * height }, (_, cell) => white.includes(cell) ? { kind: "white" } : { kind: "black", across: null as number | null, down: null as number | null });
-      const at = (cell: number) => white.includes(cell) ? digits[white.indexOf(cell)]! : 0;
+      const cells = Array.from({ length: width * height }, (_, cell) =>
+        white.includes(cell)
+          ? { kind: "white" }
+          : { kind: "black", across: null as number | null, down: null as number | null },
+      );
+      const at = (cell: number) => (white.includes(cell) ? digits[white.indexOf(cell)]! : 0);
       let valid = true;
       for (let cell = 0; cell < width * height && valid; cell += 1) {
         if (white.includes(cell)) continue;
         const black = cells[cell] as { across: number | null; down: number | null };
-        if (cell % width + 1 < width && white.includes(cell + 1)) {
-          const run = []; for (let next = cell + 1; white.includes(next) && next % width !== 0; next += 1) run.push(next);
-          if (run.length < 2 || new Set(run.map(at)).size !== run.length) valid = false; else black.across = run.reduce((sum, next) => sum + at(next), 0);
+        if ((cell % width) + 1 < width && white.includes(cell + 1)) {
+          const run = [];
+          for (let next = cell + 1; white.includes(next) && next % width !== 0; next += 1) run.push(next);
+          if (run.length < 2 || new Set(run.map(at)).size !== run.length) valid = false;
+          else black.across = run.reduce((sum, next) => sum + at(next), 0);
         }
         if (cell + width < width * height && white.includes(cell + width)) {
-          const run = []; for (let next = cell + width; white.includes(next); next += width) run.push(next);
-          if (run.length < 2 || new Set(run.map(at)).size !== run.length) valid = false; else black.down = run.reduce((sum, next) => sum + at(next), 0);
+          const run = [];
+          for (let next = cell + width; white.includes(next); next += width) run.push(next);
+          if (run.length < 2 || new Set(run.map(at)).size !== run.length) valid = false;
+          else black.down = run.reduce((sum, next) => sum + at(next), 0);
         }
       }
       const board = { width, height, cells } as never;
@@ -60,11 +77,18 @@ describe("Cross Sums' solver", () => {
       for (let code = 0; code < total; code += 1) {
         const values = Array(width * height).fill(0);
         let rest = code;
-        for (const cell of white) { values[cell] = 1 + rest % 9; rest = Math.floor(rest / 9); }
+        for (const cell of white) {
+          values[cell] = 1 + (rest % 9);
+          rest = Math.floor(rest / 9);
+        }
         if (checkCrossSums(board, values).ok) brute += 1;
       }
-      try { expect(solveCrossSums(board, [], { limit: 100_000 })).toMatchObject({ count: brute, complete: true }); compared += 1; }
-      catch (error) { if ((error as Error).name !== "RangeError") throw error; }
+      try {
+        expect(solveCrossSums(board, [], { limit: 100_000 })).toMatchObject({ count: brute, complete: true });
+        compared += 1;
+      } catch (error) {
+        if ((error as Error).name !== "RangeError") throw error;
+      }
     }
     expect(compared).toBeGreaterThanOrEqual(3);
   });
@@ -74,12 +98,14 @@ describe("Regions's solver", () => {
   it("counts the fillings of small boards exactly", () => {
     const random = seededRandom(9);
     for (let round = 0; round < 25; round += 1) {
-      const width = 3, height = 2, cells = 6;
-      const givens = Array.from({ length: cells }, () => random() < .4 ? 1 + Math.floor(random() * 4) : 0);
+      const width = 3,
+        height = 2,
+        cells = 6;
+      const givens = Array.from({ length: cells }, () => (random() < 0.4 ? 1 + Math.floor(random() * 4) : 0));
       const board = { width, height, givens };
       let brute = 0;
       for (let code = 0; code < cells ** cells; code += 1) {
-        const entries = Array.from({ length: cells }, (_, cell) => 1 + Math.floor(code / cells ** cell) % cells);
+        const entries = Array.from({ length: cells }, (_, cell) => 1 + (Math.floor(code / cells ** cell) % cells));
         if (checkRegions(board, entries).ok) brute += 1;
       }
       expect(solveRegions(board, givens, { limit: 100_000 })).toMatchObject({ count: brute, complete: true });

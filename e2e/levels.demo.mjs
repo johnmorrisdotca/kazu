@@ -13,7 +13,9 @@ const PAGES = [
 ];
 
 for (const { page: name, size, cells, count } of PAGES) {
-  test(`${name} makes an extra-hard board ${size} wide from its Level choice, and names the level in Japanese`, async ({ page }) => {
+  test(`${name} makes an extra-hard board ${size} wide from its Level choice, and names the level in Japanese`, async ({
+    page,
+  }) => {
     const errors = [];
     page.on("pageerror", (error) => errors.push(String(error)));
     await serve(page);

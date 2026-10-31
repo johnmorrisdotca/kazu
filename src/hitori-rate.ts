@@ -25,13 +25,26 @@ export function rateHitori(board: HitoriBoard): HitoriRating {
   const solvedBy = (strength: 0 | 2, depth: number) => {
     const { csp } = hitoriModel(board, strength);
     const run = logicCsp(csp, openSlots(csp), depth);
-    return { ...run, solved: run.solved && checkHitori(board, Array.from({ length: board.size ** 2 }, (_, cell) => run.alive[2 * cell + 1] === 1)).ok };
+    return {
+      ...run,
+      solved:
+        run.solved &&
+        checkHitori(
+          board,
+          Array.from({ length: board.size ** 2 }, (_, cell) => run.alive[2 * cell + 1] === 1),
+        ).ok,
+    };
   };
-  const plain = solvedBy(0, 0), reach = plain.solved ? plain : solvedBy(2, 0);
+  const plain = solvedBy(0, 0),
+    reach = plain.solved ? plain : solvedBy(2, 0);
   const probing = reach.solved ? reach : solvedBy(2, 1);
   const repeats = board.numbers.filter((_, cell) => {
-    const x = cell % board.size, y = Math.floor(cell / board.size);
-    return board.numbers.some((other, at) => at !== cell && other === board.numbers[cell] && (at % board.size === x || Math.floor(at / board.size) === y));
+    const x = cell % board.size,
+      y = Math.floor(cell / board.size);
+    return board.numbers.some(
+      (other, at) =>
+        at !== cell && other === board.numbers[cell] && (at % board.size === x || Math.floor(at / board.size) === y),
+    );
   }).length;
   return {
     depth: reach.solved ? 0 : probing.solved ? 1 : 2,

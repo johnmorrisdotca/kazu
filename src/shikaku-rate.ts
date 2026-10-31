@@ -18,14 +18,16 @@ import type { ShikakuBoard, ShikakuRating } from "./shikaku.types.ts";
  */
 export function rateShikaku(board: ShikakuBoard): ShikakuRating {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
-  const first = shikakuModel(board, 0), second = shikakuModel(board, 1), strong = shikakuModel(board, 2);
+  const first = shikakuModel(board, 0),
+    second = shikakuModel(board, 1),
+    strong = shikakuModel(board, 2);
   const proof = solveCsp(strong.csp, openSlots(strong.csp), 2, 100_000);
   if (proof.count !== 1 || proof.exhausted) throw new RangeError("Shikaku rating needs a board with one answer");
   const one = logicCsp(first.csp, openSlots(first.csp), 0);
   const two = one.solved ? one : logicCsp(second.csp, openSlots(second.csp), 0);
   const rules = two.solved ? two : logicCsp(strong.csp, openSlots(strong.csp), 0);
   const probing = rules.solved ? rules : logicCsp(strong.csp, openSlots(strong.csp), 1);
-  const areas = strong.clues.map(cell => board.clues[cell]!);
+  const areas = strong.clues.map((cell) => board.clues[cell]!);
   const options = strong.clues.map((_, v) => strong.csp.starts[v + 1]! - strong.csp.starts[v]!);
   return {
     depth: rules.solved ? 0 : probing.solved ? 1 : 2,

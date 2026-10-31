@@ -1,7 +1,4 @@
-import {
-  edgeVertices,
-  isLoopBoard,
-} from "./loop-board.ts";
+import { edgeVertices, isLoopBoard } from "./loop-board.ts";
 import type { LoopBoard } from "./loop.types.ts";
 import type { LoopDrawOptions } from "./loop-play.types.ts";
 import { loopWords } from "./loop-strings.ts";
@@ -31,23 +28,27 @@ export function drawLoop(board: LoopBoard, options: LoopDrawOptions = {}): strin
   };
   const [paper, ink, grid] = colours[options.material ?? "ivory"];
   const selected = new Set(options.edges ?? []);
-  const clueText = board.clues.map((clue, cell) => {
-    if (clue === null) return "";
-    const x = (cell % board.width + .5) * size;
-    const y = (Math.floor(cell / board.width) + .53) * size;
-    return `<text x="${x}" y="${y}" dominant-baseline="middle" text-anchor="middle" fill="${ink}" font-size="20" font-weight="700" font-family="system-ui,sans-serif">${clue}</text>`;
-  }).join("");
-  const lines = [...selected].map(edge => {
-    const [a, b] = edgeVertices(board, edge);
-    const x1 = (a % (board.width + 1)) * size;
-    const y1 = Math.floor(a / (board.width + 1)) * size;
-    const x2 = (b % (board.width + 1)) * size;
-    const y2 = Math.floor(b / (board.width + 1)) * size;
-    const bad = options.errors?.includes(edge);
-    const active = options.selected === edge;
-    const colour = bad ? "var(--kz-bad,#b5452c)" : active ? "var(--kz-frame,#a98954)" : ink;
-    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${colour}" stroke-width="${active ? 6 : 4}" stroke-linecap="round"/>`;
-  }).join("");
+  const clueText = board.clues
+    .map((clue, cell) => {
+      if (clue === null) return "";
+      const x = ((cell % board.width) + 0.5) * size;
+      const y = (Math.floor(cell / board.width) + 0.53) * size;
+      return `<text x="${x}" y="${y}" dominant-baseline="middle" text-anchor="middle" fill="${ink}" font-size="20" font-weight="700" font-family="system-ui,sans-serif">${clue}</text>`;
+    })
+    .join("");
+  const lines = [...selected]
+    .map((edge) => {
+      const [a, b] = edgeVertices(board, edge);
+      const x1 = (a % (board.width + 1)) * size;
+      const y1 = Math.floor(a / (board.width + 1)) * size;
+      const x2 = (b % (board.width + 1)) * size;
+      const y2 = Math.floor(b / (board.width + 1)) * size;
+      const bad = options.errors?.includes(edge);
+      const active = options.selected === edge;
+      const colour = bad ? "var(--kz-bad,#b5452c)" : active ? "var(--kz-frame,#a98954)" : ink;
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${colour}" stroke-width="${active ? 6 : 4}" stroke-linecap="round"/>`;
+    })
+    .join("");
   const dots = Array.from({ length: (board.width + 1) * (board.height + 1) }, (_, vertex) => {
     const x = (vertex % (board.width + 1)) * size;
     const y = Math.floor(vertex / (board.width + 1)) * size;
@@ -56,12 +57,16 @@ export function drawLoop(board: LoopBoard, options: LoopDrawOptions = {}): strin
   const gridLines: string[] = [];
   for (let y = 0; y <= board.height; y += 1) {
     for (let x = 0; x < board.width; x += 1) {
-      gridLines.push(`<line x1="${x * size}" y1="${y * size}" x2="${(x + 1) * size}" y2="${y * size}" stroke="${grid}" stroke-width="1"/>`);
+      gridLines.push(
+        `<line x1="${x * size}" y1="${y * size}" x2="${(x + 1) * size}" y2="${y * size}" stroke="${grid}" stroke-width="1"/>`,
+      );
     }
   }
   for (let y = 0; y < board.height; y += 1) {
     for (let x = 0; x <= board.width; x += 1) {
-      gridLines.push(`<line x1="${x * size}" y1="${y * size}" x2="${x * size}" y2="${(y + 1) * size}" stroke="${grid}" stroke-width="1"/>`);
+      gridLines.push(
+        `<line x1="${x * size}" y1="${y * size}" x2="${x * size}" y2="${(y + 1) * size}" stroke="${grid}" stroke-width="1"/>`,
+      );
     }
   }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 ${board.width * size + 8} ${board.height * size + 8}" role="img" aria-label="${words.title}" style="display:block;width:100%;height:auto;background:${paper}">${gridLines.join("")}${clueText}${lines}${dots}<rect width="${board.width * size}" height="${board.height * size}" fill="none" stroke="var(--kz-frame,#a98954)" stroke-width="2"/></svg>`;

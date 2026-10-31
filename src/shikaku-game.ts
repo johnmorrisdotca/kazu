@@ -17,7 +17,12 @@ import type { ShikakuBoard, ShikakuGame, ShikakuRectangle } from "./shikaku.type
  */
 export function newShikaku(board: ShikakuBoard): ShikakuGame {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
-  return { board: { width: board.width, height: board.height, clues: [...board.clues] }, rectangles: [], history: [], helped: false };
+  return {
+    board: { width: board.width, height: board.height, clues: [...board.clues] },
+    rectangles: [],
+    history: [],
+    helped: false,
+  };
 }
 /** Place a rectangle, replacing any it touches. Local rule errors are allowed for the player to check.
  *
@@ -39,8 +44,14 @@ export function placeShikaku(game: ShikakuGame, rectangle: ShikakuRectangle): Sh
   const cells = shikakuCells(game.board, rectangle);
   if (!cells) return game;
   const covered = new Set(cells);
-  return { ...game, rectangles: [...game.rectangles.filter(r => !shikakuCells(game.board, r)!.some(c => covered.has(c))), { ...rectangle }],
-    history: [...game.history, game.rectangles.map(r => ({ ...r }))] };
+  return {
+    ...game,
+    rectangles: [
+      ...game.rectangles.filter((r) => !shikakuCells(game.board, r)!.some((c) => covered.has(c))),
+      { ...rectangle },
+    ],
+    history: [...game.history, game.rectangles.map((r) => ({ ...r }))],
+  };
 }
 /** Remove the rectangle containing a cell.
  *
@@ -59,8 +70,10 @@ export function placeShikaku(game: ShikakuGame, rectangle: ShikakuRectangle): Sh
  * ```
  */
 export function removeShikaku(game: ShikakuGame, cell: number): ShikakuGame {
-  const rectangles = game.rectangles.filter(r => !shikakuCells(game.board, r)!.includes(cell));
-  return rectangles.length === game.rectangles.length ? game : { ...game, rectangles, history: [...game.history, game.rectangles] };
+  const rectangles = game.rectangles.filter((r) => !shikakuCells(game.board, r)!.includes(cell));
+  return rectangles.length === game.rectangles.length
+    ? game
+    : { ...game, rectangles, history: [...game.history, game.rectangles] };
 }
 /** Return the Shikaku game with its previous marks or entries restored, or unchanged when there is no undo history.
  *
@@ -78,7 +91,7 @@ export function removeShikaku(game: ShikakuGame, cell: number): ShikakuGame {
  */
 export function undoShikaku(game: ShikakuGame): ShikakuGame {
   const previous = game.history.at(-1);
-  return previous ? { ...game, rectangles: previous.map(r => ({ ...r })), history: game.history.slice(0, -1) } : game;
+  return previous ? { ...game, rectangles: previous.map((r) => ({ ...r })), history: game.history.slice(0, -1) } : game;
 }
 /** A rectangle is offered only when the remaining partition has one proved answer.
  *
@@ -97,7 +110,11 @@ export function undoShikaku(game: ShikakuGame): ShikakuGame {
 export function hintShikaku(game: ShikakuGame): ShikakuRectangle | null {
   const solved = solveShikaku(game.board, game.rectangles);
   if (!solved.complete || solved.count !== 1) return null;
-  return solved.solution!.find(r => !game.rectangles.some(p => p.x === r.x && p.y === r.y && p.width === r.width && p.height === r.height)) ?? null;
+  return (
+    solved.solution!.find(
+      (r) => !game.rectangles.some((p) => p.x === r.x && p.y === r.y && p.width === r.width && p.height === r.height),
+    ) ?? null
+  );
 }
 /** Whether this Shikaku game satisfies its complete native rules.
  *
@@ -113,7 +130,9 @@ export function hintShikaku(game: ShikakuGame): ShikakuRectangle | null {
  * console.log(shikakuFinished(shikakuGame));
  * ```
  */
-export function shikakuFinished(game: ShikakuGame): boolean { return checkShikaku(game.board, game.rectangles).ok; }
+export function shikakuFinished(game: ShikakuGame): boolean {
+  return checkShikaku(game.board, game.rectangles).ok;
+}
 /** Versioned public puzzle and placement data, with no hidden answer.
  *
  * @param game - The current immutable game state.
@@ -146,8 +165,14 @@ export function decodeShikaku(code: string): ShikakuGame | null {
   try {
     if (code.length > 40_000) return null;
     const value = JSON.parse(code);
-    if (value.version !== 1 || !isShikakuBoard(value.board) || !Array.isArray(value.rectangles)
-      || value.rectangles.length > value.board.clues.length || typeof value.helped !== "boolean") return null;
+    if (
+      value.version !== 1 ||
+      !isShikakuBoard(value.board) ||
+      !Array.isArray(value.rectangles) ||
+      value.rectangles.length > value.board.clues.length ||
+      typeof value.helped !== "boolean"
+    )
+      return null;
     let game = newShikaku(value.board);
     for (const r of value.rectangles) {
       if (!shikakuCells(game.board, r)) return null;
@@ -156,5 +181,7 @@ export function decodeShikaku(code: string): ShikakuGame | null {
       game = next;
     }
     return { ...game, history: [], helped: value.helped };
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }

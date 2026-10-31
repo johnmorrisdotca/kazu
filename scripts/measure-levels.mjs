@@ -67,41 +67,66 @@ const KINDS = {
 };
 
 const quantile = (sorted, q) => sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))];
-const shown = (value) => (typeof value === "boolean" ? (value ? "1" : "0") : Number.isInteger(value) ? String(value) : value.toFixed(2));
+const shown = (value) =>
+  typeof value === "boolean" ? (value ? "1" : "0") : Number.isInteger(value) ? String(value) : value.toFixed(2);
 
 /** The puzzle as text: a number where the puzzle gives one, and the answer's own marks where it has them. */
 function draw(kind, puzzle) {
   const rows = [];
   if (kind === "akari") {
-    for (let y = 0; y < puzzle.height; y += 1) rows.push(Array.from({ length: puzzle.width }, (_, x) => {
-      const cell = puzzle.cells[y * puzzle.width + x];
-      return cell === null ? (puzzle.solution.includes(y * puzzle.width + x) ? "o" : ".") : cell === false ? "#" : String(cell);
-    }).join(" "));
+    for (let y = 0; y < puzzle.height; y += 1)
+      rows.push(
+        Array.from({ length: puzzle.width }, (_, x) => {
+          const cell = puzzle.cells[y * puzzle.width + x];
+          return cell === null
+            ? puzzle.solution.includes(y * puzzle.width + x)
+              ? "o"
+              : "."
+            : cell === false
+              ? "#"
+              : String(cell);
+        }).join(" "),
+      );
   } else if (kind === "hitori") {
-    for (let y = 0; y < puzzle.size; y += 1) rows.push(Array.from({ length: puzzle.size }, (_, x) => {
-      const at = y * puzzle.size + x;
-      return puzzle.solution[at] ? "#" : String(puzzle.numbers[at]).padStart(2);
-    }).join(" "));
+    for (let y = 0; y < puzzle.size; y += 1)
+      rows.push(
+        Array.from({ length: puzzle.size }, (_, x) => {
+          const at = y * puzzle.size + x;
+          return puzzle.solution[at] ? "#" : String(puzzle.numbers[at]).padStart(2);
+        }).join(" "),
+      );
   } else if (kind === "regions") {
-    for (let y = 0; y < puzzle.height; y += 1) rows.push(Array.from({ length: puzzle.width }, (_, x) => {
-      const at = y * puzzle.width + x;
-      return puzzle.givens[at] ? String(puzzle.givens[at]).padStart(2) : " .";
-    }).join(" "));
+    for (let y = 0; y < puzzle.height; y += 1)
+      rows.push(
+        Array.from({ length: puzzle.width }, (_, x) => {
+          const at = y * puzzle.width + x;
+          return puzzle.givens[at] ? String(puzzle.givens[at]).padStart(2) : " .";
+        }).join(" "),
+      );
   } else if (kind === "shikaku") {
-    for (let y = 0; y < puzzle.height; y += 1) rows.push(Array.from({ length: puzzle.width }, (_, x) => {
-      const at = y * puzzle.width + x;
-      return puzzle.clues[at] ? String(puzzle.clues[at]).padStart(2) : " .";
-    }).join(" "));
+    for (let y = 0; y < puzzle.height; y += 1)
+      rows.push(
+        Array.from({ length: puzzle.width }, (_, x) => {
+          const at = y * puzzle.width + x;
+          return puzzle.clues[at] ? String(puzzle.clues[at]).padStart(2) : " .";
+        }).join(" "),
+      );
   } else if (kind === "cross-sums") {
-    for (let y = 0; y < puzzle.height; y += 1) rows.push(Array.from({ length: puzzle.width }, (_, x) => {
-      const cell = puzzle.cells[y * puzzle.width + x];
-      return cell.kind === "white" ? "  .  " : `${cell.down ?? "  "}\\${cell.across ?? "  "}`.padEnd(5);
-    }).join(" "));
+    for (let y = 0; y < puzzle.height; y += 1)
+      rows.push(
+        Array.from({ length: puzzle.width }, (_, x) => {
+          const cell = puzzle.cells[y * puzzle.width + x];
+          return cell.kind === "white" ? "  .  " : `${cell.down ?? "  "}\\${cell.across ?? "  "}`.padEnd(5);
+        }).join(" "),
+      );
   } else if (kind === "loop") {
-    for (let y = 0; y < puzzle.height; y += 1) rows.push(Array.from({ length: puzzle.width }, (_, x) => {
-      const clue = puzzle.clues[y * puzzle.width + x];
-      return clue === null ? "." : String(clue);
-    }).join(" "));
+    for (let y = 0; y < puzzle.height; y += 1)
+      rows.push(
+        Array.from({ length: puzzle.width }, (_, x) => {
+          const clue = puzzle.clues[y * puzzle.width + x];
+          return clue === null ? "." : String(clue);
+        }).join(" "),
+      );
   }
   return rows.join("\n");
 }
@@ -115,24 +140,34 @@ if (first === "--show") {
   console.log(`${kind} ${size} ${level} seed ${seed}: ${JSON.stringify(spec.rate(puzzle))}`);
   console.log(draw(kind, puzzle));
 } else {
-  const only = first && KINDS[first] ? first : null, seeds = Number((only ? rest[0] : first) ?? 30) || 30, size = Number((only ? rest[1] : rest[0]) ?? 0) || 0;
+  const only = first && KINDS[first] ? first : null,
+    seeds = Number((only ? rest[0] : first) ?? 30) || 30,
+    size = Number((only ? rest[1] : rest[0]) ?? 0) || 0;
   for (const [kind, spec] of Object.entries(KINDS)) {
     if (only && kind !== only) continue;
     console.log(`\n### ${kind}, ${seeds} seeds\n`);
-    console.log(`| size | level | made | median ms | p95 ms | slowest ms | depth 0 / 1 / 2 | ${spec.columns.join(" | ")} |`);
+    console.log(
+      `| size | level | made | median ms | p95 ms | slowest ms | depth 0 / 1 / 2 | ${spec.columns.join(" | ")} |`,
+    );
     console.log(`| --- | --- | --- | --- | --- | --- | --- | ${spec.columns.map(() => "---").join(" | ")} |`);
     for (const n of spec.sizes) {
       if (size && n !== size) continue;
       for (const level of LEVELS) {
-        const times = [], depths = [0, 0, 0], sums = Object.fromEntries(spec.columns.map((c) => [c, 0]));
+        const times = [],
+          depths = [0, 0, 0],
+          sums = Object.fromEntries(spec.columns.map((c) => [c, 0]));
         let made = 0;
         for (let seed = 1; seed <= seeds; seed += 1) {
           const started = performance.now();
           let puzzle;
-          try { puzzle = spec.make(n, level, seed); } catch { continue; }
+          try {
+            puzzle = spec.make(n, level, seed);
+          } catch {
+            continue;
+          }
           times.push(performance.now() - started);
           const counted = spec.count(puzzle);
-          if (!counted.complete && counted.count !== 1 || counted.count !== 1) continue;
+          if ((!counted.complete && counted.count !== 1) || counted.count !== 1) continue;
           made += 1;
           const rating = spec.rate(puzzle);
           depths[rating.depth] += 1;
@@ -140,7 +175,9 @@ if (first === "--show") {
         }
         times.sort((a, b) => a - b);
         const mean = (column) => (made ? shown(sums[column] / made) : "-");
-        console.log(`| ${n} | ${level} | ${made}/${seeds} | ${times.length ? Math.round(quantile(times, .5)) : "-"} | ${times.length ? Math.round(quantile(times, .95)) : "-"} | ${times.length ? Math.round(times[times.length - 1]) : "-"} | ${depths.join(" / ")} | ${spec.columns.map(mean).join(" | ")} |`);
+        console.log(
+          `| ${n} | ${level} | ${made}/${seeds} | ${times.length ? Math.round(quantile(times, 0.5)) : "-"} | ${times.length ? Math.round(quantile(times, 0.95)) : "-"} | ${times.length ? Math.round(times[times.length - 1]) : "-"} | ${depths.join(" / ")} | ${spec.columns.map(mean).join(" | ")} |`,
+        );
       }
     }
   }

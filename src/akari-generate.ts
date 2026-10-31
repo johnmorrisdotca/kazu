@@ -1,4 +1,10 @@
-import { AKARI_DENSER_ATTEMPTS, AKARI_DENSER_CROWDS, AKARI_LEVELS, AKARI_MOST_ATTEMPTS, AKARI_MOST_SIDE } from "./akari.constants.ts";
+import {
+  AKARI_DENSER_ATTEMPTS,
+  AKARI_DENSER_CROWDS,
+  AKARI_LEVELS,
+  AKARI_MOST_ATTEMPTS,
+  AKARI_MOST_SIDE,
+} from "./akari.constants.ts";
 import { akariNeighbours, akariVisible, checkAkari, isAkariBoard } from "./akari-board.ts";
 import { akariModel } from "./akari-logic.ts";
 import { solveAkari } from "./akari-solve.ts";
@@ -33,27 +39,40 @@ type Cells = (number | null | false)[];
  * ```
  */
 export function generateAkari(width = 7, height = width, seed = 1, level: AkariLevel = "medium"): AkariPuzzle {
-  if (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= AKARI_MOST_SIDE)
-    || !isKazuSeed(seed) || !AKARI_LEVELS.includes(level)) throw new RangeError("Invalid Akari settings");
+  if (
+    ![width, height].every((n) => Number.isInteger(n) && n >= 2 && n <= AKARI_MOST_SIDE) ||
+    !isKazuSeed(seed) ||
+    !AKARI_LEVELS.includes(level)
+  )
+    throw new RangeError("Invalid Akari settings");
   const random = seededRandom(seed);
   // The plain attempts come first, as they always have, so every seed that made a board before makes the same one.
   for (let aim = AKARI_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
     const found = bestAkari(width, height, AKARI_LEVELS[aim]!, random, 1, AKARI_MOST_ATTEMPTS);
     if (found) return { ...found.board, seed, level, solution: found.solution };
   }
-  for (const crowd of AKARI_DENSER_CROWDS) for (let aim = AKARI_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
-    const found = bestAkari(width, height, AKARI_LEVELS[aim]!, random, crowd, AKARI_DENSER_ATTEMPTS);
-    if (found) return { ...found.board, seed, level, solution: found.solution };
-  }
+  for (const crowd of AKARI_DENSER_CROWDS)
+    for (let aim = AKARI_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
+      const found = bestAkari(width, height, AKARI_LEVELS[aim]!, random, crowd, AKARI_DENSER_ATTEMPTS);
+      if (found) return { ...found.board, seed, level, solution: found.solution };
+    }
   const fallback = templateAkari(width, height, seed);
   return { ...fallback, level };
 }
 
 /** The best board of the level found within `attempts` tries at this share of black squares, with its answer, or null. */
-function bestAkari(width: number, height: number, level: AkariLevel, random: Random, crowd: number, attempts: number): { board: AkariBoard; solution: readonly number[] } | null {
+function bestAkari(
+  width: number,
+  height: number,
+  level: AkariLevel,
+  random: Random,
+  crowd: number,
+  attempts: number,
+): { board: AkariBoard; solution: readonly number[] } | null {
   // Extra-hard is the hardest of several boards that need supposing: the most suppositions wins.
   const wanted = level === "extra-hard" ? 8 : 1;
-  let best: { board: AkariBoard; probes: number; solution: readonly number[] } | null = null, found = 0;
+  let best: { board: AkariBoard; probes: number; solution: readonly number[] } | null = null,
+    found = 0;
   for (let attempt = 0; attempt < attempts && found < wanted; attempt += 1) {
     const made = attemptAkari(width, height, level, random, crowd);
     if (!made) continue;
@@ -65,26 +84,40 @@ function bestAkari(width: number, height: number, level: AkariLevel, random: Ran
   return best;
 }
 
-function attemptAkari(width: number, height: number, level: AkariLevel, random: Random, crowd: number): { board: AkariBoard; probes: number } | null {
+function attemptAkari(
+  width: number,
+  height: number,
+  level: AkariLevel,
+  random: Random,
+  crowd: number,
+): { board: AkariBoard; probes: number } | null {
   const size = width * height;
-  const density = { easy: .2, medium: .22, hard: .24, "extra-hard": .26 }[level] * (.85 + random() * .3) * crowd;
-  const cells: Cells = Array.from({ length: size }, () => random() < density ? false : null);
-  if (random() < .5) for (let y = 0; y < height; y += 1) for (let x = 0; x < width; x += 1) {
-    const mirror = (height - 1 - y) * width + width - 1 - x;
-    if (y * width + x < mirror) cells[mirror] = cells[y * width + x]!;
-  }
+  const density = { easy: 0.2, medium: 0.22, hard: 0.24, "extra-hard": 0.26 }[level] * (0.85 + random() * 0.3) * crowd;
+  const cells: Cells = Array.from({ length: size }, () => (random() < density ? false : null));
+  if (random() < 0.5)
+    for (let y = 0; y < height; y += 1)
+      for (let x = 0; x < width; x += 1) {
+        const mirror = (height - 1 - y) * width + width - 1 - x;
+        if (y * width + x < mirror) cells[mirror] = cells[y * width + x]!;
+      }
   if (!cells.includes(null)) return null;
   const base: AkariBoard = { width, height, cells };
 
   // Light every white square with randomly chosen bulbs that never see one another.
-  const lit = new Set<number>(), bulbs = new Set<number>();
-  for (const cell of shuffled(cells.flatMap((value, at) => value === null ? [at] : []), random)) {
+  const lit = new Set<number>(),
+    bulbs = new Set<number>();
+  for (const cell of shuffled(
+    cells.flatMap((value, at) => (value === null ? [at] : [])),
+    random,
+  )) {
     if (lit.has(cell)) continue;
     bulbs.add(cell);
     for (const seen of akariVisible(base, cell)) lit.add(seen);
   }
-  const numbered = cells.flatMap((value, at) => value === false && akariNeighbours(base, at).some(n => cells[n] === null) ? [at] : []);
-  for (const at of numbered) cells[at] = akariNeighbours(base, at).filter(n => bulbs.has(n)).length;
+  const numbered = cells.flatMap((value, at) =>
+    value === false && akariNeighbours(base, at).some((n) => cells[n] === null) ? [at] : [],
+  );
+  for (const at of numbered) cells[at] = akariNeighbours(base, at).filter((n) => bulbs.has(n)).length;
   if (!numbered.length) return null;
 
   const accepts = (): boolean => {
@@ -92,13 +125,14 @@ function attemptAkari(width: number, height: number, level: AkariLevel, random: 
     return logicCsp(csp, openSlots(csp), level === "easy" || level === "medium" ? 0 : 1).solved;
   };
   if (!accepts()) return null;
-  const keepAtLeast = level === "easy" ? Math.ceil(numbered.length * .7) : 0;
+  const keepAtLeast = level === "easy" ? Math.ceil(numbered.length * 0.7) : 0;
   let left = numbered.length;
   for (const at of shuffled(numbered, random)) {
     if (left <= keepAtLeast) break;
     const was = cells[at]!;
     cells[at] = false;
-    if (accepts()) left -= 1; else cells[at] = was;
+    if (accepts()) left -= 1;
+    else cells[at] = was;
   }
   const board: AkariBoard = { width, height, cells };
   if (!isAkariBoard(board)) return null;
@@ -107,5 +141,5 @@ function attemptAkari(width: number, height: number, level: AkariLevel, random: 
   if (logicCsp(csp, openSlots(csp), 0).solved) return null;
   const probing = logicCsp(csp, openSlots(csp), 1);
   if (!probing.solved) return level === "extra-hard" ? { board, probes: 1_000 } : null;
-  return probing.probes >= Math.max(2, Math.round(size * .02)) ? { board, probes: probing.probes } : null;
+  return probing.probes >= Math.max(2, Math.round(size * 0.02)) ? { board, probes: probing.probes } : null;
 }

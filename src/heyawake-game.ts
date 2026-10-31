@@ -17,7 +17,12 @@ import type { HeyawakeBoard, HeyawakeGame } from "./heyawake.types.ts";
  */
 export function newHeyawake(board: HeyawakeBoard): HeyawakeGame {
   if (!isHeyawakeBoard(board)) throw new RangeError("Invalid Heyawake board");
-  return { board: publicBoard(board), entries: Array(board.width * board.height).fill(null), history: [], helped: false };
+  return {
+    board: publicBoard(board),
+    entries: Array(board.width * board.height).fill(null),
+    history: [],
+    helped: false,
+  };
 }
 
 /** Apply the requested native Heyawake entry or mark to a new immutable game; invalid or fixed targets stay unchanged.
@@ -37,7 +42,14 @@ export function newHeyawake(board: HeyawakeBoard): HeyawakeGame {
  * ```
  */
 export function setHeyawakeCell(game: HeyawakeGame, cell: number, value: boolean | null): HeyawakeGame {
-  if (value !== null && typeof value !== "boolean" || !Number.isInteger(cell) || cell < 0 || cell >= game.entries.length || game.entries[cell] === value) return game;
+  if (
+    (value !== null && typeof value !== "boolean") ||
+    !Number.isInteger(cell) ||
+    cell < 0 ||
+    cell >= game.entries.length ||
+    game.entries[cell] === value
+  )
+    return game;
   const entries = [...game.entries];
   entries[cell] = value;
   return { ...game, entries, history: [...game.history, game.entries] };
@@ -97,7 +109,7 @@ export function restartHeyawake(game: HeyawakeGame): HeyawakeGame {
 export function hintHeyawake(game: HeyawakeGame): { cell: number; value: boolean } | null {
   const result = solveHeyawake(game.board, game.entries);
   if (!result.complete || result.count !== 1 || !result.solution) return null;
-  const cell = game.entries.findIndex(value => value === null);
+  const cell = game.entries.findIndex((value) => value === null);
   return cell < 0 ? null : { cell, value: result.solution[cell]! };
 }
 
@@ -134,7 +146,12 @@ export function heyawakeFinished(game: HeyawakeGame): boolean {
  * ```
  */
 export function encodeHeyawake(game: HeyawakeGame): string {
-  return JSON.stringify({ version: 1, board: publicBoard(game.board), entries: game.entries.map(value => value === null ? "?" : value ? "#" : ".").join(""), helped: game.helped });
+  return JSON.stringify({
+    version: 1,
+    board: publicBoard(game.board),
+    entries: game.entries.map((value) => (value === null ? "?" : value ? "#" : ".")).join(""),
+    helped: game.helped,
+  });
 }
 
 /** Read a native saved Heyawake game, or null for invalid board data or progress.
@@ -151,9 +168,21 @@ export function encodeHeyawake(game: HeyawakeGame): string {
 export function decodeHeyawake(code: string): HeyawakeGame | null {
   try {
     const data = JSON.parse(code);
-    if (data.version !== 1 || !isHeyawakeBoard(data.board) || typeof data.helped !== "boolean" || typeof data.entries !== "string") return null;
-    const entries = [...data.entries].map((value: string) => value === "?" ? null : value === "#" ? true : value === "." ? false : undefined);
-    if (entries.length !== data.board.width * data.board.height || entries.some((value: unknown) => value === undefined)) return null;
+    if (
+      data.version !== 1 ||
+      !isHeyawakeBoard(data.board) ||
+      typeof data.helped !== "boolean" ||
+      typeof data.entries !== "string"
+    )
+      return null;
+    const entries = [...data.entries].map((value: string) =>
+      value === "?" ? null : value === "#" ? true : value === "." ? false : undefined,
+    );
+    if (
+      entries.length !== data.board.width * data.board.height ||
+      entries.some((value: unknown) => value === undefined)
+    )
+      return null;
     return { board: publicBoard(data.board), entries: entries as (boolean | null)[], history: [], helped: data.helped };
   } catch {
     return null;
@@ -161,5 +190,15 @@ export function decodeHeyawake(code: string): HeyawakeGame | null {
 }
 
 function publicBoard(board: HeyawakeBoard): HeyawakeBoard {
-  return { width: board.width, height: board.height, rooms: board.rooms.map(room => ({ x: room.x, y: room.y, width: room.width, height: room.height, blacks: room.blacks })) };
+  return {
+    width: board.width,
+    height: board.height,
+    rooms: board.rooms.map((room) => ({
+      x: room.x,
+      y: room.y,
+      width: room.width,
+      height: room.height,
+      blacks: room.blacks,
+    })),
+  };
 }

@@ -27,7 +27,13 @@ import type { HitoriBoard, HitoriLevel, HitoriPuzzle } from "./hitori.types.ts";
  * ```
  */
 export function generateHitori(size = 5, seed = 1, level: HitoriLevel = "medium"): HitoriPuzzle {
-  if (!Number.isInteger(size) || size < HITORI_LEAST_SIDE || size > HITORI_MOST_SIDE || !isKazuSeed(seed) || !HITORI_LEVELS.includes(level)) {
+  if (
+    !Number.isInteger(size) ||
+    size < HITORI_LEAST_SIDE ||
+    size > HITORI_MOST_SIDE ||
+    !isKazuSeed(seed) ||
+    !HITORI_LEVELS.includes(level)
+  ) {
     throw new RangeError("Invalid Hitori settings");
   }
   const random = seededRandom(seed);
@@ -36,7 +42,8 @@ export function generateHitori(size = 5, seed = 1, level: HitoriLevel = "medium"
   for (let aim = HITORI_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
     const aimed = HITORI_LEVELS[aim]!;
     const wanted = aimed === "extra-hard" ? 4 : 1;
-    let best: { board: HitoriBoard; shaded: readonly boolean[]; score: number } | null = null, found = 0;
+    let best: { board: HitoriBoard; shaded: readonly boolean[]; score: number } | null = null,
+      found = 0;
     for (let attempt = 0; attempt < HITORI_MOST_ATTEMPTS && found < wanted; attempt += 1) {
       const built = candidateHitori(size, aimed, random, base);
       const made = built && rated(built.board, built.shaded, aimed);
@@ -54,13 +61,22 @@ export function generateHitori(size = 5, seed = 1, level: HitoriLevel = "medium"
   throw new Error("No uniquely solvable Hitori found within the generation budget; try another seed");
 }
 
-
-function rated(board: HitoriBoard, shaded: readonly boolean[], level: HitoriLevel): { board: HitoriBoard; shaded: readonly boolean[]; score: number } | null {
+function rated(
+  board: HitoriBoard,
+  shaded: readonly boolean[],
+  level: HitoriLevel,
+): { board: HitoriBoard; shaded: readonly boolean[]; score: number } | null {
   const total = board.size * board.size;
   const solved = (strength: 0 | 2, depth: number) => {
     const { csp } = hitoriModel(board, strength);
     const run = logicCsp(csp, openSlots(csp), depth);
-    return run.solved && checkHitori(board, Array.from({ length: total }, (_, cell) => run.alive[2 * cell + 1] === 1)).ok ? run : null;
+    return run.solved &&
+      checkHitori(
+        board,
+        Array.from({ length: total }, (_, cell) => run.alive[2 * cell + 1] === 1),
+      ).ok
+      ? run
+      : null;
   };
   if (level === "easy") return solved(0, 0) ? { board, shaded, score: 0 } : null;
   if (solved(0, 0)) return null;

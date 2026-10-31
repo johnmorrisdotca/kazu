@@ -16,7 +16,12 @@ import type { NurikabeBoard, NurikabeGame } from "./nurikabe.types.ts";
  */
 export function newNurikabe(board: NurikabeBoard): NurikabeGame {
   if (!isNurikabeBoard(board)) throw new RangeError("Invalid Nurikabe board");
-  return { board: { size: board.size, clues: [...board.clues] }, sea: Array(board.size ** 2).fill(false), history: [], helped: false };
+  return {
+    board: { size: board.size, clues: [...board.clues] },
+    sea: Array(board.size ** 2).fill(false),
+    history: [],
+    helped: false,
+  };
 }
 /** Apply the requested native Nurikabe entry or mark to a new immutable game; invalid or fixed targets stay unchanged.
  *
@@ -35,7 +40,8 @@ export function newNurikabe(board: NurikabeBoard): NurikabeGame {
  */
 export function markNurikabeSea(game: NurikabeGame, cell: number): NurikabeGame {
   if (!Number.isInteger(cell) || cell < 0 || cell >= game.sea.length || game.board.clues[cell]) return game;
-  const sea = [...game.sea]; sea[cell] = !sea[cell];
+  const sea = [...game.sea];
+  sea[cell] = !sea[cell];
   return { ...game, sea, history: [...game.history, [...game.sea]] };
 }
 /** Return the Nurikabe game with its previous marks or entries restored, or unchanged when there is no undo history.
@@ -70,7 +76,9 @@ export function undoNurikabe(game: NurikabeGame): NurikabeGame {
  * console.log(restartNurikabe(nurikabeGame));
  * ```
  */
-export function restartNurikabe(game: NurikabeGame): NurikabeGame { return { ...game, sea: Array(game.sea.length).fill(false), history: [], helped: false }; }
+export function restartNurikabe(game: NurikabeGame): NurikabeGame {
+  return { ...game, sea: Array(game.sea.length).fill(false), history: [], helped: false };
+}
 /** Find a native Nurikabe hint, or null when no actionable hint is available.
  *
  * @param game - The current immutable game state.
@@ -105,7 +113,9 @@ export function hintNurikabe(game: NurikabeGame): number | null {
  * console.log(encodeNurikabe(nurikabeGame));
  * ```
  */
-export function encodeNurikabe(game: NurikabeGame): string { return JSON.stringify({ version: 1, board: game.board, sea: game.sea, helped: game.helped }); }
+export function encodeNurikabe(game: NurikabeGame): string {
+  return JSON.stringify({ version: 1, board: game.board, sea: game.sea, helped: game.helped });
+}
 /** Read a native saved Nurikabe game, or null for invalid board data or progress.
  *
  * @param code - Native saved board and progress text.
@@ -121,7 +131,17 @@ export function decodeNurikabe(code: string): NurikabeGame | null {
   try {
     if (code.length > 10000) return null;
     const value = JSON.parse(code);
-    if (value.version !== 1 || !isNurikabeBoard(value.board) || !Array.isArray(value.sea) || value.sea.length !== value.board.size ** 2 || !value.sea.every((item: unknown) => typeof item === "boolean") || typeof value.helped !== "boolean") return null;
+    if (
+      value.version !== 1 ||
+      !isNurikabeBoard(value.board) ||
+      !Array.isArray(value.sea) ||
+      value.sea.length !== value.board.size ** 2 ||
+      !value.sea.every((item: unknown) => typeof item === "boolean") ||
+      typeof value.helped !== "boolean"
+    )
+      return null;
     return { ...newNurikabe(value.board), sea: [...value.sea], helped: value.helped };
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }

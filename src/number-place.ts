@@ -82,12 +82,27 @@ function fillInOrder(layout: Layout, random: Random): Grid {
  */
 function fillByPattern(size: number, random: Random): Grid {
   const box = Math.sqrt(size);
-  const labels = shuffled(Array.from({ length: size }, (_, i) => i + 1), random);
-  const order = (): number[] => shuffled(Array.from({ length: box }, (_, b) => b), random).flatMap((band) => shuffled(Array.from({ length: box }, (_, r) => band * box + r), random));
+  const labels = shuffled(
+    Array.from({ length: size }, (_, i) => i + 1),
+    random,
+  );
+  const order = (): number[] =>
+    shuffled(
+      Array.from({ length: box }, (_, b) => b),
+      random,
+    ).flatMap((band) =>
+      shuffled(
+        Array.from({ length: box }, (_, r) => band * box + r),
+        random,
+      ),
+    );
   const rows = order();
   const cols = order();
   const base = (r: number, c: number) => (box * (r % box) + Math.floor(r / box) + c) % size;
-  return Array.from({ length: size * size }, (_, index) => labels[base(rows[Math.floor(index / size)]!, cols[index % size]!)]!);
+  return Array.from(
+    { length: size * size },
+    (_, index) => labels[base(rows[Math.floor(index / size)]!, cols[index % size]!)]!,
+  );
 }
 
 /**
@@ -99,13 +114,17 @@ export function carve(solution: Grid, layout: Layout, level: KazuLevel, floor: n
   const { depth } = LEVELS[level];
   const givens = [...solution];
   let left = givens.length;
-  for (const index of shuffled(givens.map((_, i) => i), random)) {
+  for (const index of shuffled(
+    givens.map((_, i) => i),
+    random,
+  )) {
     if (left <= floor) break;
     const value = givens[index]!;
     givens[index] = 0;
-    const stillOne = layout.size > LARGEST_COUNTED
-      ? provedByGuessing(givens, layout, LARGE_GUESSES[level]) === 1
-      : countSolutions(givens, layout, 2) === 1 && guessDepth(givens, layout) <= depth;
+    const stillOne =
+      layout.size > LARGEST_COUNTED
+        ? provedByGuessing(givens, layout, LARGE_GUESSES[level]) === 1
+        : countSolutions(givens, layout, 2) === 1 && guessDepth(givens, layout) <= depth;
     if (stillOne) left -= 1;
     else givens[index] = value;
   }

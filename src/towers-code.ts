@@ -56,7 +56,12 @@ export type TowerClues = Record<TowerSide, number[]>;
  * ```
  */
 export function noClues(size: number): TowerClues {
-  return { top: new Array<number>(size).fill(0), bottom: new Array<number>(size).fill(0), left: new Array<number>(size).fill(0), right: new Array<number>(size).fill(0) };
+  return {
+    top: new Array<number>(size).fill(0),
+    bottom: new Array<number>(size).fill(0),
+    left: new Array<number>(size).fill(0),
+    right: new Array<number>(size).fill(0),
+  };
 }
 
 /**
@@ -123,7 +128,8 @@ export function towersSeen(heights: readonly number[]): number {
 export function cluesOf(solution: readonly number[], size: number): TowerClues {
   const clues = noClues(size);
   for (const side of TOWER_SIDES) {
-    for (let at = 0; at < size; at += 1) clues[side][at] = towersSeen(lineFrom(side, at, size).map((index) => solution[index]!));
+    for (let at = 0; at < size; at += 1)
+      clues[side][at] = towersSeen(lineFrom(side, at, size).map((index) => solution[index]!));
   }
   return clues;
 }

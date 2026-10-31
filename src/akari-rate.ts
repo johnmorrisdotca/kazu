@@ -26,11 +26,26 @@ export function rateAkari(board: AkariBoard): AkariRating {
   const plain = logicCsp(csp, openSlots(csp), 0);
   const probing = plain.solved ? plain : logicCsp(csp, openSlots(csp), 1);
   const blacks = board.cells.length - whites.length;
-  const clues = board.cells.filter(cell => typeof cell === "number").length;
-  const lit = board.cells.map((cell, at) => cell === false || typeof cell === "number" ? at : -1).filter(at => at >= 0);
-  const touching = lit.filter(at => {
-    const x = at % board.width, y = Math.floor(at / board.width);
-    return [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]].some(([nx, ny]) => nx! >= 0 && ny! >= 0 && nx! < board.width && ny! < board.height && board.cells[ny! * board.width + nx!] === null);
+  const clues = board.cells.filter((cell) => typeof cell === "number").length;
+  const lit = board.cells
+    .map((cell, at) => (cell === false || typeof cell === "number" ? at : -1))
+    .filter((at) => at >= 0);
+  const touching = lit.filter((at) => {
+    const x = at % board.width,
+      y = Math.floor(at / board.width);
+    return [
+      [x + 1, y],
+      [x - 1, y],
+      [x, y + 1],
+      [x, y - 1],
+    ].some(
+      ([nx, ny]) =>
+        nx! >= 0 &&
+        ny! >= 0 &&
+        nx! < board.width &&
+        ny! < board.height &&
+        board.cells[ny! * board.width + nx!] === null,
+    );
   }).length;
   return {
     depth: plain.solved ? 0 : probing.solved ? 1 : 2,

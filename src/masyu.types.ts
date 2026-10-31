@@ -62,7 +62,12 @@ export type MasyuSolve = { count: number; solution: readonly number[] | null; co
  * console.log(value);
  * ```
  */
-export type MasyuGame = { board: MasyuBoard; edges: readonly number[]; history: readonly (readonly number[])[]; helped: boolean };
+export type MasyuGame = {
+  board: MasyuBoard;
+  edges: readonly number[];
+  history: readonly (readonly number[])[];
+  helped: boolean;
+};
 /** Current Masyu marks or entries, selection, errors and native SVG appearance choices.
  *
  * @example
@@ -73,7 +78,14 @@ export type MasyuGame = { board: MasyuBoard; edges: readonly number[]; history: 
  * console.log(value);
  * ```
  */
-export type MasyuDrawOptions = { edges?: readonly number[]; selected?: number; errors?: readonly number[]; material?: "ivory" | "wood" | "slate"; pieces?: "plain" | "tiles"; language?: "en" | "ja" };
+export type MasyuDrawOptions = {
+  edges?: readonly number[];
+  selected?: number;
+  errors?: readonly number[];
+  material?: "ivory" | "wood" | "slate";
+  pieces?: "plain" | "tiles";
+  language?: "en" | "ja";
+};
 /** The initial Masyu board, native progress, appearance and host event callbacks.
  *
  * @example
@@ -85,7 +97,12 @@ export type MasyuDrawOptions = { edges?: readonly number[]; selected?: number; e
  * console.log(value);
  * ```
  */
-export type MasyuMountOptions = MasyuDrawOptions & { board: MasyuBoard; progress?: string; onChange?: (game: MasyuGame) => void; onFinish?: (game: MasyuGame) => void };
+export type MasyuMountOptions = MasyuDrawOptions & {
+  board: MasyuBoard;
+  progress?: string;
+  onChange?: (game: MasyuGame) => void;
+  onFinish?: (game: MasyuGame) => void;
+};
 /** The mounted Masyu game and progress, native controls and cleanup handle.
  *
  * @example
@@ -101,4 +118,10 @@ export type MasyuMountOptions = MasyuDrawOptions & { board: MasyuBoard; progress
  * player.destroy();
  * ```
  */
-export type MasyuMount = { game: () => MasyuGame; progress: () => string; set: (options: MasyuDrawOptions) => void; restart: () => void; destroy: () => void };
+export type MasyuMount = {
+  game: () => MasyuGame;
+  progress: () => string;
+  set: (options: MasyuDrawOptions) => void;
+  restart: () => void;
+  destroy: () => void;
+};

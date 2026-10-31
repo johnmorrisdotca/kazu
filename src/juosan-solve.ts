@@ -17,18 +17,8 @@ import type { JuosanBoard, JuosanMark, JuosanSolve } from "./juosan.types.ts";
  * console.log(solveJuosan(juosanBoard,2,20000));
  * ```
  */
-export function solveJuosan(
-  board: JuosanBoard,
-  limit = 2,
-  maxNodes = JUOSAN_MOST_NODES,
-): JuosanSolve {
-  if (
-    !isJuosanBoard(board) ||
-    !Number.isInteger(limit) ||
-    limit < 1 ||
-    !Number.isInteger(maxNodes) ||
-    maxNodes < 1
-  ) {
+export function solveJuosan(board: JuosanBoard, limit = 2, maxNodes = JUOSAN_MOST_NODES): JuosanSolve {
+  if (!isJuosanBoard(board) || !Number.isInteger(limit) || limit < 1 || !Number.isInteger(maxNodes) || maxNodes < 1) {
     throw new RangeError("Invalid Juosan search settings");
   }
 
@@ -37,7 +27,7 @@ export function solveJuosan(
   const solutions: JuosanMark[][] = [];
   const territoryAt = Array(cellCount).fill(-1);
   board.territories.forEach((territory, index) => {
-    territory.cells.forEach(cell => {
+    territory.cells.forEach((cell) => {
       territoryAt[cell] = index;
     });
   });
@@ -63,20 +53,10 @@ export function solveJuosan(
     const y = Math.floor(cell / board.width);
     const territory = board.territories[territoryAt[cell]];
     for (const mark of [1, 2] as const) {
-      if (
-        mark === 2 &&
-        x >= 2 &&
-        marks[cell - 1] === 2 &&
-        marks[cell - 2] === 2
-      ) {
+      if (mark === 2 && x >= 2 && marks[cell - 1] === 2 && marks[cell - 2] === 2) {
         continue;
       }
-      if (
-        mark === 1 &&
-        y >= 2 &&
-        marks[cell - board.width] === 1 &&
-        marks[cell - 2 * board.width] === 1
-      ) {
+      if (mark === 1 && y >= 2 && marks[cell - board.width] === 1 && marks[cell - 2 * board.width] === 1) {
         continue;
       }
 
@@ -108,8 +88,8 @@ function canStillMeetDifference(
 ): boolean {
   if (difference === null) return true;
 
-  const assigned = cells.filter(cell => marks[cell] !== 0);
-  const horizontal = assigned.filter(cell => marks[cell] === 1).length;
+  const assigned = cells.filter((cell) => marks[cell] !== 0);
+  const horizontal = assigned.filter((cell) => marks[cell] === 1).length;
   const vertical = assigned.length - horizontal;
   const remaining = cells.length - assigned.length;
   const smallestDifference = Math.max(0, Math.abs(horizontal - vertical) - remaining);

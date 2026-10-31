@@ -17,30 +17,57 @@ import type { HeyawakeBoard, HeyawakeSolve } from "./heyawake.types.ts";
  * console.log(solveHeyawake(heyawakeBoard,undefined,{limit:2,nodes:20000}));
  * ```
  */
-export function solveHeyawake(board: HeyawakeBoard, entries: readonly (boolean | null)[] = Array(board.width * board.height).fill(null), options: { limit?: number; nodes?: number } = {}): HeyawakeSolve {
+export function solveHeyawake(
+  board: HeyawakeBoard,
+  entries: readonly (boolean | null)[] = Array(board.width * board.height).fill(null),
+  options: { limit?: number; nodes?: number } = {},
+): HeyawakeSolve {
   if (!isHeyawakeBoard(board)) throw new RangeError("Invalid Heyawake board");
-  const limit = Math.max(1, Math.floor(options.limit ?? 2)), maxNodes = Math.max(1, Math.floor(options.nodes ?? HEYAWAKE_MOST_NODES));
-  const work = [...entries], ids = roomForCell(board), roomCells = board.rooms.map(room => heyawakeCells(board, room)!);
-  if (work.length !== board.width * board.height || work.some(value => value !== true && value !== false && value !== null)) throw new RangeError("Invalid Heyawake entries");
-  let count = 0, nodes = 0, solution: readonly boolean[] | null = null, stopped = false;
+  const limit = Math.max(1, Math.floor(options.limit ?? 2)),
+    maxNodes = Math.max(1, Math.floor(options.nodes ?? HEYAWAKE_MOST_NODES));
+  const work = [...entries],
+    ids = roomForCell(board),
+    roomCells = board.rooms.map((room) => heyawakeCells(board, room)!);
+  if (
+    work.length !== board.width * board.height ||
+    work.some((value) => value !== true && value !== false && value !== null)
+  )
+    throw new RangeError("Invalid Heyawake entries");
+  let count = 0,
+    nodes = 0,
+    solution: readonly boolean[] | null = null,
+    stopped = false;
   const visit = (index: number): void => {
     if (count >= limit || stopped) return;
-    if (++nodes > maxNodes) { stopped = true; return; }
-    if (index === work.length) {
-      const checked = checkHeyawake(board, work);
-      if (checked.ok) { count += 1; solution ??= work.map(value => value === true); }
+    if (++nodes > maxNodes) {
+      stopped = true;
       return;
     }
-    if (work[index] !== null) { visit(index + 1); return; }
+    if (index === work.length) {
+      const checked = checkHeyawake(board, work);
+      if (checked.ok) {
+        count += 1;
+        solution ??= work.map((value) => value === true);
+      }
+      return;
+    }
+    if (work[index] !== null) {
+      visit(index + 1);
+      return;
+    }
     const optionsAtCell = [false, true];
     for (const black of optionsAtCell) {
-      if (black && heyawakeNeighbours(board, index).some(next => work[next] === true)) continue;
+      if (black && heyawakeNeighbours(board, index).some((next) => work[next] === true)) continue;
       work[index] = black;
-      const room = board.rooms[ids[index]!]!, cells = roomCells[ids[index]!]!;
+      const room = board.rooms[ids[index]!]!,
+        cells = roomCells[ids[index]!]!;
       if (room.blacks !== null) {
-        const marked = cells.filter(cell => work[cell] === true).length;
-        const unknown = cells.filter(cell => work[cell] === null).length;
-        if (marked > room.blacks || marked + unknown < room.blacks) { work[index] = null; continue; }
+        const marked = cells.filter((cell) => work[cell] === true).length;
+        const unknown = cells.filter((cell) => work[cell] === null).length;
+        if (marked > room.blacks || marked + unknown < room.blacks) {
+          work[index] = null;
+          continue;
+        }
       }
       visit(index + 1);
       work[index] = null;

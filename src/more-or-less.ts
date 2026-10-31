@@ -81,17 +81,27 @@ export function generateMoreOrLess(size: number, level: KazuLevel, seed: number)
   const allowed = LEVELS[level];
   // Unique, and within the level: a hard puzzle may be as deep as it likes, so its depth is never measured.
   const fits = (grid: Grid, marks: Mark[]): boolean =>
-    countSolutions(grid, size, marks, 2) === 1 && (allowed === Infinity || guessDepth(grid, size, marks, allowed) <= allowed);
+    countSolutions(grid, size, marks, 2) === 1 &&
+    (allowed === Infinity || guessDepth(grid, size, marks, allowed) <= allowed);
 
-  let marks = shuffled(everyMark(solution, size), random).slice(0, Math.round(everyMark(solution, size).length * MARK_SHARE));
+  let marks = shuffled(everyMark(solution, size), random).slice(
+    0,
+    Math.round(everyMark(solution, size).length * MARK_SHARE),
+  );
   const givens: Grid = new Array<number>(size * size).fill(0);
   // Givens until it is a puzzle of the level asked for.
-  for (const index of shuffled(givens.map((_, i) => i), random)) {
+  for (const index of shuffled(
+    givens.map((_, i) => i),
+    random,
+  )) {
     if (fits(givens, marks)) break;
     givens[index] = solution[index]!;
   }
   // Then nothing that is not needed: each given and each mark, in a seeded order.
-  for (const index of shuffled(givens.map((_, i) => i), random)) {
+  for (const index of shuffled(
+    givens.map((_, i) => i),
+    random,
+  )) {
     if (givens[index] === 0) continue;
     const value = givens[index]!;
     givens[index] = 0;
@@ -101,5 +111,12 @@ export function generateMoreOrLess(size: number, level: KazuLevel, seed: number)
     const without = marks.filter((each) => each !== mark);
     if (fits(givens, without)) marks = without;
   }
-  return { kind: "more-or-less", size, level, seed, givens: encodeMoreOrLess(givens, marks, size), solution: encodeCells(solution) };
+  return {
+    kind: "more-or-less",
+    size,
+    level,
+    seed,
+    givens: encodeMoreOrLess(givens, marks, size),
+    solution: encodeCells(solution),
+  };
 }

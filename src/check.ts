@@ -83,7 +83,8 @@ function checkSumCages(size: number, givens: string, answer: string): KazuCheck 
   for (const [at, cage] of asked.cages.entries()) {
     const values = cage.cells.map((index) => filled[index]!);
     if (new Set(values).size !== values.length) return { ok: false, reason: `cage ${at + 1} repeats a number` };
-    if (values.reduce((total, value) => total + value, 0) !== cage.sum) return { ok: false, reason: `cage ${at + 1} does not add to ${cage.sum}` };
+    if (values.reduce((total, value) => total + value, 0) !== cage.sum)
+      return { ok: false, reason: `cage ${at + 1} does not add to ${cage.sum}` };
   }
   return { ok: true };
 }

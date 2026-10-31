@@ -25,21 +25,30 @@ const LEVELS = ["easy", "medium", "hard", "extra-hard"];
  */
 describe("the boards made for a seed", () => {
   const made = {};
-  for (const level of LEVELS) for (const seed of [1, 2]) {
-    made[`shikaku 7 ${level} ${seed}`] = () => generateShikaku(7, 7, level, seed);
-    made[`akari 7 ${level} ${seed}`] = () => generateAkari(7, 7, seed, level);
-    made[`loop 7 ${level} ${seed}`] = () => generateLoop(7, 7, seed, level);
-    made[`hitori 7 ${level} ${seed}`] = () => generateHitori(7, seed, level);
-    made[`regions 8 ${level} ${seed}`] = () => generateRegions(8, 8, level, seed);
-    made[`cross-sums 8 ${level} ${seed}`] = () => generateCrossSums(seed, level, 8);
-  }
+  for (const level of LEVELS)
+    for (const seed of [1, 2]) {
+      made[`shikaku 7 ${level} ${seed}`] = () => generateShikaku(7, 7, level, seed);
+      made[`akari 7 ${level} ${seed}`] = () => generateAkari(7, 7, seed, level);
+      made[`loop 7 ${level} ${seed}`] = () => generateLoop(7, 7, seed, level);
+      made[`hitori 7 ${level} ${seed}`] = () => generateHitori(7, seed, level);
+      made[`regions 8 ${level} ${seed}`] = () => generateRegions(8, 8, level, seed);
+      made[`cross-sums 8 ${level} ${seed}`] = () => generateCrossSums(seed, level, 8);
+    }
   // The 25×25 Sudoku was never on itsutsu.com, so `site.fixture.json` has none of it; these pin it from Kazu 1.4.0.
-  for (const level of ["easy", "medium", "hard"]) for (const seed of [1, 2]) made[`number-place 25 ${level} ${seed}`] = () => generateKazu("number-place", 25, level, seed);
+  for (const level of ["easy", "medium", "hard"])
+    for (const seed of [1, 2])
+      made[`number-place 25 ${level} ${seed}`] = () => generateKazu("number-place", 25, level, seed);
   // Akari at the sizes whose seeds used to fall back to a fixed lattice: the random board they make now is pinned.
   for (const seed of [1, 2, 3]) made[`akari 14 easy ${seed}`] = () => generateAkari(14, 14, seed, "easy");
   it("are the same as when they were pinned", () => {
-    const sums = Object.fromEntries(Object.entries(made).map(([key, make]) => [key, createHash("sha256").update(JSON.stringify(make())).digest("hex").slice(0, 16)]));
-    if (process.env.UPDATE_LEVELS === "1") writeFileSync("src/levels.fixture.json", `${JSON.stringify(sums, null, 2)}\n`);
+    const sums = Object.fromEntries(
+      Object.entries(made).map(([key, make]) => [
+        key,
+        createHash("sha256").update(JSON.stringify(make())).digest("hex").slice(0, 16),
+      ]),
+    );
+    if (process.env.UPDATE_LEVELS === "1")
+      writeFileSync("src/levels.fixture.json", `${JSON.stringify(sums, null, 2)}\n`);
     expect(sums).toEqual(JSON.parse(readFileSync("src/levels.fixture.json", "utf8")));
   });
 });

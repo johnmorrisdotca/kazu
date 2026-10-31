@@ -65,7 +65,9 @@ export function readGivens(kind: KazuKind, size: number, code: string): KazuGive
   const boxed = KAZU_BOXES[size] === undefined ? null : boxedLayout(size).region;
   if (kind === "number-place" || kind === "diagonal") {
     const cells = decodeCells(code, size);
-    return cells === null || boxed === null ? null : { ...plain, cells, regions: boxed, diagonals: kind === "diagonal" };
+    return cells === null || boxed === null
+      ? null
+      : { ...plain, cells, regions: boxed, diagonals: kind === "diagonal" };
   }
   if (kind === "jigsaw") {
     const read = decodeJigsaw(code, size);

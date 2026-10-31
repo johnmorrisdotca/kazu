@@ -30,13 +30,20 @@ const MOST_ATTEMPTS = 400;
  * ```
  */
 export function generateCrossSums(seed = 1, level: CrossSumsLevel = "medium", size = 10): CrossSumsPuzzle {
-  if (!isKazuSeed(seed) || !CROSS_SUMS_LEVELS.includes(level) || !Number.isInteger(size)
-    || size < CROSS_SUMS_LEAST_GENERATED_SIDE || size > CROSS_SUMS_MAX_SIDE) throw new RangeError("Invalid Cross Sums settings");
+  if (
+    !isKazuSeed(seed) ||
+    !CROSS_SUMS_LEVELS.includes(level) ||
+    !Number.isInteger(size) ||
+    size < CROSS_SUMS_LEAST_GENERATED_SIDE ||
+    size > CROSS_SUMS_MAX_SIDE
+  )
+    throw new RangeError("Invalid Cross Sums settings");
   const random = seededRandom(seed);
   for (let aim = CROSS_SUMS_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
     const aimed = CROSS_SUMS_LEVELS[aim]!;
     const wanted = aimed === "extra-hard" ? 3 : 1;
-    let best: { board: CrossSumsBoard; score: number } | null = null, found = 0;
+    let best: { board: CrossSumsBoard; score: number } | null = null,
+      found = 0;
     for (let attempt = 0; attempt < MOST_ATTEMPTS && found < wanted; attempt += 1) {
       const built = candidateCrossSums(size, aimed, random);
       if (!built) continue;
@@ -58,7 +65,8 @@ export function generateCrossSums(seed = 1, level: CrossSumsLevel = "medium", si
 
 /** Whether a board suits a level, and how well: higher is harder. */
 function scored(board: CrossSumsBoard, level: CrossSumsLevel): number | null {
-  const weak = crossSumsModel(board, 0), strong = crossSumsModel(board, 1);
+  const weak = crossSumsModel(board, 0),
+    strong = crossSumsModel(board, 1);
   if (logicCsp(weak.csp, openSlots(weak.csp), 0).solved) return level === "easy" ? 0 : null;
   if (level === "easy") return null;
   if (logicCsp(strong.csp, openSlots(strong.csp), 0).solved) return level === "medium" ? 0 : null;

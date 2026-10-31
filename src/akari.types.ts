@@ -73,7 +73,14 @@ export type AkariRating = {
  * console.log(value);
  * ```
  */
-export type AkariCheck = { ok: boolean; illuminated: number; errors: readonly number[]; dark: readonly number[]; numbered: readonly number[]; conflicts: readonly number[] };
+export type AkariCheck = {
+  ok: boolean;
+  illuminated: number;
+  errors: readonly number[];
+  dark: readonly number[];
+  numbered: readonly number[];
+  conflicts: readonly number[];
+};
 /** The Akari constraint status of a partial board.
  *
  * @example
@@ -114,4 +121,9 @@ export type AkariSolve = { count: number; solution: readonly number[] | null; co
  * console.log(value);
  * ```
  */
-export type AkariGame = { board: AkariBoard; bulbs: readonly number[]; history: readonly (readonly number[])[]; helped: boolean };
+export type AkariGame = {
+  board: AkariBoard;
+  bulbs: readonly number[];
+  history: readonly (readonly number[])[];
+  helped: boolean;
+};

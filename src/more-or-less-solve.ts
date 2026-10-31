@@ -43,7 +43,13 @@ const above = (value: number, size: number) => ALL(size) & ~((1 << (value + 1)) 
  * pruning, applied as candidates are narrowed rather than after a value is
  * placed, cuts them off early.
  */
-export function countSolutions(grid: Grid, size: number, marks: readonly Mark[], limit = 2, first?: (answer: Grid) => void): number {
+export function countSolutions(
+  grid: Grid,
+  size: number,
+  marks: readonly Mark[],
+  limit = 2,
+  first?: (answer: Grid) => void,
+): number {
   let found = 0;
   const step = (at: Grid): void => {
     if (found >= limit) return;

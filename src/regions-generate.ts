@@ -1,4 +1,9 @@
-import { REGIONS_LEAST_GENERATED_SIDE, REGIONS_LEVELS, REGIONS_MOST_ATTEMPTS, REGIONS_MOST_SIDE } from "./regions.constants.ts";
+import {
+  REGIONS_LEAST_GENERATED_SIDE,
+  REGIONS_LEVELS,
+  REGIONS_MOST_ATTEMPTS,
+  REGIONS_MOST_SIDE,
+} from "./regions.constants.ts";
 import { checkRegions } from "./regions-board.ts";
 import { partitionRegions } from "./regions-build.ts";
 import { regionsModel, regionsMostValue } from "./regions-logic.ts";
@@ -27,14 +32,14 @@ import type { Random } from "./random.ts";
  * console.log(generateRegions(5,5,"easy",42));
  * ```
  */
-export function generateRegions(
-  width = 5,
-  height = width,
-  level: RegionsLevel = "medium",
-  seed = 1,
-): RegionsPuzzle {
-  if (![width, height].every(value => Number.isInteger(value) && value >= REGIONS_LEAST_GENERATED_SIDE && value <= REGIONS_MOST_SIDE)
-    || !REGIONS_LEVELS.includes(level) || !isKazuSeed(seed)) {
+export function generateRegions(width = 5, height = width, level: RegionsLevel = "medium", seed = 1): RegionsPuzzle {
+  if (
+    ![width, height].every(
+      (value) => Number.isInteger(value) && value >= REGIONS_LEAST_GENERATED_SIDE && value <= REGIONS_MOST_SIDE,
+    ) ||
+    !REGIONS_LEVELS.includes(level) ||
+    !isKazuSeed(seed)
+  ) {
     throw new RangeError("Regions generation supports 4–12 cells per side and a valid level and seed");
   }
   const random = seededRandom(seed);
@@ -57,41 +62,74 @@ export function generateRegions(
 }
 
 /** Takes givens away from a full answer while the level's way of solving still works; null when the result is not the level. */
-function thin(width: number, height: number, solution: readonly number[], level: RegionsLevel, random: Random): RegionsBoard | null {
+function thin(
+  width: number,
+  height: number,
+  solution: readonly number[],
+  level: RegionsLevel,
+  random: Random,
+): RegionsBoard | null {
   const givens = [...solution];
   let calls = 0;
   const model = () => {
     const { csp: inner, most } = regionsModel({ width, height, givens }, givens);
-    const csp = { ...inner, propagate: (alive: Uint8Array, decided?: number) => { calls += 1; return inner.propagate(alive, decided); } };
+    const csp = {
+      ...inner,
+      propagate: (alive: Uint8Array, decided?: number) => {
+        calls += 1;
+        return inner.propagate(alive, decided);
+      },
+    };
     const start = openSlots(csp);
-    givens.forEach((value, cell) => { if (value) decide(csp, start, cell, cell * most + value - 1); });
+    givens.forEach((value, cell) => {
+      if (value) decide(csp, start, cell, cell * most + value - 1);
+    });
     return { csp, start };
   };
   // A region with no given can be as big as the squares with none joined together, which the solver must allow for; keeping
   // those stretches short keeps every proof short, and keeps the board fair: no vast blank area.
-  const roomy = (): boolean => regionsMostValue({ width, height, givens }, givens) > Math.max(12, Math.max(...solution));
-  const byRules = (): boolean => { const { csp, start } = model(); return logicCsp(csp, start, 0).solved; };
-  const unique = (): boolean => { const { csp, start } = model(); const count = countCsp(csp, start, 2, 500); return !count.exhausted && count.count === 1; };
-  const bySupposing = (): boolean => { const { csp, start } = model(); return logicCsp(csp, start, 1).solved; };
-  const keepAtLeast = level === "easy" ? Math.ceil(solution.length * .5) : 0;
+  const roomy = (): boolean =>
+    regionsMostValue({ width, height, givens }, givens) > Math.max(12, Math.max(...solution));
+  const byRules = (): boolean => {
+    const { csp, start } = model();
+    return logicCsp(csp, start, 0).solved;
+  };
+  const unique = (): boolean => {
+    const { csp, start } = model();
+    const count = countCsp(csp, start, 2, 500);
+    return !count.exhausted && count.count === 1;
+  };
+  const bySupposing = (): boolean => {
+    const { csp, start } = model();
+    return logicCsp(csp, start, 1).solved;
+  };
+  const keepAtLeast = level === "easy" ? Math.ceil(solution.length * 0.5) : 0;
   let left = givens.length;
-  const order = shuffled(givens.map((_, i) => i), random);
+  const order = shuffled(
+    givens.map((_, i) => i),
+    random,
+  );
   // First as many as the rules alone allow.
   for (const cell of order) {
     if (left <= keepAtLeast) break;
     const was = givens[cell]!;
     givens[cell] = 0;
-    if (!roomy() && byRules()) left -= 1; else givens[cell] = was;
+    if (!roomy() && byRules()) left -= 1;
+    else givens[cell] = was;
   }
   if (level === "easy" || level === "medium") return { width, height, givens };
   // Then, beyond the rules: hard takes the first given that leaves a board solved by supposing, extra-hard keeps going while the answer stays single.
   let taken = 0;
-  const from = calls, budget = width * height * 60;
+  const from = calls,
+    budget = width * height * 60;
   for (const cell of order) {
     if (!givens[cell] || calls - from > budget) continue;
     const was = givens[cell]!;
     givens[cell] = 0;
-    if (!roomy() && unique() && (level === "extra-hard" || bySupposing())) { taken += 1; if (taken >= (level === "hard" ? 3 : 6)) break; } else givens[cell] = was;
+    if (!roomy() && unique() && (level === "extra-hard" || bySupposing())) {
+      taken += 1;
+      if (taken >= (level === "hard" ? 3 : 6)) break;
+    } else givens[cell] = was;
   }
   if (!taken || byRules()) return null;
   return { width, height, givens };

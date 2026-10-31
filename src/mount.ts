@@ -1,7 +1,22 @@
 import { decodeCells, stepEntry, symbolOf, valueOfSymbol } from "./cells.ts";
 import { kazuClockText } from "./clock.ts";
 import { drawKazu, kazuCellName, kazuWhere } from "./draw.ts";
-import { answerOf, clearCell, enterNumber, gameConflicts, isPrinted, isSolved, kazuProgress, newKazuGame, numberCounts, restartKazu, toggleNote, undoKazu, valuesOf, type KazuGame } from "./game.ts";
+import {
+  answerOf,
+  clearCell,
+  enterNumber,
+  gameConflicts,
+  isPrinted,
+  isSolved,
+  kazuProgress,
+  newKazuGame,
+  numberCounts,
+  restartKazu,
+  toggleNote,
+  undoKazu,
+  valuesOf,
+  type KazuGame,
+} from "./game.ts";
 import { hintKazu, type KazuHint } from "./hint.ts";
 import type { KazuKind, KazuLevel } from "./kinds.ts";
 import { KAZU_PLAY_STYLE } from "./play-style.ts";
@@ -142,7 +157,10 @@ export type KazuMountOptions = {
  * console.log(value);
  * ```
  */
-export type KazuMountSettings = Pick<KazuMountOptions, "hints" | "check" | "conflicts" | "peers" | "tidy" | "tapToStep" | "language" | "clock" | "controls">;
+export type KazuMountSettings = Pick<
+  KazuMountOptions,
+  "hints" | "check" | "conflicts" | "peers" | "tidy" | "tapToStep" | "language" | "clock" | "controls"
+>;
 
 /** The native mounted number grid, its current game/detail, controls and cleanup methods.
  *
@@ -173,7 +191,12 @@ export type KazuMount = {
   /** What the events would tell now. */
   detail: () => KazuEventDetail;
   /** Play another puzzle (or the same one again, fresh). `run`, `notes` and `elapsed` carry on a kept one. */
-  load: (puzzle: Pick<KazuMountOptions, "kind" | "size" | "givens" | "solution" | "level" | "seed" | "run" | "notes" | "elapsed">) => boolean;
+  load: (
+    puzzle: Pick<
+      KazuMountOptions,
+      "kind" | "size" | "givens" | "solution" | "level" | "seed" | "run" | "notes" | "elapsed"
+    >,
+  ) => boolean;
   /** Change how it plays: hints, check, conflicts, peers, tidy, tapToStep, language, clock, controls. */
   set: (changes: KazuMountSettings) => void;
   /** Choose a cell (or none, with null). */
@@ -206,7 +229,8 @@ export type KazuMount = {
  */
 export function ensureKazuPlayStyle(host: Element): void {
   const root = host.getRootNode();
-  const target: ParentNode = typeof ShadowRoot !== "undefined" && root instanceof ShadowRoot ? root : host.ownerDocument.head;
+  const target: ParentNode =
+    typeof ShadowRoot !== "undefined" && root instanceof ShadowRoot ? root : host.ownerDocument.head;
   if (target.querySelector("style[data-kazu-play]") !== null) return;
   const style = host.ownerDocument.createElement("style");
   style.setAttribute("data-kazu-play", "");
@@ -214,14 +238,24 @@ export function ensureKazuPlayStyle(host: Element): void {
   target.append(style);
 }
 
-function create<K extends keyof HTMLElementTagNameMap>(document: Document, tag: K, className: string, text?: string): HTMLElementTagNameMap[K] {
+function create<K extends keyof HTMLElementTagNameMap>(
+  document: Document,
+  tag: K,
+  className: string,
+  text?: string,
+): HTMLElementTagNameMap[K] {
   const element = document.createElement(tag);
   element.className = className;
   if (text !== undefined) element.textContent = text;
   return element;
 }
 
-const ARROWS: Record<string, [number, number]> = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
+const ARROWS: Record<string, [number, number]> = {
+  ArrowUp: [-1, 0],
+  ArrowDown: [1, 0],
+  ArrowLeft: [0, -1],
+  ArrowRight: [0, 1],
+};
 
 /** Draw a puzzle into `host` and play it. Returns the handle that drives it, or null for givens that are not a puzzle of that kind and side.
  * @param host - The HTMLElement that owns the native interface.
@@ -302,7 +336,12 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
   saysEl.setAttribute("aria-live", "polite");
   host.append(bar, box, keysNote, announce, pad, controls, saysEl);
 
-  const button = (name: string, onPress: () => void, parent: HTMLElement, className = "kzp-button"): HTMLButtonElement => {
+  const button = (
+    name: string,
+    onPress: () => void,
+    parent: HTMLElement,
+    className = "kzp-button",
+  ): HTMLButtonElement => {
     const one = create(document, "button", className);
     one.type = "button";
     one.dataset.action = name;
@@ -376,10 +415,20 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     };
   }
 
-  function emit(name: "kazu-change" | "kazu-hint" | "kazu-check" | "kazu-solve", extra: Partial<KazuEventDetail> = {}): void {
+  function emit(
+    name: "kazu-change" | "kazu-hint" | "kazu-check" | "kazu-solve",
+    extra: Partial<KazuEventDetail> = {},
+  ): void {
     const info = { ...detail(), ...extra };
-    host.dispatchEvent(new CustomEvent(name, { detail: JSON.parse(JSON.stringify(info)), bubbles: true, composed: true }));
-    const call = { "kazu-change": callbacks.onChange, "kazu-hint": callbacks.onHint, "kazu-check": callbacks.onCheck, "kazu-solve": callbacks.onSolve }[name];
+    host.dispatchEvent(
+      new CustomEvent(name, { detail: JSON.parse(JSON.stringify(info)), bubbles: true, composed: true }),
+    );
+    const call = {
+      "kazu-change": callbacks.onChange,
+      "kazu-hint": callbacks.onHint,
+      "kazu-check": callbacks.onCheck,
+      "kazu-solve": callbacks.onSolve,
+    }[name];
     call?.(info);
   }
 
@@ -396,9 +445,12 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     const cell = kazuCellName(game.size, index, language);
     const shown = valuesOf(game)[index]!;
     if (isPrinted(game, index)) return say("cellGiven", { cell, value: symbolOf(shown) });
-    if (shown !== 0) return say(gameConflicts(game).includes(index) ? "cellConflict" : "cellValue", { cell, value: symbolOf(shown) });
+    if (shown !== 0)
+      return say(gameConflicts(game).includes(index) ? "cellConflict" : "cellValue", { cell, value: symbolOf(shown) });
     const notes = notesOf(game.notes[index]!);
-    return notes.length > 0 ? say("cellNotes", { cell, notes: notes.map(symbolOf).join(", ") }) : say("cellEmpty", { cell });
+    return notes.length > 0
+      ? say("cellNotes", { cell, notes: notes.map(symbolOf).join(", ") })
+      : say("cellEmpty", { cell });
   }
 
   function render(): void {
@@ -431,7 +483,10 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
       const value = at + 1;
       key.disabled = solved;
       key.dataset.done = String(counts[value]! >= game.size);
-      key.setAttribute("aria-label", say(counts[value]! >= game.size ? "padDone" : "padNumber", { n: symbolOf(value) }));
+      key.setAttribute(
+        "aria-label",
+        say(counts[value]! >= game.size ? "padDone" : "padNumber", { n: symbolOf(value) }),
+      );
     });
     if (eraseKey !== null) {
       eraseKey.disabled = solved;
@@ -459,7 +514,9 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     const progress = kazuProgress(game);
     progressEl.textContent = `${progress.filled} / ${progress.total}`;
     paintClock();
-    const text = solved ? say(banked > 0 || ranSince !== null ? "solvedIn" : "solved", { time: kazuClockText(elapsed()) }) : sayText();
+    const text = solved
+      ? say(banked > 0 || ranSince !== null ? "solvedIn" : "solved", { time: kazuClockText(elapsed()) })
+      : sayText();
     saysEl.textContent = text;
     saysEl.dataset.warn = String(says.warn === true && !solved);
     const note = selected === null ? "" : cellDescription(selected);
@@ -493,7 +550,12 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
 
   function write(cell: number, value: number): void {
     if (solved || cell < 0 || isPrinted(game, cell)) return;
-    const next = pencilOn && value !== 0 ? toggleNote(game, cell, value) : value === 0 ? clearCell(game, cell) : enterNumber(game, cell, value, settings.tidy);
+    const next =
+      pencilOn && value !== 0
+        ? toggleNote(game, cell, value)
+        : value === 0
+          ? clearCell(game, cell)
+          : enterNumber(game, cell, value, settings.tidy);
     if (next === game) return;
     runClock();
     game = next;
@@ -513,7 +575,8 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     if (target === null || target === undefined || solved) return;
     const index = Number((target as HTMLElement).dataset.cell);
     if (!Number.isInteger(index)) return;
-    if (index === selected && settings.tapToStep && !pencilOn && !isPrinted(game, index)) write(index, stepEntry(game.entries[index]!, game.size));
+    if (index === selected && settings.tapToStep && !pencilOn && !isPrinted(game, index))
+      write(index, stepEntry(game.entries[index]!, game.size));
     else api.select(index);
   };
 
@@ -629,7 +692,10 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     },
     set: (changes) => {
       const { language: nextLanguage, ...rest } = changes;
-      settings = { ...settings, ...Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== undefined)) } as typeof settings;
+      settings = {
+        ...settings,
+        ...Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== undefined)),
+      } as typeof settings;
       if ("language" in changes) {
         explicitLanguage.value = nextLanguage;
         language = nextLanguage ?? languageOfPage();
@@ -688,7 +754,10 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
       const answer = decodeCells(answerKey() ?? "", game.size);
       const wrong: number[] = [];
       const empty = game.entries.filter((value, index) => !isPrinted(game, index) && value === 0).length;
-      if (answer !== null) game.entries.forEach((value, index) => (!isPrinted(game, index) && value !== 0 && value !== answer[index] ? wrong.push(index) : undefined));
+      if (answer !== null)
+        game.entries.forEach((value, index) =>
+          !isPrinted(game, index) && value !== 0 && value !== answer[index] ? wrong.push(index) : undefined,
+        );
       else wrong.push(...gameConflicts(game).filter((index) => !isPrinted(game, index)));
       wrongCells = settings.check === "show" ? wrong : [];
       hintCell = null;
@@ -734,11 +803,24 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     if (found.why === "answer") return lead + say("hintAnswer", { cell, value });
     if (found.why === "only-number") {
       const where = kazuWhere(game.kind, language);
-      return lead + (found.by === undefined ? say("hintOnly", { cell, value, where }) : say("hintOnlyBy", { cell, value, where, by: say(found.by === "cage" ? "byCage" : found.by === "marks" ? "byMarks" : "byClues") }));
+      return (
+        lead +
+        (found.by === undefined
+          ? say("hintOnly", { cell, value, where })
+          : say("hintOnlyBy", {
+              cell,
+              value,
+              where,
+              by: say(found.by === "cage" ? "byCage" : found.by === "marks" ? "byMarks" : "byClues"),
+            }))
+      );
     }
     const group = found.group!;
     const diagonal = group.type === "diagonal" ? say(group.index === 0 ? "groupDiagonal" : "groupDiagonalOther") : "";
-    const named = group.type === "diagonal" ? diagonal : say(`group${group.type[0]!.toUpperCase()}${group.type.slice(1)}`, { n: group.index + 1 });
+    const named =
+      group.type === "diagonal"
+        ? diagonal
+        : say(`group${group.type[0]!.toUpperCase()}${group.type.slice(1)}`, { n: group.index + 1 });
     return lead + say("hintPlace", { group: named, value, cell });
   }
 

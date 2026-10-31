@@ -65,13 +65,13 @@ export function mountJuosan(host: HTMLElement, initial: JuosanMountOptions): Juo
     ...game!,
     board: {
       ...game!.board,
-      territories: game!.board.territories.map(territory => ({
+      territories: game!.board.territories.map((territory) => ({
         ...territory,
         cells: [...territory.cells],
       })),
     },
     marks: [...game!.marks],
-    history: game!.history.map(turn => [...turn]),
+    history: game!.history.map((turn) => [...turn]),
   });
   const words = () => juosanWords(options.language);
 
@@ -172,22 +172,28 @@ export function mountJuosan(host: HTMLElement, initial: JuosanMountOptions): Juo
         const next = game!.marks[cell] === 0 ? 1 : game!.marks[cell] === 1 ? 2 : 0;
         apply(next);
       });
-      button.addEventListener("keydown", event => onCellKey(event, cell));
+      button.addEventListener("keydown", (event) => onCellKey(event, cell));
       cellButtons.append(button);
     }
     board.append(cellButtons);
     if (hadFocus) board.querySelector<HTMLElement>(`[data-cell="${selected}"]`)?.focus();
 
     status.textContent = juosanFinished(game!)
-      ? game!.helped ? words().assisted : words().won
+      ? game!.helped
+        ? words().assisted
+        : words().won
       : message || words().ready;
     help.textContent = words().help;
     tools.replaceChildren();
-    addButton(words().undo, () => {
-      game = undoJuosan(game!);
-      finished = juosanFinished(game!);
-      changed();
-    }, game!.history.length === 0);
+    addButton(
+      words().undo,
+      () => {
+        game = undoJuosan(game!);
+        finished = juosanFinished(game!);
+        changed();
+      },
+      game!.history.length === 0,
+    );
     addButton(words().hint, giveHint, finished);
     addButton(words().check, checkCurrent);
     addButton(words().restart, restart);
@@ -195,11 +201,9 @@ export function mountJuosan(host: HTMLElement, initial: JuosanMountOptions): Juo
 
   const markLabel = (cell: number) => {
     const mark = game!.marks[cell];
-    const kind = mark === 1
-      ? words().horizontal
-      : mark === 2 ? words().vertical : words().blank;
+    const kind = mark === 1 ? words().horizontal : mark === 2 ? words().vertical : words().blank;
     const row = Math.floor(cell / game!.board.width) + 1;
-    const column = cell % game!.board.width + 1;
+    const column = (cell % game!.board.width) + 1;
     return `${words().row} ${row}, ${words().column} ${column}: ${kind}`;
   };
 
@@ -219,10 +223,8 @@ export function mountJuosan(host: HTMLElement, initial: JuosanMountOptions): Juo
   };
 
   const checkCurrent = () => {
-    const complete = game!.marks.every(mark => mark !== 0);
-    message = complete && checkJuosan(game!.board, game!.marks).ok
-      ? words().checked
-      : words().wrong;
+    const complete = game!.marks.every((mark) => mark !== 0);
+    message = complete && checkJuosan(game!.board, game!.marks).ok ? words().checked : words().wrong;
     render();
   };
 

@@ -10,7 +10,11 @@ import type { HeyawakeGame, HeyawakeBoard } from "./heyawake.types.ts";
  * console.log(value);
  * ```
  */
-export type HeyawakeAppearance = { language?: "en" | "ja"; material?: "ivory" | "wood" | "slate"; pieces?: "ink" | "tiles" };
+export type HeyawakeAppearance = {
+  language?: "en" | "ja";
+  material?: "ivory" | "wood" | "slate";
+  pieces?: "ink" | "tiles";
+};
 /** The initial Heyawake board, native progress, appearance and host event callbacks.
  *
  * @example
@@ -22,7 +26,12 @@ export type HeyawakeAppearance = { language?: "en" | "ja"; material?: "ivory" | 
  * console.log(value);
  * ```
  */
-export type HeyawakeMountOptions = HeyawakeAppearance & { board: HeyawakeBoard; progress?: string; onChange?: (game: HeyawakeGame) => void; onFinish?: (game: HeyawakeGame) => void };
+export type HeyawakeMountOptions = HeyawakeAppearance & {
+  board: HeyawakeBoard;
+  progress?: string;
+  onChange?: (game: HeyawakeGame) => void;
+  onFinish?: (game: HeyawakeGame) => void;
+};
 /** Current Heyawake marks or entries, selection, errors and native SVG appearance choices.
  *
  * @example
@@ -33,7 +42,11 @@ export type HeyawakeMountOptions = HeyawakeAppearance & { board: HeyawakeBoard; 
  * console.log(value);
  * ```
  */
-export type HeyawakeDrawOptions = HeyawakeAppearance & { entries?: readonly (boolean | null)[]; selected?: number; errors?: readonly number[] };
+export type HeyawakeDrawOptions = HeyawakeAppearance & {
+  entries?: readonly (boolean | null)[];
+  selected?: number;
+  errors?: readonly number[];
+};
 /** The mounted Heyawake game and progress, native controls and cleanup handle.
  *
  * @example
@@ -49,4 +62,10 @@ export type HeyawakeDrawOptions = HeyawakeAppearance & { entries?: readonly (boo
  * player.destroy();
  * ```
  */
-export type HeyawakeMount = { game: () => HeyawakeGame; progress: () => string; restart: () => void; set: (options: HeyawakeAppearance) => void; destroy: () => void };
+export type HeyawakeMount = {
+  game: () => HeyawakeGame;
+  progress: () => string;
+  restart: () => void;
+  set: (options: HeyawakeAppearance) => void;
+  destroy: () => void;
+};

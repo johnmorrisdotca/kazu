@@ -72,7 +72,13 @@ export type LoopRating = {
  * console.log(value);
  * ```
  */
-export type LoopCheck = { ok: boolean; errors: readonly number[]; clues: readonly number[]; vertices: readonly number[]; loops: number };
+export type LoopCheck = {
+  ok: boolean;
+  errors: readonly number[];
+  clues: readonly number[];
+  vertices: readonly number[];
+  loops: number;
+};
 /** The Loop constraint status of a partial board.
  *
  * @example
@@ -113,4 +119,9 @@ export type LoopSolve = { count: number; solution: readonly number[] | null; com
  * console.log(value);
  * ```
  */
-export type LoopGame = { board: LoopBoard; edges: readonly number[]; history: readonly (readonly number[])[]; helped: boolean };
+export type LoopGame = {
+  board: LoopBoard;
+  edges: readonly number[];
+  history: readonly (readonly number[])[];
+  helped: boolean;
+};

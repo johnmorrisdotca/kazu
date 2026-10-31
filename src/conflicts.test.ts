@@ -53,7 +53,10 @@ describe("conflicts", () => {
     const region = given.regions!;
     const cells = region.flatMap((value, index) => (value === 0 ? [index] : []));
     // Two cells of one region, in different rows and columns where the shape allows.
-    const [a, b] = [cells[0]!, cells.find((c) => Math.floor(c / 6) !== Math.floor(cells[0]! / 6) && c % 6 !== cells[0]! % 6)!];
+    const [a, b] = [
+      cells[0]!,
+      cells.find((c) => Math.floor(c / 6) !== Math.floor(cells[0]! / 6) && c % 6 !== cells[0]! % 6)!,
+    ];
     const grid = new Array<number>(36).fill(0);
     grid[a] = 3;
     grid[b!] = 3;

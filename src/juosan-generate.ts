@@ -18,12 +18,7 @@ import type { JuosanBoard, JuosanLevel, JuosanMark, JuosanPuzzle } from "./juosa
  * console.log(generateJuosan(3,2,"easy",42));
  * ```
  */
-export function generateJuosan(
-  width = 3,
-  height = 2,
-  level: JuosanLevel = "medium",
-  seed = 1,
-): JuosanPuzzle {
+export function generateJuosan(width = 3, height = 2, level: JuosanLevel = "medium", seed = 1): JuosanPuzzle {
   const supported = (width === 3 && height === 2) || (width === 2 && height === 3);
   if (!isKazuSeed(seed) || !JUOSAN_LEVELS.includes(level) || !supported) {
     throw new RangeError("Juosan generation currently supports 3 × 2 and 2 × 3 boards");
@@ -39,22 +34,29 @@ export function generateJuosan(
     !counted.complete ||
     counted.count !== 1 ||
     !counted.solution ||
-    counted.solution.some(value => value !== mark)
+    counted.solution.some((value) => value !== mark)
   ) {
     throw new Error("The generated Juosan did not pass its uniqueness proof");
   }
   return { ...board, seed, level, solution: counted.solution };
 }
 
-function makeTrainingTerritories(
-  width: number,
-  height: number,
-  seed: number,
-): JuosanBoard["territories"] {
+function makeTrainingTerritories(width: number, height: number, seed: number): JuosanBoard["territories"] {
   const split = seed % 2 === 0;
-  const cells = width > height
-    ? (split ? [[0, 1, 2], [3, 4, 5]] : [[0, 1, 2, 3, 4, 5]])
-    : (split ? [[0, 2, 4], [1, 3, 5]] : [[0, 1, 2, 3, 4, 5]]);
+  const cells =
+    width > height
+      ? split
+        ? [
+            [0, 1, 2],
+            [3, 4, 5],
+          ]
+        : [[0, 1, 2, 3, 4, 5]]
+      : split
+        ? [
+            [0, 2, 4],
+            [1, 3, 5],
+          ]
+        : [[0, 1, 2, 3, 4, 5]];
 
-  return cells.map(group => ({ cells: group, difference: group.length }));
+  return cells.map((group) => ({ cells: group, difference: group.length }));
 }

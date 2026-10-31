@@ -2,7 +2,11 @@ import { encodeCells } from "./cells.ts";
 import { countSolutionsWithin, guessDepth as groupDepth, solutionOf as groupSolution } from "./group-solve.ts";
 import { layoutOfGivens, readGivens } from "./givens.ts";
 import type { KazuKind } from "./kinds.ts";
-import { countSolutions as countMarks, guessDepth as marksDepth, solutionOf as marksSolution } from "./more-or-less-solve.ts";
+import {
+  countSolutions as countMarks,
+  guessDepth as marksDepth,
+  solutionOf as marksSolution,
+} from "./more-or-less-solve.ts";
 import { countSolutions as countClues, guessDepth as cluesDepth, solutionOf as cluesSolution } from "./towers-solve.ts";
 
 /**
@@ -30,7 +34,13 @@ import { countSolutions as countClues, guessDepth as cluesDepth, solutionOf as c
  * console.log(countKazuSolutions(kind,size,givens,2,20000));
  * ```
  */
-export function countKazuSolutions(kind: KazuKind, size: number, givens: string, limit = 2, budget = Infinity): number | null {
+export function countKazuSolutions(
+  kind: KazuKind,
+  size: number,
+  givens: string,
+  limit = 2,
+  budget = Infinity,
+): number | null {
   const read = readGivens(kind, size, givens);
   if (read === null) return null;
   if (kind === "more-or-less") return countMarks(read.cells, size, read.marks, limit);

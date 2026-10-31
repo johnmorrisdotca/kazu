@@ -4,10 +4,19 @@
 import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 
 import { API_CSS, apiPage } from "./api.mjs";
-import { FAMILY_SCRIPT, FAMILY_EMBED_BUILDER_WORDS, familyEmbedBuilder, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
+import {
+  FAMILY_SCRIPT,
+  FAMILY_EMBED_BUILDER_WORDS,
+  familyEmbedBuilder,
+  familyFooter,
+  familyHead,
+  familyHeader,
+  familyUnreviewed,
+} from "./family-template.mjs";
 
 const id = "kazu";
-const ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232f5d4a'/%3E%3Ctext x='50' y='72' font-size='64' text-anchor='middle' fill='%23f3efe4'%3E数%3C/text%3E%3C/svg%3E";
+const ICON =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232f5d4a'/%3E%3Ctext x='50' y='72' font-size='64' text-anchor='middle' fill='%23f3efe4'%3E数%3C/text%3E%3C/svg%3E";
 
 const uses = [
   `import { generateKazu, checkKazu } from "@johnmorrisdotca/kazu";`,
@@ -21,7 +30,8 @@ const uses = [
 ];
 const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const row = (testid, label, help) => `<div class="setup fam-row" data-help-en="${escape(help[0])}" data-help-ja="${escape(help[1])}"><span class="fam-label" data-say="${label}"></span><div class="fam-seg" role="group" data-say-label="${label}" id="${testid}" data-testid="${testid}"></div></div>`;
+const row = (testid, label, help) =>
+  `<div class="setup fam-row" data-help-en="${escape(help[0])}" data-help-ja="${escape(help[1])}"><span class="fam-label" data-say="${label}"></span><div class="fam-seg" role="group" data-say-label="${label}" id="${testid}" data-testid="${testid}"></div></div>`;
 
 const page = `<!doctype html>
 <html lang="en">
@@ -29,7 +39,8 @@ const page = `<!doctype html>
     ${familyHead({
       id,
       title: "Kazu 数 — Sudoku and grid number puzzles",
-      description: "Play six number puzzles in your browser: Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Pencil marks, hints that say why, undo and a clock. Free and open source, in English and Japanese.",
+      description:
+        "Play six number puzzles in your browser: Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Pencil marks, hints that say why, undo and a clock. Free and open source, in English and Japanese.",
       ogTitle: "Kazu 数 — Sudoku and grid number puzzles",
       ogDescription: "Sudoku, Killer Sudoku, Futoshiki, Skyscrapers and more. Every puzzle has exactly one answer.",
     })}
@@ -39,7 +50,13 @@ const page = `<!doctype html>
   </head>
   <body>
     <main>
-      ${familyHeader({ id, links: [{ href: "docs/index.html", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] })}
+      ${familyHeader({
+        id,
+        links: [
+          { href: "docs/index.html", say: "pageDocs" },
+          { href: "api.html", say: "pageApi" },
+        ],
+      })}
       <nav aria-label="More grid puzzles"><a href="shikaku.html">Shikaku</a> · <a href="hitori.html">Hitori</a> · <a href="nurikabe.html">Nurikabe</a> · <a href="akari.html">Akari</a> · <a href="juosan.html">Juosan</a> · <a href="loop.html">Loop</a> · <a href="masyu.html">Masyu</a> · <a href="yajilin.html">Yajilin</a> · <a href="ripple.html">Ripple Effect</a> · <a href="cross-sums.html">Cross Sums</a> · <a href="regions.html">Regions</a> · <a href="heyawake.html">Heyawake</a></nav>
       ${row("kinds", "puzzle", ["Choose which of the six puzzles to play. Each one has its own rules, listed below the board.", "遊ぶパズルを、六つの中から選びます。ルールは盤の下に載っています。"])}
       ${row("sizes", "size", ["Choose the size of the grid. A bigger grid takes longer.", "盤の大きさを選びます。大きいほど時間がかかります。"])}
@@ -95,19 +112,61 @@ writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kazu", icon: ICON }));
 console.log("site/ is ready: serve it, or let the Pages workflow publish it.");
 
-for (const game of ["shikaku", "hitori", "nurikabe", "akari", "juosan", "loop", "masyu", "yajilin", "ripple", "cross-sums", "regions", "heyawake"]) {
+for (const game of [
+  "shikaku",
+  "hitori",
+  "nurikabe",
+  "akari",
+  "juosan",
+  "loop",
+  "masyu",
+  "yajilin",
+  "ripple",
+  "cross-sums",
+  "regions",
+  "heyawake",
+]) {
   const gamePage = readFileSync(`demo/${game}.html`, "utf8")
-    .replace("<!--family-header-->", familyHeader({ id, links: [{ href: "index.html", say: "pageBack" }, { href: "docs/index.html", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] }))
+    .replace(
+      "<!--family-header-->",
+      familyHeader({
+        id,
+        links: [
+          { href: "index.html", say: "pageBack" },
+          { href: "docs/index.html", say: "pageDocs" },
+          { href: "api.html", say: "pageApi" },
+        ],
+      }),
+    )
     .replace("<!--family-footer-->", familyFooter({ id }))
     .replace("<!--family-unreviewed-->", familyUnreviewed({ id }))
     .replace("<!--family-script-->", `<script>${FAMILY_SCRIPT}</script>`);
   writeFileSync(`site/${game}.html`, gamePage);
 }
 
-writeFileSync("site/family-embed-builder.js", `export const FAMILY_EMBED_BUILDER_WORDS = ${JSON.stringify(FAMILY_EMBED_BUILDER_WORDS)};\nexport ${familyEmbedBuilder.toString()};\n`);
+writeFileSync(
+  "site/family-embed-builder.js",
+  `export const FAMILY_EMBED_BUILDER_WORDS = ${JSON.stringify(FAMILY_EMBED_BUILDER_WORDS)};\nexport ${familyEmbedBuilder.toString()};\n`,
+);
 const builderParts = {
-  builderHead: familyHead({ id, title: "Kazu · build a number-puzzle embed", description: "Choose a seeded or daily number puzzle, preview it and copy the embed code." }),
-  builderHeader: familyHeader({ id, links: [{ href: "./", say: "toGallery" }, { href: "docs/index.html", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] }),
-  unreviewed: familyUnreviewed({ id }), footer: familyFooter({ id }), script: `<script>${FAMILY_SCRIPT}</script>`,
+  builderHead: familyHead({
+    id,
+    title: "Kazu · build a number-puzzle embed",
+    description: "Choose a seeded or daily number puzzle, preview it and copy the embed code.",
+  }),
+  builderHeader: familyHeader({
+    id,
+    links: [
+      { href: "./", say: "toGallery" },
+      { href: "docs/index.html", say: "pageDocs" },
+      { href: "api.html", say: "pageApi" },
+    ],
+  }),
+  unreviewed: familyUnreviewed({ id }),
+  footer: familyFooter({ id }),
+  script: `<script>${FAMILY_SCRIPT}</script>`,
 };
-writeFileSync("site/builder.html", readFileSync("demo/builder.html", "utf8").replace(/<!-- family:([A-Za-z]+) -->/g, (_match, key) => builderParts[key]));
+writeFileSync(
+  "site/builder.html",
+  readFileSync("demo/builder.html", "utf8").replace(/<!-- family:([A-Za-z]+) -->/g, (_match, key) => builderParts[key]),
+);

@@ -115,7 +115,12 @@ export function boxedLayout(size: number, diagonal = false): Layout {
   const key = `${size}:${diagonal}`;
   const known = CLASSIC.get(key);
   if (known !== undefined) return known;
-  const layout = build(size, Array.from({ length: size * size }, (_, index) => boxOf(size, index)), "box", diagonal);
+  const layout = build(
+    size,
+    Array.from({ length: size * size }, (_, index) => boxOf(size, index)),
+    "box",
+    diagonal,
+  );
   CLASSIC.set(key, layout);
   return layout;
 }

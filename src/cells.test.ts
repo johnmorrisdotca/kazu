@@ -5,7 +5,9 @@ import { decodeCells, EMPTY_CELL, encodeCells, kazuHash, stepEntry, symbolOf, va
 describe("cells as a string", () => {
   it("writes 1 to 9 and then A to P", () => {
     expect([1, 9, 10, 16, 17, 25].map(symbolOf)).toEqual(["1", "9", "A", "G", "H", "P"]);
-    expect(["1", "9", "A", "G", "a", "g", "H", "p", "P", "Q", "0", ".", "", "12"].map(valueOfSymbol)).toEqual([1, 9, 10, 16, 10, 16, 17, 25, 25, 0, 0, 0, 0, 0]);
+    expect(["1", "9", "A", "G", "a", "g", "H", "p", "P", "Q", "0", ".", "", "12"].map(valueOfSymbol)).toEqual([
+      1, 9, 10, 16, 10, 16, 17, 25, 25, 0, 0, 0, 0, 0,
+    ]);
   });
 
   it("round-trips a grid of every size", () => {

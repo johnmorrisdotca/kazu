@@ -49,7 +49,14 @@ export function decidedSlot(csp: Csp, alive: Uint8Array, variable: number): numb
   return found;
 }
 
-export type CspCount = { count: number; solution: Uint8Array | null; solutions: Uint8Array[]; stopped: boolean; exhausted: boolean; nodes: number };
+export type CspCount = {
+  count: number;
+  solution: Uint8Array | null;
+  solutions: Uint8Array[];
+  stopped: boolean;
+  exhausted: boolean;
+  nodes: number;
+};
 
 /**
  * Counts the ways to decide every variable, up to `limit`. `exhausted` says the node budget ran out;
@@ -58,18 +65,29 @@ export type CspCount = { count: number; solution: Uint8Array | null; solutions: 
  */
 export function countCsp(csp: Csp, start: Uint8Array, limit: number, budget: number): CspCount {
   const variables = csp.starts.length - 1;
-  let count = 0, nodes = 0, exhausted = false, stopped = false;
+  let count = 0,
+    nodes = 0,
+    exhausted = false,
+    stopped = false;
   let solution: Uint8Array | null = null;
   const solutions: Uint8Array[] = [];
   const visit = (alive: Uint8Array, hint?: number): void => {
     if (exhausted || stopped) return;
-    if (++nodes > budget) { exhausted = true; return; }
+    if (++nodes > budget) {
+      exhausted = true;
+      return;
+    }
     if (!csp.propagate(alive, hint)) return;
-    let pick = csp.choose ? csp.choose(alive) : -1, best = 99_999;
+    let pick = csp.choose ? csp.choose(alive) : -1,
+      best = 99_999;
     if (!csp.choose) {
       for (let v = 0; v < variables; v += 1) {
         const left = slotsLeft(csp, alive, v);
-        if (left > 1 && left < best) { best = left; pick = v; if (left === 2) break; }
+        if (left > 1 && left < best) {
+          best = left;
+          pick = v;
+          if (left === 2) break;
+        }
       }
     }
     if (pick < 0) {
@@ -149,7 +167,16 @@ export function logicCsp(csp: Csp, start: Uint8Array, depth: number): CspLogic {
 export function solveCsp(csp: Csp, start: Uint8Array, limit: number, budget: number, depth = 1): CspCount {
   const plain = logicCsp(csp, start, 0);
   const reasoned = plain.solved || plain.contradiction || depth < 1 ? plain : logicCsp(csp, start, 1);
-  if (reasoned.contradiction) return { count: 0, solution: null, solutions: [], stopped: false, exhausted: false, nodes: 0 };
-  if (reasoned.solved) return { count: 1, solution: reasoned.alive, solutions: [reasoned.alive], stopped: limit <= 1, exhausted: false, nodes: 0 };
+  if (reasoned.contradiction)
+    return { count: 0, solution: null, solutions: [], stopped: false, exhausted: false, nodes: 0 };
+  if (reasoned.solved)
+    return {
+      count: 1,
+      solution: reasoned.alive,
+      solutions: [reasoned.alive],
+      stopped: limit <= 1,
+      exhausted: false,
+      nodes: 0,
+    };
   return countCsp(csp, reasoned.alive, limit, budget);
 }

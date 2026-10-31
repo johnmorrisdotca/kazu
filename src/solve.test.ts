@@ -40,7 +40,9 @@ describe("solving", () => {
 
   it("measures a hard puzzle as asking for at least a guess, and an easy one for none", () => {
     expect(kazuGuessDepth("number-place", 9, generateKazu("number-place", 9, "easy", 9).givens)).toBe(0);
-    const hard = [1, 2, 3, 4, 5, 6].map((seed) => kazuGuessDepth("number-place", 9, generateKazu("number-place", 9, "hard", seed).givens)!);
+    const hard = [1, 2, 3, 4, 5, 6].map(
+      (seed) => kazuGuessDepth("number-place", 9, generateKazu("number-place", 9, "hard", seed).givens)!,
+    );
     expect(Math.max(...hard)).toBeGreaterThanOrEqual(1);
   });
 });

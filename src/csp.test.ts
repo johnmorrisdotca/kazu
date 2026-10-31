@@ -8,15 +8,19 @@ const allDifferent = (size: number, extra?: (alive: Uint8Array) => boolean): Csp
   const starts = Int32Array.from({ length: size + 1 }, (_, i) => i * size);
   return {
     starts,
-    propagate: alive => {
+    propagate: (alive) => {
       let changed = true;
       while (changed) {
         changed = false;
         for (let v = 0; v < size; v += 1) {
-          const left = [...Array(size).keys()].filter(d => alive[v * size + d]);
+          const left = [...Array(size).keys()].filter((d) => alive[v * size + d]);
           if (!left.length) return false;
           if (left.length !== 1) continue;
-          for (let other = 0; other < size; other += 1) if (other !== v && alive[other * size + left[0]!]) { alive[other * size + left[0]!] = 0; changed = true; }
+          for (let other = 0; other < size; other += 1)
+            if (other !== v && alive[other * size + left[0]!]) {
+              alive[other * size + left[0]!] = 0;
+              changed = true;
+            }
         }
       }
       return extra ? extra(alive) : true;
@@ -34,7 +38,8 @@ describe("the shared engine", () => {
   });
 
   it("decides a variable to one slot and reads it back", () => {
-    const csp = allDifferent(3), alive = openSlots(csp);
+    const csp = allDifferent(3),
+      alive = openSlots(csp);
     expect(slotsLeft(csp, alive, 0)).toBe(3);
     decide(csp, alive, 0, 1);
     expect(decidedSlot(csp, alive, 0)).toBe(1);
@@ -44,7 +49,8 @@ describe("the shared engine", () => {
   });
 
   it("solves by reasoning when the rules are enough, and says how much supposing it took", () => {
-    const csp = allDifferent(3), alive = openSlots(csp);
+    const csp = allDifferent(3),
+      alive = openSlots(csp);
     decide(csp, alive, 0, 0);
     decide(csp, alive, 1, 4);
     const plain = logicCsp(csp, alive, 0);
@@ -57,7 +63,7 @@ describe("the shared engine", () => {
 
   it("rules out a digit by supposing it breaks a rule", () => {
     // Square 0 may not be 0, but only supposing it shows: the extra rule fires only when square 0 is decided.
-    const csp = allDifferent(2, alive => !(alive[0] && !alive[1]));
+    const csp = allDifferent(2, (alive) => !(alive[0] && !alive[1]));
     const probed = logicCsp(csp, openSlots(csp), 1);
     expect(probed).toMatchObject({ solved: true });
     expect(probed.probes).toBeGreaterThan(0);
@@ -65,7 +71,8 @@ describe("the shared engine", () => {
   });
 
   it("proves one answer by reasoning without searching, and none when a rule breaks", () => {
-    const csp = allDifferent(3), alive = openSlots(csp);
+    const csp = allDifferent(3),
+      alive = openSlots(csp);
     decide(csp, alive, 0, 0);
     decide(csp, alive, 1, 4);
     expect(solveCsp(csp, alive, 2, 1000)).toMatchObject({ count: 1, exhausted: false, nodes: 0 });

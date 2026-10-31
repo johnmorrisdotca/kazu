@@ -1,4 +1,10 @@
-import type { CrossSumsBoard, CrossSumsGame, CrossSumsLanguage, CrossSumsMaterial, CrossSumsPieces } from "./cross-sums.types.ts";
+import type {
+  CrossSumsBoard,
+  CrossSumsGame,
+  CrossSumsLanguage,
+  CrossSumsMaterial,
+  CrossSumsPieces,
+} from "./cross-sums.types.ts";
 import type { CrossSumsDrawOptions } from "./cross-sums-draw.ts";
 /** The initial CrossSums board, native progress, appearance and host event callbacks.
  *
@@ -11,7 +17,15 @@ import type { CrossSumsDrawOptions } from "./cross-sums-draw.ts";
  * console.log(value);
  * ```
  */
-export type CrossSumsMountOptions = CrossSumsDrawOptions & { board: CrossSumsBoard; language?: CrossSumsLanguage; progress?: string; onChange?: (game: CrossSumsGame) => void; onFinish?: (game: CrossSumsGame) => void; material?: CrossSumsMaterial; pieces?: CrossSumsPieces };
+export type CrossSumsMountOptions = CrossSumsDrawOptions & {
+  board: CrossSumsBoard;
+  language?: CrossSumsLanguage;
+  progress?: string;
+  onChange?: (game: CrossSumsGame) => void;
+  onFinish?: (game: CrossSumsGame) => void;
+  material?: CrossSumsMaterial;
+  pieces?: CrossSumsPieces;
+};
 /** The mounted CrossSums game and progress, native controls and cleanup handle.
  *
  * @example
@@ -27,4 +41,10 @@ export type CrossSumsMountOptions = CrossSumsDrawOptions & { board: CrossSumsBoa
  * player.destroy();
  * ```
  */
-export type CrossSumsMount = { game: () => CrossSumsGame; progress: () => string; set: (options: CrossSumsDrawOptions & { language?: CrossSumsLanguage }) => void; restart: () => void; destroy: () => void };
+export type CrossSumsMount = {
+  game: () => CrossSumsGame;
+  progress: () => string;
+  set: (options: CrossSumsDrawOptions & { language?: CrossSumsLanguage }) => void;
+  restart: () => void;
+  destroy: () => void;
+};

@@ -71,7 +71,12 @@ export type ShikakuCheck = { ok: boolean; covered: number; errors: readonly numb
  * console.log(value);
  * ```
  */
-export type ShikakuSolve = { count: number; solution: readonly ShikakuRectangle[] | null; complete: boolean; nodes: number };
+export type ShikakuSolve = {
+  count: number;
+  solution: readonly ShikakuRectangle[] | null;
+  complete: boolean;
+  nodes: number;
+};
 /** The immutable Shikaku board, current entries or marks, undo history and assistance state.
  *
  * @example
@@ -85,7 +90,12 @@ export type ShikakuSolve = { count: number; solution: readonly ShikakuRectangle[
  * console.log(value);
  * ```
  */
-export type ShikakuGame = { board: ShikakuBoard; rectangles: readonly ShikakuRectangle[]; history: readonly (readonly ShikakuRectangle[])[]; helped: boolean };
+export type ShikakuGame = {
+  board: ShikakuBoard;
+  rectangles: readonly ShikakuRectangle[];
+  history: readonly (readonly ShikakuRectangle[])[];
+  helped: boolean;
+};
 /**
  * How hard a board is, measured by solving it. `depth` 0 means the rules solve it, 1 that somebody has to suppose a
  * rectangle and watch it break, 2 that more than that is needed. `rules` is how many of the three rules a depth-0

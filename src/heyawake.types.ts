@@ -85,4 +85,9 @@ export type HeyawakeSolve = { count: number; solution: readonly boolean[] | null
  * console.log(value);
  * ```
  */
-export type HeyawakeGame = { board: HeyawakeBoard; entries: readonly (boolean | null)[]; history: readonly (readonly (boolean | null)[])[]; helped: boolean };
+export type HeyawakeGame = {
+  board: HeyawakeBoard;
+  entries: readonly (boolean | null)[];
+  history: readonly (readonly (boolean | null)[])[];
+  helped: boolean;
+};

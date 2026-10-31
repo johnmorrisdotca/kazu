@@ -159,14 +159,20 @@ export type Segment = { x1: number; y1: number; x2: number; y2: number };
  * ```
  */
 export function cageOutline(size: number, cageOf: (index: number) => number | undefined, inset = 0.12): Segment[] {
-  const at = (row: number, col: number) => (row < 0 || col < 0 || row >= size || col >= size ? undefined : cageOf(row * size + col));
+  const at = (row: number, col: number) =>
+    row < 0 || col < 0 || row >= size || col >= size ? undefined : cageOf(row * size + col);
   const out: Segment[] = [];
   for (let row = 0; row < size; row += 1) {
     for (let col = 0; col < size; col += 1) {
       const mine = at(row, col);
       if (mine === undefined) continue;
       const same = (r: number, c: number) => at(r, c) === mine;
-      const edge = { top: !same(row - 1, col), bottom: !same(row + 1, col), left: !same(row, col - 1), right: !same(row, col + 1) };
+      const edge = {
+        top: !same(row - 1, col),
+        bottom: !same(row + 1, col),
+        left: !same(row, col - 1),
+        right: !same(row, col + 1),
+      };
       /*
        * How far a side's line runs past the cell toward one end: stops `inset` short when the cage
        * ends there, runs to the edge when the neighbour carries the same side on, and `inset` past
@@ -175,19 +181,39 @@ export function cageOutline(size: number, cageOf: (index: number) => number | un
       const reach = (ends: boolean, neighbourHasSide: boolean) => (ends ? -inset : neighbourHasSide ? 0 : inset);
       if (edge.top) {
         const y = row + inset;
-        out.push({ x1: col - reach(edge.left, !same(row - 1, col - 1) && same(row, col - 1)), y1: y, x2: col + 1 + reach(edge.right, !same(row - 1, col + 1) && same(row, col + 1)), y2: y });
+        out.push({
+          x1: col - reach(edge.left, !same(row - 1, col - 1) && same(row, col - 1)),
+          y1: y,
+          x2: col + 1 + reach(edge.right, !same(row - 1, col + 1) && same(row, col + 1)),
+          y2: y,
+        });
       }
       if (edge.bottom) {
         const y = row + 1 - inset;
-        out.push({ x1: col - reach(edge.left, !same(row + 1, col - 1) && same(row, col - 1)), y1: y, x2: col + 1 + reach(edge.right, !same(row + 1, col + 1) && same(row, col + 1)), y2: y });
+        out.push({
+          x1: col - reach(edge.left, !same(row + 1, col - 1) && same(row, col - 1)),
+          y1: y,
+          x2: col + 1 + reach(edge.right, !same(row + 1, col + 1) && same(row, col + 1)),
+          y2: y,
+        });
       }
       if (edge.left) {
         const x = col + inset;
-        out.push({ x1: x, y1: row - reach(edge.top, !same(row - 1, col - 1) && same(row - 1, col)), x2: x, y2: row + 1 + reach(edge.bottom, !same(row + 1, col - 1) && same(row + 1, col)) });
+        out.push({
+          x1: x,
+          y1: row - reach(edge.top, !same(row - 1, col - 1) && same(row - 1, col)),
+          x2: x,
+          y2: row + 1 + reach(edge.bottom, !same(row + 1, col - 1) && same(row + 1, col)),
+        });
       }
       if (edge.right) {
         const x = col + 1 - inset;
-        out.push({ x1: x, y1: row - reach(edge.top, !same(row - 1, col + 1) && same(row - 1, col)), x2: x, y2: row + 1 + reach(edge.bottom, !same(row + 1, col + 1) && same(row + 1, col)) });
+        out.push({
+          x1: x,
+          y1: row - reach(edge.top, !same(row - 1, col + 1) && same(row - 1, col)),
+          x2: x,
+          y2: row + 1 + reach(edge.bottom, !same(row + 1, col + 1) && same(row + 1, col)),
+        });
       }
     }
   }
@@ -239,7 +265,14 @@ export function generateSumCages(size: number, level: KazuLevel, seed: number): 
     // A cage of one cell is printed as its number too, as it would be in a newspaper's.
     const single = new Set(cages.flatMap((cage) => (cage.cells.length === 1 ? cage.cells : [])));
     const cells = solution.map((value, index) => (single.has(index) ? value : 0));
-    return { kind: "sum-cages", size, level, seed, givens: encodeKiller(cells, cages), solution: encodeCells(solution) };
+    return {
+      kind: "sum-cages",
+      size,
+      level,
+      seed,
+      givens: encodeKiller(cells, cages),
+      solution: encodeCells(solution),
+    };
   }
 }
 
@@ -249,7 +282,11 @@ function joinCages(size: number, solution: readonly number[], level: KazuLevel, 
   let cages: Cage[] = solution.map((value, index) => ({ cells: [index], sum: value }));
   const blank = new Array<number>(size * size).fill(0);
   let refused = 0;
-  for (let tried = 0; tried < JOINS_PER_CELL * size * size && cages.length > want && refused < REFUSED_IN_A_ROW_PER_SIDE * size; tried += 1) {
+  for (
+    let tried = 0;
+    tried < JOINS_PER_CELL * size * size && cages.length > want && refused < REFUSED_IN_A_ROW_PER_SIDE * size;
+    tried += 1
+  ) {
     const cageOf = new Array<number>(size * size);
     cages.forEach((cage, c) => cage.cells.forEach((index) => (cageOf[index] = c)));
     /*
@@ -258,9 +295,12 @@ function joinCages(size: number, solution: readonly number[], level: KazuLevel, 
      * shapes are not all grown from the same few.
      */
     const smallest = Math.min(...cages.map((cage) => cage.cells.length));
-    const pool = random() < 0.8 ? cages.flatMap((cage, c) => (cage.cells.length === smallest ? [c] : [])) : cages.map((_, c) => c);
+    const pool =
+      random() < 0.8 ? cages.flatMap((cage, c) => (cage.cells.length === smallest ? [c] : [])) : cages.map((_, c) => c);
     const a = pool[Math.floor(random() * pool.length)]!;
-    const touching = [...new Set(cages[a]!.cells.flatMap((index) => neighbours(size, index)).map((index) => cageOf[index]!))].filter((c) => c !== a);
+    const touching = [
+      ...new Set(cages[a]!.cells.flatMap((index) => neighbours(size, index)).map((index) => cageOf[index]!)),
+    ].filter((c) => c !== a);
     if (touching.length === 0) continue;
     const b = touching[Math.floor(random() * touching.length)]!;
     const cells = [...cages[a]!.cells, ...cages[b]!.cells];

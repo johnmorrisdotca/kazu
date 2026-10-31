@@ -59,7 +59,10 @@ export function kazuGeometry(kind: KazuKind, size: number): KazuGeometry {
   const ring = kind === "towers" ? 1 : 0;
   const origin = MARGIN + ring * KAZU_CELL;
   const side = 2 * MARGIN + (size + 2 * ring) * KAZU_CELL;
-  const corner = (index: number) => ({ x: origin + (index % size) * KAZU_CELL, y: origin + Math.floor(index / size) * KAZU_CELL });
+  const corner = (index: number) => ({
+    x: origin + (index % size) * KAZU_CELL,
+    y: origin + Math.floor(index / size) * KAZU_CELL,
+  });
   return {
     side,
     cell: KAZU_CELL,

@@ -23,7 +23,10 @@ export function generateRipple(width = 9, height = width, seed = 1): RipplePuzzl
   }
   const random = seededRandom(seed);
   for (let attempt = 0; attempt < RIPPLE_MAX_ATTEMPTS; attempt += 1) {
-    const rooms = Array.from({ length: 81 }, (_, cell) => Math.floor(Math.floor(cell / 9) / 3) * 3 + Math.floor(cell % 9 / 3));
+    const rooms = Array.from(
+      { length: 81 },
+      (_, cell) => Math.floor(Math.floor(cell / 9) / 3) * 3 + Math.floor((cell % 9) / 3),
+    );
     const solution = blockSolution(random);
     const clues: (number | null)[] = [...solution];
     const order = Array.from({ length: clues.length }, (_, cell) => cell);
@@ -36,7 +39,10 @@ export function generateRipple(width = 9, height = width, seed = 1): RipplePuzzl
       clues[cell] = null;
       const board = { width, height, rooms, clues };
       const proof = solveRipple(board, { limit: 2 });
-      if (!proof.complete || proof.count !== 1) { clues[cell] = previous; continue; }
+      if (!proof.complete || proof.count !== 1) {
+        clues[cell] = previous;
+        continue;
+      }
       clueCount -= 1;
     }
     if (clueCount > 58 || clueCount >= clues.length) continue;
@@ -52,10 +58,10 @@ export function generateRipple(width = 9, height = width, seed = 1): RipplePuzzl
 function blockSolution(random: () => number): number[] {
   const bands = shuffled([0, 1, 2], random);
   const stacks = shuffled([0, 1, 2], random);
-  const rows = bands.flatMap(band => shuffled([0, 1, 2], random).map(row => band * 3 + row));
-  const columns = stacks.flatMap(stack => shuffled([0, 1, 2], random).map(column => stack * 3 + column));
+  const rows = bands.flatMap((band) => shuffled([0, 1, 2], random).map((row) => band * 3 + row));
+  const columns = stacks.flatMap((stack) => shuffled([0, 1, 2], random).map((column) => stack * 3 + column));
   const digits = shuffled([1, 2, 3, 4, 5, 6, 7, 8, 9], random);
-  return rows.flatMap(row => columns.map(column => digits[(row * 3 + Math.floor(row / 3) + column) % 9]!));
+  return rows.flatMap((row) => columns.map((column) => digits[(row * 3 + Math.floor(row / 3) + column) % 9]!));
 }
 
 function shuffled<T>(items: T[], random: () => number): T[] {

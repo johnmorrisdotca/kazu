@@ -118,7 +118,15 @@ export function decodeNotes(code: string, size: number): number[] | null {
   for (let at = 0; at < code.length; at += 6) {
     const index = Number.parseInt(code.slice(at, at + 2), 36);
     const bits = Number.parseInt(code.slice(at + 2, at + 6), 36);
-    if (!Number.isInteger(index) || index < 0 || index >= size * size || !Number.isInteger(bits) || bits <= 0 || bits >= 2 ** size) return null;
+    if (
+      !Number.isInteger(index) ||
+      index < 0 ||
+      index >= size * size ||
+      !Number.isInteger(bits) ||
+      bits <= 0 ||
+      bits >= 2 ** size
+    )
+      return null;
     notes[index] = bits << 1;
   }
   return notes;

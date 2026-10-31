@@ -19,7 +19,9 @@ export function recordedSizes(kind: KazuKind): number[] {
 }
 
 /** The same, for one puzzle, by this package's key. */
-const SITE_NAME_OF: Record<string, string> = Object.fromEntries(Object.entries(KAZU_KIND_OF_SITE_KIND).map(([site, kind]) => [kind, site]));
+const SITE_NAME_OF: Record<string, string> = Object.fromEntries(
+  Object.entries(KAZU_KIND_OF_SITE_KIND).map(([site, kind]) => [kind, site]),
+);
 
 /**
  * One puzzle's recorded seeds, made again: every size and every level, sixty seeds each, byte for byte

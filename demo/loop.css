@@ -1,4 +1,26 @@
-.dimensions{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}#board{max-width:42rem;margin:auto}.sl-board{touch-action:manipulation}.sl-edge{min-width:12px;min-height:12px}.sl-dialog{max-width:min(95vw,60rem)}
+.dimensions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+#board {
+  max-width: 42rem;
+  margin: auto;
+}
+.sl-board {
+  touch-action: manipulation;
+}
+.sl-edge {
+  min-width: 12px;
+  min-height: 12px;
+}
+.sl-dialog {
+  max-width: min(95vw, 60rem);
+}
 
 /* Keep navigation width stable across languages. */
-header nav a[data-say="pageDocs"] { inline-size: 8rem; justify-content: center; flex: none; }
+header nav a[data-say="pageDocs"] {
+  inline-size: 8rem;
+  justify-content: center;
+  flex: none;
+}

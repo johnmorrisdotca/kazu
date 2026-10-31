@@ -29,8 +29,12 @@ import type { Random } from "./random.ts";
  * ```
  */
 export function generateLoop(width = 5, height = width, seed = 1, level: LoopLevel = "medium"): LoopPuzzle {
-  if (![width, height].every(side => Number.isInteger(side) && side >= 2 && side <= LOOP_MOST_SIDE)
-    || !isKazuSeed(seed) || !LOOP_LEVELS.includes(level)) throw new RangeError("Invalid Loop settings");
+  if (
+    ![width, height].every((side) => Number.isInteger(side) && side >= 2 && side <= LOOP_MOST_SIDE) ||
+    !isKazuSeed(seed) ||
+    !LOOP_LEVELS.includes(level)
+  )
+    throw new RangeError("Invalid Loop settings");
   const random = seededRandom(seed);
   // The work an attempt does is counted in rule runs, never in time, so a seed makes the same puzzle on every machine. When a level has used its share the next one down is tried.
   const work = { calls: 0, limit: width * height * 900 };
@@ -38,7 +42,8 @@ export function generateLoop(width = 5, height = width, seed = 1, level: LoopLev
     work.calls = 0;
     const aimed = LOOP_LEVELS[aim]!;
     const wanted = 1;
-    let best: { board: LoopBoard; probes: number } | null = null, found = 0;
+    let best: { board: LoopBoard; probes: number } | null = null,
+      found = 0;
     for (let attempt = 0; attempt < LOOP_MOST_ATTEMPTS && found < wanted && work.calls < work.limit; attempt += 1) {
       const made = attemptLoop(width, height, aimed, random, work);
       if (!made) continue;
@@ -57,7 +62,8 @@ export function generateLoop(width = 5, height = width, seed = 1, level: LoopLev
 
 /** The loop of a random region of squares: connected, without a hole, and never touching itself at a corner. */
 function growRegion(width: number, height: number, share: number, thin: number, random: Random): Uint8Array {
-  const stride = width + 2, inside = new Uint8Array(stride * (height + 2));
+  const stride = width + 2,
+    inside = new Uint8Array(stride * (height + 2));
   const at = (x: number, y: number) => (y + 1) * stride + x + 1;
   const target = Math.max(2, Math.round(width * height * share));
   const start = at(Math.floor(random() * width), Math.floor(random() * height));
@@ -65,36 +71,49 @@ function growRegion(width: number, height: number, share: number, thin: number, 
   let size = 1;
   const outsideReaches = (): boolean => {
     // Every square not in the region must still be reachable from beyond the board.
-    const seen = new Uint8Array(inside.length), stack = [0];
+    const seen = new Uint8Array(inside.length),
+      stack = [0];
     seen[0] = 1;
     let reached = 1;
     while (stack.length) {
       const cell = stack.pop()!;
       for (const next of [cell - 1, cell + 1, cell - stride, cell + stride]) {
         if (next < 0 || next >= inside.length || seen[next] || inside[next]) continue;
-        seen[next] = 1; reached += 1; stack.push(next);
+        seen[next] = 1;
+        reached += 1;
+        stack.push(next);
       }
     }
     return reached === inside.length - size;
   };
   while (size < target) {
     const options: { cell: number; touching: number }[] = [];
-    for (let y = 0; y < height; y += 1) for (let x = 0; x < width; x += 1) {
-      const cell = at(x, y);
-      if (inside[cell]) continue;
-      const touching = (inside[cell - 1]! + inside[cell + 1]! + inside[cell - stride]! + inside[cell + stride]!);
-      if (!touching) continue;
-      // Two squares touching only at a corner would pinch the loop where it passes itself.
-      if ([[cell - 1, cell - stride, cell - stride - 1], [cell + 1, cell - stride, cell - stride + 1], [cell - 1, cell + stride, cell + stride - 1], [cell + 1, cell + stride, cell + stride + 1]]
-        .some(([a, b, diagonal]) => inside[diagonal!] && !inside[a!] && !inside[b!])) continue;
-      inside[cell] = 1; size += 1;
-      const fine = outsideReaches();
-      inside[cell] = 0; size -= 1;
-      if (!fine) continue;
-      options.push({ cell, touching });
-    }
+    for (let y = 0; y < height; y += 1)
+      for (let x = 0; x < width; x += 1) {
+        const cell = at(x, y);
+        if (inside[cell]) continue;
+        const touching = inside[cell - 1]! + inside[cell + 1]! + inside[cell - stride]! + inside[cell + stride]!;
+        if (!touching) continue;
+        // Two squares touching only at a corner would pinch the loop where it passes itself.
+        if (
+          [
+            [cell - 1, cell - stride, cell - stride - 1],
+            [cell + 1, cell - stride, cell - stride + 1],
+            [cell - 1, cell + stride, cell + stride - 1],
+            [cell + 1, cell + stride, cell + stride + 1],
+          ].some(([a, b, diagonal]) => inside[diagonal!] && !inside[a!] && !inside[b!])
+        )
+          continue;
+        inside[cell] = 1;
+        size += 1;
+        const fine = outsideReaches();
+        inside[cell] = 0;
+        size -= 1;
+        if (!fine) continue;
+        options.push({ cell, touching });
+      }
     if (!options.length) break;
-    const thinnest = options.filter(option => option.touching === 1);
+    const thinnest = options.filter((option) => option.touching === 1);
     const pool = thinnest.length && random() < thin ? thinnest : options;
     inside[pool[Math.floor(random() * pool.length)]!.cell] = 1;
     size += 1;
@@ -119,19 +138,38 @@ function loopOf(width: number, height: number, region: Uint8Array): Set<number> 
   return edges;
 }
 
-function attemptLoop(width: number, height: number, level: LoopLevel, random: Random, work: { calls: number }): { board: LoopBoard; probes: number } | null {
-  const share = { easy: .45, medium: .5, hard: .55, "extra-hard": .6 }[level] * (.9 + random() * .2);
-  const region = growRegion(width, height, share, .75, random);
+function attemptLoop(
+  width: number,
+  height: number,
+  level: LoopLevel,
+  random: Random,
+  work: { calls: number },
+): { board: LoopBoard; probes: number } | null {
+  const share = { easy: 0.45, medium: 0.5, hard: 0.55, "extra-hard": 0.6 }[level] * (0.9 + random() * 0.2);
+  const region = growRegion(width, height, share, 0.75, random);
   const edges = loopOf(width, height, region);
   const blank: LoopBoard = { width, height, clues: Array(width * height).fill(null) };
-  const full = Array.from({ length: width * height }, (_, cell) => loopCellEdges(blank, cell)!.filter(edge => edges.has(edge)).length);
+  const full = Array.from(
+    { length: width * height },
+    (_, cell) => loopCellEdges(blank, cell)!.filter((edge) => edges.has(edge)).length,
+  );
   const clues: (number | null)[] = [...full];
   let calls = 0;
   const csp = () => {
     const { csp: model } = loopModel({ width, height, clues });
-    return { ...model, propagate: (alive: Uint8Array, decided?: number) => { calls += 1; work.calls += 1; return model.propagate(alive, decided); } };
+    return {
+      ...model,
+      propagate: (alive: Uint8Array, decided?: number) => {
+        calls += 1;
+        work.calls += 1;
+        return model.propagate(alive, decided);
+      },
+    };
   };
-  const byRules = (): boolean => { const c = csp(); return logicCsp(c, openSlots(c), 0).solved; };
+  const byRules = (): boolean => {
+    const c = csp();
+    return logicCsp(c, openSlots(c), 0).solved;
+  };
   const bySupposing = (): boolean => {
     const c = csp();
     const count = countCsp(c, openSlots(c), 2, 800);
@@ -139,8 +177,11 @@ function attemptLoop(width: number, height: number, level: LoopLevel, random: Ra
     return logicCsp(c, openSlots(c), 1).solved;
   };
   if (!byRules()) return null;
-  const order = shuffled(clues.map((_, cell) => cell), random).sort((a, b) => (full[a] === 0 ? 0 : 1) - (full[b] === 0 ? 0 : 1));
-  const keepAtLeast = level === "easy" ? Math.ceil(width * height * .7) : 0;
+  const order = shuffled(
+    clues.map((_, cell) => cell),
+    random,
+  ).sort((a, b) => (full[a] === 0 ? 0 : 1) - (full[b] === 0 ? 0 : 1));
+  const keepAtLeast = level === "easy" ? Math.ceil(width * height * 0.7) : 0;
   let left = clues.length;
   /** Takes numbers away while `test` still passes, until `spent` says the work is used up or `done` says the board is hard enough. */
   const thin = (test: () => boolean, spent: () => boolean, done: () => boolean = () => false): void => {
@@ -149,7 +190,10 @@ function attemptLoop(width: number, height: number, level: LoopLevel, random: Ra
       if (left <= keepAtLeast || spent()) return;
       const was = clues[cell]!;
       clues[cell] = null;
-      if (!test()) { clues[cell] = was; continue; }
+      if (!test()) {
+        clues[cell] = was;
+        continue;
+      }
       left -= 1;
       if (done()) return;
     }

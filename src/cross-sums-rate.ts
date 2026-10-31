@@ -6,8 +6,13 @@ import type { CrossSumsBoard, CrossSumsRating } from "./cross-sums.types.ts";
 const COMBOS = (length: number, sum: number): number => {
   let count = 0;
   for (let mask = 1; mask < 512; mask += 1) {
-    let n = 0, total = 0;
-    for (let d = 1; d <= 9; d += 1) if (mask & 1 << d - 1) { n += 1; total += d; }
+    let n = 0,
+      total = 0;
+    for (let d = 1; d <= 9; d += 1)
+      if (mask & (1 << (d - 1))) {
+        n += 1;
+        total += d;
+      }
     if (n === length && total === sum) count += 1;
   }
   return count;
@@ -28,7 +33,8 @@ const COMBOS = (length: number, sum: number): number => {
  */
 export function rateCrossSums(board: CrossSumsBoard): CrossSumsRating {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
-  const weak = crossSumsModel(board, 0), strong = crossSumsModel(board, 1);
+  const weak = crossSumsModel(board, 0),
+    strong = crossSumsModel(board, 1);
   const proof = solveCsp(strong.csp, openSlots(strong.csp), 2, 250_000);
   if (proof.count !== 1 || proof.exhausted) throw new RangeError("Cross Sums rating needs a board with one answer");
   const plain = logicCsp(weak.csp, openSlots(weak.csp), 0);
@@ -41,8 +47,8 @@ export function rateCrossSums(board: CrossSumsBoard): CrossSumsRating {
     probes: rules.solved ? 0 : probing.probes,
     whites: strong.whites.length,
     runs: runs.length,
-    longest: Math.max(...runs.map(run => run.cells.length)),
+    longest: Math.max(...runs.map((run) => run.cells.length)),
     meanRun: runs.reduce((total, run) => total + run.cells.length, 0) / runs.length,
-    fixedShare: runs.filter(run => COMBOS(run.cells.length, run.sum) === 1).length / runs.length,
+    fixedShare: runs.filter((run) => COMBOS(run.cells.length, run.sum) === 1).length / runs.length,
   };
 }

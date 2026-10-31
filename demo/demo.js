@@ -2,15 +2,25 @@
 // `mountKazu` (the drawing, the number pad, pencil marks, Undo, Hint, Check, the clock), with every option the package has
 // on a settings panel, kept on this device between visits, and spoken in the language the header's chooser picks.
 // The page itself only chooses a puzzle and hands the settings on.
-import { generateKazu, KAZU_KINDS, KAZU_LEVELS, KAZU_SPECS, freshKazuSeed, isKazuLevel, isKazuSeed } from "./dist/index.js";
+import {
+  generateKazu,
+  KAZU_KINDS,
+  KAZU_LEVELS,
+  KAZU_SPECS,
+  freshKazuSeed,
+  isKazuLevel,
+  isKazuSeed,
+} from "./dist/index.js";
 import { KAZU_NAMES, KAZU_SIZE_NAMES } from "./dist/draw-entry.js";
 import { mountKazu } from "./dist/play-entry.js";
 
 // The page's own words, in the two languages it speaks. Set as text, never as HTML.
 const WORDS = {
   en: {
-    pageDocs: "Docs", pageApi: "API",
-    pitch: "Six number puzzles on one square grid: Sudoku, Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Every puzzle has exactly one answer. Tap a cell, then a number; turn Pencil on to make notes; ask for a Hint to be told which cell to fill next, and why.",
+    pageDocs: "Docs",
+    pageApi: "API",
+    pitch:
+      "Six number puzzles on one square grid: Sudoku, Jigsaw, Diagonal and Killer Sudoku, Futoshiki and Skyscrapers. Every puzzle has exactly one answer. Tap a cell, then a number; turn Pencil on to make notes; ask for a Hint to be told which cell to fill next, and why.",
     name: "Kazu (数) is Japanese for “number”, the everyday word, as in 数を数える, to count numbers.",
     nameLink: "About the name",
     puzzle: "Puzzle",
@@ -32,14 +42,18 @@ const WORDS = {
     rulesTitle: (name) => `How ${name} is played`,
     alsoKnown: (names) => (names.length === 0 ? "" : `Also known as ${names.join(", ")}.`),
     moreTitle: "Using it",
-    moreText: "The board above is the package itself: the generator, the rules, the hint and the drawing. Each line below is all it takes.",
+    moreText:
+      "The board above is the package itself: the generator, the rules, the hint and the drawing. Each line below is all it takes.",
     tagTitle: "As a tag",
-    tagText: "The same board in one element, with no framework: a Killer Sudoku made from a seed, asked to point at the hint instead of filling it in.",
+    tagText:
+      "The same board in one element, with no framework: a Killer Sudoku made from a seed, asked to point at the hint instead of filling it in.",
     foot: "Every puzzle is made in your browser from a seed, and is proved to have exactly one answer. Nothing leaves this page.",
   },
   ja: {
-    pageDocs: "ドキュメント", pageApi: "API（英語）",
-    pitch: "一つの正方形の盤で遊ぶ、六つの数字パズルです：ナンプレ、変形ナンプレ、対角ナンプレ、サムナンプレ、不等式、摩天楼。どの問題も、答えはちょうど一つです。マスをタップして数字を選びます。メモをオンにすると下書きができ、ヒントでは次に入れるマスと、その理由がわかります。",
+    pageDocs: "ドキュメント",
+    pageApi: "API（英語）",
+    pitch:
+      "一つの正方形の盤で遊ぶ、六つの数字パズルです：ナンプレ、変形ナンプレ、対角ナンプレ、サムナンプレ、不等式、摩天楼。どの問題も、答えはちょうど一つです。マスをタップして数字を選びます。メモをオンにすると下書きができ、ヒントでは次に入れるマスと、その理由がわかります。",
     name: "「数」（かず）は、数字やかずを表す、ふだんのことばです。「数を数える」のように使います。",
     nameLink: "名前について（英語）",
     puzzle: "パズル",
@@ -61,9 +75,11 @@ const WORDS = {
     rulesTitle: (name) => `${name}の遊び方`,
     alsoKnown: (names) => (names.length === 0 ? "" : `別名：${names.join("、")}。`),
     moreTitle: "使い方",
-    moreText: "上の盤面は、このパッケージそのもの（問題の作成、ルール、ヒント、描画）で動いています。下の各行がそれぞれ必要なコードのすべてです。",
+    moreText:
+      "上の盤面は、このパッケージそのもの（問題の作成、ルール、ヒント、描画）で動いています。下の各行がそれぞれ必要なコードのすべてです。",
     tagTitle: "タグとして",
-    tagText: "同じ盤面を、フレームワークなしの一つの要素で。シードから作ったサムナンプレで、ヒントは数字を入れず、指すだけにしています。",
+    tagText:
+      "同じ盤面を、フレームワークなしの一つの要素で。シードから作ったサムナンプレで、ヒントは数字を入れず、指すだけにしています。",
     foot: "どの問題も、あなたのブラウザーでシードから作られ、答えがちょうど一つであることが確かめられています。このページの外には何も送られません。",
   },
 };
@@ -85,15 +101,25 @@ const write = (value) => {
     /* Not remembered on this device; the board still plays. */
   }
 };
-const pick = (asked, allowed, kept, fallback) => (allowed.includes(asked) ? asked : allowed.includes(kept) ? kept : fallback);
+const pick = (asked, allowed, kept, fallback) =>
+  allowed.includes(asked) ? asked : allowed.includes(kept) ? kept : fallback;
 
 const kept = read();
 let kind = pick(params.get("kind"), KAZU_KINDS, kept.kind, "number-place");
 const sizes = { ...(kept.sizes ?? {}) };
-const sizeOf = () => (KAZU_SPECS[kind].sizes.includes(Number(params.get("size"))) ? Number(params.get("size")) : KAZU_SPECS[kind].sizes.includes(sizes[kind]) ? sizes[kind] : KAZU_SPECS[kind].defaultSize);
+const sizeOf = () =>
+  KAZU_SPECS[kind].sizes.includes(Number(params.get("size")))
+    ? Number(params.get("size"))
+    : KAZU_SPECS[kind].sizes.includes(sizes[kind])
+      ? sizes[kind]
+      : KAZU_SPECS[kind].defaultSize;
 let size = sizeOf();
 let level = isKazuLevel(params.get("level")) ? params.get("level") : isKazuLevel(kept.level) ? kept.level : "medium";
-let seed = isKazuSeed(Number(params.get("seed"))) ? Number(params.get("seed")) : isKazuSeed(kept.seed) && kept.kind === kind && kept.size === size && kept.level === level ? kept.seed : freshKazuSeed();
+let seed = isKazuSeed(Number(params.get("seed")))
+  ? Number(params.get("seed"))
+  : isKazuSeed(kept.seed) && kept.kind === kind && kept.size === size && kept.level === level
+    ? kept.seed
+    : freshKazuSeed();
 const play = {
   hints: pick(params.get("hints"), ["place", "show", "off"], kept.play?.hints, "place"),
   check: pick(params.get("check"), ["count", "show", "off"], kept.play?.check, "count"),
@@ -142,13 +168,55 @@ function label(main, sub) {
 
 function settings() {
   const lang = language.lang;
-  seg(document.getElementById("kinds"), KAZU_KINDS, kind, (value) => choose({ kind: value }), (value) => label(KAZU_NAMES[value][lang]));
-  seg(document.getElementById("sizes"), KAZU_SPECS[kind].sizes, size, (value) => choose({ size: value }), (value) => label(`${value}×${value}`, KAZU_SIZE_NAMES[kind][value]?.[lang]));
-  seg(document.getElementById("levels"), KAZU_LEVELS, level, (value) => choose({ level: value }), (value) => label(say("levels")[value]));
-  seg(document.getElementById("hints"), ["place", "show", "off"], play.hints, (value) => changePlay({ hints: value }), (value) => label(say("hintsOptions")[value]));
-  seg(document.getElementById("check"), ["count", "show", "off"], play.check, (value) => changePlay({ check: value }), (value) => label(say("checkOptions")[value]));
-  seg(document.getElementById("conflicts"), [true, false], play.conflicts, (value) => changePlay({ conflicts: value }), (value) => label(say(value ? "on" : "off")));
-  seg(document.getElementById("peers"), [true, false], play.peers, (value) => changePlay({ peers: value }), (value) => label(say(value ? "on" : "off")));
+  seg(
+    document.getElementById("kinds"),
+    KAZU_KINDS,
+    kind,
+    (value) => choose({ kind: value }),
+    (value) => label(KAZU_NAMES[value][lang]),
+  );
+  seg(
+    document.getElementById("sizes"),
+    KAZU_SPECS[kind].sizes,
+    size,
+    (value) => choose({ size: value }),
+    (value) => label(`${value}×${value}`, KAZU_SIZE_NAMES[kind][value]?.[lang]),
+  );
+  seg(
+    document.getElementById("levels"),
+    KAZU_LEVELS,
+    level,
+    (value) => choose({ level: value }),
+    (value) => label(say("levels")[value]),
+  );
+  seg(
+    document.getElementById("hints"),
+    ["place", "show", "off"],
+    play.hints,
+    (value) => changePlay({ hints: value }),
+    (value) => label(say("hintsOptions")[value]),
+  );
+  seg(
+    document.getElementById("check"),
+    ["count", "show", "off"],
+    play.check,
+    (value) => changePlay({ check: value }),
+    (value) => label(say("checkOptions")[value]),
+  );
+  seg(
+    document.getElementById("conflicts"),
+    [true, false],
+    play.conflicts,
+    (value) => changePlay({ conflicts: value }),
+    (value) => label(say(value ? "on" : "off")),
+  );
+  seg(
+    document.getElementById("peers"),
+    [true, false],
+    play.peers,
+    (value) => changePlay({ peers: value }),
+    (value) => label(say(value ? "on" : "off")),
+  );
   document.getElementById("seed").textContent = say("seed", seed);
 }
 
@@ -164,7 +232,8 @@ function rules() {
       return item;
     }),
   );
-  document.getElementById("rules-origin").textContent = `${info.origin[lang]} ${say("alsoKnown", info.alsoKnownAs)}`.trim();
+  document.getElementById("rules-origin").textContent =
+    `${info.origin[lang]} ${say("alsoKnown", info.alsoKnownAs)}`.trim();
 }
 
 function render() {
@@ -191,13 +260,26 @@ function remember() {
 function put() {
   const made = generateKazu(kind, size, level, seed);
   const same = progress !== null && progress.key === puzzleKey();
-  const entry = { kind, size, givens: made.givens, solution: made.solution, level, seed, run: same ? progress.run : undefined, notes: same ? progress.notes : undefined, elapsed: same ? progress.elapsed : undefined };
+  const entry = {
+    kind,
+    size,
+    givens: made.givens,
+    solution: made.solution,
+    level,
+    seed,
+    run: same ? progress.run : undefined,
+    notes: same ? progress.notes : undefined,
+    elapsed: same ? progress.elapsed : undefined,
+  };
   if (mount === null) {
     mount = mountKazu(host, {
       ...entry,
       ...play,
       onChange: (detail) => {
-        progress = detail.run.replace(/\./g, "") === "" && detail.notes === "" ? null : { key: puzzleKey(), run: detail.run, notes: detail.notes, elapsed: detail.elapsedMs };
+        progress =
+          detail.run.replace(/\./g, "") === "" && detail.notes === ""
+            ? null
+            : { key: puzzleKey(), run: detail.run, notes: detail.notes, elapsed: detail.elapsedMs };
         keep();
         host.dataset.filled = String(detail.progress.filled);
       },

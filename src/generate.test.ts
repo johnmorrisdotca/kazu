@@ -29,7 +29,9 @@ describe("generating", () => {
             // takes (so it is not measured). Sum Cages' levels are how big its cages are, so it is only asked to be finite.
             if (level === "hard") continue;
             const depth = kazuGuessDepth(kind, size, puzzle.givens)!;
-            expect(depth).toBeLessThanOrEqual(kind === "sum-cages" ? Number.MAX_SAFE_INTEGER : level === "easy" ? 0 : 1);
+            expect(depth).toBeLessThanOrEqual(
+              kind === "sum-cages" ? Number.MAX_SAFE_INTEGER : level === "easy" ? 0 : 1,
+            );
           }
         }, 120_000);
       }
@@ -48,7 +50,9 @@ describe("generating", () => {
   it("gives a hard Sudoku fewer givens than an easy one", () => {
     const count = (code: string) => [...code].filter((c) => c !== ".").length;
     for (const size of KAZU_SPECS["number-place"].sizes) {
-      expect(count(generateKazu("number-place", size, "hard", 7).givens)).toBeLessThan(count(generateKazu("number-place", size, "easy", 7).givens));
+      expect(count(generateKazu("number-place", size, "hard", 7).givens)).toBeLessThan(
+        count(generateKazu("number-place", size, "easy", 7).givens),
+      );
     }
   });
 
@@ -56,7 +60,9 @@ describe("generating", () => {
     const puzzle = generateKazu("number-place", 6, "easy", 3);
     const solution = decodeCells(puzzle.solution, 6)!;
     for (const box of [0, 1, 2, 3, 4, 5]) {
-      const cells = solution.filter((_, index) => Math.floor(Math.floor(index / 6) / 2) * 2 + Math.floor((index % 6) / 3) === box);
+      const cells = solution.filter(
+        (_, index) => Math.floor(Math.floor(index / 6) / 2) * 2 + Math.floor((index % 6) / 3) === box,
+      );
       expect(new Set(cells).size).toBe(6);
     }
   });
@@ -73,7 +79,8 @@ describe("generating", () => {
     const puzzle = generateKazu("sum-cages", 9, "medium", 5);
     const read = readGivens("sum-cages", 9, puzzle.givens)!;
     const solution = decodeCells(puzzle.solution, 9)!;
-    for (const cage of read.cages!) expect(cage.cells.reduce((total, index) => total + solution[index]!, 0)).toBe(cage.sum);
+    for (const cage of read.cages!)
+      expect(cage.cells.reduce((total, index) => total + solution[index]!, 0)).toBe(cage.sum);
     expect(read.cells.filter((value) => value !== 0).length).toBeLessThan(10);
     expect(read.cages!.reduce((count, cage) => count + cage.cells.length, 0)).toBe(81);
   });
@@ -94,6 +101,7 @@ describe("generating", () => {
     expect(() => generateKazu("sudoku" as KazuKind, 9, "easy", 1)).toThrow(RangeError);
     expect(() => generateKazu("number-place", 8, "easy", 1)).toThrow(/8×8/);
     expect(() => generateKazu("number-place", 9, "extreme" as "easy", 1)).toThrow(RangeError);
-    for (const seed of [0, -1, 1.5, 2 ** 31, Number.NaN, "7" as unknown as number]) expect(() => generateKazu("number-place", 9, "easy", seed)).toThrow(RangeError);
+    for (const seed of [0, -1, 1.5, 2 ** 31, Number.NaN, "7" as unknown as number])
+      expect(() => generateKazu("number-place", 9, "easy", seed)).toThrow(RangeError);
   });
 });

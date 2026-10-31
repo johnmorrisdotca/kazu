@@ -18,10 +18,7 @@ import type { AkariBoard, AkariSolve } from "./akari.types.ts";
  * console.log(solveAkari(akariBoard,{limit:2,nodes:20000}));
  * ```
  */
-export function solveAkari(
-  board: AkariBoard,
-  options: { limit?: number; nodes?: number } = {},
-): AkariSolve {
+export function solveAkari(board: AkariBoard, options: { limit?: number; nodes?: number } = {}): AkariSolve {
   if (!isAkariBoard(board)) throw new RangeError("Invalid Akari board");
   const limit = options.limit ?? 2;
   const budget = options.nodes ?? AKARI_MOST_NODES;

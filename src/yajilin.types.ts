@@ -43,7 +43,10 @@ export type YajilinBoard = { width: number; height: number; clues: readonly (Yaj
  * console.log(value);
  * ```
  */
-export type YajilinPuzzle = YajilinBoard & { seed: number; solution: { shaded: readonly boolean[]; edges: readonly number[] } };
+export type YajilinPuzzle = YajilinBoard & {
+  seed: number;
+  solution: { shaded: readonly boolean[]; edges: readonly number[] };
+};
 /** The Yajilin completion result and cells that violate its native rules.
  *
  * @example
@@ -96,7 +99,13 @@ export type YajilinSolve = { count: number; solution: YajilinSolution | null; co
  * console.log(value);
  * ```
  */
-export type YajilinGame = { board: YajilinBoard; shaded: readonly boolean[]; edges: readonly number[]; history: readonly { shaded: readonly boolean[]; edges: readonly number[] }[]; helped: boolean };
+export type YajilinGame = {
+  board: YajilinBoard;
+  shaded: readonly boolean[];
+  edges: readonly number[];
+  history: readonly { shaded: readonly boolean[]; edges: readonly number[] }[];
+  helped: boolean;
+};
 /** Current Yajilin marks or entries, selection, errors and native SVG appearance choices.
  *
  * @example
@@ -107,7 +116,15 @@ export type YajilinGame = { board: YajilinBoard; shaded: readonly boolean[]; edg
  * console.log(value);
  * ```
  */
-export type YajilinDrawOptions = { shaded?: readonly boolean[]; edges?: readonly number[]; selected?: number; errors?: readonly number[]; material?: "ivory" | "wood" | "slate"; pieces?: "plain" | "tiles"; language?: "en" | "ja" };
+export type YajilinDrawOptions = {
+  shaded?: readonly boolean[];
+  edges?: readonly number[];
+  selected?: number;
+  errors?: readonly number[];
+  material?: "ivory" | "wood" | "slate";
+  pieces?: "plain" | "tiles";
+  language?: "en" | "ja";
+};
 /** The initial Yajilin board, native progress, appearance and host event callbacks.
  *
  * @example
@@ -119,7 +136,12 @@ export type YajilinDrawOptions = { shaded?: readonly boolean[]; edges?: readonly
  * console.log(value);
  * ```
  */
-export type YajilinMountOptions = YajilinDrawOptions & { board: YajilinBoard; progress?: string; onChange?: (game: YajilinGame) => void; onFinish?: (game: YajilinGame) => void };
+export type YajilinMountOptions = YajilinDrawOptions & {
+  board: YajilinBoard;
+  progress?: string;
+  onChange?: (game: YajilinGame) => void;
+  onFinish?: (game: YajilinGame) => void;
+};
 /** The mounted Yajilin game and progress, native controls and cleanup handle.
  *
  * @example
@@ -135,4 +157,10 @@ export type YajilinMountOptions = YajilinDrawOptions & { board: YajilinBoard; pr
  * player.destroy();
  * ```
  */
-export type YajilinMount = { game: () => YajilinGame; progress: () => string; set: (options: YajilinDrawOptions) => void; restart: () => void; destroy: () => void };
+export type YajilinMount = {
+  game: () => YajilinGame;
+  progress: () => string;
+  set: (options: YajilinDrawOptions) => void;
+  restart: () => void;
+  destroy: () => void;
+};

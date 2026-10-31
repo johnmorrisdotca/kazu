@@ -27,13 +27,18 @@ import type { ShikakuBoard, ShikakuLevel, ShikakuPuzzle } from "./shikaku.types.
  * ```
  */
 export function generateShikaku(width = 7, height = width, level: ShikakuLevel = "medium", seed = 1): ShikakuPuzzle {
-  if (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= SHIKAKU_MOST_SIDE)
-    || !isKazuSeed(seed) || !SHIKAKU_LEVELS.includes(level)) throw new RangeError("Invalid Shikaku settings");
+  if (
+    ![width, height].every((n) => Number.isInteger(n) && n >= 2 && n <= SHIKAKU_MOST_SIDE) ||
+    !isKazuSeed(seed) ||
+    !SHIKAKU_LEVELS.includes(level)
+  )
+    throw new RangeError("Invalid Shikaku settings");
   const random = seededRandom(seed);
   for (let aim = SHIKAKU_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
     const aimed = SHIKAKU_LEVELS[aim]!;
     const wanted = aimed === "extra-hard" ? 3 : 1;
-    let best: { board: ShikakuBoard; score: number } | null = null, found = 0;
+    let best: { board: ShikakuBoard; score: number } | null = null,
+      found = 0;
     for (let attempt = 0; attempt < SHIKAKU_MOST_ATTEMPTS && found < wanted; attempt += 1) {
       const built = candidateShikaku(width, height, aimed, random);
       if (!built) continue;

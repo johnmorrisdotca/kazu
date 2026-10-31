@@ -47,7 +47,8 @@ export type KazuDrawOptions = {
   frame?: boolean;
 };
 
-const escape = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const escape = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const num = (value: number) => String(Math.round(value * 100) / 100);
 
 const WHERE_KEY: Record<KazuKind, string> = {
@@ -101,8 +102,10 @@ function boxPath(givens: KazuGivens, x0: number, y0: number): string {
     for (let row = 0; row < size; row += 1) {
       for (let col = 0; col < size; col += 1) {
         const here = regions[row * size + col];
-        if (col < size - 1 && regions[row * size + col + 1] !== here) parts.push(`M${x0 + (col + 1) * U} ${y0 + row * U}v${U}`);
-        if (row < size - 1 && regions[(row + 1) * size + col] !== here) parts.push(`M${x0 + col * U} ${y0 + (row + 1) * U}h${U}`);
+        if (col < size - 1 && regions[row * size + col + 1] !== here)
+          parts.push(`M${x0 + (col + 1) * U} ${y0 + row * U}v${U}`);
+        if (row < size - 1 && regions[(row + 1) * size + col] !== here)
+          parts.push(`M${x0 + col * U} ${y0 + (row + 1) * U}h${U}`);
       }
     }
   }
@@ -158,7 +161,12 @@ function markShape(size: number, less: number, more: number, x0: number, y0: num
  * console.log(drawKazu(kind,size,givens,{language:"en"})?.startsWith("<svg"));
  * ```
  */
-export function drawKazu(kind: KazuKind, size: number, givensCode: string, options: KazuDrawOptions = {}): string | null {
+export function drawKazu(
+  kind: KazuKind,
+  size: number,
+  givensCode: string,
+  options: KazuDrawOptions = {},
+): string | null {
   const givens = readGivens(kind, size, givensCode);
   if (givens === null) return null;
   const language = options.language ?? "en";
@@ -217,7 +225,13 @@ export function drawKazu(kind: KazuKind, size: number, givensCode: string, optio
     cage.cells.forEach((index) => cageOf.set(index, c));
     sumAt.set(Math.min(...cage.cells), cage.sum);
   });
-  const cageLines = givens.cages === null ? [] : cageOutline(size, (index) => cageOf.get(index)).map((line) => `<line x1="${num(x0 + line.x1 * U)}" y1="${num(y0 + line.y1 * U)}" x2="${num(x0 + line.x2 * U)}" y2="${num(y0 + line.y2 * U)}"/>`);
+  const cageLines =
+    givens.cages === null
+      ? []
+      : cageOutline(size, (index) => cageOf.get(index)).map(
+          (line) =>
+            `<line x1="${num(x0 + line.x1 * U)}" y1="${num(y0 + line.y1 * U)}" x2="${num(x0 + line.x2 * U)}" y2="${num(y0 + line.y2 * U)}"/>`,
+        );
 
   // Numbers and pencil marks.
   const digitSize = size > 9 ? 0.5 * U : 0.6 * U;
@@ -236,12 +250,16 @@ export function drawKazu(kind: KazuKind, size: number, givensCode: string, optio
     if (shown !== 0) {
       const printed = givens.cells[index] !== 0;
       const bad = conflicts.has(index) || wrong.has(index);
-      digits.push(`<text class="kz-digit ${printed ? "kz-given" : "kz-entry"}${bad ? " kz-bad" : ""}" x="${num(x + U / 2)}" y="${num(y + U / 2 + (givens.cages !== null ? 0.06 * U : 0))}" font-size="${num(digitSize)}" data-cell="${index}">${symbolOf(shown)}</text>`);
+      digits.push(
+        `<text class="kz-digit ${printed ? "kz-given" : "kz-entry"}${bad ? " kz-bad" : ""}" x="${num(x + U / 2)}" y="${num(y + U / 2 + (givens.cages !== null ? 0.06 * U : 0))}" font-size="${num(digitSize)}" data-cell="${index}">${symbolOf(shown)}</text>`,
+      );
     } else {
       for (const noted of notesOf(notes[index] ?? 0)) {
         const col = (noted - 1) % columns;
         const row = Math.floor((noted - 1) / columns);
-        pencil.push(`<text class="kz-note" x="${num(x + noteSide + ((col + 0.5) * noteWidth) / columns)}" y="${num(y + noteTop + ((row + 0.5) * noteHeight) / noteRows)}" font-size="${num(noteFont)}">${symbolOf(noted)}</text>`);
+        pencil.push(
+          `<text class="kz-note" x="${num(x + noteSide + ((col + 0.5) * noteWidth) / columns)}" y="${num(y + noteTop + ((row + 0.5) * noteHeight) / noteRows)}" font-size="${num(noteFont)}">${symbolOf(noted)}</text>`,
+        );
       }
     }
   }
@@ -263,7 +281,9 @@ export function drawKazu(kind: KazuKind, size: number, givensCode: string, optio
         const { x, y } = at(first);
         const cx = side === "left" ? x - U / 2 : side === "right" ? x + U + U / 2 : x + U / 2;
         const cy = side === "top" ? y - U / 2 : side === "bottom" ? y + U + U / 2 : y + U / 2;
-        clues.push(`<text class="kz-clue" x="${num(cx)}" y="${num(cy)}" font-size="${num(0.5 * U)}" data-side="${side}" data-at="${place}">${clue}</text>`);
+        clues.push(
+          `<text class="kz-clue" x="${num(cx)}" y="${num(cy)}" font-size="${num(0.5 * U)}" data-side="${side}" data-at="${place}">${clue}</text>`,
+        );
       }
     }
   }
@@ -291,7 +311,9 @@ export function drawKazu(kind: KazuKind, size: number, givensCode: string, optio
     sums.join(""),
     marks.join(""),
     clues.join(""),
-    options.done === true ? `<rect class="kz-solved" x="${x0}" y="${y0}" width="${size * U}" height="${size * U}"/>` : "",
+    options.done === true
+      ? `<rect class="kz-solved" x="${x0}" y="${y0}" width="${size * U}" height="${size * U}"/>`
+      : "",
     hits.join(""),
     `</svg>`,
   ].join("");

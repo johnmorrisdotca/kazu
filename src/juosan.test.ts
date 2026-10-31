@@ -22,15 +22,30 @@ describe("Juosan rules", () => {
     expect(solveJuosan(board, 2, 1).complete).toBe(false);
   });
   it("keeps immutable progress, undo, and assisted state in save data", () => {
-    const board: JuosanBoard = { width: 2, height: 2, territories: [{ cells: [0, 1], difference: 0 }, { cells: [2, 3], difference: 0 }] };
-    const started = newJuosan(board), changed = setJuosanMark(started, 0, 1);
-    expect(started.marks[0]).toBe(0); expect(undoJuosan(changed).marks[0]).toBe(0);
-    const saved = encodeJuosan({ ...changed, helped: true }); expect(decodeJuosan(saved)?.helped).toBe(true);
+    const board: JuosanBoard = {
+      width: 2,
+      height: 2,
+      territories: [
+        { cells: [0, 1], difference: 0 },
+        { cells: [2, 3], difference: 0 },
+      ],
+    };
+    const started = newJuosan(board),
+      changed = setJuosanMark(started, 0, 1);
+    expect(started.marks[0]).toBe(0);
+    expect(undoJuosan(changed).marks[0]).toBe(0);
+    const saved = encodeJuosan({ ...changed, helped: true });
+    expect(decodeJuosan(saved)?.helped).toBe(true);
   });
   it("repeats exhaustively proved puzzles on supported wide and tall boards", () => {
-    for (const [w, h, seed] of [[3, 2, 4], [2, 3, 31]]) {
-      const a = generateJuosan(w, h, "easy", seed), b = generateJuosan(w, h, "easy", seed);
-      expect(a).toEqual(b); expect(checkJuosan(a, a.solution).ok).toBe(true);
+    for (const [w, h, seed] of [
+      [3, 2, 4],
+      [2, 3, 31],
+    ]) {
+      const a = generateJuosan(w, h, "easy", seed),
+        b = generateJuosan(w, h, "easy", seed);
+      expect(a).toEqual(b);
+      expect(checkJuosan(a, a.solution).ok).toBe(true);
       expect(solveJuosan(a, 2).complete).toBe(true);
       expect(solveJuosan(a, 2).count).toBe(1);
     }

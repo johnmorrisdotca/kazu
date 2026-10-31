@@ -41,21 +41,30 @@ export function generateTowers(size: number, level: KazuLevel, seed: number): Ka
   const allowed = LEVELS[level];
   // Unique, and within the level: a hard puzzle may be as deep as it likes, so its depth is never measured.
   const fits = (grid: Grid, clues: TowerClues): boolean =>
-    countSolutions(grid, size, clues, 2) === 1 && (allowed === Infinity || guessDepth(grid, size, clues, allowed) <= allowed);
+    countSolutions(grid, size, clues, 2) === 1 &&
+    (allowed === Infinity || guessDepth(grid, size, clues, allowed) <= allowed);
 
   const clues = cluesOf(solution, size);
   const givens: Grid = new Array<number>(size * size).fill(0);
-  for (const index of shuffled(givens.map((_, i) => i), random)) {
+  for (const index of shuffled(
+    givens.map((_, i) => i),
+    random,
+  )) {
     if (fits(givens, clues)) break;
     givens[index] = solution[index]!;
   }
-  for (const index of shuffled(givens.map((_, i) => i), random)) {
+  for (const index of shuffled(
+    givens.map((_, i) => i),
+    random,
+  )) {
     if (givens[index] === 0) continue;
     const value = givens[index]!;
     givens[index] = 0;
     if (!fits(givens, clues)) givens[index] = value;
   }
-  const places: { side: TowerSide; at: number }[] = TOWER_SIDES.flatMap((side) => Array.from({ length: size }, (_, at) => ({ side, at })));
+  const places: { side: TowerSide; at: number }[] = TOWER_SIDES.flatMap((side) =>
+    Array.from({ length: size }, (_, at) => ({ side, at })),
+  );
   for (const { side, at } of shuffled(places, random)) {
     const clue = clues[side][at]!;
     clues[side][at] = 0;

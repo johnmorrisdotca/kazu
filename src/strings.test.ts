@@ -24,7 +24,16 @@ describe("the words", () => {
   });
 
   it("reads a language from a tag: Japanese for ja, English for the rest", () => {
-    expect(["ja", "ja-JP", "JA", "en", "fr", "", null, undefined].map(kazuLanguageOf)).toEqual(["ja", "ja", "ja", "en", "en", "en", "en", "en"]);
+    expect(["ja", "ja-JP", "JA", "en", "fr", "", null, undefined].map(kazuLanguageOf)).toEqual([
+      "ja",
+      "ja",
+      "ja",
+      "en",
+      "en",
+      "en",
+      "en",
+      "en",
+    ]);
   });
 
   it("names every puzzle, with its rules, its origin and a name for every size it offers, in both languages", () => {

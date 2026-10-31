@@ -42,7 +42,13 @@ export type JuosanLanguage = "en" | "ja";
  * console.log(value);
  * ```
  */
-export type JuosanDrawOptions = { marks?: JuosanGame["marks"]; selected?: number | null; material?: JuosanMaterial; pieces?: JuosanPieces; language?: JuosanLanguage };
+export type JuosanDrawOptions = {
+  marks?: JuosanGame["marks"];
+  selected?: number | null;
+  material?: JuosanMaterial;
+  pieces?: JuosanPieces;
+  language?: JuosanLanguage;
+};
 /** The initial Juosan board, native progress, appearance and host event callbacks.
  *
  * @example
@@ -54,7 +60,12 @@ export type JuosanDrawOptions = { marks?: JuosanGame["marks"]; selected?: number
  * console.log(value);
  * ```
  */
-export type JuosanMountOptions = JuosanDrawOptions & { board: JuosanBoard; progress?: string; onChange?: (game: JuosanGame) => void; onFinish?: (game: JuosanGame) => void };
+export type JuosanMountOptions = JuosanDrawOptions & {
+  board: JuosanBoard;
+  progress?: string;
+  onChange?: (game: JuosanGame) => void;
+  onFinish?: (game: JuosanGame) => void;
+};
 /** The mounted Juosan game and progress, native controls and cleanup handle.
  *
  * @example
@@ -70,4 +81,10 @@ export type JuosanMountOptions = JuosanDrawOptions & { board: JuosanBoard; progr
  * player.destroy();
  * ```
  */
-export type JuosanMount = { game: () => JuosanGame; progress: () => string; set: (options: JuosanDrawOptions) => void; restart: () => void; destroy: () => void };
+export type JuosanMount = {
+  game: () => JuosanGame;
+  progress: () => string;
+  set: (options: JuosanDrawOptions) => void;
+  restart: () => void;
+  destroy: () => void;
+};

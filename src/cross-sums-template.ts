@@ -1,4 +1,9 @@
-import { CROSS_SUMS_GENERATION_ATTEMPTS, CROSS_SUMS_GENERATION_NODES, CROSS_SUMS_MAX_ATTEMPTS, CROSS_SUMS_MAX_NODES } from "./cross-sums.constants.ts";
+import {
+  CROSS_SUMS_GENERATION_ATTEMPTS,
+  CROSS_SUMS_GENERATION_NODES,
+  CROSS_SUMS_MAX_ATTEMPTS,
+  CROSS_SUMS_MAX_NODES,
+} from "./cross-sums.constants.ts";
 import { isCrossSumsBoard } from "./cross-sums-board.ts";
 import { solveCrossSums } from "./cross-sums-solve.ts";
 import { isKazuSeed, seededRandom } from "./random.ts";
@@ -11,9 +16,9 @@ export function templateCrossSums(seed = 1): Omit<CrossSumsPuzzle, "level"> {
   const budget = { attempts: CROSS_SUMS_GENERATION_ATTEMPTS, nodes: CROSS_SUMS_GENERATION_NODES };
   for (let attempt = 0; attempt < CROSS_SUMS_MAX_ATTEMPTS && budget.attempts > 0 && budget.nodes > 0; attempt += 1) {
     budget.attempts -= 1;
-    const rowGroups = random() < .5 ? [2, 2, 2] : random() < .5 ? [2, 3] : [3, 2];
+    const rowGroups = random() < 0.5 ? [2, 2, 2] : random() < 0.5 ? [2, 3] : [3, 2];
     const columnGroups = rowGroups.length === 3 ? [2, 2, 2] : [2, 3];
-    if (random() < .5) columnGroups.reverse();
+    if (random() < 0.5) columnGroups.reverse();
     const rowStarts = groupStarts(rowGroups, random);
     const columnStarts = groupStarts(columnGroups, random);
     const cells: CrossSumsCell[] = Array.from({ length: 100 }, () => ({ kind: "black", across: null, down: null }));
@@ -24,7 +29,10 @@ export function templateCrossSums(seed = 1): Omit<CrossSumsPuzzle, "level"> {
       for (const [columnIndex, columnStart] of columnStarts.entries()) {
         const shape = { height: rowGroups[rowIndex]!, width: columnGroups[columnIndex]! };
         const local = chooseUniqueTile(shape.width, shape.height, random, budget);
-        if (!local) { failed = true; break; }
+        if (!local) {
+          failed = true;
+          break;
+        }
         placeTile(board, solution, rowStart, columnStart, local);
       }
       if (failed) break;
@@ -42,11 +50,20 @@ export function templateCrossSums(seed = 1): Omit<CrossSumsPuzzle, "level"> {
 
 function groupStarts(groups: readonly number[], random: () => number): number[] {
   const used = groups.reduce((sum, size) => sum + size, 0) + groups.length - 1;
-  let at = 1 + (8 - used > 0 && random() < .5 ? 8 - used : 0);
-  return groups.map(size => { const start = at; at += size + 1; return start; });
+  let at = 1 + (8 - used > 0 && random() < 0.5 ? 8 - used : 0);
+  return groups.map((size) => {
+    const start = at;
+    at += size + 1;
+    return start;
+  });
 }
 
-function chooseUniqueTile(width: number, height: number, random: () => number, budget: { attempts: number; nodes: number }): number[][] | null {
+function chooseUniqueTile(
+  width: number,
+  height: number,
+  random: () => number,
+  budget: { attempts: number; nodes: number },
+): number[][] | null {
   for (let attempt = 0; attempt < CROSS_SUMS_MAX_ATTEMPTS && budget.attempts > 0 && budget.nodes > 0; attempt += 1) {
     budget.attempts -= 1;
     const candidate = randomRectangle(width, height, random);
@@ -55,7 +72,8 @@ function chooseUniqueTile(width: number, height: number, random: () => number, b
     const proof = solveCrossSums(board, [], { limit: 2, nodes: Math.min(25_000, budget.nodes) });
     budget.nodes -= Math.min(budget.nodes, proof.nodes);
     if (!budget.nodes) return null;
-    if (proof.complete && proof.count === 1) return proof.solution ? splitSolution(proof.solution, width, height) : candidate;
+    if (proof.complete && proof.count === 1)
+      return proof.solution ? splitSolution(proof.solution, width, height) : candidate;
   }
   return null;
 }
@@ -67,7 +85,7 @@ function randomRectangle(width: number, height: number, random: () => number): n
     for (let attempt = 0; attempt < 100; attempt += 1) {
       const available = shuffled([1, 2, 3, 4, 5, 6, 7, 8, 9], random);
       const candidate = available.slice(0, width);
-      if (candidate.every((digit, x) => rows.every(previous => previous[x] !== digit))) {
+      if (candidate.every((digit, x) => rows.every((previous) => previous[x] !== digit))) {
         row = candidate;
         break;
       }
@@ -79,27 +97,49 @@ function randomRectangle(width: number, height: number, random: () => number): n
 }
 
 function tileBoard(solution: readonly (readonly number[])[]): CrossSumsBoard {
-  const height = solution.length + 1, width = solution[0]!.length + 1;
-  const cells: CrossSumsCell[] = Array.from({ length: width * height }, () => ({ kind: "black", across: null, down: null }));
-  for (let y = 0; y < solution.length; y += 1) for (let x = 0; x < solution[y]!.length; x += 1) cells[(y + 1) * width + x + 1] = { kind: "white" };
-  for (let y = 0; y < solution.length; y += 1) (cells[(y + 1) * width] as Extract<CrossSumsCell, { kind: "black" }>).across = solution[y]!.reduce((sum, value) => sum + value, 0);
-  for (let x = 0; x < solution[0]!.length; x += 1) (cells[x + 1] as Extract<CrossSumsCell, { kind: "black" }>).down = solution.reduce((sum, row) => sum + row[x]!, 0);
+  const height = solution.length + 1,
+    width = solution[0]!.length + 1;
+  const cells: CrossSumsCell[] = Array.from({ length: width * height }, () => ({
+    kind: "black",
+    across: null,
+    down: null,
+  }));
+  for (let y = 0; y < solution.length; y += 1)
+    for (let x = 0; x < solution[y]!.length; x += 1) cells[(y + 1) * width + x + 1] = { kind: "white" };
+  for (let y = 0; y < solution.length; y += 1)
+    (cells[(y + 1) * width] as Extract<CrossSumsCell, { kind: "black" }>).across = solution[y]!.reduce(
+      (sum, value) => sum + value,
+      0,
+    );
+  for (let x = 0; x < solution[0]!.length; x += 1)
+    (cells[x + 1] as Extract<CrossSumsCell, { kind: "black" }>).down = solution.reduce((sum, row) => sum + row[x]!, 0);
   return { width, height, cells };
 }
 
-function placeTile(board: CrossSumsBoard, full: number[], top: number, left: number, solution: readonly (readonly number[])[]): void {
+function placeTile(
+  board: CrossSumsBoard,
+  full: number[],
+  top: number,
+  left: number,
+  solution: readonly (readonly number[])[],
+): void {
   const width = board.width;
   const cells = board.cells as CrossSumsCell[];
-  for (let y = 0; y < solution.length; y += 1) for (let x = 0; x < solution[y]!.length; x += 1) full[(top + y) * width + left + x] = solution[y]![x]!;
+  for (let y = 0; y < solution.length; y += 1)
+    for (let x = 0; x < solution[y]!.length; x += 1) full[(top + y) * width + left + x] = solution[y]![x]!;
   for (let y = 0; y < solution.length; y += 1) {
     const clue = (top + y) * width + left - 1;
-    (cells[clue] as Extract<CrossSumsCell, { kind: "black" }>).across = solution[y]!.reduce((sum, value) => sum + value, 0);
+    (cells[clue] as Extract<CrossSumsCell, { kind: "black" }>).across = solution[y]!.reduce(
+      (sum, value) => sum + value,
+      0,
+    );
   }
   for (let x = 0; x < solution[0]!.length; x += 1) {
     const clue = (top - 1) * width + left + x;
     (cells[clue] as Extract<CrossSumsCell, { kind: "black" }>).down = solution.reduce((sum, row) => sum + row[x]!, 0);
   }
-  for (let y = 0; y < solution.length; y += 1) for (let x = 0; x < solution[y]!.length; x += 1) cells[(top + y) * width + left + x] = { kind: "white" };
+  for (let y = 0; y < solution.length; y += 1)
+    for (let x = 0; x < solution[y]!.length; x += 1) cells[(top + y) * width + left + x] = { kind: "white" };
 }
 
 function splitSolution(values: readonly number[], width: number, height: number): number[][] {

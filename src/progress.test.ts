@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { decodeNotes, decodeRun, decodeSteps, encodeNotes, encodeRun, encodeSteps, KAZU_STEPS_KEPT } from "./progress.ts";
+import {
+  decodeNotes,
+  decodeRun,
+  decodeSteps,
+  encodeNotes,
+  encodeRun,
+  encodeSteps,
+  KAZU_STEPS_KEPT,
+} from "./progress.ts";
 
 describe("a run, its pencil marks and its steps", () => {
   it("writes the entries as the site does and reads them back, for a run of the right size only", () => {
@@ -16,7 +24,7 @@ describe("a run, its pencil marks and its steps", () => {
       const notes = new Array<number>(size * size).fill(0);
       notes[0] = 1 << 1;
       notes[size + 1] = (1 << 2) | (1 << size);
-      notes[size * size - 1] = ((1 << (size + 1)) - 2);
+      notes[size * size - 1] = (1 << (size + 1)) - 2;
       expect(decodeNotes(encodeNotes(notes), size)).toEqual(notes);
     }
     expect(encodeNotes(new Array(81).fill(0))).toBe("");

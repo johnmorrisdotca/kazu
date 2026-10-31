@@ -48,12 +48,7 @@ export function isJuosanBoard(value: unknown): value is JuosanBoard {
     }
 
     for (const cell of territory.cells) {
-      if (
-        !Number.isInteger(cell) ||
-        cell < 0 ||
-        cell >= cellCount ||
-        occupied.has(cell)
-      ) {
+      if (!Number.isInteger(cell) || cell < 0 || cell >= cellCount || occupied.has(cell)) {
         return false;
       }
       occupied.add(cell);
@@ -100,7 +95,7 @@ export function isJuosanBoard(value: unknown): value is JuosanBoard {
  * ```
  */
 export function juosanTerritoryAt(board: JuosanBoard, cell: number): number {
-  return board.territories.findIndex(territory => territory.cells.includes(cell));
+  return board.territories.findIndex((territory) => territory.cells.includes(cell));
 }
 
 /** Checks public rules directly, independently of the solver and stored answer.
@@ -118,15 +113,12 @@ export function juosanTerritoryAt(board: JuosanBoard, cell: number): number {
  * console.log(checkJuosan(juosanBoard,juosanSolution));
  * ```
  */
-export function checkJuosan(
-  board: JuosanBoard,
-  marks: readonly JuosanMark[],
-): JuosanCheck {
+export function checkJuosan(board: JuosanBoard, marks: readonly JuosanMark[]): JuosanCheck {
   if (!isJuosanBoard(board)) throw new RangeError("Invalid Juosan board");
   if (
     !Array.isArray(marks) ||
     marks.length !== board.width * board.height ||
-    marks.some(mark => mark !== 1 && mark !== 2)
+    marks.some((mark) => mark !== 1 && mark !== 2)
   ) {
     return { ok: false, errors: [-1] };
   }
@@ -134,7 +126,7 @@ export function checkJuosan(
   const errors: number[] = [];
   board.territories.forEach((territory, index) => {
     if (territory.difference === null) return;
-    const horizontal = territory.cells.filter(cell => marks[cell] === 1).length;
+    const horizontal = territory.cells.filter((cell) => marks[cell] === 1).length;
     const vertical = territory.cells.length - horizontal;
     if (Math.abs(horizontal - vertical) !== territory.difference) errors.push(index);
   });
@@ -142,12 +134,7 @@ export function checkJuosan(
   for (let y = 0; y < board.height; y += 1) {
     for (let x = 0; x < board.width; x += 1) {
       const cell = y * board.width + x;
-      if (
-        x + 2 < board.width &&
-        marks[cell] === 2 &&
-        marks[cell + 1] === 2 &&
-        marks[cell + 2] === 2
-      ) {
+      if (x + 2 < board.width && marks[cell] === 2 && marks[cell + 1] === 2 && marks[cell + 2] === 2) {
         errors.push(-2);
       }
       if (

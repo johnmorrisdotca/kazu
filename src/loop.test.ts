@@ -1,18 +1,8 @@
 import { describe, expect, it } from "vitest";
-import {
-  checkLoop,
-  progressLoop,
-} from "./loop-board.ts";
+import { checkLoop, progressLoop } from "./loop-board.ts";
 import { solveLoop } from "./loop-solve.ts";
 import { generateLoop } from "./loop-generate.ts";
-import {
-  decodeLoop,
-  encodeLoop,
-  hintLoop,
-  newLoop,
-  toggleLoop,
-  undoLoop,
-} from "./loop-game.ts";
+import { decodeLoop, encodeLoop, hintLoop, newLoop, toggleLoop, undoLoop } from "./loop-game.ts";
 import { drawLoop } from "./loop-draw.ts";
 
 describe("Loop loop rules", () => {
@@ -24,8 +14,7 @@ describe("Loop loop rules", () => {
     expect(checkLoop(board, [0])).toMatchObject({ ok: false, loops: 0 });
 
     const separated = { width: 3, height: 2, clues: Array(6).fill(null) };
-    expect(checkLoop(separated, [0, 3, 9, 10, 5, 8, 15, 16]))
-      .toMatchObject({ ok: false, loops: 2 });
+    expect(checkLoop(separated, [0, 3, 9, 10, 5, 8, 15, 16])).toMatchObject({ ok: false, loops: 2 });
     const clue = { ...board, clues: [1, null, null, null] };
     expect(checkLoop(clue, oneCellLoop)).toMatchObject({ ok: false, clues: [0] });
   });
@@ -78,7 +67,13 @@ describe("Loop loop rules", () => {
   });
 
   it("makes repeatable boards of any size from 2 to 10 and proves each has one answer", () => {
-    for (const [width, height] of [[5, 5], [7, 7], [10, 6], [6, 10], [2, 2]]) {
+    for (const [width, height] of [
+      [5, 5],
+      [7, 7],
+      [10, 6],
+      [6, 10],
+      [2, 2],
+    ]) {
       for (let seed = 1; seed <= 6; seed += 1) {
         const puzzle = generateLoop(width, height, seed);
         expect(checkLoop(puzzle, puzzle.solution).ok).toBe(true);
@@ -107,7 +102,7 @@ function bruteCount(board: { width: number; height: number; clues: readonly (num
   const edgeCount = horizontal + board.height * (board.width + 1);
   let count = 0;
   for (let mask = 0; mask < 2 ** edgeCount; mask += 1) {
-    const edges = Array.from({ length: edgeCount }, (_, edge) => edge).filter(edge => mask & 1 << edge);
+    const edges = Array.from({ length: edgeCount }, (_, edge) => edge).filter((edge) => mask & (1 << edge));
     if (!edges.length) continue;
     const selected = new Set(edges);
     const vertexEdges = Array.from({ length: (board.width + 1) * (board.height + 1) }, (_, vertex) => {
@@ -118,25 +113,34 @@ function bruteCount(board: { width: number; height: number; clues: readonly (num
       if (x < board.width) adjacent.push(y * board.width + x);
       if (y > 0) adjacent.push(horizontal + (y - 1) * (board.width + 1) + x);
       if (y < board.height) adjacent.push(horizontal + y * (board.width + 1) + x);
-      return adjacent.filter(edge => selected.has(edge));
+      return adjacent.filter((edge) => selected.has(edge));
     });
-    if (vertexEdges.some(incident => incident.length !== 0 && incident.length !== 2)) continue;
+    if (vertexEdges.some((incident) => incident.length !== 0 && incident.length !== 2)) continue;
     const clueMatches = board.clues.every((clue, cell) => {
       if (clue === null) return true;
       const x = cell % board.width;
       const y = Math.floor(cell / board.width);
-      const surrounding = [y * board.width + x,
+      const surrounding = [
+        y * board.width + x,
         horizontal + y * (board.width + 1) + x + 1,
         (y + 1) * board.width + x,
-        horizontal + y * (board.width + 1) + x];
-      return surrounding.filter(edge => selected.has(edge)).length === clue;
+        horizontal + y * (board.width + 1) + x,
+      ];
+      return surrounding.filter((edge) => selected.has(edge)).length === clue;
     });
     if (!clueMatches) continue;
-    const ends = (edge: number) => edge < horizontal
-      ? [Math.floor(edge / board.width) * (board.width + 1) + edge % board.width,
-        Math.floor(edge / board.width) * (board.width + 1) + edge % board.width + 1]
-      : [Math.floor((edge - horizontal) / (board.width + 1)) * (board.width + 1) + (edge - horizontal) % (board.width + 1),
-        (Math.floor((edge - horizontal) / (board.width + 1)) + 1) * (board.width + 1) + (edge - horizontal) % (board.width + 1)];
+    const ends = (edge: number) =>
+      edge < horizontal
+        ? [
+            Math.floor(edge / board.width) * (board.width + 1) + (edge % board.width),
+            Math.floor(edge / board.width) * (board.width + 1) + (edge % board.width) + 1,
+          ]
+        : [
+            Math.floor((edge - horizontal) / (board.width + 1)) * (board.width + 1) +
+              ((edge - horizontal) % (board.width + 1)),
+            (Math.floor((edge - horizontal) / (board.width + 1)) + 1) * (board.width + 1) +
+              ((edge - horizontal) % (board.width + 1)),
+          ];
     const reached = new Set([edges[0]]);
     const queue = [edges[0]!];
     while (queue.length) {

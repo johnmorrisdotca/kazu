@@ -4,7 +4,7 @@ import { serve } from "./demo.mjs";
 
 test("Yajilin shades a playable cell, saves it, and restores the mark", async ({ page }) => {
   const errors = [];
-  page.on("pageerror", error => errors.push(String(error)));
+  page.on("pageerror", (error) => errors.push(String(error)));
   await serve(page);
   await page.goto("http://kazu.test/yajilin.html?seed=17");
   const cells = page.locator(".ky-cell");
@@ -12,10 +12,14 @@ test("Yajilin shades a playable cell, saves it, and restores the mark", async ({
   await page.getByRole("button", { name: "Shade", exact: true }).click();
   const openCell = page.locator('.ky-cell:not([data-clue="true"])').first();
   await openCell.click();
-  await expect.poll(async () => page.evaluate(() => {
-    const saved = JSON.parse(localStorage.getItem("kazu-yajilin-progress"));
-    return JSON.parse(saved.progress).shaded.filter(Boolean).length;
-  })).toBe(1);
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const saved = JSON.parse(localStorage.getItem("kazu-yajilin-progress"));
+        return JSON.parse(saved.progress).shaded.filter(Boolean).length;
+      }),
+    )
+    .toBe(1);
 
   await page.reload();
   await expect(page.locator('.ky-cell[aria-label$=", shaded"]')).toHaveCount(1);

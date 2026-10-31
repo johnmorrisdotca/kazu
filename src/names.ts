@@ -207,10 +207,31 @@ export const KAZU_NAMES: Record<KazuKind, KazuName> = {
  * ```
  */
 export const KAZU_SIZE_NAMES: Record<KazuKind, Record<number, { en: string; ja: string }>> = {
-  "number-place": { 4: { en: "Quick", ja: "速" }, 6: { en: "Short", ja: "短" }, 9: { en: "Classic", ja: "定番" }, 16: { en: "Giant", ja: "特大" }, 25: { en: "Colossus", ja: "巨大" } },
-  jigsaw: { 5: { en: "Quick", ja: "速" }, 6: { en: "Short", ja: "短" }, 7: { en: "Standard", ja: "定番" }, 9: { en: "Classic", ja: "本格" } },
+  "number-place": {
+    4: { en: "Quick", ja: "速" },
+    6: { en: "Short", ja: "短" },
+    9: { en: "Classic", ja: "定番" },
+    16: { en: "Giant", ja: "特大" },
+    25: { en: "Colossus", ja: "巨大" },
+  },
+  jigsaw: {
+    5: { en: "Quick", ja: "速" },
+    6: { en: "Short", ja: "短" },
+    7: { en: "Standard", ja: "定番" },
+    9: { en: "Classic", ja: "本格" },
+  },
   diagonal: { 6: { en: "Short", ja: "短" }, 9: { en: "Classic", ja: "定番" } },
   "sum-cages": { 6: { en: "Short", ja: "短" }, 9: { en: "Classic", ja: "定番" } },
-  "more-or-less": { 4: { en: "Quick", ja: "速" }, 5: { en: "Standard", ja: "定番" }, 6: { en: "Longer", ja: "長め" }, 7: { en: "Long", ja: "長" } },
-  towers: { 4: { en: "Quick", ja: "速" }, 5: { en: "Standard", ja: "定番" }, 6: { en: "Longer", ja: "長め" }, 7: { en: "Long", ja: "長" } },
+  "more-or-less": {
+    4: { en: "Quick", ja: "速" },
+    5: { en: "Standard", ja: "定番" },
+    6: { en: "Longer", ja: "長め" },
+    7: { en: "Long", ja: "長" },
+  },
+  towers: {
+    4: { en: "Quick", ja: "速" },
+    5: { en: "Standard", ja: "定番" },
+    6: { en: "Longer", ja: "長め" },
+    7: { en: "Long", ja: "長" },
+  },
 };

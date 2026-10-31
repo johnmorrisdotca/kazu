@@ -17,8 +17,13 @@ import type { RippleBoard, RippleGame } from "./ripple.types.ts";
  */
 export function newRipple(board: RippleBoard): RippleGame {
   if (!isRippleBoard(board)) throw new RangeError("Invalid Ripple Effect board");
-  return { board: { width: board.width, height: board.height, rooms: [...board.rooms], clues: [...board.clues] },
-    values: board.clues.map(clue => clue ?? 0), notes: board.rooms.map(() => []), history: [], helped: false };
+  return {
+    board: { width: board.width, height: board.height, rooms: [...board.rooms], clues: [...board.clues] },
+    values: board.clues.map((clue) => clue ?? 0),
+    notes: board.rooms.map(() => []),
+    history: [],
+    helped: false,
+  };
 }
 
 /** Apply the requested native Ripple entry or mark to a new immutable game; invalid or fixed targets stay unchanged.
@@ -38,11 +43,20 @@ export function newRipple(board: RippleBoard): RippleGame {
  * ```
  */
 export function setRippleValue(game: RippleGame, cell: number, value: number): RippleGame {
-  if (!Number.isInteger(cell) || cell < 0 || cell >= game.values.length || game.board.clues[cell] !== null
-    || !Number.isInteger(value) || value < 0 || value > rippleRoomSizes(game.board)[game.board.rooms[cell]!]!) return game;
+  if (
+    !Number.isInteger(cell) ||
+    cell < 0 ||
+    cell >= game.values.length ||
+    game.board.clues[cell] !== null ||
+    !Number.isInteger(value) ||
+    value < 0 ||
+    value > rippleRoomSizes(game.board)[game.board.rooms[cell]!]!
+  )
+    return game;
   if (game.values[cell] === value) return game;
-  const values = [...game.values]; values[cell] = value;
-  const notes = game.notes.map((list, index) => index === cell ? [] : [...list]);
+  const values = [...game.values];
+  values[cell] = value;
+  const notes = game.notes.map((list, index) => (index === cell ? [] : [...list]));
   return { ...game, values, notes, history: [...game.history, snapshot(game)] };
 }
 
@@ -63,9 +77,18 @@ export function setRippleValue(game: RippleGame, cell: number, value: number): R
  * ```
  */
 export function toggleRippleNote(game: RippleGame, cell: number, value: number): RippleGame {
-  if (!Number.isInteger(cell) || cell < 0 || cell >= game.values.length || game.board.clues[cell] !== null || game.values[cell] !== 0
-    || !Number.isInteger(value) || value < 1 || value > rippleRoomSizes(game.board)[game.board.rooms[cell]!]!) return game;
-  const notes = game.notes.map(list => [...list]);
+  if (
+    !Number.isInteger(cell) ||
+    cell < 0 ||
+    cell >= game.values.length ||
+    game.board.clues[cell] !== null ||
+    game.values[cell] !== 0 ||
+    !Number.isInteger(value) ||
+    value < 1 ||
+    value > rippleRoomSizes(game.board)[game.board.rooms[cell]!]!
+  )
+    return game;
+  const notes = game.notes.map((list) => [...list]);
   const current = new Set(notes[cell]);
   if (current.has(value)) current.delete(value);
   else current.add(value);
@@ -89,7 +112,14 @@ export function toggleRippleNote(game: RippleGame, cell: number, value: number):
  */
 export function undoRipple(game: RippleGame): RippleGame {
   const previous = game.history.at(-1);
-  return previous ? { ...game, values: [...previous.values], notes: previous.notes.map(list => [...list]), history: game.history.slice(0, -1) } : game;
+  return previous
+    ? {
+        ...game,
+        values: [...previous.values],
+        notes: previous.notes.map((list) => [...list]),
+        history: game.history.slice(0, -1),
+      }
+    : game;
 }
 
 /** Whether this Ripple game satisfies its complete native rules.
@@ -106,7 +136,9 @@ export function undoRipple(game: RippleGame): RippleGame {
  * console.log(rippleFinished(rippleGame));
  * ```
  */
-export function rippleFinished(game: RippleGame): boolean { return checkRipple(game.board, game.values).ok; }
+export function rippleFinished(game: RippleGame): boolean {
+  return checkRipple(game.board, game.values).ok;
+}
 
 /** Offers a cell only when the current public entries leave one proved completion.
  *
@@ -163,9 +195,16 @@ export function decodeRipple(code: string): RippleGame | null {
   try {
     if (code.length > 40_000) return null;
     const data = JSON.parse(code);
-    if (data.version !== 1 || !isRippleBoard(data.board) || !Array.isArray(data.values)
-      || data.values.length !== data.board.rooms.length || !Array.isArray(data.notes)
-      || data.notes.length !== data.board.rooms.length || typeof data.helped !== "boolean") return null;
+    if (
+      data.version !== 1 ||
+      !isRippleBoard(data.board) ||
+      !Array.isArray(data.values) ||
+      data.values.length !== data.board.rooms.length ||
+      !Array.isArray(data.notes) ||
+      data.notes.length !== data.board.rooms.length ||
+      typeof data.helped !== "boolean"
+    )
+      return null;
     let game = newRipple(data.board);
     for (let cell = 0; cell < data.values.length; cell += 1) {
       const value = data.values[cell];
@@ -176,14 +215,22 @@ export function decodeRipple(code: string): RippleGame | null {
         game = next;
       }
       const list = data.notes[cell];
-      if (!Array.isArray(list) || new Set(list).size !== list.length
-        || list.some(note => !Number.isInteger(note) || note < 1 || note > rippleRoomSizes(game.board)[game.board.rooms[cell]!]!)) return null;
+      if (
+        !Array.isArray(list) ||
+        new Set(list).size !== list.length ||
+        list.some(
+          (note) => !Number.isInteger(note) || note < 1 || note > rippleRoomSizes(game.board)[game.board.rooms[cell]!]!,
+        )
+      )
+        return null;
       for (const note of list) game = toggleRippleNote(game, cell, note);
     }
     return { ...game, history: [], helped: data.helped };
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
 function snapshot(game: RippleGame) {
-  return { values: [...game.values], notes: game.notes.map(list => [...list]) };
+  return { values: [...game.values], notes: game.notes.map((list) => [...list]) };
 }

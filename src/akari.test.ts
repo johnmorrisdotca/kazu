@@ -1,22 +1,8 @@
 import { describe, expect, it } from "vitest";
-import {
-  akariNeighbours,
-  akariVisible,
-  checkAkari,
-  isAkariBoard,
-  progressAkari,
-} from "./akari-board.ts";
+import { akariNeighbours, akariVisible, checkAkari, isAkariBoard, progressAkari } from "./akari-board.ts";
 import { solveAkari } from "./akari-solve.ts";
 import { generateAkari } from "./akari-generate.ts";
-import {
-  akariFinished,
-  decodeAkari,
-  encodeAkari,
-  hintAkari,
-  newAkari,
-  toggleAkari,
-  undoAkari,
-} from "./akari-game.ts";
+import { akariFinished, decodeAkari, encodeAkari, hintAkari, newAkari, toggleAkari, undoAkari } from "./akari-game.ts";
 import { drawAkari } from "./akari-draw.ts";
 
 describe("Akari rules", () => {
@@ -62,7 +48,13 @@ describe("Akari rules", () => {
     expect(hintAkari(generated)).not.toBeNull();
   });
   it("generates deterministic 5×5, 7×7 and rectangular boards with proved uniqueness", () => {
-    for (const [width, height] of [[5, 5], [7, 7], [10, 6], [6, 10], [16, 9]]) {
+    for (const [width, height] of [
+      [5, 5],
+      [7, 7],
+      [10, 6],
+      [6, 10],
+      [16, 9],
+    ]) {
       for (let seed = 1; seed <= 4; seed += 1) {
         const puzzle = generateAkari(width, height, seed);
         expect(checkAkari(puzzle, puzzle.solution).ok).toBe(true);
@@ -93,10 +85,10 @@ it("matches a separate brute-force placement count on every tiny 2×2 board", ()
     });
     if (!cells.includes(null)) continue;
     const board = { width: 2, height: 2, cells };
-    const whites = cells.flatMap((cell, index) => cell === null ? [index] : []);
+    const whites = cells.flatMap((cell, index) => (cell === null ? [index] : []));
     let brute = 0;
     for (let mask = 0; mask < 2 ** whites.length; mask += 1) {
-      const bulbs = whites.filter((_, index) => mask & 1 << index);
+      const bulbs = whites.filter((_, index) => mask & (1 << index));
       if (checkAkari(board, bulbs).ok) brute += 1;
     }
     const counted = solveAkari(board, { limit: 100, nodes: 100_000 });

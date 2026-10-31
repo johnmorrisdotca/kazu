@@ -2,19 +2,30 @@ import { describe, expect, it } from "vitest";
 import { checkNurikabe, isNurikabeBoard } from "./nurikabe-board.ts";
 import { solveNurikabe } from "./nurikabe-solve.ts";
 import { generateNurikabe } from "./nurikabe-generate.ts";
-import { decodeNurikabe, encodeNurikabe, hintNurikabe, markNurikabeSea, newNurikabe, undoNurikabe } from "./nurikabe-game.ts";
+import {
+  decodeNurikabe,
+  encodeNurikabe,
+  hintNurikabe,
+  markNurikabeSea,
+  newNurikabe,
+  undoNurikabe,
+} from "./nurikabe-game.ts";
 import { drawNurikabe } from "./nurikabe-draw.ts";
 
 describe("Nurikabe island and sea rules", () => {
   it("checks numbered island areas, connected sea, and the 2×2 sea ban", () => {
-    const puzzle = generateNurikabe(2), sea = [...puzzle.solution];
+    const puzzle = generateNurikabe(2),
+      sea = [...puzzle.solution];
     expect(checkNurikabe(puzzle, sea).ok).toBe(true);
-    const split = Array(25).fill(false); split[sea.findIndex(Boolean)] = true;
+    const split = Array(25).fill(false);
+    split[sea.findIndex(Boolean)] = true;
     expect(checkNurikabe(puzzle, split).ok).toBe(false);
-    const square = Array(25).fill(false); for (const cell of [0, 1, 5, 6]) square[cell] = true;
+    const square = Array(25).fill(false);
+    for (const cell of [0, 1, 5, 6]) square[cell] = true;
     expect(checkNurikabe(puzzle, square).ok).toBe(false);
     const islandCell = puzzle.solution.findIndex((value, cell) => !value && !puzzle.clues[cell]);
-    const wrongArea = [...sea]; wrongArea[islandCell] = true;
+    const wrongArea = [...sea];
+    wrongArea[islandCell] = true;
     expect(checkNurikabe(puzzle, wrongArea).ok).toBe(false);
   });
   it("rejects malformed boards and distinguishes uniqueness proof from exhaustion", () => {
@@ -35,13 +46,21 @@ describe("Nurikabe island and sea rules", () => {
     expect(seen.size).toBeGreaterThan(10);
   });
   it("keeps saved game data public and immutable", () => {
-    const puzzle = generateNurikabe(2), game = newNurikabe(puzzle), next = markNurikabeSea(game, 1);
-    expect(game.sea[1]).toBe(false); expect(next.sea[1]).toBe(true); expect(undoNurikabe(next).sea[1]).toBe(false);
-    expect(encodeNurikabe(next)).not.toContain("solution"); expect(decodeNurikabe(encodeNurikabe(next))?.sea).toEqual(next.sea);
-    expect(decodeNurikabe("{")).toBeNull(); expect(hintNurikabe(game)).not.toBeNull();
+    const puzzle = generateNurikabe(2),
+      game = newNurikabe(puzzle),
+      next = markNurikabeSea(game, 1);
+    expect(game.sea[1]).toBe(false);
+    expect(next.sea[1]).toBe(true);
+    expect(undoNurikabe(next).sea[1]).toBe(false);
+    expect(encodeNurikabe(next)).not.toContain("solution");
+    expect(decodeNurikabe(encodeNurikabe(next))?.sea).toEqual(next.sea);
+    expect(decodeNurikabe("{")).toBeNull();
+    expect(hintNurikabe(game)).not.toBeNull();
   });
   it("draws clues and player's sea marks", () => {
-    const puzzle = generateNurikabe(3), svg = drawNurikabe(puzzle, { sea: puzzle.solution, pieces: "tiles", language: "ja" });
-    expect(svg).toContain("Nurikabe"); expect(svg).not.toContain("solution");
+    const puzzle = generateNurikabe(3),
+      svg = drawNurikabe(puzzle, { sea: puzzle.solution, pieces: "tiles", language: "ja" });
+    expect(svg).toContain("Nurikabe");
+    expect(svg).not.toContain("solution");
   });
 });

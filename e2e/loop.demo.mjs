@@ -3,7 +3,7 @@ import { serve, noSidewaysScroll } from "./demo.mjs";
 
 test("Loop edges, undo, hints, language and materials", async ({ page }) => {
   const errors = [];
-  page.on("pageerror", error => errors.push(String(error)));
+  page.on("pageerror", (error) => errors.push(String(error)));
   await serve(page);
   await page.goto("http://kazu.test/loop.html?seed=42");
   await expect(page.locator(".sl-edge")).toHaveCount(112);

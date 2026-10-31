@@ -17,9 +17,17 @@ import type { YajilinBoard, YajilinGame } from "./yajilin.types.ts";
  */
 export function newYajilin(board: YajilinBoard): YajilinGame {
   if (!isYajilinBoard(board)) throw new RangeError("Invalid Yajilin board");
-  return { board: { width: board.width, height: board.height, clues: board.clues.map(clue => clue ? { ...clue } : null) }, shaded: Array(board.width * board.height).fill(false), edges: [], history: [], helped: false };
+  return {
+    board: { width: board.width, height: board.height, clues: board.clues.map((clue) => (clue ? { ...clue } : null)) },
+    shaded: Array(board.width * board.height).fill(false),
+    edges: [],
+    history: [],
+    helped: false,
+  };
 }
-function snapshot(game: YajilinGame) { return { shaded: [...game.shaded], edges: [...game.edges] }; }
+function snapshot(game: YajilinGame) {
+  return { shaded: [...game.shaded], edges: [...game.edges] };
+}
 /** Apply the requested native Yajilin entry or mark to a new immutable game; invalid or fixed targets stay unchanged.
  *
  * @param game - The current immutable game state.
@@ -37,7 +45,8 @@ function snapshot(game: YajilinGame) { return { shaded: [...game.shaded], edges:
  */
 export function toggleYajilinShade(game: YajilinGame, cell: number): YajilinGame {
   if (!Number.isInteger(cell) || cell < 0 || cell >= game.shaded.length || game.board.clues[cell]) return game;
-  const shaded = [...game.shaded]; shaded[cell] = !shaded[cell];
+  const shaded = [...game.shaded];
+  shaded[cell] = !shaded[cell];
   return { ...game, shaded, history: [...game.history, snapshot(game)] };
 }
 /** Apply the requested native Yajilin entry or mark to a new immutable game; invalid or fixed targets stay unchanged.
@@ -57,7 +66,9 @@ export function toggleYajilinShade(game: YajilinGame, cell: number): YajilinGame
  */
 export function toggleYajilinEdge(game: YajilinGame, edge: number): YajilinGame {
   if (!Number.isInteger(edge) || edge < 0 || edge >= yajilinEdgeCount(game.board)) return game;
-  const edges = game.edges.includes(edge) ? game.edges.filter(value => value !== edge) : [...game.edges, edge].sort((a, b) => a - b);
+  const edges = game.edges.includes(edge)
+    ? game.edges.filter((value) => value !== edge)
+    : [...game.edges, edge].sort((a, b) => a - b);
   return { ...game, edges, history: [...game.history, snapshot(game)] };
 }
 /** Return the Yajilin game with its previous marks or entries restored, or unchanged when there is no undo history.
@@ -76,7 +87,9 @@ export function toggleYajilinEdge(game: YajilinGame, edge: number): YajilinGame 
  */
 export function undoYajilin(game: YajilinGame): YajilinGame {
   const previous = game.history.at(-1);
-  return previous ? { ...game, shaded: [...previous.shaded], edges: [...previous.edges], history: game.history.slice(0, -1) } : game;
+  return previous
+    ? { ...game, shaded: [...previous.shaded], edges: [...previous.edges], history: game.history.slice(0, -1) }
+    : game;
 }
 /** Return the Yajilin game reset to its initial entries or marks.
  *
@@ -92,7 +105,9 @@ export function undoYajilin(game: YajilinGame): YajilinGame {
  * console.log(restartYajilin(yajilinGame));
  * ```
  */
-export function restartYajilin(game: YajilinGame): YajilinGame { return { ...newYajilin(game.board), helped: false }; }
+export function restartYajilin(game: YajilinGame): YajilinGame {
+  return { ...newYajilin(game.board), helped: false };
+}
 /** Find a native Yajilin hint, or null when no actionable hint is available.
  *
  * @param game - The current immutable game state.
@@ -107,12 +122,14 @@ export function restartYajilin(game: YajilinGame): YajilinGame { return { ...new
  * console.log(hintYajilin(yajilinGame));
  * ```
  */
-export function hintYajilin(game: YajilinGame): { type: "shade"; cell: number } | { type: "edge"; edge: number } | null {
+export function hintYajilin(
+  game: YajilinGame,
+): { type: "shade"; cell: number } | { type: "edge"; edge: number } | null {
   const result = solveYajilin(game.board);
   if (!result.complete || result.count !== 1) return null;
   const cell = result.solution!.shaded.findIndex((value, index) => value !== game.shaded[index]);
   if (cell >= 0) return { type: "shade", cell };
-  const edge = result.solution!.edges.find(value => !game.edges.includes(value));
+  const edge = result.solution!.edges.find((value) => !game.edges.includes(value));
   return edge === undefined ? null : { type: "edge", edge };
 }
 /** Encode the Yajilin board and current game as native resumable text.
@@ -147,12 +164,22 @@ export function decodeYajilin(code: string): YajilinGame | null {
   try {
     if (code.length > 40_000) return null;
     const value = JSON.parse(code);
-    if (value.version !== 1 || !isYajilinBoard(value.board) || !Array.isArray(value.shaded)
-      || value.shaded.length !== value.board.width * value.board.height || !value.shaded.every((cell: unknown) => typeof cell === "boolean")
-      || !Array.isArray(value.edges) || !value.edges.every((edge: unknown) => Number.isInteger(edge))
-      || typeof value.helped !== "boolean") return null;
+    if (
+      value.version !== 1 ||
+      !isYajilinBoard(value.board) ||
+      !Array.isArray(value.shaded) ||
+      value.shaded.length !== value.board.width * value.board.height ||
+      !value.shaded.every((cell: unknown) => typeof cell === "boolean") ||
+      !Array.isArray(value.edges) ||
+      !value.edges.every((edge: unknown) => Number.isInteger(edge)) ||
+      typeof value.helped !== "boolean"
+    )
+      return null;
     const edges = [...new Set(value.edges as number[])].sort((a, b) => a - b);
-    if (edges.length !== value.edges.length || edges.some(edge => edge < 0 || edge >= yajilinEdgeCount(value.board))) return null;
+    if (edges.length !== value.edges.length || edges.some((edge) => edge < 0 || edge >= yajilinEdgeCount(value.board)))
+      return null;
     return { ...newYajilin(value.board), shaded: [...value.shaded], edges, helped: value.helped };
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }

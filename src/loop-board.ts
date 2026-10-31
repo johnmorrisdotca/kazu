@@ -17,10 +17,17 @@ import type { LoopBoard, LoopCheck, LoopProgress } from "./loop.types.ts";
 export function isLoopBoard(value: unknown): value is LoopBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as LoopBoard;
-  return Number.isInteger(board.width) && board.width >= 2 && board.width <= LOOP_MOST_SIDE
-    && Number.isInteger(board.height) && board.height >= 2 && board.height <= LOOP_MOST_SIDE
-    && Array.isArray(board.clues) && board.clues.length === board.width * board.height
-    && board.clues.every(clue => clue === null || Number.isInteger(clue) && clue >= 0 && clue <= 3);
+  return (
+    Number.isInteger(board.width) &&
+    board.width >= 2 &&
+    board.width <= LOOP_MOST_SIDE &&
+    Number.isInteger(board.height) &&
+    board.height >= 2 &&
+    board.height <= LOOP_MOST_SIDE &&
+    Array.isArray(board.clues) &&
+    board.clues.length === board.width * board.height &&
+    board.clues.every((clue) => clue === null || (Number.isInteger(clue) && clue >= 0 && clue <= 3))
+  );
 }
 
 /** Count horizontal edges in the Loop board’s native edge numbering.
@@ -114,24 +121,27 @@ export function loopVertexEdges(board: LoopBoard, vertex: number): number[] {
 function evaluate(board: LoopBoard, selected: readonly number[], complete: boolean): LoopCheck {
   if (!isLoopBoard(board)) throw new RangeError("Invalid Loop board");
   const edgeCount = loopEdgeCount(board);
-  const errors = selected.filter((edge, index) => !Number.isInteger(edge)
-    || edge < 0 || edge >= edgeCount || selected.indexOf(edge) !== index);
-  const edges = [...new Set(selected.filter(edge => Number.isInteger(edge) && edge >= 0 && edge < edgeCount))];
+  const errors = selected.filter(
+    (edge, index) => !Number.isInteger(edge) || edge < 0 || edge >= edgeCount || selected.indexOf(edge) !== index,
+  );
+  const edges = [...new Set(selected.filter((edge) => Number.isInteger(edge) && edge >= 0 && edge < edgeCount))];
   const edgeSet = new Set(edges);
-  const vertexDegrees = Array.from({ length: (board.width + 1) * (board.height + 1) }, (_, vertex) =>
-    loopVertexEdges(board, vertex).filter(edge => edgeSet.has(edge)).length);
-  const vertices = vertexDegrees.flatMap((degree, vertex) => degree > 2 || complete && degree === 1 ? [vertex] : []);
+  const vertexDegrees = Array.from(
+    { length: (board.width + 1) * (board.height + 1) },
+    (_, vertex) => loopVertexEdges(board, vertex).filter((edge) => edgeSet.has(edge)).length,
+  );
+  const vertices = vertexDegrees.flatMap((degree, vertex) =>
+    degree > 2 || (complete && degree === 1) ? [vertex] : [],
+  );
   const clues = board.clues.flatMap((clue, cell) => {
     if (clue === null) return [];
-    const count = loopCellEdges(board, cell)!.filter(edge => edgeSet.has(edge)).length;
-    return complete ? count !== clue ? [cell] : [] : count > clue ? [cell] : [];
+    const count = loopCellEdges(board, cell)!.filter((edge) => edgeSet.has(edge)).length;
+    return complete ? (count !== clue ? [cell] : []) : count > clue ? [cell] : [];
   });
   const closed = closedComponents(board, edgeSet);
   const loops = closed.count;
   const detachedClosedLoop = loops > 0 && closed.edges !== edges.length;
-  const loopError = complete
-    ? edges.length === 0 || loops !== 1
-    : loops > 1 || detachedClosedLoop;
+  const loopError = complete ? edges.length === 0 || loops !== 1 : loops > 1 || detachedClosedLoop;
   return {
     ok: !errors.length && !vertices.length && !clues.length && !loopError,
     errors,
@@ -201,8 +211,11 @@ function closedComponents(board: LoopBoard, edges: ReadonlySet<number>): { count
         }
       }
     }
-    const degreeTwo = [...component].every(edge => edgeVertices(board, edge)
-      .every(vertex => loopVertexEdges(board, vertex).filter(adjacent => component.has(adjacent)).length === 2));
+    const degreeTwo = [...component].every((edge) =>
+      edgeVertices(board, edge).every(
+        (vertex) => loopVertexEdges(board, vertex).filter((adjacent) => component.has(adjacent)).length === 2,
+      ),
+    );
     if (degreeTwo) {
       count += 1;
       closedEdges += component.size;

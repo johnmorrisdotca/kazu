@@ -60,7 +60,13 @@ function orderingsFor(size: number): Uint8Array[][] {
     if (at === size) {
       const from = towersSeen(heights);
       const to = towersSeen([...heights].reverse());
-      for (const [a, b] of [[from, to], [from, 0], [0, to], [0, 0]] as const) lists[a]![b]!.push(...heights);
+      for (const [a, b] of [
+        [from, to],
+        [from, 0],
+        [0, to],
+        [0, 0],
+      ] as const)
+        lists[a]![b]!.push(...heights);
       return;
     }
     for (let i = at; i < size; i += 1) {
@@ -81,8 +87,10 @@ export type Line = { cells: number[]; from: number; to: number };
 export function cluedLines(size: number, clues: TowerClues): Line[] {
   const lines: Line[] = [];
   for (let at = 0; at < size; at += 1) {
-    if (clues.left[at] !== 0 || clues.right[at] !== 0) lines.push({ cells: lineFrom("left", at, size), from: clues.left[at]!, to: clues.right[at]! });
-    if (clues.top[at] !== 0 || clues.bottom[at] !== 0) lines.push({ cells: lineFrom("top", at, size), from: clues.top[at]!, to: clues.bottom[at]! });
+    if (clues.left[at] !== 0 || clues.right[at] !== 0)
+      lines.push({ cells: lineFrom("left", at, size), from: clues.left[at]!, to: clues.right[at]! });
+    if (clues.top[at] !== 0 || clues.bottom[at] !== 0)
+      lines.push({ cells: lineFrom("top", at, size), from: clues.top[at]!, to: clues.bottom[at]! });
   }
   return lines;
 }
@@ -135,7 +143,10 @@ export function narrowEdges(line: Line, candidates: number[], size: number): boo
       changed = true;
     }
   };
-  for (const [clue, cells] of [[line.from, line.cells], [line.to, [...line.cells].reverse()]] as const) {
+  for (const [clue, cells] of [
+    [line.from, line.cells],
+    [line.to, [...line.cells].reverse()],
+  ] as const) {
     if (clue === 0) continue;
     cells.forEach((index, k) => {
       if (clue === 1 && k === 0) narrow(index, 1 << size);
@@ -161,7 +172,12 @@ export type SinglesResult = { grid: Grid; solved: boolean; contradiction: boolea
  * left in its row or column. Runs to a fixpoint. Returns a new grid; the
  * input is left alone.
  */
-export function applySingles(grid: Grid, size: number, clues: TowerClues, reasoning: Reasoning = "edges"): SinglesResult {
+export function applySingles(
+  grid: Grid,
+  size: number,
+  clues: TowerClues,
+  reasoning: Reasoning = "edges",
+): SinglesResult {
   const narrowOne = reasoning === "lines" ? narrowLine : narrowEdges;
   const work = [...grid];
   const lines = cluedLines(size, clues);
@@ -241,7 +257,13 @@ function branchCell(singles: SinglesResult, size: number): number {
 }
 
 /** How many answers the grid has, up to `limit`: the strongest reasoning at every node, then a branch on the tightest cell. */
-export function countSolutions(grid: Grid, size: number, clues: TowerClues, limit = 2, first?: (answer: Grid) => void): number {
+export function countSolutions(
+  grid: Grid,
+  size: number,
+  clues: TowerClues,
+  limit = 2,
+  first?: (answer: Grid) => void,
+): number {
   let found = 0;
   const step = (at: Grid): void => {
     if (found >= limit) return;
