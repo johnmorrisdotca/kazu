@@ -931,7 +931,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). The commands are under [Development](#
 Please follow the [code of conduct](./CODE_OF_CONDUCT.md). A way to make the check or the solver run for long, or markup that gets out of the drawing, is for the [security policy](./SECURITY.md), not a public issue.
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The latest release, 2.1.0, adds the puzzle boards' standard embed attributes, the shared embed builder, and the documentation site with a checked example for every export.
+See [CHANGELOG.md](./CHANGELOG.md). The latest release, 2.1.1, changes nothing a player sees.
 
 ## Licence
 
