@@ -1,6 +1,6 @@
-import { decodeCells, stepEntry, symbolOf, valueOfSymbol } from "./cells.ts";
+import { stepEntry, symbolOf, valueOfSymbol } from "./cells.ts";
 import { kazuClockText } from "./clock.ts";
-import { drawKazu, kazuCellName, kazuWhere } from "./draw.ts";
+import { kazuCellName } from "./draw.ts";
 import {
   answerOf,
   clearCell,
@@ -11,18 +11,18 @@ import {
   type KazuGame,
   kazuProgress,
   newKazuGame,
-  numberCounts,
-  restartKazu,
   toggleNote,
-  undoKazu,
   valuesOf,
 } from "./game.ts";
-import { hintKazu, type KazuHint } from "./hint.ts";
+import type { KazuHint } from "./hint.ts";
 import type { KazuKind, KazuLevel } from "./kinds.ts";
+import { mountHandle } from "./mountHandle.ts";
+import { NOTES_KEY_IS_A_NUMBER, renderBoard } from "./mountRender.ts";
+import type { MountSession } from "./mountSession.ts";
 import { KAZU_PLAY_STYLE } from "./play-style.ts";
 import { decodeNotes, decodeRun, encodeNotes, encodeRun, notesOf } from "./progress.ts";
 import { solveKazu } from "./solve.ts";
-import { type KazuLanguage, kazuLanguageOf, kazuNameOf, kazuSay } from "./strings.ts";
+import { type KazuLanguage, kazuLanguageOf, kazuSay } from "./strings.ts";
 
 /**
  * A PLAYABLE KAZU BOARD IN ANY PAGE: `mountKazu(host, options)` draws a puzzle into an element and plays
@@ -43,9 +43,6 @@ import { type KazuLanguage, kazuLanguageOf, kazuNameOf, kazuSay } from "./string
  *
  * Needs a page. Its words are English and Japanese and follow the page's `lang`.
  */
-
-/** From this side up the letter N is a number (A is 10, so N is 23), and Pencil moves to the slash key. */
-const NOTES_KEY_IS_A_NUMBER = 23;
 
 /** What every event tells of the board.
  *
@@ -269,149 +266,147 @@ const ARROWS: Record<string, [number, number]> = {
  * ```
  */
 export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMount | null {
-  const document = host.ownerDocument;
-  const view = document.defaultView!;
-  const firstGame = start(options);
-  if (firstGame === null) return null;
-  ensureKazuPlayStyle(host);
+  const s = {} as MountSession;
+  s.host = host;
+  s.options = options;
+  s.document = s.host.ownerDocument;
+  s.view = s.document.defaultView!;
+  s.firstGame = start(s.options);
+  if (s.firstGame === null) return null;
+  ensureKazuPlayStyle(s.host);
 
-  let game: KazuGame = firstGame;
-  let level = options.level;
-  let seed = options.seed;
-  let solution: string | null = options.solution ?? null;
-  let settings = {
-    hints: options.hints ?? "place",
-    check: options.check ?? "count",
-    conflicts: options.conflicts !== false,
-    peers: options.peers !== false,
-    tidy: options.tidy !== false,
-    tapToStep: options.tapToStep !== false,
-    clock: options.clock !== false,
-    controls: options.controls !== false,
+  s.game = s.firstGame;
+  s.level = s.options.level;
+  s.seed = s.options.seed;
+  s.solution = s.options.solution ?? null;
+  s.settings = {
+    hints: s.options.hints ?? "place",
+    check: s.options.check ?? "count",
+    conflicts: s.options.conflicts !== false,
+    peers: s.options.peers !== false,
+    tidy: s.options.tidy !== false,
+    tapToStep: s.options.tapToStep !== false,
+    clock: s.options.clock !== false,
+    controls: s.options.controls !== false,
   };
-  const explicitLanguage = { value: options.language };
-  const callbacks = options;
+  s.explicitLanguage = { value: s.options.language };
+  s.callbacks = s.options;
 
-  let selected: number | null = null;
-  let pencilOn = false;
-  let hintCell: number | null = null;
-  let wrongCells: number[] = [];
-  let says: { key: string; values?: Record<string, string | number>; warn?: boolean; text?: string } = { key: "tap" };
-  let hints = 0;
-  let checks = 0;
-  let solved = isSolved(game);
-  let banked = options.elapsed ?? 0;
-  let ranSince: number | null = null;
-  let tick: ReturnType<typeof setInterval> | null = null;
-  let language: KazuLanguage = explicitLanguage.value ?? languageOfPage();
-  let drawn = "";
-  let announced = "";
+  s.selected = null;
+  s.pencilOn = false;
+  s.hintCell = null;
+  s.wrongCells = [];
+  s.says = { key: "tap" };
+  s.hints = 0;
+  s.checks = 0;
+  s.solved = isSolved(s.game);
+  s.banked = s.options.elapsed ?? 0;
+  s.ranSince = null;
+  s.tick = null;
+  s.language = s.explicitLanguage.value ?? languageOfPage();
+  s.drawn = "";
+  s.announced = "";
 
   function languageOfPage(): KazuLanguage {
-    return kazuLanguageOf(host.closest("[lang]")?.getAttribute("lang") ?? document.documentElement.lang);
+    return kazuLanguageOf(s.host.closest("[lang]")?.getAttribute("lang") ?? s.document.documentElement.lang);
   }
 
   // The parts.
-  host.classList.add("kazu-play");
-  host.replaceChildren();
-  const bar = create(document, "div", "kzp-bar");
-  const clockEl = create(document, "span", "kzp-clock");
-  clockEl.setAttribute("role", "timer");
-  const progressEl = create(document, "span", "kzp-progress");
-  bar.append(clockEl, progressEl);
-  const box = create(document, "div", "kzp-box");
-  box.tabIndex = 0;
-  box.setAttribute("role", "application");
-  const inner = create(document, "div", "kzp-inner");
-  box.append(inner);
-  const keysNote = create(document, "p", "kzp-sr");
-  box.setAttribute("aria-describedby", `kzp-keys-${Math.random().toString(36).slice(2, 8)}`);
-  keysNote.id = box.getAttribute("aria-describedby")!;
-  const announce = create(document, "p", "kzp-sr");
-  announce.setAttribute("aria-live", "polite");
-  const pad = create(document, "div", "kzp-pad");
-  pad.setAttribute("role", "group");
-  const controls = create(document, "div", "kzp-controls");
-  const saysEl = create(document, "p", "kzp-says");
-  saysEl.setAttribute("aria-live", "polite");
-  host.append(bar, box, keysNote, announce, pad, controls, saysEl);
+  s.host.classList.add("kazu-play");
+  s.host.replaceChildren();
+  s.bar = create(s.document, "div", "kzp-bar");
+  s.clockEl = create(s.document, "span", "kzp-clock");
+  s.clockEl.setAttribute("role", "timer");
+  s.progressEl = create(s.document, "span", "kzp-progress");
+  s.bar.append(s.clockEl, s.progressEl);
+  s.box = create(s.document, "div", "kzp-box");
+  s.box.tabIndex = 0;
+  s.box.setAttribute("role", "application");
+  s.inner = create(s.document, "div", "kzp-inner");
+  s.box.append(s.inner);
+  s.keysNote = create(s.document, "p", "kzp-sr");
+  s.box.setAttribute("aria-describedby", `kzp-keys-${Math.random().toString(36).slice(2, 8)}`);
+  s.keysNote.id = s.box.getAttribute("aria-describedby")!;
+  s.announce = create(s.document, "p", "kzp-sr");
+  s.announce.setAttribute("aria-live", "polite");
+  s.pad = create(s.document, "div", "kzp-pad");
+  s.pad.setAttribute("role", "group");
+  s.controls = create(s.document, "div", "kzp-controls");
+  s.saysEl = create(s.document, "p", "kzp-says");
+  s.saysEl.setAttribute("aria-live", "polite");
+  s.host.append(s.bar, s.box, s.keysNote, s.announce, s.pad, s.controls, s.saysEl);
 
-  const button = (
-    name: string,
-    onPress: () => void,
-    parent: HTMLElement,
-    className = "kzp-button",
-  ): HTMLButtonElement => {
-    const one = create(document, "button", className);
+  s.button = (name: string, onPress: () => void, parent: HTMLElement, className = "kzp-button"): HTMLButtonElement => {
+    const one = create(s.document, "button", className);
     one.type = "button";
     one.dataset.action = name;
     one.addEventListener("click", onPress);
     parent.append(one);
     return one;
   };
-  const undoButton = button("undo", () => api.undo(), controls);
-  const pencilButton = button("pencil", () => api.pencil(), controls);
-  const hintButton = button("hint", () => api.hint(), controls);
-  const checkButton = button("check", () => api.check(), controls);
-  let padKeys: HTMLButtonElement[] = [];
-  let eraseKey: HTMLButtonElement | null = null;
+  s.undoButton = s.button("undo", () => api.undo(), s.controls);
+  s.pencilButton = s.button("pencil", () => api.pencil(), s.controls);
+  s.hintButton = s.button("hint", () => api.hint(), s.controls);
+  s.checkButton = s.button("check", () => api.check(), s.controls);
+  s.padKeys = [];
+  s.eraseKey = null;
 
-  const say = (key: string, values: Record<string, string | number> = {}): string => kazuSay(language, key, values);
+  s.say = (key: string, values: Record<string, string | number> = {}): string => kazuSay(s.language, key, values);
 
   function elapsed(): number {
-    return banked + (ranSince === null ? 0 : view.performance.now() - ranSince);
+    return s.banked + (s.ranSince === null ? 0 : s.view.performance.now() - s.ranSince);
   }
 
   function runClock(): void {
-    if (ranSince !== null || solved || document.hidden) return;
-    ranSince = view.performance.now();
-    if (tick === null) tick = setInterval(paintClock, 1000);
+    if (s.ranSince !== null || s.solved || s.document.hidden) return;
+    s.ranSince = s.view.performance.now();
+    if (s.tick === null) s.tick = setInterval(paintClock, 1000);
   }
 
   function stopClock(): void {
-    if (ranSince !== null) banked += view.performance.now() - ranSince;
-    ranSince = null;
-    if (tick !== null) clearInterval(tick);
-    tick = null;
+    if (s.ranSince !== null) s.banked += s.view.performance.now() - s.ranSince;
+    s.ranSince = null;
+    if (s.tick !== null) clearInterval(s.tick);
+    s.tick = null;
   }
 
   function paintClock(): void {
     const text = kazuClockText(elapsed());
-    if (clockEl.textContent !== text) clockEl.textContent = text;
+    if (s.clockEl.textContent !== text) s.clockEl.textContent = text;
   }
 
   // The pad: a key for every number, and one to erase. Its columns are fixed for a puzzle's side.
   function buildPad(): void {
-    pad.replaceChildren();
-    padKeys = [];
-    for (let value = 1; value <= game.size; value += 1) {
-      const key = button(`number-${value}`, () => api.enter(value), pad, "kzp-key");
+    s.pad.replaceChildren();
+    s.padKeys = [];
+    for (let value = 1; value <= s.game.size; value += 1) {
+      const key = s.button(`number-${value}`, () => api.enter(value), s.pad, "kzp-key");
       key.dataset.value = String(value);
       key.textContent = symbolOf(value);
-      padKeys.push(key);
+      s.padKeys.push(key);
     }
-    eraseKey = button("erase", () => api.enter(0), pad, "kzp-key");
-    eraseKey.dataset.erase = "true";
-    eraseKey.textContent = "×";
-    const rows = game.size <= 6 ? 1 : game.size <= 9 ? 2 : 3;
-    pad.style.setProperty("--kzp-columns", String(Math.ceil((game.size + 1) / rows)));
+    s.eraseKey = s.button("erase", () => api.enter(0), s.pad, "kzp-key");
+    s.eraseKey.dataset.erase = "true";
+    s.eraseKey.textContent = "×";
+    const rows = s.game.size <= 6 ? 1 : s.game.size <= 9 ? 2 : 3;
+    s.pad.style.setProperty("--kzp-columns", String(Math.ceil((s.game.size + 1) / rows)));
   }
 
   function detail(): KazuEventDetail {
     return {
-      kind: game.kind,
-      size: game.size,
-      level,
-      seed,
-      run: encodeRun(game.entries),
-      notes: encodeNotes(game.notes),
-      answer: answerOf(game),
-      progress: kazuProgress(game),
+      kind: s.game.kind,
+      size: s.game.size,
+      level: s.level,
+      seed: s.seed,
+      run: encodeRun(s.game.entries),
+      notes: encodeNotes(s.game.notes),
+      answer: answerOf(s.game),
+      progress: kazuProgress(s.game),
       elapsedMs: Math.round(elapsed()),
-      hints,
-      checks,
-      helped: hints > 0,
-      solved,
+      hints: s.hints,
+      checks: s.checks,
+      helped: s.hints > 0,
+      solved: s.solved,
     };
   }
 
@@ -420,167 +415,97 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
     extra: Partial<KazuEventDetail> = {},
   ): void {
     const info = { ...detail(), ...extra };
-    host.dispatchEvent(
+    s.host.dispatchEvent(
       new CustomEvent(name, { detail: JSON.parse(JSON.stringify(info)), bubbles: true, composed: true }),
     );
     const call = {
-      "kazu-change": callbacks.onChange,
-      "kazu-hint": callbacks.onHint,
-      "kazu-check": callbacks.onCheck,
-      "kazu-solve": callbacks.onSolve,
+      "kazu-change": s.callbacks.onChange,
+      "kazu-hint": s.callbacks.onHint,
+      "kazu-check": s.callbacks.onCheck,
+      "kazu-solve": s.callbacks.onSolve,
     }[name];
     call?.(info);
   }
 
   function answerKey(): string | null {
-    if (solution === null) solution = solveKazu(game.kind, game.size, game.givens);
-    return solution;
+    if (s.solution === null) s.solution = solveKazu(s.game.kind, s.game.size, s.game.givens);
+    return s.solution;
   }
 
   function sayText(): string {
-    return says.text ?? kazuSay(language, says.key, says.values ?? {});
+    return s.says.text ?? kazuSay(s.language, s.says.key, s.says.values ?? {});
   }
 
   function cellDescription(index: number): string {
-    const cell = kazuCellName(game.size, index, language);
-    const shown = valuesOf(game)[index]!;
-    if (isPrinted(game, index)) return say("cellGiven", { cell, value: symbolOf(shown) });
+    const cell = kazuCellName(s.game.size, index, s.language);
+    const shown = valuesOf(s.game)[index]!;
+    if (isPrinted(s.game, index)) return s.say("cellGiven", { cell, value: symbolOf(shown) });
     if (shown !== 0)
-      return say(gameConflicts(game).includes(index) ? "cellConflict" : "cellValue", { cell, value: symbolOf(shown) });
-    const notes = notesOf(game.notes[index]!);
+      return s.say(gameConflicts(s.game).includes(index) ? "cellConflict" : "cellValue", {
+        cell,
+        value: symbolOf(shown),
+      });
+    const notes = notesOf(s.game.notes[index]!);
     return notes.length > 0
-      ? say("cellNotes", { cell, notes: notes.map(symbolOf).join(", ") })
-      : say("cellEmpty", { cell });
-  }
-
-  function render(): void {
-    const conflicts = settings.conflicts ? gameConflicts(game) : [];
-    const svg = drawKazu(game.kind, game.size, game.givens, {
-      entries: game.entries,
-      notes: game.notes,
-      selected,
-      peers: settings.peers,
-      conflicts,
-      wrong: wrongCells,
-      hint: hintCell,
-      done: solved,
-      interactive: !solved,
-      language,
-    });
-    if (svg !== null && svg !== drawn) {
-      inner.innerHTML = svg;
-      drawn = svg;
-    }
-    box.dataset.over = String(solved);
-    host.dataset.solved = String(solved);
-    host.dataset.pencil = String(pencilOn);
-    host.dataset.kind = game.kind;
-    host.dataset.size = String(game.size);
-    box.setAttribute("aria-label", say("board", { name: kazuNameOf(game.kind, language), size: game.size }));
-    keysNote.textContent = say(game.size >= NOTES_KEY_IS_A_NUMBER ? "keysColossus" : "keys");
-    const counts = numberCounts(game);
-    padKeys.forEach((key, at) => {
-      const value = at + 1;
-      key.disabled = solved;
-      key.dataset.done = String(counts[value]! >= game.size);
-      key.setAttribute(
-        "aria-label",
-        say(counts[value]! >= game.size ? "padDone" : "padNumber", { n: symbolOf(value) }),
-      );
-    });
-    if (eraseKey !== null) {
-      eraseKey.disabled = solved;
-      eraseKey.setAttribute("aria-label", say("erase"));
-    }
-    pad.setAttribute("aria-label", say("pad"));
-    undoButton.textContent = say("undo");
-    undoButton.disabled = game.past.length === 0 || solved;
-    pencilButton.textContent = say("pencil");
-    pencilButton.title = say("pencilTitle");
-    pencilButton.setAttribute("aria-pressed", String(pencilOn));
-    pencilButton.disabled = solved;
-    hintButton.textContent = say("hint");
-    hintButton.title = say("hintTitle");
-    hintButton.hidden = settings.hints === "off";
-    hintButton.disabled = solved;
-    checkButton.textContent = say("check");
-    checkButton.title = say("checkTitle");
-    checkButton.hidden = settings.check === "off";
-    checkButton.disabled = solved;
-    controls.hidden = !settings.controls;
-    pad.hidden = !settings.controls;
-    clockEl.hidden = !settings.clock;
-    clockEl.setAttribute("aria-label", say("clock"));
-    const progress = kazuProgress(game);
-    progressEl.textContent = `${progress.filled} / ${progress.total}`;
-    paintClock();
-    const text = solved
-      ? say(banked > 0 || ranSince !== null ? "solvedIn" : "solved", { time: kazuClockText(elapsed()) })
-      : sayText();
-    saysEl.textContent = text;
-    saysEl.dataset.warn = String(says.warn === true && !solved);
-    const note = selected === null ? "" : cellDescription(selected);
-    if (note !== announced) {
-      announced = note;
-      announce.textContent = note;
-    }
+      ? s.say("cellNotes", { cell, notes: notes.map(symbolOf).join(", ") })
+      : s.say("cellEmpty", { cell });
   }
 
   function setSays(key: string, values?: Record<string, string | number>, warn = false, text?: string): void {
-    says = { key, values, warn, text };
+    s.says = { key, values, warn, text };
   }
 
   function tapWords(): void {
-    setSays(pencilOn ? "tapPencil" : "tap");
+    setSays(s.pencilOn ? "tapPencil" : "tap");
   }
 
   function changed(): void {
-    hintCell = null;
-    wrongCells = [];
-    solved = isSolved(game);
-    if (solved) {
+    s.hintCell = null;
+    s.wrongCells = [];
+    s.solved = isSolved(s.game);
+    if (s.solved) {
       stopClock();
       setSays("solved");
-    } else if (kazuProgress(game).filled === game.size * game.size) setSays("full", undefined, true);
+    } else if (kazuProgress(s.game).filled === s.game.size * s.game.size) setSays("full", undefined, true);
     else tapWords();
-    render();
+    s.render();
     emit("kazu-change");
-    if (solved) emit("kazu-solve");
+    if (s.solved) emit("kazu-solve");
   }
 
   function write(cell: number, value: number): void {
-    if (solved || cell < 0 || isPrinted(game, cell)) return;
+    if (s.solved || cell < 0 || isPrinted(s.game, cell)) return;
     const next =
-      pencilOn && value !== 0
-        ? toggleNote(game, cell, value)
+      s.pencilOn && value !== 0
+        ? toggleNote(s.game, cell, value)
         : value === 0
-          ? clearCell(game, cell)
-          : enterNumber(game, cell, value, settings.tidy);
-    if (next === game) return;
+          ? clearCell(s.game, cell)
+          : enterNumber(s.game, cell, value, s.settings.tidy);
+    if (next === s.game) return;
     runClock();
-    game = next;
+    s.game = next;
     changed();
   }
 
   function move(by: [number, number]): void {
-    const { size } = game;
-    const from = selected ?? 0;
+    const { size } = s.game;
+    const from = s.selected ?? 0;
     const row = Math.min(size - 1, Math.max(0, Math.floor(from / size) + by[0]));
     const col = Math.min(size - 1, Math.max(0, (from % size) + by[1]));
     api.select(row * size + col);
   }
 
-  const onClick = (event: Event) => {
+  s.onClick = (event: Event) => {
     const target = (event.target as Element | null)?.closest("[data-cell]");
-    if (target === null || target === undefined || solved) return;
+    if (target === null || target === undefined || s.solved) return;
     const index = Number((target as HTMLElement).dataset.cell);
     if (!Number.isInteger(index)) return;
-    if (index === selected && settings.tapToStep && !pencilOn && !isPrinted(game, index))
-      write(index, stepEntry(game.entries[index]!, game.size));
+    if (index === s.selected && s.settings.tapToStep && !s.pencilOn && !isPrinted(s.game, index))
+      write(index, stepEntry(s.game.entries[index]!, s.game.size));
     else api.select(index);
   };
 
-  const onKey = (event: KeyboardEvent) => {
+  s.onKey = (event: KeyboardEvent) => {
     if (event.metaKey || event.ctrlKey || event.altKey) {
       if ((event.metaKey || event.ctrlKey) && !event.altKey && event.key.toLowerCase() === "z") {
         event.preventDefault();
@@ -593,237 +518,97 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
       move(ARROWS[event.key]!);
       return;
     }
-    if (solved) return;
+    if (s.solved) return;
     if (event.key === "Escape") {
       event.preventDefault();
       api.select(null);
     } else if (event.key === "Backspace" || event.key === "Delete" || event.key === "0" || event.key === " ") {
       event.preventDefault();
       api.enter(0);
-    } else if (event.key.toLowerCase() === (game.size >= NOTES_KEY_IS_A_NUMBER ? "/" : "n")) {
+    } else if (event.key.toLowerCase() === (s.game.size >= NOTES_KEY_IS_A_NUMBER ? "/" : "n")) {
       event.preventDefault();
       api.pencil();
-    } else if (event.shiftKey && selected !== null) {
+    } else if (event.shiftKey && s.selected !== null) {
       // Shift with a number is a pencil mark, whatever the keyboard writes for a shifted digit: read the key's place, not its symbol.
       const code = /^Digit([1-9])$/.exec(event.code)?.[1] ?? /^Key([A-P])$/.exec(event.code)?.[1];
       const value = code === undefined ? 0 : valueOfSymbol(code);
-      if (value >= 1 && value <= game.size) {
+      if (value >= 1 && value <= s.game.size) {
         event.preventDefault();
-        write(selected, 0);
-        const next = toggleNote(game, selected, value);
-        if (next !== game) {
+        write(s.selected, 0);
+        const next = toggleNote(s.game, s.selected, value);
+        if (next !== s.game) {
           runClock();
-          game = next;
+          s.game = next;
           changed();
         }
       }
     } else {
       const value = valueOfSymbol(event.key);
-      if (value >= 1 && value <= game.size) {
+      if (value >= 1 && value <= s.game.size) {
         event.preventDefault();
         api.enter(value);
       }
     }
   };
 
-  const onFocus = () => {
-    if (selected === null && !solved) api.select(0);
+  s.onFocus = () => {
+    if (s.selected === null && !s.solved) api.select(0);
   };
 
-  const onVisible = () => {
-    if (document.hidden) {
-      if (ranSince !== null) {
+  s.onVisible = () => {
+    if (s.document.hidden) {
+      if (s.ranSince !== null) {
         stopClock();
         paintClock();
-        resumeOnShow = true;
+        s.resumeOnShow = true;
       }
-    } else if (resumeOnShow) {
-      resumeOnShow = false;
+    } else if (s.resumeOnShow) {
+      s.resumeOnShow = false;
       runClock();
     }
   };
-  let resumeOnShow = false;
+  s.resumeOnShow = false;
 
-  box.addEventListener("click", onClick);
-  box.addEventListener("keydown", onKey);
-  box.addEventListener("focus", onFocus);
-  document.addEventListener("visibilitychange", onVisible);
-  const watching =
+  s.box.addEventListener("click", s.onClick);
+  s.box.addEventListener("keydown", s.onKey);
+  s.box.addEventListener("focus", s.onFocus);
+  s.document.addEventListener("visibilitychange", s.onVisible);
+  s.watching =
     typeof MutationObserver === "undefined"
       ? null
       : new MutationObserver(() => {
-          if (explicitLanguage.value !== undefined) return;
+          if (s.explicitLanguage.value !== undefined) return;
           const next = languageOfPage();
-          if (next === language) return;
-          language = next;
-          drawn = "";
-          render();
+          if (next === s.language) return;
+          s.language = next;
+          s.drawn = "";
+          s.render();
         });
-  watching?.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  s.watching?.observe(s.document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 
+  s.paintClock = paintClock;
+  s.elapsed = elapsed;
+  s.sayText = sayText;
+  s.cellDescription = cellDescription;
+  s.render = () => renderBoard(s);
   buildPad();
-  render();
+  s.render();
 
-  const api: KazuMount = {
-    host,
-    game: () => game,
-    detail,
-    load: (puzzle) => {
-      const next = start(puzzle);
-      if (next === null) return false;
-      stopClock();
-      game = next;
-      solution = puzzle.solution ?? null;
-      level = puzzle.level;
-      seed = puzzle.seed;
-      banked = puzzle.elapsed ?? 0;
-      selected = null;
-      pencilOn = false;
-      hints = 0;
-      checks = 0;
-      hintCell = null;
-      wrongCells = [];
-      solved = isSolved(game);
-      drawn = "";
-      setSays("tap");
-      buildPad();
-      render();
-      return true;
-    },
-    set: (changes) => {
-      const { language: nextLanguage, ...rest } = changes;
-      settings = {
-        ...settings,
-        ...Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== undefined)),
-      } as typeof settings;
-      if ("language" in changes) {
-        explicitLanguage.value = nextLanguage;
-        language = nextLanguage ?? languageOfPage();
-      }
-      drawn = "";
-      render();
-    },
-    select: (cell) => {
-      selected = cell !== null && cell >= 0 && cell < game.size * game.size ? cell : null;
-      if (hintCell !== null && hintCell !== selected) hintCell = null;
-      render();
-    },
-    enter: (value) => {
-      if (selected !== null) write(selected, value);
-    },
-    pencil: (on) => {
-      pencilOn = on ?? !pencilOn;
-      if (!solved) tapWords();
-      render();
-    },
-    undo: () => {
-      const next = undoKazu(game);
-      if (next === game || solved) return;
-      game = next;
-      changed();
-    },
-    hint: () => {
-      if (solved || settings.hints === "off") return;
-      const found = hintKazu(game.kind, game.size, game.givens, game.entries, answerKey() ?? undefined);
-      if (found === null) {
-        setSays("hintDone");
-        render();
-        return;
-      }
-      hints += 1;
-      selected = found.cell;
-      const words = hintWords(found);
-      if (settings.hints === "place") {
-        runClock();
-        game = enterNumber(game, found.cell, found.value, settings.tidy);
-        changed();
-        if (!solved) setSays("", undefined, false, words);
-        hintCell = found.cell;
-        render();
-      } else {
-        hintCell = found.cell;
-        wrongCells = [];
-        setSays("", undefined, false, words);
-        render();
-      }
-      emit("kazu-hint", { hint: found });
-    },
-    check: () => {
-      if (solved || settings.check === "off") return;
-      checks += 1;
-      const answer = decodeCells(answerKey() ?? "", game.size);
-      const wrong: number[] = [];
-      const empty = game.entries.filter((value, index) => !isPrinted(game, index) && value === 0).length;
-      if (answer !== null)
-        game.entries.forEach((value, index) => {
-          !isPrinted(game, index) && value !== 0 && value !== answer[index] ? wrong.push(index) : undefined;
-        });
-      else wrong.push(...gameConflicts(game).filter((index) => !isPrinted(game, index)));
-      wrongCells = settings.check === "show" ? wrong : [];
-      hintCell = null;
-      if (wrong.length === 0 && empty === 0) setSays("checkRight");
-      else if (wrong.length === 0) setSays("checkOnlyEmpty", { empty });
-      else if (empty === 0) setSays("checkWrongNoneEmpty", { wrong: wrong.length }, true);
-      else setSays("checkWrong", { wrong: wrong.length, empty }, true);
-      render();
-      emit("kazu-check");
-    },
-    restart: () => {
-      stopClock();
-      game = restartKazu(game);
-      banked = 0;
-      hints = 0;
-      checks = 0;
-      selected = null;
-      hintCell = null;
-      wrongCells = [];
-      solved = isSolved(game);
-      setSays("tap");
-      render();
-      emit("kazu-change");
-    },
-    destroy: () => {
-      stopClock();
-      box.removeEventListener("click", onClick);
-      box.removeEventListener("keydown", onKey);
-      box.removeEventListener("focus", onFocus);
-      document.removeEventListener("visibilitychange", onVisible);
-      watching?.disconnect();
-      host.replaceChildren();
-      host.classList.remove("kazu-play");
-      for (const name of ["solved", "pencil", "kind", "size"]) delete host.dataset[name];
-    },
-  };
-
-  /** The line a hint says, in the board's language. */
-  function hintWords(found: KazuHint): string {
-    const cell = kazuCellName(game.size, found.cell, language);
-    const value = symbolOf(found.value);
-    const lead = found.replaces ? say("hintReplaces", { cell }) : "";
-    if (found.why === "answer") return lead + say("hintAnswer", { cell, value });
-    if (found.why === "only-number") {
-      const where = kazuWhere(game.kind, language);
-      return (
-        lead +
-        (found.by === undefined
-          ? say("hintOnly", { cell, value, where })
-          : say("hintOnlyBy", {
-              cell,
-              value,
-              where,
-              by: say(found.by === "cage" ? "byCage" : found.by === "marks" ? "byMarks" : "byClues"),
-            }))
-      );
-    }
-    const group = found.group!;
-    const diagonal = group.type === "diagonal" ? say(group.index === 0 ? "groupDiagonal" : "groupDiagonalOther") : "";
-    const named =
-      group.type === "diagonal"
-        ? diagonal
-        : say(`group${group.type[0]!.toUpperCase()}${group.type.slice(1)}`, { n: group.index + 1 });
-    return lead + say("hintPlace", { group: named, value, cell });
-  }
-
+  s.stopClock = stopClock;
+  s.setSays = setSays;
+  s.buildPad = buildPad;
+  s.render = () => renderBoard(s);
+  s.write = write;
+  s.changed = changed;
+  s.tapWords = tapWords;
+  s.answerKey = answerKey;
+  s.emit = emit;
+  s.runClock = runClock;
+  s.languageOfPage = languageOfPage;
+  s.detail = detail;
+  s.elapsed = elapsed;
+  s.start = start;
+  const api = mountHandle(s);
   return api;
 }
 

@@ -10,16 +10,16 @@
       "gzip": 12731
     },
     "./play": {
-      "minified": 82710,
-      "gzip": 27348
+      "minified": 86387,
+      "gzip": 27977
     },
     "./element": {
-      "minified": 86016,
-      "gzip": 27725
+      "minified": 89815,
+      "gzip": 28451
     },
     "./element/define": {
-      "minified": 86021,
-      "gzip": 27725
+      "minified": 89820,
+      "gzip": 28452
     },
     "./shikaku": {
       "minified": 13239,

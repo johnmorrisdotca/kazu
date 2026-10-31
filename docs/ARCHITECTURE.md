@@ -235,6 +235,9 @@ src/
 ├── draw-entry.ts       the "/draw" entry
 ├── play-style.ts        the style of a playable board: its box, pad, buttons and words
 ├── mount.ts            mountKazu: draws a puzzle into an element and plays it
+├── mountRender.ts     the drawing of that board, its pad and its words
+├── mountHandle.ts     the handle a page keeps: load, enter, undo, hint and check
+├── mountSession.ts    the state those three close over
 ├── play-entry.ts       the "/play" entry
 ├── embed-day.ts        shared UTC day parsing and deterministic date seeds
 ├── element.ts          the "/element" entry: the <kazu-board> class
