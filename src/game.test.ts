@@ -16,8 +16,8 @@ import {
   undoKazu,
   valuesOf,
 } from "./game.ts";
-import { notesOf } from "./progress.ts";
 import { generateKazu } from "./generate.ts";
+import { notesOf } from "./progress.ts";
 
 const puzzle = generateKazu("number-place", 9, "easy", 3);
 const solution = decodeCells(puzzle.solution, 9)!;

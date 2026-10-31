@@ -72,9 +72,9 @@ export function isMasyuBoard(value: unknown): value is MasyuBoard {
  * ```
  */
 export function masyuNeighbors(board: MasyuBoard, cell: number): { cell: number; edge: number; direction: number }[] {
-  const x = cell % board.width,
-    y = Math.floor(cell / board.width),
-    horizontal = board.height * (board.width - 1);
+  const x = cell % board.width;
+  const y = Math.floor(cell / board.width);
+  const horizontal = board.height * (board.width - 1);
   const result = [];
   if (y > 0) result.push({ cell: cell - board.width, edge: horizontal + (y - 1) * board.width + x, direction: 0 });
   if (x < board.width - 1) result.push({ cell: cell + 1, edge: y * (board.width - 1) + x, direction: 1 });
@@ -130,9 +130,9 @@ function pearlRule(board: MasyuBoard, edges: ReadonlySet<number>, cell: number):
  */
 export function checkMasyu(board: MasyuBoard, lines: readonly number[]): MasyuCheck {
   if (!isMasyuBoard(board)) throw new RangeError("Invalid Masyu board");
-  const edgeCount = masyuEdgeCount(board),
-    edges = new Set(lines),
-    errors = new Set<number>();
+  const edgeCount = masyuEdgeCount(board);
+  const edges = new Set(lines);
+  const errors = new Set<number>();
   if (edges.size !== lines.length || lines.some((edge) => !Number.isInteger(edge) || edge < 0 || edge >= edgeCount)) {
     return { ok: false, errors: [] };
   }
@@ -144,9 +144,9 @@ export function checkMasyu(board: MasyuBoard, lines: readonly number[]): MasyuCh
       errors.add(cell);
   }
   if (edges.size) {
-    const start = degrees.findIndex((degree) => degree === 2),
-      reached = new Set([start]),
-      stack = [start];
+    const start = degrees.indexOf(2);
+    const reached = new Set([start]);
+    const stack = [start];
     while (stack.length) {
       const cell = stack.pop()!;
       for (const next of masyuNeighbors(board, cell))

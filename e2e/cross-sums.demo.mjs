@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { serve, noSidewaysScroll } from "./demo.mjs";
+import { expect, test } from "@playwright/test";
+import { noSidewaysScroll, serve } from "./demo.mjs";
 
 test("Cross Sums totals, keyboard entry, pencil, undo, hint, appearance, language and saved progress", async ({
   page,

@@ -1,6 +1,6 @@
-import type { Csp } from "./csp.ts";
-import { akariNeighbours, akariVisible } from "./akari-board.ts";
 import type { AkariBoard } from "./akari.types.ts";
+import { akariNeighbours, akariVisible } from "./akari-board.ts";
+import type { Csp } from "./csp.ts";
 
 /** An Akari board as variables: one per white square, slot 0 for no bulb and slot 1 for a bulb. */
 export type AkariModel = { csp: Csp; whites: readonly number[]; index: Int32Array };
@@ -53,8 +53,8 @@ export function akariModel(board: AkariBoard): AkariModel {
         }
       }
       for (const clue of clues) {
-        let on = 0,
-          maybe = 0;
+        let on = 0;
+        let maybe = 0;
         for (let k = 0; k < clue.near.length; k += 1) {
           const j = clue.near[k]!;
           if (alive[2 * j + 1]) {
@@ -82,8 +82,8 @@ export function akariModel(board: AkariBoard): AkariModel {
         }
       }
       for (let i = 0; i < whites.length; i += 1) {
-        let lamps = alive[2 * i + 1] ? 1 : 0,
-          only = alive[2 * i + 1] ? i : -1;
+        let lamps = alive[2 * i + 1] ? 1 : 0;
+        let only = alive[2 * i + 1] ? i : -1;
         const ray = sees[i]!;
         for (let k = 0; k < ray.length && lamps < 2; k += 1) {
           const j = ray[k]!;

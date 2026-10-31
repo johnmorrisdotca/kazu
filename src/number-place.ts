@@ -1,8 +1,8 @@
 import { encodeCells } from "./cells.ts";
-import { countSolutions, guessDepth, provedByGuessing, type Grid } from "./group-solve.ts";
+import { countSolutions, type Grid, guessDepth, provedByGuessing } from "./group-solve.ts";
 import type { KazuLevel, KazuPuzzle } from "./kinds.ts";
 import { boxedLayout, type Layout } from "./layout.ts";
-import { seededRandom, shuffled, type Random } from "./random.ts";
+import { type Random, seededRandom, shuffled } from "./random.ts";
 
 /**
  * Making a Sudoku (Number Place) puzzle, and its Diagonal variant, from a seed.

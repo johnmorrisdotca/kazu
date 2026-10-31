@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { canReach, checkCrossSums, isCrossSumsBoard, crossSumsRuns, progressCrossSums } from "./cross-sums-board.ts";
 import type { CrossSumsCell } from "./cross-sums.types.ts";
-import { generateCrossSums } from "./cross-sums-generate.ts";
+import { canReach, checkCrossSums, crossSumsRuns, isCrossSumsBoard, progressCrossSums } from "./cross-sums-board.ts";
 import {
   decodeCrossSums,
   encodeCrossSums,
@@ -10,6 +9,7 @@ import {
   newCrossSums,
   undoCrossSums,
 } from "./cross-sums-game.ts";
+import { generateCrossSums } from "./cross-sums-generate.ts";
 import { solveCrossSums } from "./cross-sums-solve.ts";
 
 const board = {
@@ -69,17 +69,17 @@ describe("Cross Sums rules", () => {
 
 describe("Cross Sums play and generation", () => {
   it("generates the same proved board for the same seed", () => {
-    const first = generateCrossSums(21),
-      second = generateCrossSums(21);
+    const first = generateCrossSums(21);
+    const second = generateCrossSums(21);
     expect(first).toEqual(second);
     expect(solveCrossSums(first)).toMatchObject({ count: 1, complete: true });
     expect(checkCrossSums(first, first.solution).ok).toBe(true);
     expect(first.solution.filter(Boolean).length).toBeGreaterThan(20);
   });
   it("keeps moves immutable and round trips public progress without an answer", () => {
-    const puzzle = generateCrossSums(5),
-      game = newCrossSums(puzzle),
-      cell = puzzle.cells.findIndex((tile) => tile.kind === "white");
+    const puzzle = generateCrossSums(5);
+    const game = newCrossSums(puzzle);
+    const cell = puzzle.cells.findIndex((tile) => tile.kind === "white");
     const next = enterCrossSums(game, cell, 3, true);
     expect(game.notes[cell]).toEqual([]);
     expect(next.notes[cell]).toEqual([3]);

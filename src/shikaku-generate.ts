@@ -1,12 +1,12 @@
+import { logicCsp, openSlots } from "./csp.ts";
+import { isKazuSeed, seededRandom } from "./random.ts";
 import { SHIKAKU_LEVELS, SHIKAKU_MOST_ATTEMPTS, SHIKAKU_MOST_SIDE } from "./shikaku.constants.ts";
+import type { ShikakuBoard, ShikakuLevel, ShikakuPuzzle } from "./shikaku.types.ts";
 import { checkShikaku } from "./shikaku-board.ts";
 import { candidateShikaku } from "./shikaku-build.ts";
 import { shikakuModel } from "./shikaku-logic.ts";
 import { solveShikaku } from "./shikaku-solve.ts";
 import { templateShikaku } from "./shikaku-template.ts";
-import { logicCsp, openSlots } from "./csp.ts";
-import { isKazuSeed, seededRandom } from "./random.ts";
-import type { ShikakuBoard, ShikakuLevel, ShikakuPuzzle } from "./shikaku.types.ts";
 
 /**
  * Seeded rectangles packed into the board, one number each, with an independently counted, unique answer. The board
@@ -37,8 +37,8 @@ export function generateShikaku(width = 7, height = width, level: ShikakuLevel =
   for (let aim = SHIKAKU_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
     const aimed = SHIKAKU_LEVELS[aim]!;
     const wanted = aimed === "extra-hard" ? 3 : 1;
-    let best: { board: ShikakuBoard; score: number } | null = null,
-      found = 0;
+    let best: { board: ShikakuBoard; score: number } | null = null;
+    let found = 0;
     for (let attempt = 0; attempt < SHIKAKU_MOST_ATTEMPTS && found < wanted; attempt += 1) {
       const built = candidateShikaku(width, height, aimed, random);
       if (!built) continue;

@@ -1,4 +1,6 @@
+import type { MasyuMount, MasyuMountOptions } from "./masyu.types.ts";
 import { checkMasyu, masyuNeighbors } from "./masyu-board.ts";
+import { drawMasyu } from "./masyu-draw.ts";
 import {
   decodeMasyu,
   encodeMasyu,
@@ -8,10 +10,8 @@ import {
   toggleMasyuEdge,
   undoMasyu,
 } from "./masyu-game.ts";
-import { drawMasyu } from "./masyu-draw.ts";
-import { MASYU_PLAY_STYLE } from "./masyu-style.ts";
 import { MASYU_STRINGS } from "./masyu-strings.ts";
-import type { MasyuMount, MasyuMountOptions } from "./masyu.types.ts";
+import { MASYU_PLAY_STYLE } from "./masyu-style.ts";
 
 /** Mount the native Masyu player in a host element and return its cleanup and control handle.
  *
@@ -32,13 +32,13 @@ import type { MasyuMount, MasyuMountOptions } from "./masyu.types.ts";
  * ```
  */
 export function mountMasyu(element: HTMLElement, initial: MasyuMountOptions): MasyuMount {
-  const document = element.ownerDocument,
-    style = document.createElement("style");
+  const document = element.ownerDocument;
+  const style = document.createElement("style");
   style.textContent = MASYU_PLAY_STYLE;
   const root = document.createElement("section");
   root.className = "kazu-masyu";
-  const help = document.createElement("p"),
-    board = document.createElement("div");
+  const help = document.createElement("p");
+  const board = document.createElement("div");
   board.className = "km-board";
   const tools = document.createElement("div");
   tools.className = "km-tools";
@@ -56,11 +56,11 @@ export function mountMasyu(element: HTMLElement, initial: MasyuMountOptions): Ma
     game.board.pearls.some((pearl, cell) => pearl !== initial.board.pearls[cell])
   )
     game = newMasyu(initial.board);
-  let selected = 0,
-    anchor: number | null = null,
-    errors: readonly number[] = [],
-    message = "",
-    dead = false;
+  let selected = 0;
+  let anchor: number | null = null;
+  let errors: readonly number[] = [];
+  let message = "";
+  let dead = false;
   const words = () => MASYU_STRINGS[options.language ?? "en"];
   const copy = () => ({
     ...game!,
@@ -111,8 +111,8 @@ export function mountMasyu(element: HTMLElement, initial: MasyuMountOptions): Ma
         render();
       };
       button.onkeydown = (event) => {
-        const x = cell % game!.board.width,
-          y = Math.floor(cell / game!.board.width);
+        const x = cell % game!.board.width;
+        const y = Math.floor(cell / game!.board.width);
         const moves: Record<string, [number, number]> = {
           ArrowUp: [0, -1],
           ArrowDown: [0, 1],
@@ -122,8 +122,8 @@ export function mountMasyu(element: HTMLElement, initial: MasyuMountOptions): Ma
         if (event.key in moves) {
           event.preventDefault();
           const [dx, dy] = moves[event.key]!;
-          const nextX = x + dx,
-            nextY = y + dy;
+          const nextX = x + dx;
+          const nextY = y + dy;
           if (nextX >= 0 && nextX < game!.board.width && nextY >= 0 && nextY < game!.board.height) {
             selected = nextY * game!.board.width + nextX;
             render();

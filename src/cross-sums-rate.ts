@@ -1,13 +1,13 @@
-import { isCrossSumsBoard, crossSumsRuns } from "./cross-sums-board.ts";
+import type { CrossSumsBoard, CrossSumsRating } from "./cross-sums.types.ts";
+import { crossSumsRuns, isCrossSumsBoard } from "./cross-sums-board.ts";
 import { crossSumsModel } from "./cross-sums-logic.ts";
 import { logicCsp, openSlots, solveCsp } from "./csp.ts";
-import type { CrossSumsBoard, CrossSumsRating } from "./cross-sums.types.ts";
 
 const COMBOS = (length: number, sum: number): number => {
   let count = 0;
   for (let mask = 1; mask < 512; mask += 1) {
-    let n = 0,
-      total = 0;
+    let n = 0;
+    let total = 0;
     for (let d = 1; d <= 9; d += 1)
       if (mask & (1 << (d - 1))) {
         n += 1;
@@ -33,8 +33,8 @@ const COMBOS = (length: number, sum: number): number => {
  */
 export function rateCrossSums(board: CrossSumsBoard): CrossSumsRating {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
-  const weak = crossSumsModel(board, 0),
-    strong = crossSumsModel(board, 1);
+  const weak = crossSumsModel(board, 0);
+  const strong = crossSumsModel(board, 1);
   const proof = solveCsp(strong.csp, openSlots(strong.csp), 2, 250_000);
   if (proof.count !== 1 || proof.exhausted) throw new RangeError("Cross Sums rating needs a board with one answer");
   const plain = logicCsp(weak.csp, openSlots(weak.csp), 0);

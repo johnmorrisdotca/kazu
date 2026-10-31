@@ -1,5 +1,5 @@
-import { isCrossSumsBoard } from "./cross-sums-board.ts";
 import type { CrossSumsBoard, CrossSumsMaterial, CrossSumsPieces } from "./cross-sums.types.ts";
+import { isCrossSumsBoard } from "./cross-sums-board.ts";
 
 /** Current CrossSums marks or entries, selection, errors and native SVG appearance choices.
  *
@@ -35,18 +35,18 @@ export type CrossSumsDrawOptions = {
  */
 export function drawCrossSums(board: CrossSumsBoard, options: CrossSumsDrawOptions = {}): string {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
-  const size = 56,
-    paper =
-      options.material === "slate" ? "#262a27" : options.material === "wood" ? "#e5cda6" : "var(--kz-paper,#fbf8f1)";
+  const size = 56;
+  const paper =
+    options.material === "slate" ? "#262a27" : options.material === "wood" ? "#e5cda6" : "var(--kz-paper,#fbf8f1)";
   const ink =
     options.material === "slate" ? "#ece8dc" : options.material === "wood" ? "#493e2f" : "var(--kz-ink,#1f2320)";
   const grid = options.material === "slate" ? "#454a44" : "var(--kz-grid,#cfc6b2)";
   const cells = board.cells
     .map((tile, cell) => {
-      const x = (cell % board.width) * size,
-        y = Math.floor(cell / board.width) * size;
-      const white = tile.kind === "white",
-        value = options.values?.[cell] ?? 0;
+      const x = (cell % board.width) * size;
+      const y = Math.floor(cell / board.width) * size;
+      const white = tile.kind === "white";
+      const value = options.values?.[cell] ?? 0;
       const mark = options.errors?.includes(cell) ? "var(--kz-bad,#b5452c)" : ink;
       const bg = white ? (options.selected === cell ? "var(--kz-selected,#e9dfca)" : paper) : "#333630";
       const clue = white

@@ -1,8 +1,8 @@
 import { encodeHitori, generateHitori } from "./dist/hitori-entry.js";
 import { mountHitori } from "./dist/hitori-play-entry.js";
 
-let player,
-  language = "en";
+let player;
+let language = "en";
 const labels = {
   en: {
     title: "Hitori",
@@ -34,10 +34,10 @@ const translate = () => {
 
 const mount = () => {
   try {
-    const seed = Number(get("seed").value),
-      size = Number(get("size").value),
-      level = get("level").value,
-      key = "kazu-hitori-progress";
+    const seed = Number(get("seed").value);
+    const size = Number(get("size").value);
+    const level = get("level").value;
+    const key = "kazu-hitori-progress";
     const puzzle = generateHitori(size, seed, level);
     player?.destroy();
     const saved = JSON.parse(localStorage.getItem(key) || "null");
@@ -92,4 +92,5 @@ get("new").onclick = mount;
 mount();
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

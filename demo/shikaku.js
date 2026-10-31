@@ -1,21 +1,22 @@
 import {
-  newShikaku,
-  encodeShikaku,
   decodeShikaku,
-  shikakuFinished,
-  SHIKAKU_CHALLENGE_PACKS,
+  encodeShikaku,
   generateShikakuChallenge,
+  newShikaku,
+  SHIKAKU_CHALLENGE_PACKS,
+  shikakuFinished,
 } from "./dist/shikaku-entry.js";
 import { mountShikaku } from "./dist/shikaku-play-entry.js";
-const get = (id) => document.getElementById(id),
-  params = new URLSearchParams(location.search);
-let activeSettings,
-  activeChallenge = null,
-  handle,
-  worker,
-  started = Date.now(),
-  stopped = null,
-  language = params.get("lang") === "ja" ? "ja" : "en";
+
+const get = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let activeSettings;
+let activeChallenge = null;
+let handle;
+let worker;
+let started = Date.now();
+let stopped = null;
+let language = params.get("lang") === "ja" ? "ja" : "en";
 const words = {
   en: [
     "A place for every number.",
@@ -92,9 +93,11 @@ function translate() {
     const element = get(id);
     if (element) element.textContent = words[language][i];
   });
-  ["level", "material", "pieces"].forEach((id, group) =>
-    [...get(id).options].forEach((o, i) => (o.textContent = words[language][15 + [0, 4, 7][group] + i])),
-  );
+  ["level", "material", "pieces"].forEach((id, group) => {
+    [...get(id).options].forEach((o, i) => {
+      o.textContent = words[language][15 + [0, 4, 7][group] + i];
+    });
+  });
   get("pack-label").textContent = language === "ja" ? "チャレンジパック" : "Challenge pack";
   get("challenge-label").textContent = language === "ja" ? "問題" : "Challenge";
   get("play-challenge").textContent = language === "ja" ? "チャレンジを始める" : "Play challenge";
@@ -102,9 +105,9 @@ function translate() {
   handle?.set({ language });
 }
 function fillChallenges() {
-  const pack = get("pack").value,
-    challenge = get("challenge"),
-    entries = pack ? SHIKAKU_CHALLENGE_PACKS[pack].challenges : [];
+  const pack = get("pack").value;
+  const challenge = get("challenge");
+  const entries = pack ? SHIKAKU_CHALLENGE_PACKS[pack].challenges : [];
   challenge.replaceChildren(
     ...entries.map((entry, i) => {
       const option = document.createElement("option");
@@ -117,14 +120,14 @@ function fillChallenges() {
   get("play-challenge").disabled = !pack;
 }
 function playChallenge() {
-  const pack = get("pack").value,
-    index = Number(get("challenge").value);
+  const pack = get("pack").value;
+  const index = Number(get("challenge").value);
   if (!pack) return;
   worker?.terminate();
   worker = null;
   get("new").disabled = false;
-  const challenge = generateShikakuChallenge(pack, index),
-    puzzle = challenge.puzzle;
+  const challenge = generateShikakuChallenge(pack, index);
+  const puzzle = challenge.puzzle;
   activeChallenge = { pack: challenge.pack, challenge: String(index) };
   for (const id of ["width", "height", "level", "seed"]) get(id).value = String(challenge[id]);
   get("size").value =
@@ -313,4 +316,5 @@ if (params.has("pack") && ["square", "wide", "tall"].includes(params.get("pack")
 } else make();
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

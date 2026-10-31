@@ -1,5 +1,5 @@
-import { isShikakuBoard, shikakuCells } from "./shikaku-board.ts";
 import type { ShikakuBoard } from "./shikaku.types.ts";
+import { isShikakuBoard, shikakuCells } from "./shikaku-board.ts";
 import type { ShikakuDrawOptions } from "./shikaku-play.types.ts";
 import { shikakuWords } from "./shikaku-strings.ts";
 
@@ -19,8 +19,8 @@ import { shikakuWords } from "./shikaku-strings.ts";
  */
 export function drawShikaku(board: ShikakuBoard, options: ShikakuDrawOptions = {}): string {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
-  const words = shikakuWords(options.language),
-    size = 48;
+  const words = shikakuWords(options.language);
+  const size = 48;
   const palettes = {
     ivory: ["var(--kz-paper,#fbf8f1)", "var(--kz-ink,#1f2320)", "var(--kz-grid,#cfc6b2)"],
     wood: ["#e5cda6", "#493e2f", "#bca582"],
@@ -37,8 +37,8 @@ export function drawShikaku(board: ShikakuBoard, options: ShikakuDrawOptions = {
   }
   const cells = board.clues
     .map((n, c) => {
-      const x = (c % board.width) * size,
-        y = Math.floor(c / board.width) * size;
+      const x = (c % board.width) * size;
+      const y = Math.floor(c / board.width) * size;
       const active = c === options.selected || c === options.anchor;
       return `<g data-shikaku-cell="${c}"><rect x="${x}" y="${y}" width="48" height="48" fill="${active ? ink : "transparent"}" fill-opacity="${active ? ".15" : "1"}" stroke="${grid}" stroke-width="1"/>${n ? `${options.pieces === "tiles" ? `<rect x="${x + 10}" y="${y + 10}" width="28" height="28" rx="6" fill="${paper}" stroke="${grid}"/>` : ""}<text x="${x + 24}" y="${y + 25}" dominant-baseline="middle" text-anchor="middle" fill="${ink}" font-size="21" font-weight="700" font-family="system-ui,sans-serif">${n}</text>` : ""}</g>`;
     })

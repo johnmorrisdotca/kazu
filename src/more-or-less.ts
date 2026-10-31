@@ -1,8 +1,8 @@
 import { encodeCells } from "./cells.ts";
 import type { KazuLevel, KazuPuzzle } from "./kinds.ts";
 import { encodeMoreOrLess, type Mark } from "./more-or-less-code.ts";
-import { countSolutions, guessDepth, type Grid } from "./more-or-less-solve.ts";
-import { seededRandom, shuffled, type Random } from "./random.ts";
+import { countSolutions, type Grid, guessDepth } from "./more-or-less-solve.ts";
+import { type Random, seededRandom, shuffled } from "./random.ts";
 
 /**
  * Making a Futoshiki (More or Less) puzzle from a seed.

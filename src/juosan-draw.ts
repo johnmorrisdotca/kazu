@@ -1,5 +1,5 @@
-import { isJuosanBoard } from "./juosan-board.ts";
 import type { JuosanBoard } from "./juosan.types.ts";
+import { isJuosanBoard } from "./juosan-board.ts";
 import type { JuosanDrawOptions } from "./juosan-play.types.ts";
 import { juosanWords } from "./juosan-strings.ts";
 

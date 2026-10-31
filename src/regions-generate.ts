@@ -1,17 +1,17 @@
+import { countCsp, decide, logicCsp, openSlots } from "./csp.ts";
+import type { Random } from "./random.ts";
+import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
 import {
   REGIONS_LEAST_GENERATED_SIDE,
   REGIONS_LEVELS,
   REGIONS_MOST_ATTEMPTS,
   REGIONS_MOST_SIDE,
 } from "./regions.constants.ts";
+import type { RegionsBoard, RegionsLevel, RegionsPuzzle } from "./regions.types.ts";
 import { checkRegions } from "./regions-board.ts";
 import { partitionRegions } from "./regions-build.ts";
 import { regionsModel, regionsMostValue } from "./regions-logic.ts";
 import { solveRegions } from "./regions-solve.ts";
-import { countCsp, decide, logicCsp, openSlots } from "./csp.ts";
-import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
-import type { RegionsBoard, RegionsLevel, RegionsPuzzle } from "./regions.types.ts";
-import type { Random } from "./random.ts";
 
 /**
  * Makes a seeded puzzle and proves its answer is the only one. The board is cut into connected regions, each holding
@@ -120,8 +120,8 @@ function thin(
   if (level === "easy" || level === "medium") return { width, height, givens };
   // Then, beyond the rules: hard takes the first given that leaves a board solved by supposing, extra-hard keeps going while the answer stays single.
   let taken = 0;
-  const from = calls,
-    budget = width * height * 60;
+  const from = calls;
+  const budget = width * height * 60;
   for (const cell of order) {
     if (!givens[cell] || calls - from > budget) continue;
     const was = givens[cell]!;

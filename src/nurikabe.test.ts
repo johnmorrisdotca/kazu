@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { checkNurikabe, isNurikabeBoard } from "./nurikabe-board.ts";
-import { solveNurikabe } from "./nurikabe-solve.ts";
-import { generateNurikabe } from "./nurikabe-generate.ts";
+import { drawNurikabe } from "./nurikabe-draw.ts";
 import {
   decodeNurikabe,
   encodeNurikabe,
@@ -10,12 +9,13 @@ import {
   newNurikabe,
   undoNurikabe,
 } from "./nurikabe-game.ts";
-import { drawNurikabe } from "./nurikabe-draw.ts";
+import { generateNurikabe } from "./nurikabe-generate.ts";
+import { solveNurikabe } from "./nurikabe-solve.ts";
 
 describe("Nurikabe island and sea rules", () => {
   it("checks numbered island areas, connected sea, and the 2×2 sea ban", () => {
-    const puzzle = generateNurikabe(2),
-      sea = [...puzzle.solution];
+    const puzzle = generateNurikabe(2);
+    const sea = [...puzzle.solution];
     expect(checkNurikabe(puzzle, sea).ok).toBe(true);
     const split = Array(25).fill(false);
     split[sea.findIndex(Boolean)] = true;
@@ -46,9 +46,9 @@ describe("Nurikabe island and sea rules", () => {
     expect(seen.size).toBeGreaterThan(10);
   });
   it("keeps saved game data public and immutable", () => {
-    const puzzle = generateNurikabe(2),
-      game = newNurikabe(puzzle),
-      next = markNurikabeSea(game, 1);
+    const puzzle = generateNurikabe(2);
+    const game = newNurikabe(puzzle);
+    const next = markNurikabeSea(game, 1);
     expect(game.sea[1]).toBe(false);
     expect(next.sea[1]).toBe(true);
     expect(undoNurikabe(next).sea[1]).toBe(false);
@@ -58,8 +58,8 @@ describe("Nurikabe island and sea rules", () => {
     expect(hintNurikabe(game)).not.toBeNull();
   });
   it("draws clues and player's sea marks", () => {
-    const puzzle = generateNurikabe(3),
-      svg = drawNurikabe(puzzle, { sea: puzzle.solution, pieces: "tiles", language: "ja" });
+    const puzzle = generateNurikabe(3);
+    const svg = drawNurikabe(puzzle, { sea: puzzle.solution, pieces: "tiles", language: "ja" });
     expect(svg).toContain("Nurikabe");
     expect(svg).not.toContain("solution");
   });

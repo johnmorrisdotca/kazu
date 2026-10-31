@@ -1,19 +1,19 @@
 import { checkHeyawake, isHeyawakeBoard } from "./heyawake-board.ts";
+import { drawHeyawake } from "./heyawake-draw.ts";
 import {
   decodeHeyawake,
   encodeHeyawake,
+  heyawakeFinished,
   hintHeyawake,
   newHeyawake,
   restartHeyawake,
   setHeyawakeCell,
   undoHeyawake,
-  heyawakeFinished,
 } from "./heyawake-game.ts";
-import { drawHeyawake } from "./heyawake-draw.ts";
-import { KAZU_STYLE } from "./style.ts";
-import { HEYAWAKE_PLAY_STYLE } from "./heyawake-style.ts";
-import { heyawakeWords } from "./heyawake-strings.ts";
 import type { HeyawakeDrawOptions, HeyawakeMount, HeyawakeMountOptions } from "./heyawake-play.types.ts";
+import { heyawakeWords } from "./heyawake-strings.ts";
+import { HEYAWAKE_PLAY_STYLE } from "./heyawake-style.ts";
+import { KAZU_STYLE } from "./style.ts";
 
 /** Mount the native Heyawake player in a host element and return its cleanup and control handle.
  *
@@ -36,21 +36,21 @@ import type { HeyawakeDrawOptions, HeyawakeMount, HeyawakeMountOptions } from ".
 export function mountHeyawake(host: HTMLElement, initial: HeyawakeMountOptions): HeyawakeMount {
   if (!isHeyawakeBoard(initial.board)) throw new RangeError("Invalid Heyawake board");
   const doc = host.ownerDocument;
-  let options = { ...initial },
-    game = initial.progress ? decodeHeyawake(initial.progress) : null;
+  let options = { ...initial };
+  let game = initial.progress ? decodeHeyawake(initial.progress) : null;
   if (!game || JSON.stringify(game.board) !== JSON.stringify(initial.board)) game = newHeyawake(initial.board);
-  let selected = 0,
-    errors: readonly number[] = [],
-    message = "",
-    dead = false,
-    finished = heyawakeFinished(game);
-  const root = doc.createElement("div"),
-    style = doc.createElement("style"),
-    board = doc.createElement("div"),
-    grid = doc.createElement("div"),
-    status = doc.createElement("p"),
-    tools = doc.createElement("div"),
-    help = doc.createElement("p");
+  let selected = 0;
+  let errors: readonly number[] = [];
+  let message = "";
+  let dead = false;
+  let finished = heyawakeFinished(game);
+  const root = doc.createElement("div");
+  const style = doc.createElement("style");
+  const board = doc.createElement("div");
+  const grid = doc.createElement("div");
+  const status = doc.createElement("p");
+  const tools = doc.createElement("div");
+  const help = doc.createElement("p");
   root.className = "kh-root";
   style.textContent = KAZU_STYLE.replace(/\.kazu/g, ".kh-palette") + HEYAWAKE_PLAY_STYLE;
   board.className = "kh-board";
@@ -107,9 +107,9 @@ export function mountHeyawake(host: HTMLElement, initial: HeyawakeMountOptions):
   };
   const render = () => {
     if (dead) return;
-    const w = words(),
-      b = game!.board,
-      focused = grid.contains(doc.activeElement);
+    const w = words();
+    const b = game!.board;
+    const focused = grid.contains(doc.activeElement);
     board.classList.toggle("kh-palette", (options.material ?? "ivory") === "ivory");
     board.innerHTML = drawHeyawake(b, { ...options, entries: game!.entries, selected, errors });
     grid.replaceChildren();

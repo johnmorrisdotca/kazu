@@ -1,5 +1,5 @@
-import { akariVisible, isAkariBoard } from "./akari-board.ts";
 import type { AkariBoard } from "./akari.types.ts";
+import { akariVisible, isAkariBoard } from "./akari-board.ts";
 import type { AkariDrawOptions } from "./akari-play.types.ts";
 import { akariWords } from "./akari-strings.ts";
 
@@ -30,7 +30,11 @@ export function drawAkari(board: AkariBoard, options: AkariDrawOptions = {}): st
   const [paper, ink, grid, black] = palettes[options.material ?? "ivory"];
   const bulbs = new Set(options.bulbs ?? []);
   const lit = new Set<number>();
-  bulbs.forEach((cell) => akariVisible(board, cell).forEach((illuminated) => lit.add(illuminated)));
+  bulbs.forEach((cell) => {
+    akariVisible(board, cell).forEach((illuminated) => {
+      lit.add(illuminated);
+    });
+  });
 
   const cells = board.cells
     .map((clue, cell) => {

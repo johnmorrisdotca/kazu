@@ -1,11 +1,10 @@
 import { describe, expect, it } from "vitest";
-
-import { checkKazu, isKazuGivens } from "./check.ts";
 import { decodeCells, encodeCells } from "./cells.ts";
+import { checkKazu, isKazuGivens } from "./check.ts";
 import { generateKazu } from "./generate.ts";
+import { readGivens } from "./givens.ts";
 import { encodeJigsaw } from "./jigsaw.ts";
 import { KAZU_KINDS, KAZU_SPECS, type KazuKind } from "./kinds.ts";
-import { readGivens } from "./givens.ts";
 
 /** The answer with the cells at two places swapped. */
 function swapped(answer: string, a: number, b: number): string {

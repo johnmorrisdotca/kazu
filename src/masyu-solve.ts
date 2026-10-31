@@ -1,6 +1,6 @@
 import { MASYU_NODE_BUDGET } from "./masyu.constants.ts";
-import { checkMasyu, isMasyuBoard, masyuEdgeCount, masyuNeighbors } from "./masyu-board.ts";
 import type { MasyuBoard, MasyuSolve } from "./masyu.types.ts";
+import { checkMasyu, isMasyuBoard, masyuEdgeCount, masyuNeighbors } from "./masyu-board.ts";
 
 /** Counts distinct single loops with local pearl rules; budget stops never claim a proof.
  *
@@ -18,8 +18,8 @@ import type { MasyuBoard, MasyuSolve } from "./masyu.types.ts";
  */
 export function solveMasyu(board: MasyuBoard, options: { limit?: number; nodes?: number } = {}): MasyuSolve {
   if (!isMasyuBoard(board)) throw new RangeError("Invalid Masyu board");
-  const limit = options.limit ?? 2,
-    budget = options.nodes ?? MASYU_NODE_BUDGET;
+  const limit = options.limit ?? 2;
+  const budget = options.nodes ?? MASYU_NODE_BUDGET;
   if (!Number.isInteger(limit) || limit < 1 || !Number.isInteger(budget) || budget < 1)
     throw new RangeError("Invalid search bounds");
   const edgeState = Array(masyuEdgeCount(board)).fill(-1) as number[];
@@ -37,10 +37,10 @@ export function solveMasyu(board: MasyuBoard, options: { limit?: number; nodes?:
     }
     return choices;
   });
-  let count = 0,
-    nodes = 0,
-    complete = true,
-    answer: number[] | null = null;
+  let count = 0;
+  let nodes = 0;
+  let complete = true;
+  let answer: number[] | null = null;
   const assigned = Array(board.pearls.length).fill(false) as boolean[];
   const visit = (depth: number) => {
     if (++nodes > budget) {
@@ -55,8 +55,8 @@ export function solveMasyu(board: MasyuBoard, options: { limit?: number; nodes?:
       if (count >= limit) complete = false;
       return;
     }
-    let chosen = -1,
-      available: number[] | null = null;
+    let chosen = -1;
+    let available: number[] | null = null;
     for (let cell = 0; cell < board.pearls.length; cell += 1) {
       if (assigned[cell]) continue;
       const neighbors = masyuNeighbors(board, cell);

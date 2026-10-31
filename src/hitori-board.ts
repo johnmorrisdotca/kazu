@@ -41,9 +41,9 @@ export function isHitoriBoard(board: HitoriBoard): boolean {
  * ```
  */
 export function hitoriNeighbors(size: number, cell: number): number[] {
-  const x = cell % size,
-    y = Math.floor(cell / size),
-    neighbors: number[] = [];
+  const x = cell % size;
+  const y = Math.floor(cell / size);
+  const neighbors: number[] = [];
   if (x > 0) neighbors.push(cell - 1);
   if (x < size - 1) neighbors.push(cell + 1);
   if (y > 0) neighbors.push(cell - size);
@@ -71,8 +71,8 @@ export function checkHitori(
   shaded: readonly boolean[],
 ): { ok: boolean; errors: readonly number[] } {
   if (!isHitoriBoard(board)) return { ok: false, errors: [] };
-  const size = board.size,
-    total = size * size;
+  const size = board.size;
+  const total = size * size;
   if (shaded.length !== total || !shaded.every((value) => typeof value === "boolean")) return { ok: false, errors: [] };
   const errors = new Set<number>();
   for (let y = 0; y < size; y += 1)
@@ -103,8 +103,8 @@ export function checkHitori(
         }
     }
 
-  const white = shaded.map((isShaded, cell) => (isShaded ? -1 : cell)).filter((cell) => cell >= 0),
-    reached = new Set<number>();
+  const white = shaded.map((isShaded, cell) => (isShaded ? -1 : cell)).filter((cell) => cell >= 0);
+  const reached = new Set<number>();
   if (white.length) {
     const stack = [white[0]!];
     reached.add(white[0]!);

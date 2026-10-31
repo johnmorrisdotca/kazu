@@ -1,6 +1,6 @@
+import type { YajilinBoard, YajilinGame } from "./yajilin.types.ts";
 import { isYajilinBoard, yajilinEdgeCount } from "./yajilin-board.ts";
 import { solveYajilin } from "./yajilin-solve.ts";
-import type { YajilinBoard, YajilinGame } from "./yajilin.types.ts";
 
 /** Create the initial immutable Yajilin game from a valid board.
  *

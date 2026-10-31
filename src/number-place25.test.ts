@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from "vitest";
 import { decodeCells } from "./cells.ts";
 import { checkKazu } from "./check.ts";
 import { generateKazu } from "./generate.ts";
-import { boxOf, KAZU_BOXES } from "./layout.ts";
 import { KAZU_LEVELS, KAZU_SPECS } from "./kinds.ts";
+import { boxOf, KAZU_BOXES } from "./layout.ts";
 import { countKazuSolutions, kazuGuessDepth, solveKazu } from "./solve.ts";
 
 vi.setConfig({ testTimeout: 120_000 });
@@ -37,7 +37,9 @@ describe("the 25×25 Sudoku", () => {
         expect(puzzle.solution).toMatch(/P/);
         expect(puzzle.solution).not.toContain(".");
         // Every printed number is the solution's.
-        [...puzzle.givens].forEach((c, at) => c === "." || expect(c).toBe(puzzle.solution[at]));
+        [...puzzle.givens].forEach((c, at) => {
+          c === "." || expect(c).toBe(puzzle.solution[at]);
+        });
         expect(kazuGuessDepth("number-place", 25, puzzle.givens)!).toBeLessThanOrEqual(
           { easy: 0, medium: 1, hard: 2 }[level],
         );

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { checkLoop, progressLoop } from "./loop-board.ts";
-import { solveLoop } from "./loop-solve.ts";
-import { generateLoop } from "./loop-generate.ts";
-import { decodeLoop, encodeLoop, hintLoop, newLoop, toggleLoop, undoLoop } from "./loop-game.ts";
 import { drawLoop } from "./loop-draw.ts";
+import { decodeLoop, encodeLoop, hintLoop, newLoop, toggleLoop, undoLoop } from "./loop-game.ts";
+import { generateLoop } from "./loop-generate.ts";
+import { solveLoop } from "./loop-solve.ts";
 
 describe("Loop loop rules", () => {
   it("checks loop closure, connectedness, vertex degree and numbered cell edges", () => {

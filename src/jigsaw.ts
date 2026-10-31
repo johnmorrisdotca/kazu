@@ -3,7 +3,7 @@ import { fillLayout } from "./group-solve.ts";
 import type { KazuLevel, KazuPuzzle } from "./kinds.ts";
 import { KAZU_BOXES, neighbours, regionLayout, regionsAreSound } from "./layout.ts";
 import { carve } from "./number-place.ts";
-import { seededRandom, type Random } from "./random.ts";
+import { type Random, seededRandom } from "./random.ts";
 
 /**
  * Making a Jigsaw Sudoku from a seed: Sudoku with the boxes traded for irregular regions of the

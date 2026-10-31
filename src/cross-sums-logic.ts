@@ -1,13 +1,13 @@
-import type { Csp } from "./csp.ts";
-import { crossSumsRuns } from "./cross-sums-board.ts";
 import type { CrossSumsBoard } from "./cross-sums.types.ts";
+import { crossSumsRuns } from "./cross-sums-board.ts";
+import type { Csp } from "./csp.ts";
 
 /** Every way to choose `length` different digits that add to `sum`, as 9-bit masks (bit d - 1 for digit d), by length then sum. */
 const COMBINATIONS: number[][][] = (() => {
   const table: number[][][] = Array.from({ length: 10 }, () => Array.from({ length: 46 }, () => [] as number[]));
   for (let mask = 1; mask < 512; mask += 1) {
-    let length = 0,
-      sum = 0;
+    let length = 0;
+    let sum = 0;
     for (let d = 1; d <= 9; d += 1)
       if (mask & (1 << (d - 1))) {
         length += 1;
@@ -40,14 +40,18 @@ export function crossSumsModel(
     combos: COMBINATIONS[run.cells.length]![run.sum]!,
   }));
   const runsOf = whites.map(() => [] as number[]);
-  runs.forEach((run, r) => run.cells.forEach((cell) => runsOf[cell]!.push(r)));
+  runs.forEach((run, r) => {
+    run.cells.forEach((cell) => {
+      runsOf[cell]!.push(r);
+    });
+  });
   const starts = Int32Array.from({ length: whites.length + 1 }, (_, i) => i * 9);
-  const domain = new Int16Array(whites.length),
-    loaded = new Int32Array(whites.length),
-    touched = new Int32Array(whites.length),
-    changedCells = new Int32Array(whites.length);
-  const queue = new Int32Array(runs.length * 4 + 4),
-    queued = new Uint8Array(runs.length);
+  const domain = new Int16Array(whites.length);
+  const loaded = new Int32Array(whites.length);
+  const touched = new Int32Array(whites.length);
+  const changedCells = new Int32Array(whites.length);
+  const queue = new Int32Array(runs.length * 4 + 4);
+  const queued = new Uint8Array(runs.length);
   let stamp = 0;
 
   const propagate = (alive: Uint8Array, decided?: number): boolean => {
@@ -63,8 +67,8 @@ export function crossSumsModel(
       }
       return domain[i]!;
     };
-    let head = 0,
-      tail = 0;
+    let head = 0;
+    let tail = 0;
     const push = (r: number) => {
       if (!queued[r]) {
         queued[r] = 1;
@@ -74,12 +78,12 @@ export function crossSumsModel(
     if (decided === undefined) for (let r = 0; r < runs.length; r += 1) push(r);
     else for (const r of runsOf[decided]!) push(r);
     while (head < tail) {
-      const r = queue[head++ % queue.length]!,
-        run = runs[r]!,
-        cells = run.cells;
+      const r = queue[head++ % queue.length]!;
+      const run = runs[r]!;
+      const cells = run.cells;
       queued[r] = 0;
-      let known = 0,
-        union = 0;
+      let known = 0;
+      let union = 0;
       for (let k = 0; k < cells.length; k += 1) {
         const mask = read(cells[k]!);
         if (!mask) return fail();
@@ -89,9 +93,9 @@ export function crossSumsModel(
           known |= mask;
         }
       }
-      let usable = 0,
-        always = 511,
-        viable = 0;
+      let usable = 0;
+      let always = 511;
+      let viable = 0;
       for (let c = 0; c < run.combos.length; c += 1) {
         const combo = run.combos[c]!;
         if (combo & ~union || known & ~combo) continue;
@@ -104,8 +108,8 @@ export function crossSumsModel(
       }
       if (!viable) return fail();
       for (let k = 0; k < cells.length; k += 1) {
-        const cell = cells[k]!,
-          was = domain[cell]!;
+        const cell = cells[k]!;
+        const was = domain[cell]!;
         let mask = was & usable;
         // Squares not yet decided cannot take the digits the decided ones of the run hold.
         if (was & (was - 1)) mask &= ~known;
@@ -145,9 +149,9 @@ export function crossSumsModel(
   // A search that picks at random among the squares with fewest digits left can be restarted when it gets lost.
   const choose = random
     ? (alive: Uint8Array): number => {
-        let best = 10,
-          count = 0,
-          pick = -1;
+        let best = 10;
+        let count = 0;
+        let pick = -1;
         for (let i = 0; i < whites.length; i += 1) {
           let left = 0;
           for (let d = 0; d < 9; d += 1) left += alive[9 * i + d]!;

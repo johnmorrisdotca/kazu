@@ -1,7 +1,7 @@
+import type { AkariBoard, AkariRating } from "./akari.types.ts";
 import { isAkariBoard } from "./akari-board.ts";
 import { akariModel } from "./akari-logic.ts";
 import { logicCsp, openSlots, solveCsp } from "./csp.ts";
-import type { AkariBoard, AkariRating } from "./akari.types.ts";
 
 /**
  * Rates a board by solving it as a person would: with the rules alone (depth 0), then with one supposition at
@@ -31,8 +31,8 @@ export function rateAkari(board: AkariBoard): AkariRating {
     .map((cell, at) => (cell === false || typeof cell === "number" ? at : -1))
     .filter((at) => at >= 0);
   const touching = lit.filter((at) => {
-    const x = at % board.width,
-      y = Math.floor(at / board.width);
+    const x = at % board.width;
+    const y = Math.floor(at / board.width);
     return [
       [x + 1, y],
       [x - 1, y],

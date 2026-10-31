@@ -2,16 +2,17 @@
 // `mountKazu` (the drawing, the number pad, pencil marks, Undo, Hint, Check, the clock), with every option the package has
 // on a settings panel, kept on this device between visits, and spoken in the language the header's chooser picks.
 // The page itself only chooses a puzzle and hands the settings on.
+
+import { KAZU_NAMES, KAZU_SIZE_NAMES } from "./dist/draw-entry.js";
 import {
+  freshKazuSeed,
   generateKazu,
+  isKazuLevel,
+  isKazuSeed,
   KAZU_KINDS,
   KAZU_LEVELS,
   KAZU_SPECS,
-  freshKazuSeed,
-  isKazuLevel,
-  isKazuSeed,
 } from "./dist/index.js";
-import { KAZU_NAMES, KAZU_SIZE_NAMES } from "./dist/draw-entry.js";
 import { mountKazu } from "./dist/play-entry.js";
 
 // The page's own words, in the two languages it speaks. Set as text, never as HTML.
@@ -335,4 +336,5 @@ render();
 host.dataset.ready = "true";
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

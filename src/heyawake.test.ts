@@ -61,8 +61,8 @@ describe("Heyawake rules", () => {
 describe("Heyawake immutable play state", () => {
   it("allows marks in numbered rooms, undoes them, and saves no generated answer", () => {
     const board = { width: 2, height: 2, rooms: [{ x: 0, y: 0, width: 2, height: 2, blacks: 1 }] };
-    const initial = newHeyawake(board),
-      next = setHeyawakeCell(initial, 0, true);
+    const initial = newHeyawake(board);
+    const next = setHeyawakeCell(initial, 0, true);
     expect(next.entries[0]).toBe(true);
     expect(undoHeyawake(next).entries).toEqual(initial.entries);
     const code = encodeHeyawake({
@@ -80,8 +80,8 @@ describe("Heyawake immutable play state", () => {
 
 describe("seeded original Heyawake generation", () => {
   it("reproduces a puzzle whose answer is independently checked and uniquely counted", () => {
-    const first = generateHeyawake(5, 4, "easy", 17),
-      again = generateHeyawake(5, 4, "easy", 17);
+    const first = generateHeyawake(5, 4, "easy", 17);
+    const again = generateHeyawake(5, 4, "easy", 17);
     expect(first).toEqual(again);
     expect(checkHeyawake(first, first.solution)).toMatchObject({ ok: true, complete: true });
     expect(solveHeyawake(first)).toMatchObject({ count: 1, complete: true });

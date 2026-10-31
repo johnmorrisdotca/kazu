@@ -1,8 +1,8 @@
 import { LOOP_MOST_SIDE } from "./loop.constants.ts";
+import type { LoopBoard, LoopPuzzle } from "./loop.types.ts";
 import { checkLoop, isLoopBoard, loopCellEdges } from "./loop-board.ts";
 import { solveLoop } from "./loop-solve.ts";
 import { isKazuSeed, seededRandom } from "./random.ts";
-import type { LoopBoard, LoopPuzzle } from "./loop.types.ts";
 
 /** The first generator, kept as the fallback that cannot fail: a proved puzzle from a seeded rectangle or L-shaped tile-region loop. */
 export function templateLoop(width = 5, height = width, seed = 1): Omit<LoopPuzzle, "level"> {

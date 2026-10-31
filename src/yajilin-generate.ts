@@ -1,7 +1,7 @@
 import { isKazuSeed, seededRandom } from "./random.ts";
+import type { YajilinBoard, YajilinDirection, YajilinPuzzle } from "./yajilin.types.ts";
 import { checkYajilin, isYajilinBoard, yajilinNeighbors } from "./yajilin-board.ts";
 import { solveYajilin } from "./yajilin-solve.ts";
-import type { YajilinBoard, YajilinDirection, YajilinPuzzle } from "./yajilin.types.ts";
 
 type Layout = {
   loop: readonly number[];
@@ -185,8 +185,8 @@ const layouts: readonly Layout[] = [
 ];
 
 function transformCell(cell: number, turns: number, reflect: boolean): number {
-  let x = cell % 5,
-    y = Math.floor(cell / 5);
+  let x = cell % 5;
+  let y = Math.floor(cell / 5);
   if (reflect) x = 4 - x;
   for (let turn = 0; turn < turns; turn += 1) [x, y] = [4 - y, x];
   return y * 5 + x;
@@ -227,10 +227,10 @@ function edgesFromLoop(board: YajilinBoard, loop: readonly number[]): number[] {
  */
 export function generateYajilin(size: 5 = 5, seed = 1): YajilinPuzzle {
   if (size !== 5 || !isKazuSeed(seed)) throw new RangeError("Invalid Yajilin settings");
-  const random = seededRandom(seed),
-    layout = layouts[Math.floor(random() * layouts.length)]!;
-  const turns = Math.floor(random() * 4),
-    reflect = random() < 0.5;
+  const random = seededRandom(seed);
+  const layout = layouts[Math.floor(random() * layouts.length)]!;
+  const turns = Math.floor(random() * 4);
+  const reflect = random() < 0.5;
   const clues: YajilinBoard["clues"][number][] = Array(25).fill(null);
   for (const [cell, direction, count] of layout.clues) {
     const transformed = transformCell(cell, turns, reflect);

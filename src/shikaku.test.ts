@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { checkShikaku, isShikakuBoard, shikakuCandidates } from "./shikaku-board.ts";
-import { solveShikaku } from "./shikaku-solve.ts";
-import { generateShikaku } from "./shikaku-generate.ts";
+import { drawShikaku } from "./shikaku-draw.ts";
 import {
   decodeShikaku,
   encodeShikaku,
@@ -11,7 +10,8 @@ import {
   removeShikaku,
   undoShikaku,
 } from "./shikaku-game.ts";
-import { drawShikaku } from "./shikaku-draw.ts";
+import { generateShikaku } from "./shikaku-generate.ts";
+import { solveShikaku } from "./shikaku-solve.ts";
 
 const board = { width: 3, height: 2, clues: [3, 0, 0, 0, 0, 3] };
 describe("Shikaku rectangle rules", () => {
@@ -29,8 +29,8 @@ describe("Shikaku rectangle rules", () => {
     });
   });
   it("checks coverage, clue area, overlap, empty rectangles and bounds independently", () => {
-    const top = { x: 0, y: 0, width: 3, height: 1 },
-      bottom = { ...top, y: 1 };
+    const top = { x: 0, y: 0, width: 3, height: 1 };
+    const bottom = { ...top, y: 1 };
     expect(checkShikaku(board, [top, bottom]).ok).toBe(true);
     expect(checkShikaku(board, [top]).ok).toBe(false);
     expect(checkShikaku(board, [top, top, bottom]).errors).toContain(1);
@@ -43,10 +43,10 @@ describe("Shikaku rectangle rules", () => {
     for (const c of shikakuCandidates(board, 0)) expect(checkShikaku(board, [c]).errors).toEqual([]);
   });
   it("leaves games untouched, replaces touching rectangles and restores undo", () => {
-    const game = newShikaku(board),
-      top = { x: 0, y: 0, width: 3, height: 1 };
-    const first = placeShikaku(game, top),
-      replacement = placeShikaku(first, { ...top, width: 1 });
+    const game = newShikaku(board);
+    const top = { x: 0, y: 0, width: 3, height: 1 };
+    const first = placeShikaku(game, top);
+    const replacement = placeShikaku(first, { ...top, width: 1 });
     expect(game.rectangles).toEqual([]);
     expect(first.rectangles).toEqual([top]);
     expect(replacement.rectangles).toHaveLength(1);
@@ -96,8 +96,8 @@ describe("Shikaku rectangle rules", () => {
 function bruteCount(clues: readonly number[], occupied = 0): number {
   if (occupied === 15) return 1;
   const first = [0, 1, 2, 3].find((c) => !(occupied & (1 << c)))!;
-  const x = first % 2,
-    y = Math.floor(first / 2);
+  const x = first % 2;
+  const y = Math.floor(first / 2);
   let total = 0;
   for (let w = 1; x + w <= 2; w += 1)
     for (let h = 1; y + h <= 2; h += 1) {

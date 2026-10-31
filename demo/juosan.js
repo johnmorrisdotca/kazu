@@ -1,10 +1,11 @@
-import { generateJuosan, newJuosan, encodeJuosan, decodeJuosan } from "./dist/juosan-entry.js";
+import { decodeJuosan, encodeJuosan, generateJuosan, newJuosan } from "./dist/juosan-entry.js";
 import { mountJuosan } from "./dist/juosan-play-entry.js";
-const get = (id) => document.getElementById(id),
-  params = new URLSearchParams(location.search);
-let language = params.get("lang") === "ja" ? "ja" : "en",
-  handle,
-  active = null;
+
+const get = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let language = params.get("lang") === "ja" ? "ja" : "en";
+let handle;
+let active = null;
 const words = {
   en: {
     intro:
@@ -86,8 +87,8 @@ function play(puzzle, progress) {
 }
 function make() {
   if (!get("setup").reportValidity()) return;
-  const [width, height] = get("size").value.split("x").map(Number),
-    seed = Number(get("seed").value);
+  const [width, height] = get("size").value.split("x").map(Number);
+  const seed = Number(get("seed").value);
   try {
     const puzzle = generateJuosan(width, height, "easy", seed);
     play(puzzle, encodeJuosan(newJuosan(puzzle)));
@@ -155,4 +156,5 @@ if (restored && ["3x2", "2x3"].includes(`${saved.width}x${saved.height}`)) {
 } else make();
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

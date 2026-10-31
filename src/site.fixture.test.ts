@@ -1,15 +1,14 @@
 import { describe, expect, it } from "vitest";
-
-import fixture from "./site.fixture.json" with { type: "json" };
-import { recordedSizes, sitePuzzles } from "./site.fixture.ts";
 import { decodeCells, encodeCells } from "./cells.ts";
 import { checkKazu } from "./check.ts";
 import { readGivens } from "./givens.ts";
-import { KAZU_KIND_OF_SITE_KIND, KAZU_LEVELS, type KazuKind } from "./kinds.ts";
-import { decodeSteps, encodeSteps } from "./progress.ts";
 import { encodeJigsaw } from "./jigsaw.ts";
-import { encodeKiller } from "./sum-cages.ts";
+import { KAZU_KIND_OF_SITE_KIND, KAZU_LEVELS, type KazuKind } from "./kinds.ts";
 import { encodeMoreOrLess } from "./more-or-less-code.ts";
+import { decodeSteps, encodeSteps } from "./progress.ts";
+import fixture from "./site.fixture.json" with { type: "json" };
+import { recordedSizes, sitePuzzles } from "./site.fixture.ts";
+import { encodeKiller } from "./sum-cages.ts";
 import { encodeTowers } from "./towers-code.ts";
 
 /**

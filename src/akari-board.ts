@@ -126,7 +126,9 @@ function evaluate(board: AkariBoard, bulbs: readonly number[], complete: boolean
   const lit = new Set<number>();
   for (const bulb of unique) {
     const ray = akariVisible(board, bulb);
-    ray.forEach((cell) => lit.add(cell));
+    ray.forEach((cell) => {
+      lit.add(cell);
+    });
     if (ray.some((cell) => cell !== bulb && unique.has(cell))) conflicts.push(bulb);
   }
 

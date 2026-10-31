@@ -127,7 +127,10 @@ export function checkRegions(board: RegionsBoard, entries: readonly number[]): R
   const regions = entryRegions(board, entries);
   for (const region of regions) {
     const number = entries[region[0]!]!;
-    if (region.length > number) region.forEach((cell) => errors.add(cell));
+    if (region.length > number)
+      region.forEach((cell) => {
+        errors.add(cell);
+      });
   }
   const componentErrors = errors.size > 0;
   const complete = filled === entries.length;

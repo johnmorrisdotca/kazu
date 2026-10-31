@@ -1,5 +1,6 @@
 import { decodeLoop, generateLoop } from "./dist/loop-entry.js";
 import { mountLoop } from "./dist/loop-play-entry.js";
+
 const get = (id) => document.getElementById(id);
 const query = new URLSearchParams(location.search);
 let language = query.get("lang") === "ja" ? "ja" : "en";
@@ -70,9 +71,9 @@ function dimensions() {
   get("height").value = String(height);
 }
 function start() {
-  const width = Number(get("width").value),
-    height = Number(get("height").value),
-    seed = Number(get("seed").value);
+  const width = Number(get("width").value);
+  const height = Number(get("height").value);
+  const seed = Number(get("seed").value);
   settings = { width, height, seed, level: get("level").value, material: get("material").value };
   try {
     const puzzle = generateLoop(width, height, seed, settings.level);
@@ -177,4 +178,5 @@ if (query.has("seed")) start();
 else start();
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

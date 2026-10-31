@@ -1,5 +1,5 @@
-import { generateRegions } from "./regions-generate.ts";
 import type { RegionsLevel } from "./regions.types.ts";
+import { generateRegions } from "./regions-generate.ts";
 
 self.onmessage = (event: MessageEvent<{ width: number; height: number; level: RegionsLevel; seed: number }>) => {
   try {

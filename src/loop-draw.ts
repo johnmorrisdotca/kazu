@@ -1,5 +1,5 @@
-import { edgeVertices, isLoopBoard } from "./loop-board.ts";
 import type { LoopBoard } from "./loop.types.ts";
+import { edgeVertices, isLoopBoard } from "./loop-board.ts";
 import type { LoopDrawOptions } from "./loop-play.types.ts";
 import { loopWords } from "./loop-strings.ts";
 

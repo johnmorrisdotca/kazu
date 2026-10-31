@@ -1,8 +1,8 @@
 import { AKARI_MOST_NODES } from "./akari.constants.ts";
+import type { AkariBoard, AkariSolve } from "./akari.types.ts";
 import { isAkariBoard } from "./akari-board.ts";
 import { akariModel } from "./akari-logic.ts";
 import { openSlots, solveCsp } from "./csp.ts";
-import type { AkariBoard, AkariSolve } from "./akari.types.ts";
 
 /** Bounded constraint search over the rules in `akariLogic.ts`; a stopped proof is always marked incomplete.
  *

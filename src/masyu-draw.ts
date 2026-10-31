@@ -1,5 +1,5 @@
-import { isMasyuBoard, masyuNeighbors } from "./masyu-board.ts";
 import type { MasyuBoard, MasyuDrawOptions } from "./masyu.types.ts";
+import { isMasyuBoard, masyuNeighbors } from "./masyu-board.ts";
 import { MASYU_STRINGS } from "./masyu-strings.ts";
 
 /** Render the Masyu board and supplied current state as native SVG text.
@@ -18,28 +18,28 @@ import { MASYU_STRINGS } from "./masyu-strings.ts";
  */
 export function drawMasyu(board: MasyuBoard, options: MasyuDrawOptions = {}): string {
   if (!isMasyuBoard(board)) throw new RangeError("Invalid Masyu board");
-  const words = MASYU_STRINGS[options.language ?? "en"],
-    step = 52,
-    pad = 14;
+  const words = MASYU_STRINGS[options.language ?? "en"];
+  const step = 52;
+  const pad = 14;
   const palette = {
     ivory: ["var(--kz-paper,#fbf8f1)", "var(--kz-ink,#1f2320)", "var(--kz-grid,#cfc6b2)"],
     wood: ["#e5cda6", "#493e2f", "#bca582"],
     slate: ["#262a27", "#ece8dc", "#454a44"],
   };
   const [paper, ink, grid] = palette[options.material ?? "ivory"];
-  const edges = new Set(options.edges ?? []),
-    parts: string[] = [];
+  const edges = new Set(options.edges ?? []);
+  const parts: string[] = [];
   for (let cell = 0; cell < board.pearls.length; cell += 1) {
-    const x = pad + (cell % board.width) * step,
-      y = pad + Math.floor(cell / board.width) * step;
+    const x = pad + (cell % board.width) * step;
+    const y = pad + Math.floor(cell / board.width) * step;
     const active = options.selected === cell;
     parts.push(
       `<rect x="${x - step / 2}" y="${y - step / 2}" width="${step}" height="${step}" fill="${active ? ink : "transparent"}" fill-opacity="${active ? ".08" : "1"}"/>`,
     );
     for (const next of masyuNeighbors(board, cell))
       if (cell < next.cell && edges.has(next.edge)) {
-        const nx = pad + (next.cell % board.width) * step,
-          ny = pad + Math.floor(next.cell / board.width) * step;
+        const nx = pad + (next.cell % board.width) * step;
+        const ny = pad + Math.floor(next.cell / board.width) * step;
         parts.push(
           `<line x1="${x}" y1="${y}" x2="${nx}" y2="${ny}" stroke="${options.errors?.includes(cell) ? "var(--kz-bad,#b5452c)" : ink}" stroke-width="5" stroke-linecap="round"/>`,
         );
@@ -48,8 +48,8 @@ export function drawMasyu(board: MasyuBoard, options: MasyuDrawOptions = {}): st
   for (let cell = 0; cell < board.pearls.length; cell += 1) {
     const pearl = board.pearls[cell];
     if (!pearl) continue;
-    const x = pad + (cell % board.width) * step,
-      y = pad + Math.floor(cell / board.width) * step;
+    const x = pad + (cell % board.width) * step;
+    const y = pad + Math.floor(cell / board.width) * step;
     const radius = options.pieces === "tiles" ? 12 : 10;
     parts.push(
       `<circle cx="${x}" cy="${y}" r="${radius}" fill="${pearl === 1 ? paper : ink}" stroke="${ink}" stroke-width="3" aria-label="${words.pearl[pearl]}"/>`,

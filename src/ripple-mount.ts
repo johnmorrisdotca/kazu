@@ -1,4 +1,4 @@
-import { KAZU_STYLE } from "./style.ts";
+import type { RippleGame } from "./ripple.types.ts";
 import { checkRipple, progressRipple, rippleRoomSizes } from "./ripple-board.ts";
 import {
   decodeRipple,
@@ -10,10 +10,10 @@ import {
   toggleRippleNote,
   undoRipple,
 } from "./ripple-game.ts";
-import { RIPPLE_PLAY_STYLE } from "./ripple-style.ts";
-import { rippleWords } from "./ripple-strings.ts";
-import type { RippleGame } from "./ripple.types.ts";
 import type { RippleDrawOptions, RippleMount, RippleMountOptions } from "./ripple-play.types.ts";
+import { rippleWords } from "./ripple-strings.ts";
+import { RIPPLE_PLAY_STYLE } from "./ripple-style.ts";
+import { KAZU_STYLE } from "./style.ts";
 
 /** Mount the native Ripple player in a host element and return its cleanup and control handle.
  *
@@ -38,12 +38,12 @@ export function mountRipple(host: HTMLElement, initial: RippleMountOptions): Rip
   let options = { ...initial };
   let game = initial.progress ? decodeRipple(initial.progress) : null;
   game ??= newRipple(initial.board);
-  let selected = game.values.findIndex((value, cell) => game!.board.clues[cell] === null);
+  let selected = game.values.findIndex((_value, cell) => game!.board.clues[cell] === null);
   if (selected < 0) selected = 0;
-  let pencil = false,
-    errors: number[] = [],
-    message = "",
-    dead = false;
+  let pencil = false;
+  let errors: number[] = [];
+  let message = "";
+  let dead = false;
   const root = doc.createElement("section");
   root.className = "rp-root";
   const style = doc.createElement("style");
@@ -101,10 +101,10 @@ export function mountRipple(host: HTMLElement, initial: RippleMountOptions): Rip
   const render = () => {
     if (dead) return;
     const focused = board.contains(doc.activeElement);
-    const w = words(),
-      current = game!.board,
-      sizes = rippleRoomSizes(current),
-      validation = progressRipple(current, game!.values);
+    const w = words();
+    const current = game!.board;
+    const sizes = rippleRoomSizes(current);
+    const validation = progressRipple(current, game!.values);
     root.dataset.material = options.material ?? "ivory";
     root.dataset.pieces = options.pieces ?? "ink";
     root.classList.toggle("rp-tiles", options.pieces === "tiles");
@@ -112,17 +112,17 @@ export function mountRipple(host: HTMLElement, initial: RippleMountOptions): Rip
     board.setAttribute("aria-label", w.title);
     board.replaceChildren();
     for (let cell = 0; cell < current.rooms.length; cell += 1) {
-      const x = cell % current.width,
-        y = Math.floor(cell / current.width),
-        room = current.rooms[cell]!;
+      const x = cell % current.width;
+      const y = Math.floor(cell / current.width);
+      const room = current.rooms[cell]!;
       const control = doc.createElement("button");
       control.type = "button";
       control.className = "rp-cell";
       if (x + 1 < current.width && current.rooms[cell + 1] !== room) control.classList.add("rp-room-right");
       if (y + 1 < current.height && current.rooms[cell + current.width] !== room)
         control.classList.add("rp-room-bottom");
-      const clue = current.clues[cell] !== null,
-        value = game!.values[cell]!;
+      const clue = current.clues[cell] !== null;
+      const value = game!.values[cell]!;
       control.dataset.cell = String(cell);
       control.dataset.clue = String(clue);
       control.dataset.error = String(errors.includes(cell));
@@ -222,22 +222,22 @@ export function mountRipple(host: HTMLElement, initial: RippleMountOptions): Rip
   function move(cell: number, direction: string) {
     const dx = direction === "ArrowLeft" ? -1 : direction === "ArrowRight" ? 1 : 0;
     const dy = direction === "ArrowUp" ? -1 : direction === "ArrowDown" ? 1 : 0;
-    const x = cell % game!.board.width,
-      y = Math.floor(cell / game!.board.width);
-    const nx = Math.min(game!.board.width - 1, Math.max(0, x + dx)),
-      ny = Math.min(game!.board.height - 1, Math.max(0, y + dy));
+    const x = cell % game!.board.width;
+    const y = Math.floor(cell / game!.board.width);
+    const nx = Math.min(game!.board.width - 1, Math.max(0, x + dx));
+    const ny = Math.min(game!.board.height - 1, Math.max(0, y + dy));
     selected = ny * game!.board.width + nx;
     render();
     board.querySelector<HTMLElement>(`[data-cell="${selected}"]`)?.focus();
   }
   function restart() {
     game = newRipple(game!.board);
-    selected = game.values.findIndex((value, cell) => game!.board.clues[cell] === null);
+    selected = game.values.findIndex((_value, cell) => game!.board.clues[cell] === null);
     changed();
   }
   function expand() {
-    const dialog = doc.createElement("dialog"),
-      close = doc.createElement("button");
+    const dialog = doc.createElement("dialog");
+    const close = doc.createElement("button");
     dialog.className = "rp-dialog";
     close.type = "button";
     close.className = "rp-tool rp-close";

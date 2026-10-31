@@ -1,9 +1,9 @@
+import type { CrossSumsBoard, CrossSumsCell, CrossSumsLevel } from "./cross-sums.types.ts";
 import { isCrossSumsBoard } from "./cross-sums-board.ts";
 import { crossSumsModel } from "./cross-sums-logic.ts";
 import { countCsp, logicCsp, openSlots } from "./csp.ts";
-import { shuffled } from "./random.ts";
-import type { CrossSumsBoard, CrossSumsCell, CrossSumsLevel } from "./cross-sums.types.ts";
 import type { Random } from "./random.ts";
+import { shuffled } from "./random.ts";
 
 /** How the black squares are scattered, and the longest run a level allows. */
 export const SHAPE: Record<CrossSumsLevel, { black: number; longest: number }> = {
@@ -29,12 +29,12 @@ export function crossSumsPattern(side: number, level: CrossSumsLevel, random: Ra
  */
 function laidRows(side: number, level: CrossSumsLevel, random: Random): boolean[] | null {
   const { black, longest } = SHAPE[level];
-  const white = Array<boolean>(side * side).fill(false),
-    above = Array<number>(side).fill(0);
+  const white = Array<boolean>(side * side).fill(false);
+  const above = Array<number>(side).fill(0);
   const chance = 1 - black * (0.85 + random() * 0.3);
   for (let row = 1; row < side; row += 1) {
-    const last = row === side - 1,
-      chosen = Array<boolean>(side).fill(false);
+    const last = row === side - 1;
+    const chosen = Array<boolean>(side).fill(false);
     let steps = 0;
     const place = (col: number, run: number): boolean => {
       if (++steps > 4000) return false;
@@ -67,8 +67,8 @@ function laidRows(side: number, level: CrossSumsLevel, random: Random): boolean[
 export function crossSumsWays(length: number, sum: number): number {
   let ways = 0;
   for (let mask = 1; mask < 512; mask += 1) {
-    let n = 0,
-      total = 0;
+    let n = 0;
+    let total = 0;
     for (let d = 1; d <= 9; d += 1)
       if (mask & (1 << (d - 1))) {
         n += 1;
@@ -87,20 +87,22 @@ export function crossSumsDigits(side: number, white: readonly boolean[], random:
   const digits = Array<number>(white.length).fill(0);
   let steps = 0;
   const fill = (at: number): boolean => {
-    while (at < white.length && !white[at]) at += 1;
-    if (at === white.length) return true;
+    let current = at;
+    while (current < white.length && !white[current]) current += 1;
+    if (current === white.length) return true;
     if (++steps > 40_000) return false;
     const used = new Set<number>();
-    for (let left = at - 1; left >= 0 && white[left] && (left + 1) % side !== 0; left -= 1) used.add(digits[left]!);
-    for (let up = at - side; up >= 0 && white[up]; up -= side) used.add(digits[up]!);
+    for (let left = current - 1; left >= 0 && white[left] && (left + 1) % side !== 0; left -= 1)
+      used.add(digits[left]!);
+    for (let up = current - side; up >= 0 && white[up]; up -= side) used.add(digits[up]!);
     for (const digit of shuffled(
       [1, 2, 3, 4, 5, 6, 7, 8, 9].filter((d) => !used.has(d)),
       random,
     )) {
-      digits[at] = digit;
-      if (fill(at + 1)) return true;
+      digits[current] = digit;
+      if (fill(current + 1)) return true;
     }
-    digits[at] = 0;
+    digits[current] = 0;
     return false;
   };
   return fill(0) ? digits : null;
@@ -119,8 +121,8 @@ export function crossSumsTighten(
   rounds: number,
 ): void {
   const runsAt = (cell: number): { across: number[]; down: number[] } => {
-    const across: number[] = [cell],
-      down: number[] = [cell];
+    const across: number[] = [cell];
+    const down: number[] = [cell];
     for (let at = cell - 1; at >= 0 && white[at] && (at + 1) % side !== 0; at -= 1) across.push(at);
     for (let at = cell + 1; at < white.length && white[at] && at % side !== 0; at += 1) across.push(at);
     for (let at = cell - side; at >= 0 && white[at]; at -= side) down.push(at);
@@ -141,8 +143,8 @@ export function crossSumsTighten(
     const options = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter((d) => !used.has(d) && d !== digits[cell]);
     if (!options.length) continue;
     const digit = options[Math.floor(random() * options.length)]!;
-    const before = ways(across) + ways(down),
-      after = ways(across, { cell, digit }) + ways(down, { cell, digit });
+    const before = ways(across) + ways(down);
+    const after = ways(across, { cell, digit }) + ways(down, { cell, digit });
     if (after <= before) digits[cell] = digit;
   }
 }
@@ -176,8 +178,8 @@ export function crossSumsBoardOf(side: number, white: readonly boolean[], digits
 function oneStrip(side: number, white: readonly boolean[]): boolean {
   const first = white.indexOf(true);
   if (first < 0) return false;
-  const seen = new Set<number>([first]),
-    stack = [first];
+  const seen = new Set<number>([first]);
+  const stack = [first];
   while (stack.length) {
     const at = stack.pop()!;
     for (const next of [at - 1, at + 1, at - side, at + side]) {
@@ -221,8 +223,8 @@ export function candidateCrossSums(
   const valid = (): boolean => {
     for (let cell = 0; cell < white.length; cell += 1) {
       if (!white[cell]) continue;
-      let across = 1,
-        down = 1;
+      let across = 1;
+      let down = 1;
       for (let at = cell - 1; at >= 0 && white[at] && (at + 1) % side !== 0; at -= 1) across += 1;
       for (let at = cell + 1; at < white.length && white[at] && at % side !== 0; at += 1) across += 1;
       for (let at = cell - side; at >= 0 && white[at]; at -= side) down += 1;

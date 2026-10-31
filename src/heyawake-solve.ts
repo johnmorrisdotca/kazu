@@ -1,6 +1,6 @@
 import { HEYAWAKE_MOST_NODES } from "./heyawake.constants.ts";
-import { checkHeyawake, heyawakeCells, heyawakeNeighbours, isHeyawakeBoard, roomForCell } from "./heyawake-board.ts";
 import type { HeyawakeBoard, HeyawakeSolve } from "./heyawake.types.ts";
+import { checkHeyawake, heyawakeCells, heyawakeNeighbours, isHeyawakeBoard, roomForCell } from "./heyawake-board.ts";
 
 /** Search for Heyawake answers up to the solution and node limits; completion distinguishes a proved result from exhausted work.
  *
@@ -23,20 +23,20 @@ export function solveHeyawake(
   options: { limit?: number; nodes?: number } = {},
 ): HeyawakeSolve {
   if (!isHeyawakeBoard(board)) throw new RangeError("Invalid Heyawake board");
-  const limit = Math.max(1, Math.floor(options.limit ?? 2)),
-    maxNodes = Math.max(1, Math.floor(options.nodes ?? HEYAWAKE_MOST_NODES));
-  const work = [...entries],
-    ids = roomForCell(board),
-    roomCells = board.rooms.map((room) => heyawakeCells(board, room)!);
+  const limit = Math.max(1, Math.floor(options.limit ?? 2));
+  const maxNodes = Math.max(1, Math.floor(options.nodes ?? HEYAWAKE_MOST_NODES));
+  const work = [...entries];
+  const ids = roomForCell(board);
+  const roomCells = board.rooms.map((room) => heyawakeCells(board, room)!);
   if (
     work.length !== board.width * board.height ||
     work.some((value) => value !== true && value !== false && value !== null)
   )
     throw new RangeError("Invalid Heyawake entries");
-  let count = 0,
-    nodes = 0,
-    solution: readonly boolean[] | null = null,
-    stopped = false;
+  let count = 0;
+  let nodes = 0;
+  let solution: readonly boolean[] | null = null;
+  let stopped = false;
   const visit = (index: number): void => {
     if (count >= limit || stopped) return;
     if (++nodes > maxNodes) {
@@ -59,8 +59,8 @@ export function solveHeyawake(
     for (const black of optionsAtCell) {
       if (black && heyawakeNeighbours(board, index).some((next) => work[next] === true)) continue;
       work[index] = black;
-      const room = board.rooms[ids[index]!]!,
-        cells = roomCells[ids[index]!]!;
+      const room = board.rooms[ids[index]!]!;
+      const cells = roomCells[ids[index]!]!;
       if (room.blacks !== null) {
         const marked = cells.filter((cell) => work[cell] === true).length;
         const unknown = cells.filter((cell) => work[cell] === null).length;

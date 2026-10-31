@@ -3,8 +3,8 @@ import { mountMasyu } from "./dist/masyu-play-entry.js";
 
 const get = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
-let language = params.get("lang") === "ja" ? "ja" : "en",
-  player;
+let language = params.get("lang") === "ja" ? "ja" : "en";
+let player;
 const words = {
   en: {
     intro:
@@ -72,8 +72,8 @@ function appearance() {
   return { material: get("material").value, pieces: get("pieces").value, language };
 }
 function start(reset = true) {
-  const seed = Number(get("seed").value),
-    key = "kazu-masyu-progress";
+  const seed = Number(get("seed").value);
+  const key = "kazu-masyu-progress";
   try {
     const puzzle = generateMasyu(5, seed);
     let progress;
@@ -111,4 +111,5 @@ for (const id of ["material", "pieces"]) get(id).onchange = () => start(false);
 start();
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

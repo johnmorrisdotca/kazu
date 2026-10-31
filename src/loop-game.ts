@@ -1,6 +1,6 @@
+import type { LoopBoard, LoopGame } from "./loop.types.ts";
 import { checkLoop, isLoopBoard } from "./loop-board.ts";
 import { solveLoop } from "./loop-solve.ts";
-import type { LoopBoard, LoopGame } from "./loop.types.ts";
 
 /** Create the initial immutable Loop game from a valid board.
  *

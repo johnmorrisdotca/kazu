@@ -1,8 +1,8 @@
+import { openSlots, solveCsp } from "./csp.ts";
 import { LOOP_MOST_NODES } from "./loop.constants.ts";
+import type { LoopBoard, LoopSolve } from "./loop.types.ts";
 import { isLoopBoard, loopEdgeCount } from "./loop-board.ts";
 import { loopModel } from "./loop-logic.ts";
-import { openSlots, solveCsp } from "./csp.ts";
-import type { LoopBoard, LoopSolve } from "./loop.types.ts";
 
 /** Counts loop solutions with the pruning in `loopLogic.ts` under explicit work bounds.
  *

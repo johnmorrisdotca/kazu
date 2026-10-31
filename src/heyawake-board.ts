@@ -74,7 +74,9 @@ export function isHeyawakeBoard(value: unknown): value is HeyawakeBoard {
       return false;
     const cells = heyawakeCells(board, room);
     if (!cells || cells.some((cell) => occupied.has(cell))) return false;
-    cells.forEach((cell) => occupied.add(cell));
+    cells.forEach((cell) => {
+      occupied.add(cell);
+    });
   }
   return occupied.size === board.width * board.height;
 }
@@ -94,8 +96,8 @@ export function isHeyawakeBoard(value: unknown): value is HeyawakeBoard {
  * ```
  */
 export function heyawakeNeighbours(board: HeyawakeBoard, cell: number): number[] {
-  const x = cell % board.width,
-    y = Math.floor(cell / board.width);
+  const x = cell % board.width;
+  const y = Math.floor(cell / board.width);
   return [
     [x - 1, y],
     [x + 1, y],
@@ -121,11 +123,11 @@ export function heyawakeNeighbours(board: HeyawakeBoard, cell: number): number[]
  */
 export function roomForCell(board: HeyawakeBoard): number[] {
   const lookup = Array(board.width * board.height).fill(-1) as number[];
-  board.rooms.forEach((room, index) =>
+  board.rooms.forEach((room, index) => {
     heyawakeCells(board, room)?.forEach((cell) => {
       lookup[cell] = index;
-    }),
-  );
+    });
+  });
   return lookup;
 }
 
@@ -152,16 +154,18 @@ export function checkHeyawake(board: HeyawakeBoard, entries: readonly (boolean |
     entries.some((value) => value !== true && value !== false && value !== null)
   )
     throw new RangeError("Invalid Heyawake entries");
-  const errors = new Set<number>(),
-    complete = entries.every((value) => value !== null),
-    ids = roomForCell(board);
+  const errors = new Set<number>();
+  const complete = entries.every((value) => value !== null);
+  const ids = roomForCell(board);
   for (let cell = 0; cell < entries.length; cell += 1) {
     if (entries[cell] !== true) continue;
     if (heyawakeNeighbours(board, cell).some((next) => entries[next] === true)) {
       errors.add(cell);
       heyawakeNeighbours(board, cell)
         .filter((next) => entries[next] === true)
-        .forEach((next) => errors.add(next));
+        .forEach((next) => {
+          errors.add(next);
+        });
     }
   }
   for (let index = 0; index < board.rooms.length; index += 1) {
@@ -169,7 +173,9 @@ export function checkHeyawake(board: HeyawakeBoard, entries: readonly (boolean |
     const cells = heyawakeCells(board, room)!;
     const marked = cells.filter((cell) => entries[cell] === true).length;
     if (room.blacks !== null && (marked > room.blacks || (complete && marked !== room.blacks)))
-      cells.forEach((cell) => errors.add(cell));
+      cells.forEach((cell) => {
+        errors.add(cell);
+      });
   }
   if (complete) {
     const white = entries.flatMap((value, cell) => (value === false ? [cell] : []));
@@ -185,7 +191,12 @@ export function checkHeyawake(board: HeyawakeBoard, entries: readonly (boolean |
           }
         }
     }
-    if (reached.size !== white.length) white.filter((cell) => !reached.has(cell)).forEach((cell) => errors.add(cell));
+    if (reached.size !== white.length)
+      white
+        .filter((cell) => !reached.has(cell))
+        .forEach((cell) => {
+          errors.add(cell);
+        });
     checkRoomSpans(board, entries, ids, errors);
   }
   return { ok: errors.size === 0 && complete, complete, errors: [...errors].sort((a, b) => a - b) };
@@ -217,30 +228,36 @@ export function checkRoomSpans(
   errors = new Set<number>(),
 ): void {
   for (let y = 0; y < board.height; y += 1) {
-    let rooms = new Set<number>(),
-      cells: number[] = [];
+    let rooms = new Set<number>();
+    let cells: number[] = [];
     for (let x = 0; x <= board.width; x += 1) {
       const cell = y * board.width + x;
       if (x < board.width && entries[cell] === false) {
         cells.push(cell);
         rooms.add(roomIds[cell]!);
       } else {
-        if (rooms.size > 2) cells.forEach((value) => errors.add(value));
+        if (rooms.size > 2)
+          cells.forEach((value) => {
+            errors.add(value);
+          });
         rooms = new Set();
         cells = [];
       }
     }
   }
   for (let x = 0; x < board.width; x += 1) {
-    let rooms = new Set<number>(),
-      cells: number[] = [];
+    let rooms = new Set<number>();
+    let cells: number[] = [];
     for (let y = 0; y <= board.height; y += 1) {
       const cell = y * board.width + x;
       if (y < board.height && entries[cell] === false) {
         cells.push(cell);
         rooms.add(roomIds[cell]!);
       } else {
-        if (rooms.size > 2) cells.forEach((value) => errors.add(value));
+        if (rooms.size > 2)
+          cells.forEach((value) => {
+            errors.add(value);
+          });
         rooms = new Set();
         cells = [];
       }

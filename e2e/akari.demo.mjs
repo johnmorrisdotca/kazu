@@ -1,6 +1,6 @@
-import { test, expect } from "@playwright/test";
-import { serve, noSidewaysScroll } from "./demo.mjs";
+import { expect, test } from "@playwright/test";
 import { generateAkari } from "../dist/akari-entry.js";
+import { noSidewaysScroll, serve } from "./demo.mjs";
 
 test("Akari bulbs, undo, hints, language, materials and restore", async ({ page }) => {
   const errors = [];

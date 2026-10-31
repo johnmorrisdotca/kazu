@@ -73,10 +73,10 @@ export function isYajilinBoard(value: unknown): value is YajilinBoard {
  * ```
  */
 export function yajilinNeighbors(board: YajilinBoard, cell: number): { cell: number; edge: number }[] {
-  const x = cell % board.width,
-    y = Math.floor(cell / board.width),
-    horizontal = board.height * (board.width - 1),
-    result = [];
+  const x = cell % board.width;
+  const y = Math.floor(cell / board.width);
+  const horizontal = board.height * (board.width - 1);
+  const result = [];
   if (y > 0) result.push({ cell: cell - board.width, edge: horizontal + (y - 1) * board.width + x });
   if (x < board.width - 1) result.push({ cell: cell + 1, edge: y * (board.width - 1) + x });
   if (y < board.height - 1) result.push({ cell: cell + board.width, edge: horizontal + y * board.width + x });
@@ -85,10 +85,10 @@ export function yajilinNeighbors(board: YajilinBoard, cell: number): { cell: num
 }
 
 function ray(board: YajilinBoard, cell: number, direction: YajilinDirection): number[] {
-  const [dx, dy] = directionDelta[direction],
-    cells = [];
-  let x = (cell % board.width) + dx,
-    y = Math.floor(cell / board.width) + dy;
+  const [dx, dy] = directionDelta[direction];
+  const cells = [];
+  let x = (cell % board.width) + dx;
+  let y = Math.floor(cell / board.width) + dy;
   while (x >= 0 && x < board.width && y >= 0 && y < board.height) {
     cells.push(y * board.width + x);
     x += dx;
@@ -115,10 +115,10 @@ function ray(board: YajilinBoard, cell: number, direction: YajilinDirection): nu
  */
 export function checkYajilin(board: YajilinBoard, shaded: readonly boolean[], lines: readonly number[]): YajilinCheck {
   if (!isYajilinBoard(board)) throw new RangeError("Invalid Yajilin board");
-  const size = board.width,
-    total = size * size,
-    edges = new Set(lines),
-    errors = new Set<number>();
+  const size = board.width;
+  const total = size * size;
+  const edges = new Set(lines);
+  const errors = new Set<number>();
   if (shaded.length !== total || !shaded.every((value) => typeof value === "boolean")) return { ok: false, errors: [] };
   if (
     edges.size !== lines.length ||
@@ -147,9 +147,9 @@ export function checkYajilin(board: YajilinBoard, shaded: readonly boolean[], li
     return degree;
   });
   if (edges.size) {
-    const first = degrees.findIndex((degree) => degree > 0),
-      reached = new Set([first]),
-      stack = [first];
+    const first = degrees.findIndex((degree) => degree > 0);
+    const reached = new Set([first]);
+    const stack = [first];
     while (stack.length) {
       const cell = stack.pop()!;
       for (const next of yajilinNeighbors(board, cell))

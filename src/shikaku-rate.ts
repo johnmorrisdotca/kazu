@@ -1,7 +1,7 @@
-import { isShikakuBoard } from "./shikaku-board.ts";
-import { shikakuModel } from "./shikaku-logic.ts";
 import { logicCsp, openSlots, solveCsp } from "./csp.ts";
 import type { ShikakuBoard, ShikakuRating } from "./shikaku.types.ts";
+import { isShikakuBoard } from "./shikaku-board.ts";
+import { shikakuModel } from "./shikaku-logic.ts";
 
 /** Rates a board with one answer by solving it with the first rule, with the first two, with all three, then by supposing.
  *
@@ -18,9 +18,9 @@ import type { ShikakuBoard, ShikakuRating } from "./shikaku.types.ts";
  */
 export function rateShikaku(board: ShikakuBoard): ShikakuRating {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
-  const first = shikakuModel(board, 0),
-    second = shikakuModel(board, 1),
-    strong = shikakuModel(board, 2);
+  const first = shikakuModel(board, 0);
+  const second = shikakuModel(board, 1);
+  const strong = shikakuModel(board, 2);
   const proof = solveCsp(strong.csp, openSlots(strong.csp), 2, 100_000);
   if (proof.count !== 1 || proof.exhausted) throw new RangeError("Shikaku rating needs a board with one answer");
   const one = logicCsp(first.csp, openSlots(first.csp), 0);

@@ -1,7 +1,7 @@
 import { encodeCells } from "./cells.ts";
 import { checkKazu } from "./check.ts";
 import { conflictsOf } from "./conflicts.ts";
-import { layoutOfGivens, readGivens, type KazuGivens } from "./givens.ts";
+import { type KazuGivens, layoutOfGivens, readGivens } from "./givens.ts";
 import type { KazuKind } from "./kinds.ts";
 
 /**

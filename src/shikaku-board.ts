@@ -79,14 +79,16 @@ export function shikakuCells(board: ShikakuBoard, r: ShikakuRectangle): number[]
  */
 export function checkShikaku(board: ShikakuBoard, rectangles: readonly ShikakuRectangle[]): ShikakuCheck {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
-  const occupied = new Set<number>(),
-    errors: number[] = [];
+  const occupied = new Set<number>();
+  const errors: number[] = [];
   rectangles.forEach((r, index) => {
     const cells = shikakuCells(board, r);
     const clues = cells?.filter((c) => board.clues[c] > 0) ?? [];
     if (!cells || clues.length !== 1 || board.clues[clues[0]] !== cells.length || cells.some((c) => occupied.has(c)))
       errors.push(index);
-    cells?.forEach((c) => occupied.add(c));
+    cells?.forEach((c) => {
+      occupied.add(c);
+    });
   });
   return { ok: errors.length === 0 && occupied.size === board.clues.length, covered: occupied.size, errors };
 }
@@ -106,11 +108,11 @@ export function checkShikaku(board: ShikakuBoard, rectangles: readonly ShikakuRe
  */
 export function shikakuCandidates(board: ShikakuBoard, cell: number): ShikakuRectangle[] {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
-  const area = board.clues[cell],
-    out: ShikakuRectangle[] = [];
+  const area = board.clues[cell];
+  const out: ShikakuRectangle[] = [];
   if (!area) return out;
-  const cx = cell % board.width,
-    cy = Math.floor(cell / board.width);
+  const cx = cell % board.width;
+  const cy = Math.floor(cell / board.width);
   for (let w = 1; w <= board.width; w += 1) {
     if (area % w) continue;
     const h = area / w;

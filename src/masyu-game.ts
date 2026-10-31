@@ -1,6 +1,6 @@
+import type { MasyuBoard, MasyuGame } from "./masyu.types.ts";
 import { checkMasyu, isMasyuBoard, masyuEdgeCount } from "./masyu-board.ts";
 import { solveMasyu } from "./masyu-solve.ts";
-import type { MasyuBoard, MasyuGame } from "./masyu.types.ts";
 
 /** Create the initial immutable Masyu game from a valid board.
  *

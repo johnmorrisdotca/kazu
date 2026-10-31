@@ -1,5 +1,6 @@
-import { generateNurikabe, encodeNurikabe } from "./dist/nurikabe-entry.js";
+import { encodeNurikabe, generateNurikabe } from "./dist/nurikabe-entry.js";
 import { mountNurikabe } from "./dist/nurikabe-play-entry.js";
+
 let player;
 familyLanguage({
   id: "kazu",
@@ -28,9 +29,9 @@ familyLanguage({
 });
 const mount = () => {
   try {
-    const seed = Number(document.querySelector("#seed").value),
-      key = "kazu-nurikabe-progress",
-      puzzle = generateNurikabe(seed);
+    const seed = Number(document.querySelector("#seed").value);
+    const key = "kazu-nurikabe-progress";
+    const puzzle = generateNurikabe(seed);
     player?.destroy();
     const saved = JSON.parse(localStorage.getItem(key) || "null");
     player = mountNurikabe(document.querySelector("#board"), {
@@ -50,4 +51,5 @@ document.querySelector("#new").onclick = mount;
 mount();
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

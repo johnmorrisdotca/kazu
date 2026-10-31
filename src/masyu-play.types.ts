@@ -1,5 +1,5 @@
 export type {
-  MasyuDrawOptions as MasyuDrawOptions,
-  MasyuMount as MasyuMount,
-  MasyuMountOptions as MasyuMountOptions,
+  MasyuDrawOptions,
+  MasyuMount,
+  MasyuMountOptions,
 } from "./masyu.types.ts";

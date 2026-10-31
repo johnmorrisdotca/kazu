@@ -1,8 +1,8 @@
+import { isKazuSeed, seededRandom } from "./random.ts";
 import { RIPPLE_MAX_ATTEMPTS } from "./ripple.constants.ts";
+import type { RipplePuzzle } from "./ripple.types.ts";
 import { checkRipple } from "./ripple-board.ts";
 import { solveRipple } from "./ripple-solve.ts";
-import { isKazuSeed, seededRandom } from "./random.ts";
-import type { RipplePuzzle } from "./ripple.types.ts";
 
 /** Builds a seeded block-room family and accepts it only after a bounded uniqueness proof.
  *

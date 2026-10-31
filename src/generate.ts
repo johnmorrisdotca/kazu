@@ -1,5 +1,5 @@
-import { isKazuKind, isKazuLevel, isKazuSize, type KazuKind, type KazuLevel, type KazuPuzzle } from "./kinds.ts";
 import { generateJigsaw } from "./jigsaw.ts";
+import { isKazuKind, isKazuLevel, isKazuSize, type KazuKind, type KazuLevel, type KazuPuzzle } from "./kinds.ts";
 import { generateMoreOrLess } from "./more-or-less.ts";
 import { generateDiagonal, generateNumberPlace } from "./number-place.ts";
 import { isKazuSeed } from "./random.ts";

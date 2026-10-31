@@ -1,6 +1,6 @@
 import { RIPPLE_MAX_NODES } from "./ripple.constants.ts";
-import { isRippleBoard, rippleRoomSizes } from "./ripple-board.ts";
 import type { RippleBoard, RippleSolve } from "./ripple.types.ts";
+import { isRippleBoard, rippleRoomSizes } from "./ripple-board.ts";
 
 /** Counts rule-valid fillings within an explicit node budget.
  *
@@ -18,17 +18,17 @@ import type { RippleBoard, RippleSolve } from "./ripple.types.ts";
  */
 export function solveRipple(board: RippleBoard, options: { limit?: number; nodes?: number } = {}): RippleSolve {
   if (!isRippleBoard(board)) throw new RangeError("Invalid Ripple Effect board");
-  const limit = options.limit ?? 2,
-    budget = options.nodes ?? RIPPLE_MAX_NODES;
+  const limit = options.limit ?? 2;
+  const budget = options.nodes ?? RIPPLE_MAX_NODES;
   if (!Number.isInteger(limit) || limit < 1 || !Number.isInteger(budget) || budget < 1)
     throw new RangeError("Invalid search bounds");
   const sizes = rippleRoomSizes(board);
   const values = board.clues.map((clue) => clue ?? 0);
   const roomUsed = sizes.map(() => new Set<number>());
-  let count = 0,
-    nodes = 0,
-    complete = true,
-    solution: number[] | null = null;
+  let count = 0;
+  let nodes = 0;
+  let complete = true;
+  let solution: number[] | null = null;
   for (let cell = 0; cell < values.length; cell += 1) {
     const value = values[cell]!;
     if (!value) continue;
@@ -48,8 +48,8 @@ export function solveRipple(board: RippleBoard, options: { limit?: number; nodes
       complete = false;
       return;
     }
-    let bestCell = -1,
-      bestValues: number[] = [];
+    let bestCell = -1;
+    let bestValues: number[] = [];
     for (let cell = 0; cell < values.length; cell += 1) {
       if (values[cell]) continue;
       const room = board.rooms[cell]!;
@@ -87,12 +87,12 @@ export function solveRipple(board: RippleBoard, options: { limit?: number; nodes
 }
 
 function conflicts(cell: number, value: number, values: readonly number[], board: RippleBoard): boolean {
-  const x = cell % board.width,
-    y = Math.floor(cell / board.width);
+  const x = cell % board.width;
+  const y = Math.floor(cell / board.width);
   for (let other = 0; other < values.length; other += 1) {
     if (values[other] !== value || other === cell) continue;
-    const ox = other % board.width,
-      oy = Math.floor(other / board.width);
+    const ox = other % board.width;
+    const oy = Math.floor(other / board.width);
     if ((oy === y && Math.abs(ox - x) <= value) || (ox === x && Math.abs(oy - y) <= value)) return true;
   }
   return false;

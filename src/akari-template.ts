@@ -1,8 +1,8 @@
 import { AKARI_MOST_SIDE } from "./akari.constants.ts";
+import type { AkariPuzzle } from "./akari.types.ts";
 import { checkAkari, isAkariBoard } from "./akari-board.ts";
 import { solveAkari } from "./akari-solve.ts";
 import { isKazuSeed, seededRandom } from "./random.ts";
-import type { AkariPuzzle } from "./akari.types.ts";
 
 /**
  * The first generator, kept as the fallback that cannot fail: makes a seeded board from two original room-grid families: horizontal or vertical paired
@@ -59,12 +59,12 @@ export function templateAkari(width = 7, height = width, seed = 1): Omit<AkariPu
   }
 
   // Reflections are applied to the board and the construction answer together.
-  const reflectX = random() < 0.5,
-    reflectY = random() < 0.5;
+  const reflectX = random() < 0.5;
+  const reflectY = random() < 0.5;
   const original = [...cells];
   const map = (cell: number) => {
-    const x = cell % width,
-      y = Math.floor(cell / width);
+    const x = cell % width;
+    const y = Math.floor(cell / width);
     return (reflectY ? height - 1 - y : y) * width + (reflectX ? width - 1 - x : x);
   };
   for (let cell = 0; cell < original.length; cell += 1) cells[map(cell)] = original[cell]!;

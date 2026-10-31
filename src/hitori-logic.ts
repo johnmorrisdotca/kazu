@@ -1,6 +1,6 @@
 import type { Csp } from "./csp.ts";
-import { hitoriNeighbors } from "./hitori-board.ts";
 import type { HitoriBoard } from "./hitori.types.ts";
+import { hitoriNeighbors } from "./hitori-board.ts";
 
 /**
  * Hitori as variables: one per square, slot 0 for left white and slot 1 for shaded.
@@ -10,13 +10,13 @@ import type { HitoriBoard } from "./hitori.types.ts";
  * search checks whatever the strength.
  */
 export function hitoriModel(board: HitoriBoard, strength: 0 | 1 | 2 = 2): { csp: Csp } {
-  const size = board.size,
-    total = size * size;
+  const size = board.size;
+  const total = size * size;
   const neighbours = Array.from({ length: total }, (_, cell) => Int32Array.from(hitoriNeighbors(size, cell)));
   const partners = Array.from({ length: total }, (_, cell) => {
-    const x = cell % size,
-      y = Math.floor(cell / size),
-      found: number[] = [];
+    const x = cell % size;
+    const y = Math.floor(cell / size);
+    const found: number[] = [];
     for (let k = 0; k < size; k += 1) {
       if (k !== x && board.numbers[y * size + k] === board.numbers[cell]) found.push(y * size + k);
       if (k !== y && board.numbers[k * size + x] === board.numbers[cell]) found.push(k * size + x);
@@ -33,8 +33,8 @@ export function hitoriModel(board: HitoriBoard, strength: 0 | 1 | 2 = 2): { csp:
         [1, 0],
         [0, 1],
       ] as const) {
-        const nx = x + dx,
-          ny = y + dy;
+        const nx = x + dx;
+        const ny = y + dy;
         if (nx >= size || ny >= size) continue;
         const next = ny * size + nx;
         if (board.numbers[cell] === board.numbers[next]) {
@@ -43,23 +43,23 @@ export function hitoriModel(board: HitoriBoard, strength: 0 | 1 | 2 = 2): { csp:
           );
           if (others.length) pairs.push({ a: cell, b: next, others });
         }
-        const fx = x + 2 * dx,
-          fy = y + 2 * dy;
+        const fx = x + 2 * dx;
+        const fy = y + 2 * dy;
         if (fx < size && fy < size && board.numbers[cell] === board.numbers[fy * size + fx]) sandwiches.push(next);
       }
     }
   const starts = Int32Array.from({ length: total + 1 }, (_, i) => i * 2);
-  const disc = new Int32Array(total),
-    low = new Int32Array(total),
-    whitesBelow = new Int32Array(total);
+  const disc = new Int32Array(total);
+  const low = new Int32Array(total);
+  const whitesBelow = new Int32Array(total);
 
   const propagate = (alive: Uint8Array): boolean => {
     let changed = true;
     while (changed) {
       changed = false;
       for (let c = 0; c < total; c += 1) {
-        const white = alive[2 * c]!,
-          shaded = alive[2 * c + 1]!;
+        const white = alive[2 * c]!;
+        const shaded = alive[2 * c + 1]!;
         if (!white && !shaded) return false;
         if (shaded && !white) {
           const around = neighbours[c]!;
@@ -86,8 +86,8 @@ export function hitoriModel(board: HitoriBoard, strength: 0 | 1 | 2 = 2): { csp:
         if (shaded) {
           // A square is shaded only to settle a duplicate, so some equal number in its row or column must stay white.
           const same = partners[c]!;
-          let free = 0,
-            last = -1;
+          let free = 0;
+          let last = -1;
           for (let k = 0; k < same.length; k += 1)
             if (alive[2 * same[k]!]) {
               free += 1;
@@ -132,16 +132,16 @@ export function hitoriModel(board: HitoriBoard, strength: 0 | 1 | 2 = 2): { csp:
   };
 
   const cutList = new Int32Array(total);
-  let clock = 0,
-    cutCount = 0,
-    whiteTotal = 0,
-    current: Uint8Array = new Uint8Array(0),
-    power = 0;
+  let clock = 0;
+  let cutCount = 0;
+  let whiteTotal = 0;
+  let current: Uint8Array = new Uint8Array(0);
+  let power = 0;
   const visit = (u: number, parent: number): void => {
     disc[u] = low[u] = ++clock;
-    let below = current[2 * u + 1] ? 0 : 1,
-      cutWhites = 0,
-      cutParts = 0;
+    let below = current[2 * u + 1] ? 0 : 1;
+    let cutWhites = 0;
+    let cutParts = 0;
     const around = neighbours[u]!;
     for (let k = 0; k < around.length; k += 1) {
       const n = around[k]!;

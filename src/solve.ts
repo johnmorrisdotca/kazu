@@ -1,13 +1,13 @@
 import { encodeCells } from "./cells.ts";
-import { countSolutionsWithin, guessDepth as groupDepth, solutionOf as groupSolution } from "./group-solve.ts";
 import { layoutOfGivens, readGivens } from "./givens.ts";
+import { countSolutionsWithin, guessDepth as groupDepth, solutionOf as groupSolution } from "./group-solve.ts";
 import type { KazuKind } from "./kinds.ts";
 import {
   countSolutions as countMarks,
   guessDepth as marksDepth,
   solutionOf as marksSolution,
 } from "./more-or-less-solve.ts";
-import { countSolutions as countClues, guessDepth as cluesDepth, solutionOf as cluesSolution } from "./towers-solve.ts";
+import { guessDepth as cluesDepth, solutionOf as cluesSolution, countSolutions as countClues } from "./towers-solve.ts";
 
 /**
  * How many answers a puzzle has, up to `limit` (two by default, so "many" costs no more than "two"):

@@ -1,4 +1,4 @@
-import type { HeyawakeGame, HeyawakeBoard } from "./heyawake.types.ts";
+import type { HeyawakeBoard, HeyawakeGame } from "./heyawake.types.ts";
 
 /** Language, material and marks for a native Heyawake board.
  *

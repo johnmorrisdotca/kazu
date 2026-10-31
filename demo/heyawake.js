@@ -1,13 +1,13 @@
 import { decodeHeyawake, encodeHeyawake, generateHeyawake } from "./dist/heyawake-entry.js";
 import { mountHeyawake } from "./dist/heyawake-play-entry.js";
 
-const get = (id) => document.getElementById(id),
-  params = new URLSearchParams(location.search);
-let handle,
-  language = params.get("lang") === "ja" ? "ja" : "en",
-  activeSettings = null,
-  started = Date.now(),
-  stopped = null;
+const get = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let handle;
+let language = params.get("lang") === "ja" ? "ja" : "en";
+let activeSettings = null;
+let started = Date.now();
+let stopped = null;
 const words = {
   en: {
     title: "Heyawake",
@@ -66,12 +66,11 @@ function translate() {
     unique: w.unique,
   }))
     get(id).textContent = text;
-  ["level", "material", "pieces"].forEach((id, group) =>
-    [...get(id).options].forEach(
-      (option, index) =>
-        (option.textContent = (group === 0 ? w.levels : group === 1 ? w.materials : w.piecesList)[index]),
-    ),
-  );
+  ["level", "material", "pieces"].forEach((id, group) => {
+    [...get(id).options].forEach((option, index) => {
+      option.textContent = (group === 0 ? w.levels : group === 1 ? w.materials : w.piecesList)[index];
+    });
+  });
   handle?.set({ language });
 }
 
@@ -214,4 +213,5 @@ if (restored) {
 }
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

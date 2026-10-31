@@ -1,10 +1,10 @@
 import { decodeCrossSums, encodeCrossSums, generateCrossSums } from "./dist/cross-sums-entry.js";
 import { mountCrossSums } from "./dist/cross-sums-play-entry.js";
 
-const get = (id) => document.getElementById(id),
-  params = new URLSearchParams(location.search);
-let language = params.get("lang") === "ja" ? "ja" : "en",
-  handle;
+const get = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let language = params.get("lang") === "ja" ? "ja" : "en";
+let handle;
 const strings = {
   en: {
     title: "Cross Sums",
@@ -72,11 +72,11 @@ function translate() {
     ["unique", "unique"],
   ])
     get(id).textContent = strings[language][key];
-  ["material", "pieces"].forEach((id) =>
+  ["material", "pieces"].forEach((id) => {
     [...get(id).options].forEach((option) => {
       option.textContent = strings[language][option.value];
-    }),
-  );
+    });
+  });
   handle?.set({ language });
 }
 function appearance() {
@@ -170,4 +170,5 @@ if (restored) {
 else make();
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

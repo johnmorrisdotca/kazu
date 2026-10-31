@@ -1,10 +1,11 @@
-import { VERSION, KAZU_KINDS, KAZU_LEVELS, KAZU_SPECS, isKazuSize } from "./dist/index.js";
-import { kazuNameOf } from "./dist/strings.js";
-import { KAZU_SEED_MOST, isKazuSeed } from "./dist/random.js";
-import { KazuBoard, KAZU_EMBED_OPTION_KEYS } from "./dist/element.js";
+import { KAZU_EMBED_OPTION_KEYS, KazuBoard } from "./dist/element.js";
 import { embedDay } from "./dist/embed-day.js";
+import { isKazuSize, KAZU_KINDS, KAZU_LEVELS, KAZU_SPECS, VERSION } from "./dist/index.js";
+import { isKazuSeed, KAZU_SEED_MOST } from "./dist/random.js";
+import { kazuNameOf } from "./dist/strings.js";
 import "./dist/element-define.js";
-import { familyEmbedBuilder, FAMILY_EMBED_BUILDER_WORDS } from "./family-embed-builder.js";
+import { FAMILY_EMBED_BUILDER_WORDS, familyEmbedBuilder } from "./family-embed-builder.js";
+
 const words = {
   en: {
     ...FAMILY_EMBED_BUILDER_WORDS.en,
@@ -250,4 +251,5 @@ globalThis.document.getElementById("bld-groups").addEventListener("click", (even
 });
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

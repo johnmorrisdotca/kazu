@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { drawKazu, kazuCellName, kazuWhere } from "./draw.ts";
-import { kazuGeometry } from "./geometry.ts";
 import { generateKazu } from "./generate.ts";
+import { kazuGeometry } from "./geometry.ts";
 import { readGivens } from "./givens.ts";
 import { KAZU_KINDS, KAZU_SPECS } from "./kinds.ts";
 import { KAZU_STYLE } from "./style.ts";

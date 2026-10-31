@@ -1,6 +1,6 @@
+import type { RegionsBoard, RegionsGame } from "./regions.types.ts";
 import { checkRegions, isRegionsBoard } from "./regions-board.ts";
 import { solveRegions } from "./regions-solve.ts";
-import type { RegionsBoard, RegionsGame } from "./regions.types.ts";
 
 /** Create the initial immutable Regions game from a valid board.
  *

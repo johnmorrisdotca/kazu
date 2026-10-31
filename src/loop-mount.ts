@@ -1,10 +1,10 @@
-import { progressLoop, loopCellEdges, loopHorizontalCount, loopVertexEdges } from "./loop-board.ts";
-import { decodeLoop, encodeLoop, hintLoop, newLoop, loopFinished, toggleLoop, undoLoop } from "./loop-game.ts";
-import { KAZU_STYLE } from "./style.ts";
-import { LOOP_PLAY_STYLE } from "./loop-style.ts";
-import { loopWords } from "./loop-strings.ts";
-import type { LoopDrawOptions, LoopMount, LoopMountOptions } from "./loop-play.types.ts";
 import type { LoopBoard } from "./loop.types.ts";
+import { loopCellEdges, loopHorizontalCount, loopVertexEdges, progressLoop } from "./loop-board.ts";
+import { decodeLoop, encodeLoop, hintLoop, loopFinished, newLoop, toggleLoop, undoLoop } from "./loop-game.ts";
+import type { LoopDrawOptions, LoopMount, LoopMountOptions } from "./loop-play.types.ts";
+import { loopWords } from "./loop-strings.ts";
+import { LOOP_PLAY_STYLE } from "./loop-style.ts";
+import { KAZU_STYLE } from "./style.ts";
 
 /** Mounts an accessible dot-and-edge loop player in the given host element.
  *
@@ -300,7 +300,15 @@ function progressEdges(
 ): number[] {
   if (loops > 1) return [...edges];
   const result = new Set<number>();
-  clueErrors.forEach((cell) => loopCellEdges(board, cell)?.forEach((edge) => result.add(edge)));
-  vertexErrors.forEach((vertex) => loopVertexEdges(board, vertex).forEach((edge) => result.add(edge)));
+  clueErrors.forEach((cell) => {
+    loopCellEdges(board, cell)?.forEach((edge) => {
+      result.add(edge);
+    });
+  });
+  vertexErrors.forEach((vertex) => {
+    loopVertexEdges(board, vertex).forEach((edge) => {
+      result.add(edge);
+    });
+  });
   return [...result];
 }

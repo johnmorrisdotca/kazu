@@ -1,6 +1,6 @@
-import { isRippleBoard, checkRipple, rippleRoomSizes } from "./ripple-board.ts";
-import { solveRipple } from "./ripple-solve.ts";
 import type { RippleBoard, RippleGame } from "./ripple.types.ts";
+import { checkRipple, isRippleBoard, rippleRoomSizes } from "./ripple-board.ts";
+import { solveRipple } from "./ripple-solve.ts";
 
 /** Create the initial immutable Ripple game from a valid board.
  *

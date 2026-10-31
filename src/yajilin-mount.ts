@@ -1,4 +1,6 @@
+import type { YajilinMount, YajilinMountOptions } from "./yajilin.types.ts";
 import { checkYajilin, yajilinNeighbors } from "./yajilin-board.ts";
+import { drawYajilin } from "./yajilin-draw.ts";
 import {
   decodeYajilin,
   encodeYajilin,
@@ -9,10 +11,8 @@ import {
   toggleYajilinShade,
   undoYajilin,
 } from "./yajilin-game.ts";
-import { drawYajilin } from "./yajilin-draw.ts";
-import { YAJILIN_PLAY_STYLE } from "./yajilin-style.ts";
 import { YAJILIN_STRINGS } from "./yajilin-strings.ts";
-import type { YajilinMount, YajilinMountOptions } from "./yajilin.types.ts";
+import { YAJILIN_PLAY_STYLE } from "./yajilin-style.ts";
 
 /** Mount the native Yajilin player in a host element and return its cleanup and control handle.
  *
@@ -33,13 +33,13 @@ import type { YajilinMount, YajilinMountOptions } from "./yajilin.types.ts";
  * ```
  */
 export function mountYajilin(element: HTMLElement, initial: YajilinMountOptions): YajilinMount {
-  const document = element.ownerDocument,
-    style = document.createElement("style");
+  const document = element.ownerDocument;
+  const style = document.createElement("style");
   style.textContent = YAJILIN_PLAY_STYLE;
   const root = document.createElement("section");
   root.className = "kazu-yajilin";
-  const help = document.createElement("p"),
-    board = document.createElement("div");
+  const help = document.createElement("p");
+  const board = document.createElement("div");
   board.className = "ky-board";
   const modes = document.createElement("div");
   modes.className = "ky-tools ky-modes";
@@ -58,12 +58,12 @@ export function mountYajilin(element: HTMLElement, initial: YajilinMountOptions)
     game.board.height === initial.board.height &&
     game.board.clues.every((clue, cell) => JSON.stringify(clue) === JSON.stringify(initial.board.clues[cell]));
   if (!sameBoard) game = newYajilin(initial.board);
-  let selected = 0,
-    anchor: number | null = null,
-    mode: "line" | "shade" = "line";
-  let errors: readonly number[] = [],
-    message = "",
-    dead = false;
+  let selected = 0;
+  let anchor: number | null = null;
+  let mode: "line" | "shade" = "line";
+  let errors: readonly number[] = [];
+  let message = "";
+  let dead = false;
   const words = () => YAJILIN_STRINGS[options.language ?? "en"];
   const copy = () => ({
     ...game!,
@@ -128,8 +128,8 @@ export function mountYajilin(element: HTMLElement, initial: YajilinMountOptions)
         render();
       };
       button.onkeydown = (event) => {
-        const x = cell % game!.board.width,
-          y = Math.floor(cell / game!.board.width);
+        const x = cell % game!.board.width;
+        const y = Math.floor(cell / game!.board.width);
         const moves: Record<string, [number, number]> = {
           ArrowUp: [0, -1],
           ArrowDown: [0, 1],
@@ -138,9 +138,9 @@ export function mountYajilin(element: HTMLElement, initial: YajilinMountOptions)
         };
         if (event.key in moves) {
           event.preventDefault();
-          const [dx, dy] = moves[event.key]!,
-            nextX = x + dx,
-            nextY = y + dy;
+          const [dx, dy] = moves[event.key]!;
+          const nextX = x + dx;
+          const nextY = y + dy;
           if (nextX >= 0 && nextX < game!.board.width && nextY >= 0 && nextY < game!.board.height) {
             selected = nextY * game!.board.width + nextX;
             render();

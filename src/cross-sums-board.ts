@@ -1,5 +1,5 @@
 import { CROSS_SUMS_MAX_SIDE, CROSS_SUMS_MIN_SIDE } from "./cross-sums.constants.ts";
-import type { CrossSumsBoard, CrossSumsCheck, CrossSumsCell, CrossSumsRun } from "./cross-sums.types.ts";
+import type { CrossSumsBoard, CrossSumsCell, CrossSumsCheck, CrossSumsRun } from "./cross-sums.types.ts";
 
 /** Whether the value has valid native CrossSums dimensions, clues and data.
  *
@@ -71,12 +71,12 @@ export function crossSumsRuns(board: CrossSumsBoard): CrossSumsRun[] {
 
 function collectRuns(board: CrossSumsBoard): CrossSumsRun[] | null {
   const runs: CrossSumsRun[] = [];
-  const acrossCount = Array(board.cells.length).fill(0),
-    downCount = Array(board.cells.length).fill(0);
+  const acrossCount = Array(board.cells.length).fill(0);
+  const downCount = Array(board.cells.length).fill(0);
   for (let cell = 0; cell < board.cells.length; cell += 1) {
-    const x = cell % board.width,
-      y = Math.floor(cell / board.width),
-      tile = board.cells[cell]!;
+    const x = cell % board.width;
+    const y = Math.floor(cell / board.width);
+    const tile = board.cells[cell]!;
     if (tile.kind === "white") continue;
     const rightWhite = x + 1 < board.width && board.cells[cell + 1]?.kind === "white";
     const downWhite = y + 1 < board.height && board.cells[cell + board.width]?.kind === "white";
@@ -125,8 +125,8 @@ function collectRuns(board: CrossSumsBoard): CrossSumsRun[] | null {
 export function checkCrossSums(board: CrossSumsBoard, values: readonly number[]): CrossSumsCheck {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
   if (values.length !== board.cells.length) throw new RangeError("Invalid Cross Sums values");
-  const errors = new Set<number>(),
-    runs = crossSumsRuns(board);
+  const errors = new Set<number>();
+  const runs = crossSumsRuns(board);
   values.forEach((value, cell) => {
     if (board.cells[cell]!.kind === "black" ? value !== 0 : !Number.isInteger(value) || value < 0 || value > 9)
       errors.add(cell);
@@ -137,8 +137,13 @@ export function checkCrossSums(board: CrossSumsBoard, values: readonly number[])
     const sum = filled.reduce((total, value) => total + value, 0);
     const missing = run.cells.length - filled.length;
     if (duplicate.size || sum > run.sum || !canReach(run.sum - sum, missing, filled))
-      run.cells.forEach((cell) => errors.add(cell));
-    if (missing === 0 && sum !== run.sum) run.cells.forEach((cell) => errors.add(cell));
+      run.cells.forEach((cell) => {
+        errors.add(cell);
+      });
+    if (missing === 0 && sum !== run.sum)
+      run.cells.forEach((cell) => {
+        errors.add(cell);
+      });
   }
   const complete = board.cells.every((cell, index) => cell.kind === "black" || values[index]! > 0);
   return { ok: complete && errors.size === 0, complete, errors: [...errors].sort((a, b) => a - b) };

@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import { checkYajilin, isYajilinBoard, yajilinEdgeCount, yajilinNeighbors } from "./yajilin-board.ts";
-import { generateYajilin } from "./yajilin-generate.ts";
 import {
   decodeYajilin,
   encodeYajilin,
@@ -11,6 +10,7 @@ import {
   toggleYajilinShade,
   undoYajilin,
 } from "./yajilin-game.ts";
+import { generateYajilin } from "./yajilin-generate.ts";
 import { solveYajilin } from "./yajilin-solve.ts";
 
 describe("Yajilin rules", () => {
@@ -31,8 +31,8 @@ describe("Yajilin rules", () => {
   });
 
   it("requires one connected loop through every open cell and rejects extra edges", () => {
-    const puzzle = generateYajilin(5, 2),
-      solution = [...puzzle.solution.edges];
+    const puzzle = generateYajilin(5, 2);
+    const solution = [...puzzle.solution.edges];
     expect(checkYajilin(puzzle, puzzle.solution.shaded, [...solution, solution[0]!]).ok).toBe(false);
     const clues = Array(25).fill(null);
     clues[12] = { direction: "up", count: 0 };
@@ -47,8 +47,8 @@ describe("Yajilin rules", () => {
   });
 
   it("checks arrow totals independently and reports bounded searches honestly", () => {
-    const puzzle = generateYajilin(5, 3),
-      clueCell = puzzle.clues.findIndex(Boolean);
+    const puzzle = generateYajilin(5, 3);
+    const clueCell = puzzle.clues.findIndex(Boolean);
     const clues = [...puzzle.clues];
     clues[clueCell] = { ...clues[clueCell]!, count: clues[clueCell]!.count + 1 };
     expect(checkYajilin({ ...puzzle, clues }, puzzle.solution.shaded, puzzle.solution.edges).errors).toContain(
@@ -60,8 +60,8 @@ describe("Yajilin rules", () => {
   });
 
   it("makes reproducible varied layouts and proves each answer", () => {
-    const patterns = new Set<string>(),
-      loopLengths = new Set<number>();
+    const patterns = new Set<string>();
+    const loopLengths = new Set<number>();
     for (let seed = 1; seed <= 30; seed += 1) {
       const puzzle = generateYajilin(5, seed);
       expect(puzzle).toEqual(generateYajilin(5, seed));
@@ -76,10 +76,10 @@ describe("Yajilin rules", () => {
   });
 
   it("keeps play immutable and saves only the public board and progress", () => {
-    const puzzle = generateYajilin(),
-      game = newYajilin(puzzle);
-    const cell = puzzle.solution.shaded.findIndex(Boolean),
-      shaded = toggleYajilinShade(game, cell);
+    const puzzle = generateYajilin();
+    const game = newYajilin(puzzle);
+    const cell = puzzle.solution.shaded.findIndex(Boolean);
+    const shaded = toggleYajilinShade(game, cell);
     expect(game.shaded[cell]).toBe(false);
     expect(shaded.shaded[cell]).toBe(true);
     const line = toggleYajilinEdge(shaded, puzzle.solution.edges[0]!);

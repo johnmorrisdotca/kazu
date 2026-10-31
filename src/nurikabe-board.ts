@@ -40,9 +40,9 @@ export function isNurikabeBoard(board: NurikabeBoard): boolean {
  * ```
  */
 export function nurikabeNeighbors(size: number, cell: number): number[] {
-  const x = cell % size,
-    y = Math.floor(cell / size),
-    neighbors: number[] = [];
+  const x = cell % size;
+  const y = Math.floor(cell / size);
+  const neighbors: number[] = [];
   if (x > 0) neighbors.push(cell - 1);
   if (x < size - 1) neighbors.push(cell + 1);
   if (y > 0) neighbors.push(cell - size);
@@ -75,23 +75,26 @@ export function checkNurikabe(
     !sea.every((value) => typeof value === "boolean")
   )
     return { ok: false, errors: [] };
-  const size = board.size,
-    total = size * size,
-    errors = new Set<number>();
+  const size = board.size;
+  const total = size * size;
+  const errors = new Set<number>();
   for (let cell = 0; cell < total; cell += 1) if (board.clues[cell] && sea[cell]) errors.add(cell);
   for (let y = 0; y < size - 1; y += 1)
     for (let x = 0; x < size - 1; x += 1) {
       const square = [y * size + x, y * size + x + 1, (y + 1) * size + x, (y + 1) * size + x + 1];
-      if (square.every((cell) => sea[cell])) square.forEach((cell) => errors.add(cell));
+      if (square.every((cell) => sea[cell]))
+        square.forEach((cell) => {
+          errors.add(cell);
+        });
     }
 
-  const visited = new Set<number>(),
-    islands: { cells: number[]; clues: number[] }[] = [];
+  const visited = new Set<number>();
+  const islands: { cells: number[]; clues: number[] }[] = [];
   for (let start = 0; start < total; start += 1)
     if (!sea[start] && !visited.has(start)) {
-      const stack = [start],
-        cells: number[] = [],
-        clues: number[] = [];
+      const stack = [start];
+      const cells: number[] = [];
+      const clues: number[] = [];
       visited.add(start);
       while (stack.length) {
         const cell = stack.pop()!;
@@ -104,13 +107,16 @@ export function checkNurikabe(
           }
       }
       islands.push({ cells, clues });
-      if (clues.length !== 1 || board.clues[clues[0]!] !== cells.length) cells.forEach((cell) => errors.add(cell));
+      if (clues.length !== 1 || board.clues[clues[0]!] !== cells.length)
+        cells.forEach((cell) => {
+          errors.add(cell);
+        });
     }
   for (let cell = 0; cell < total; cell += 1)
     if (board.clues[cell] && !islands.some((island) => island.clues[0] === cell)) errors.add(cell);
 
-  const black = sea.map((value, cell) => (value ? cell : -1)).filter((cell) => cell >= 0),
-    connected = new Set<number>();
+  const black = sea.map((value, cell) => (value ? cell : -1)).filter((cell) => cell >= 0);
+  const connected = new Set<number>();
   if (black.length) {
     const stack = [black[0]!];
     connected.add(black[0]!);

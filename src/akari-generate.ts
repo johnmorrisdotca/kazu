@@ -5,14 +5,14 @@ import {
   AKARI_MOST_ATTEMPTS,
   AKARI_MOST_SIDE,
 } from "./akari.constants.ts";
+import type { AkariBoard, AkariLevel, AkariPuzzle } from "./akari.types.ts";
 import { akariNeighbours, akariVisible, checkAkari, isAkariBoard } from "./akari-board.ts";
 import { akariModel } from "./akari-logic.ts";
 import { solveAkari } from "./akari-solve.ts";
 import { templateAkari } from "./akari-template.ts";
 import { logicCsp, openSlots } from "./csp.ts";
-import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
-import type { AkariBoard, AkariLevel, AkariPuzzle } from "./akari.types.ts";
 import type { Random } from "./random.ts";
+import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
 
 type Cells = (number | null | false)[];
 
@@ -71,8 +71,8 @@ function bestAkari(
 ): { board: AkariBoard; solution: readonly number[] } | null {
   // Extra-hard is the hardest of several boards that need supposing: the most suppositions wins.
   const wanted = level === "extra-hard" ? 8 : 1;
-  let best: { board: AkariBoard; probes: number; solution: readonly number[] } | null = null,
-    found = 0;
+  let best: { board: AkariBoard; probes: number; solution: readonly number[] } | null = null;
+  let found = 0;
   for (let attempt = 0; attempt < attempts && found < wanted; attempt += 1) {
     const made = attemptAkari(width, height, level, random, crowd);
     if (!made) continue;
@@ -104,8 +104,8 @@ function attemptAkari(
   const base: AkariBoard = { width, height, cells };
 
   // Light every white square with randomly chosen bulbs that never see one another.
-  const lit = new Set<number>(),
-    bulbs = new Set<number>();
+  const lit = new Set<number>();
+  const bulbs = new Set<number>();
   for (const cell of shuffled(
     cells.flatMap((value, at) => (value === null ? [at] : [])),
     random,

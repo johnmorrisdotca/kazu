@@ -1,7 +1,7 @@
-import { isRegionsBoard } from "./regions-board.ts";
-import { regionsModel } from "./regions-logic.ts";
 import { decide, logicCsp, openSlots, solveCsp } from "./csp.ts";
 import type { RegionsBoard, RegionsRating } from "./regions.types.ts";
+import { isRegionsBoard } from "./regions-board.ts";
+import { regionsModel } from "./regions-logic.ts";
 
 /** Rates a board with one answer by solving it as a person would: with the rules, then by supposing one number at a time.
  *
@@ -33,17 +33,17 @@ export function rateRegions(board: RegionsBoard): RegionsRating {
   });
   const regions = new Map<string, number>();
   const label = Array<number>(answer.length).fill(-1);
-  let count = 0,
-    largest = 0,
-    unnamed = 0;
+  let count = 0;
+  let largest = 0;
+  let unnamed = 0;
   for (let first = 0; first < answer.length; first += 1) {
     if (label[first]! >= 0) continue;
     const members = [first];
     label[first] = count;
     for (let at = 0; at < members.length; at += 1) {
-      const cell = members[at]!,
-        x = cell % board.width,
-        y = Math.floor(cell / board.width);
+      const cell = members[at]!;
+      const x = cell % board.width;
+      const y = Math.floor(cell / board.width);
       for (const [nx, ny] of [
         [x + 1, y],
         [x - 1, y],

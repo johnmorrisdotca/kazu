@@ -1,12 +1,12 @@
+import { countCsp, logicCsp, openSlots } from "./csp.ts";
 import { LOOP_LEVELS, LOOP_MOST_ATTEMPTS, LOOP_MOST_SIDE } from "./loop.constants.ts";
+import type { LoopBoard, LoopLevel, LoopPuzzle } from "./loop.types.ts";
 import { checkLoop, loopCellEdges } from "./loop-board.ts";
 import { loopModel } from "./loop-logic.ts";
 import { solveLoop } from "./loop-solve.ts";
 import { templateLoop } from "./loop-template.ts";
-import { countCsp, logicCsp, openSlots } from "./csp.ts";
-import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
-import type { LoopBoard, LoopLevel, LoopPuzzle } from "./loop.types.ts";
 import type { Random } from "./random.ts";
+import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
 
 /**
  * Makes a seeded puzzle and proves it has one answer. A random winding loop is grown cell by cell, every square is
@@ -42,8 +42,8 @@ export function generateLoop(width = 5, height = width, seed = 1, level: LoopLev
     work.calls = 0;
     const aimed = LOOP_LEVELS[aim]!;
     const wanted = 1;
-    let best: { board: LoopBoard; probes: number } | null = null,
-      found = 0;
+    let best: { board: LoopBoard; probes: number } | null = null;
+    let found = 0;
     for (let attempt = 0; attempt < LOOP_MOST_ATTEMPTS && found < wanted && work.calls < work.limit; attempt += 1) {
       const made = attemptLoop(width, height, aimed, random, work);
       if (!made) continue;
@@ -62,8 +62,8 @@ export function generateLoop(width = 5, height = width, seed = 1, level: LoopLev
 
 /** The loop of a random region of squares: connected, without a hole, and never touching itself at a corner. */
 function growRegion(width: number, height: number, share: number, thin: number, random: Random): Uint8Array {
-  const stride = width + 2,
-    inside = new Uint8Array(stride * (height + 2));
+  const stride = width + 2;
+  const inside = new Uint8Array(stride * (height + 2));
   const at = (x: number, y: number) => (y + 1) * stride + x + 1;
   const target = Math.max(2, Math.round(width * height * share));
   const start = at(Math.floor(random() * width), Math.floor(random() * height));
@@ -71,8 +71,8 @@ function growRegion(width: number, height: number, share: number, thin: number, 
   let size = 1;
   const outsideReaches = (): boolean => {
     // Every square not in the region must still be reachable from beyond the board.
-    const seen = new Uint8Array(inside.length),
-      stack = [0];
+    const seen = new Uint8Array(inside.length);
+    const stack = [0];
     seen[0] = 1;
     let reached = 1;
     while (stack.length) {

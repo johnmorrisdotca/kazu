@@ -1,11 +1,10 @@
 import { describe, expect, it } from "vitest";
-
-import { conflictsOf } from "./conflicts.ts";
-import { readGivens } from "./givens.ts";
 import { decodeCells } from "./cells.ts";
+import { conflictsOf } from "./conflicts.ts";
 import { generateKazu } from "./generate.ts";
-import { KAZU_KINDS, KAZU_SPECS } from "./kinds.ts";
+import { readGivens } from "./givens.ts";
 import type { KazuKind } from "./kinds.ts";
+import { KAZU_KINDS, KAZU_SPECS } from "./kinds.ts";
 
 function valuesOf(kind: KazuKind, size: number, seed: number) {
   const puzzle = generateKazu(kind, size, "medium", seed);
@@ -73,7 +72,9 @@ describe("conflicts", () => {
     if (cage.sum + 1 <= 6) expect(conflictsOf(given, grid)).toContain(a);
     // A full cage with the wrong total.
     const full = new Array<number>(36).fill(0);
-    cage.cells.forEach((cell, i) => (full[cell] = (i % 6) + 1));
+    cage.cells.forEach((cell, i) => {
+      full[cell] = (i % 6) + 1;
+    });
     const total = full.reduce((sum, value) => sum + value, 0);
     if (total !== cage.sum) for (const cell of cage.cells) expect(conflictsOf(given, full)).toContain(cell);
     expect(b).toBeDefined();

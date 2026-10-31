@@ -2,7 +2,7 @@ import { decodeCells, encodeCells } from "./cells.ts";
 import { countSolutionsWithin, fillLayout } from "./group-solve.ts";
 import type { KazuLevel, KazuPuzzle } from "./kinds.ts";
 import { boxedLayout, cagedLayout, neighbours } from "./layout.ts";
-import { seededRandom, type Random } from "./random.ts";
+import { type Random, seededRandom } from "./random.ts";
 
 /**
  * Making a Killer Sudoku (Sum Cages) puzzle from a seed: a filled Sudoku grid, cut into cages whose
@@ -71,7 +71,11 @@ export type Cage = { cells: number[]; sum: number };
  */
 export function encodeKiller(cells: readonly number[], cages: readonly Cage[]): string {
   const cageOf = new Array<number>(cells.length).fill(0);
-  cages.forEach((cage, c) => cage.cells.forEach((index) => (cageOf[index] = c)));
+  cages.forEach((cage, c) => {
+    cage.cells.forEach((index) => {
+      cageOf[index] = c;
+    });
+  });
   if (cages.length > CAGE_LETTERS.length) throw new Error(`${cages.length} cages is more than a code can name.`);
   const letters = cageOf.map((c) => CAGE_LETTERS[c]).join("");
   const sums = cages.map((cage) => cage.sum.toString(36).padStart(2, "0")).join("");
@@ -288,7 +292,11 @@ function joinCages(size: number, solution: readonly number[], level: KazuLevel, 
     tried += 1
   ) {
     const cageOf = new Array<number>(size * size);
-    cages.forEach((cage, c) => cage.cells.forEach((index) => (cageOf[index] = c)));
+    cages.forEach((cage, c) => {
+      cage.cells.forEach((index) => {
+        cageOf[index] = c;
+      });
+    });
     /*
      * The smallest cages first, most of the time: a cage of one cell is a printed number, and a Sum
      * Cages puzzle is the one with next to none of those. The rest of the time any cage, so the

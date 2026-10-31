@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { akariNeighbours, akariVisible, checkAkari, isAkariBoard, progressAkari } from "./akari-board.ts";
-import { solveAkari } from "./akari-solve.ts";
-import { generateAkari } from "./akari-generate.ts";
-import { akariFinished, decodeAkari, encodeAkari, hintAkari, newAkari, toggleAkari, undoAkari } from "./akari-game.ts";
 import { drawAkari } from "./akari-draw.ts";
+import { akariFinished, decodeAkari, encodeAkari, hintAkari, newAkari, toggleAkari, undoAkari } from "./akari-game.ts";
+import { generateAkari } from "./akari-generate.ts";
+import { solveAkari } from "./akari-solve.ts";
 
 describe("Akari rules", () => {
   const board = {

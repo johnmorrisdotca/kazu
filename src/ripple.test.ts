@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { checkRipple, isRippleBoard, progressRipple } from "./ripple-board.ts";
-import { solveRipple } from "./ripple-solve.ts";
-import { generateRipple } from "./ripple-generate.ts";
+import { drawRipple } from "./ripple-draw.ts";
 import {
   decodeRipple,
   encodeRipple,
@@ -12,7 +11,8 @@ import {
   toggleRippleNote,
   undoRipple,
 } from "./ripple-game.ts";
-import { drawRipple } from "./ripple-draw.ts";
+import { generateRipple } from "./ripple-generate.ts";
+import { solveRipple } from "./ripple-solve.ts";
 
 describe("Ripple Effect rooms and spacing", () => {
   it("requires room values 1 through room size exactly once", () => {
@@ -104,9 +104,9 @@ describe("Ripple Effect rooms and spacing", () => {
   });
 
   it("keeps play immutable, pencil entries reversible and saves public state only", () => {
-    const puzzle = generateRipple(9, 9, 5),
-      game = newRipple(puzzle),
-      hint = hintRipple(game);
+    const puzzle = generateRipple(9, 9, 5);
+    const game = newRipple(puzzle);
+    const hint = hintRipple(game);
     expect(hint).not.toBeNull();
     const noted = toggleRippleNote(game, hint!.cell, hint!.value);
     expect(game.notes[hint!.cell]).toEqual([]);

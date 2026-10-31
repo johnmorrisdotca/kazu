@@ -1,4 +1,5 @@
 import { checkHitori } from "./hitori-board.ts";
+import { drawHitori } from "./hitori-draw.ts";
 import {
   decodeHitori,
   encodeHitori,
@@ -8,11 +9,10 @@ import {
   shadeHitori,
   undoHitori,
 } from "./hitori-game.ts";
-import { drawHitori } from "./hitori-draw.ts";
-import { KAZU_STYLE } from "./style.ts";
-import { HITORI_PLAY_STYLE } from "./hitori-style.ts";
-import { hitoriWords } from "./hitori-strings.ts";
 import type { HitoriDrawOptions, HitoriMount, HitoriMountOptions } from "./hitori-play.types.ts";
+import { hitoriWords } from "./hitori-strings.ts";
+import { HITORI_PLAY_STYLE } from "./hitori-style.ts";
+import { KAZU_STYLE } from "./style.ts";
 
 /** A keyboard- and touch-friendly Hitori player, mounted in any host element.
  *
@@ -34,20 +34,20 @@ import type { HitoriDrawOptions, HitoriMount, HitoriMountOptions } from "./hitor
  */
 export function mountHitori(host: HTMLElement, initial: HitoriMountOptions): HitoriMount {
   const doc = host.ownerDocument;
-  let options = { ...initial },
-    game = initial.progress ? decodeHitori(initial.progress) : null;
+  let options = { ...initial };
+  let game = initial.progress ? decodeHitori(initial.progress) : null;
   game ??= newHitori(initial.board);
-  let selected = 0,
-    errors: readonly number[] = [],
-    message = "",
-    finished = checkHitori(game.board, game.shaded).ok,
-    dead = false;
-  const root = doc.createElement("div"),
-    style = doc.createElement("style"),
-    board = doc.createElement("div");
-  const status = doc.createElement("p"),
-    tools = doc.createElement("div"),
-    help = doc.createElement("p");
+  let selected = 0;
+  let errors: readonly number[] = [];
+  let message = "";
+  let finished = checkHitori(game.board, game.shaded).ok;
+  let dead = false;
+  const root = doc.createElement("div");
+  const style = doc.createElement("style");
+  const board = doc.createElement("div");
+  const status = doc.createElement("p");
+  const tools = doc.createElement("div");
+  const help = doc.createElement("p");
   root.className = "kh-root";
   style.textContent = KAZU_STYLE.replace(/\.kazu/g, ".ks-palette") + HITORI_PLAY_STYLE;
   board.className = "kh-board";
@@ -89,9 +89,9 @@ export function mountHitori(host: HTMLElement, initial: HitoriMountOptions): Hit
   };
   const render = () => {
     if (dead) return;
-    const words = hitoriWords(options.language),
-      focused = board.contains(doc.activeElement),
-      size = game!.board.size;
+    const words = hitoriWords(options.language);
+    const focused = board.contains(doc.activeElement);
+    const size = game!.board.size;
     board.innerHTML = drawHitori(game!.board, { ...options, shaded: game!.shaded, selected, errors });
     const cells = doc.createElement("div");
     cells.className = "kh-cells";

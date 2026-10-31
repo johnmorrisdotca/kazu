@@ -1,8 +1,8 @@
+import { decide, openSlots, solveCsp } from "./csp.ts";
 import { SHIKAKU_MOST_NODES } from "./shikaku.constants.ts";
+import type { ShikakuBoard, ShikakuRectangle, ShikakuSolve } from "./shikaku.types.ts";
 import { checkShikaku, isShikakuBoard } from "./shikaku-board.ts";
 import { shikakuModel } from "./shikaku-logic.ts";
-import { decide, openSlots, solveCsp } from "./csp.ts";
-import type { ShikakuBoard, ShikakuRectangle, ShikakuSolve } from "./shikaku.types.ts";
 
 /** Exact cover over squares. A bounded search reports incompleteness instead of claiming uniqueness.
  *
@@ -25,8 +25,8 @@ export function solveShikaku(
   options: { limit?: number; nodes?: number } = {},
 ): ShikakuSolve {
   if (!isShikakuBoard(board)) throw new RangeError("Invalid Shikaku board");
-  const limit = options.limit ?? 2,
-    budget = options.nodes ?? SHIKAKU_MOST_NODES;
+  const limit = options.limit ?? 2;
+  const budget = options.nodes ?? SHIKAKU_MOST_NODES;
   if (!Number.isInteger(limit) || limit < 1 || !Number.isInteger(budget) || budget < 1)
     throw new RangeError("Invalid search bounds");
   if (checkShikaku(board, placed).errors.length) return { count: 0, solution: null, complete: true, nodes: 0 };

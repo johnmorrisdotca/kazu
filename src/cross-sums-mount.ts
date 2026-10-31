@@ -1,3 +1,4 @@
+import type { CrossSumsGame } from "./cross-sums.types.ts";
 import { progressCrossSums } from "./cross-sums-board.ts";
 import { drawCrossSums } from "./cross-sums-draw.ts";
 import {
@@ -9,10 +10,9 @@ import {
   newCrossSums,
   undoCrossSums,
 } from "./cross-sums-game.ts";
-import { CROSS_SUMS_PLAY_STYLE } from "./cross-sums-style.ts";
-import { crossSumsWords } from "./cross-sums-strings.ts";
-import type { CrossSumsGame } from "./cross-sums.types.ts";
 import type { CrossSumsMount, CrossSumsMountOptions } from "./cross-sums-play.types.ts";
+import { crossSumsWords } from "./cross-sums-strings.ts";
+import { CROSS_SUMS_PLAY_STYLE } from "./cross-sums-style.ts";
 
 /** Mount the native CrossSums player in a host element and return its cleanup and control handle.
  *
@@ -39,18 +39,18 @@ export function mountCrossSums(host: HTMLElement, initial: CrossSumsMountOptions
   let game: CrossSumsGame = initial.progress
     ? (decodeCrossSums(initial.progress) ?? newCrossSums(initial.board))
     : newCrossSums(initial.board);
-  let selected = game.board.cells.findIndex((cell) => cell.kind === "white"),
-    pencil = false,
-    message = "",
-    dead = false;
-  const root = doc.createElement("div"),
-    style = doc.createElement("style"),
-    board = doc.createElement("div"),
-    tools = doc.createElement("div"),
-    pad = doc.createElement("div"),
-    status = doc.createElement("p"),
-    help = doc.createElement("p"),
-    grid = doc.createElement("div");
+  let selected = game.board.cells.findIndex((cell) => cell.kind === "white");
+  let pencil = false;
+  let message = "";
+  let dead = false;
+  const root = doc.createElement("div");
+  const style = doc.createElement("style");
+  const board = doc.createElement("div");
+  const tools = doc.createElement("div");
+  const pad = doc.createElement("div");
+  const status = doc.createElement("p");
+  const help = doc.createElement("p");
+  const grid = doc.createElement("div");
   root.className = "kk-root";
   style.textContent = CROSS_SUMS_PLAY_STYLE;
   board.className = "kk-board";
@@ -86,9 +86,9 @@ export function mountCrossSums(host: HTMLElement, initial: CrossSumsMountOptions
   };
   const render = () => {
     if (dead) return;
-    const w = words(),
-      b = game.board,
-      focus = grid.contains(doc.activeElement);
+    const w = words();
+    const b = game.board;
+    const focus = grid.contains(doc.activeElement);
     (board.firstElementChild as HTMLElement).innerHTML = drawCrossSums(b, {
       values: game.values,
       notes: game.notes,
@@ -104,8 +104,8 @@ export function mountCrossSums(host: HTMLElement, initial: CrossSumsMountOptions
       button.className = "kk-cell";
       button.disabled = cell.kind === "black";
       button.tabIndex = selected === index ? 0 : -1;
-      const row = Math.floor(index / b.width) + 1,
-        column = (index % b.width) + 1;
+      const row = Math.floor(index / b.width) + 1;
+      const column = (index % b.width) + 1;
       const tile =
         cell.kind === "black"
           ? `${w.across} ${cell.across ?? "—"}, ${w.down} ${cell.down ?? "—"}`

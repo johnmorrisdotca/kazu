@@ -1,4 +1,5 @@
 import { checkShikaku, shikakuCells } from "./shikaku-board.ts";
+import { drawShikaku } from "./shikaku-draw.ts";
 import {
   decodeShikaku,
   encodeShikaku,
@@ -9,11 +10,10 @@ import {
   shikakuFinished,
   undoShikaku,
 } from "./shikaku-game.ts";
-import { drawShikaku } from "./shikaku-draw.ts";
-import { KAZU_STYLE } from "./style.ts";
-import { SHIKAKU_PLAY_STYLE } from "./shikaku-style.ts";
-import { shikakuWords } from "./shikaku-strings.ts";
 import type { ShikakuDrawOptions, ShikakuMount, ShikakuMountOptions } from "./shikaku-play.types.ts";
+import { shikakuWords } from "./shikaku-strings.ts";
+import { SHIKAKU_PLAY_STYLE } from "./shikaku-style.ts";
+import { KAZU_STYLE } from "./style.ts";
 
 /** A rectangle player in any element; mount once, update appearance with set, destroy on unmount.
  *
@@ -35,21 +35,21 @@ import type { ShikakuDrawOptions, ShikakuMount, ShikakuMountOptions } from "./sh
  */
 export function mountShikaku(host: HTMLElement, initial: ShikakuMountOptions): ShikakuMount {
   const doc = host.ownerDocument;
-  let options = { ...initial },
-    game = initial.progress ? decodeShikaku(initial.progress) : null;
+  let options = { ...initial };
+  let game = initial.progress ? decodeShikaku(initial.progress) : null;
   game ??= newShikaku(initial.board);
-  let selected = 0,
-    anchor: number | null = null,
-    errors: readonly number[] = [],
-    message = "",
-    finished = shikakuFinished(game),
-    dead = false;
-  const root = doc.createElement("div"),
-    style = doc.createElement("style"),
-    board = doc.createElement("div"),
-    status = doc.createElement("p"),
-    tools = doc.createElement("div"),
-    help = doc.createElement("p");
+  let selected = 0;
+  let anchor: number | null = null;
+  let errors: readonly number[] = [];
+  let message = "";
+  let finished = shikakuFinished(game);
+  let dead = false;
+  const root = doc.createElement("div");
+  const style = doc.createElement("style");
+  const board = doc.createElement("div");
+  const status = doc.createElement("p");
+  const tools = doc.createElement("div");
+  const help = doc.createElement("p");
   root.className = "ks-root";
   style.textContent = KAZU_STYLE.replace(/\.kazu/g, ".ks-palette") + SHIKAKU_PLAY_STYLE;
   board.className = "ks-board";
@@ -97,12 +97,12 @@ export function mountShikaku(host: HTMLElement, initial: ShikakuMountOptions): S
       render();
       return;
     }
-    const a = anchor,
-      width = game!.board.width,
-      ax = a % width,
-      ay = Math.floor(a / width),
-      x = cell % width,
-      y = Math.floor(cell / width);
+    const a = anchor;
+    const width = game!.board.width;
+    const ax = a % width;
+    const ay = Math.floor(a / width);
+    const x = cell % width;
+    const y = Math.floor(cell / width);
     game = placeShikaku(game!, {
       x: Math.min(ax, x),
       y: Math.min(ay, y),
@@ -122,9 +122,9 @@ export function mountShikaku(host: HTMLElement, initial: ShikakuMountOptions): S
   };
   const render = () => {
     if (dead) return;
-    const w = words(),
-      b = game!.board,
-      focused = board.contains(doc.activeElement);
+    const w = words();
+    const b = game!.board;
+    const focused = board.contains(doc.activeElement);
     board.classList.toggle("ks-palette", (options.material ?? "ivory") === "ivory");
     board.innerHTML = drawShikaku(b, { ...options, rectangles: game!.rectangles, selected, anchor, errors });
     const cells = doc.createElement("div");
@@ -212,8 +212,8 @@ export function mountShikaku(host: HTMLElement, initial: ShikakuMountOptions): S
     button(w.restart, restart);
     button(w.expand, () => {
       if (root.parentElement !== host) return;
-      const dialog = doc.createElement("dialog"),
-        close = doc.createElement("button");
+      const dialog = doc.createElement("dialog");
+      const close = doc.createElement("button");
       dialog.className = "ks-dialog";
       close.className = "ks-close";
       close.textContent = w.close;

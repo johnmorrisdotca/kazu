@@ -1,9 +1,9 @@
 import { symbolOf } from "./cells.ts";
-import { kazuGeometry, KAZU_CELL } from "./geometry.ts";
-import { readGivens, type KazuGivens } from "./givens.ts";
+import { KAZU_CELL, kazuGeometry } from "./geometry.ts";
+import { type KazuGivens, readGivens } from "./givens.ts";
 import type { KazuKind } from "./kinds.ts";
 import { notesOf } from "./progress.ts";
-import { kazuNameOf, kazuSay, type KazuLanguage } from "./strings.ts";
+import { type KazuLanguage, kazuNameOf, kazuSay } from "./strings.ts";
 import { KAZU_STYLE } from "./style.ts";
 import { cageOutline } from "./sum-cages.ts";
 import { lineFrom, TOWER_SIDES } from "./towers-code.ts";
@@ -47,7 +47,7 @@ export type KazuDrawOptions = {
   frame?: boolean;
 };
 
-const escape = (text: string) =>
+const escapeHtml = (text: string) =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const num = (value: number) => String(Math.round(value * 100) / 100);
 
@@ -222,7 +222,9 @@ export function drawKazu(
   const cageOf = new Map<number, number>();
   const sumAt = new Map<number, number>();
   (givens.cages ?? []).forEach((cage, c) => {
-    cage.cells.forEach((index) => cageOf.set(index, c));
+    cage.cells.forEach((index) => {
+      cageOf.set(index, c);
+    });
     sumAt.set(Math.min(...cage.cells), cage.sum);
   });
   const cageLines =
@@ -298,7 +300,7 @@ export function drawKazu(
 
   const label = options.label ?? kazuSay(language, "board", { name: kazuNameOf(kind, language), size });
   return [
-    `<svg class="kazu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${side} ${side}" role="img" aria-label="${escape(label)}" data-kind="${kind}" data-size="${size}"${options.done === true ? ` data-solved="true"` : ""}>`,
+    `<svg class="kazu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${side} ${side}" role="img" aria-label="${escapeHtml(label)}" data-kind="${kind}" data-size="${size}"${options.done === true ? ` data-solved="true"` : ""}>`,
     options.style === true ? `<style>${KAZU_STYLE}</style>` : "",
     options.frame === true ? `<rect class="kz-frame" x="0" y="0" width="${side}" height="${side}" rx="12"/>` : "",
     `<rect class="kz-paper" x="${options.frame === true ? 6 : 0}" y="${options.frame === true ? 6 : 0}" width="${options.frame === true ? side - 12 : side}" height="${options.frame === true ? side - 12 : side}" rx="${options.frame === true ? 8 : 6}"/>`,

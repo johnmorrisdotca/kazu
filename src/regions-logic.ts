@@ -1,6 +1,6 @@
 import type { Csp } from "./csp.ts";
-import { regionsNeighbours } from "./regions-board.ts";
 import type { RegionsBoard } from "./regions.types.ts";
+import { regionsNeighbours } from "./regions-board.ts";
 
 /** The most any square can be: a region holding a given or an entry is that number, and one with none lies among the squares with neither. */
 export function regionsMostValue(board: RegionsBoard, fixed: readonly number[]): number {
@@ -37,20 +37,20 @@ export function regionsModel(
   fixed: readonly number[],
   most = regionsMostValue(board, fixed),
 ): { csp: Csp; most: number } {
-  const cells = board.width * board.height,
-    values = most;
+  const cells = board.width * board.height;
+  const values = most;
   const nb = new Int32Array(cells * 4).fill(-1);
   for (let cell = 0; cell < cells; cell += 1)
     regionsNeighbours(board, cell).forEach((next, k) => {
       nb[cell * 4 + k] = next;
     });
   const starts = Int32Array.from({ length: cells + 1 }, (_, i) => i * values);
-  const only = new Int32Array(cells),
-    label = new Int32Array(cells),
-    size = new Int32Array(cells + 1),
-    stack = new Int32Array(cells + 1),
-    members = new Int32Array(cells),
-    seen = new Int32Array(cells);
+  const only = new Int32Array(cells);
+  const label = new Int32Array(cells);
+  const size = new Int32Array(cells + 1);
+  const stack = new Int32Array(cells + 1);
+  const members = new Int32Array(cells);
+  const seen = new Int32Array(cells);
   const dirty = new Uint8Array(values + 1);
   let stamp = 0;
 
@@ -60,8 +60,8 @@ export function regionsModel(
     while (changed) {
       changed = false;
       for (let cell = 0; cell < cells; cell += 1) {
-        let left = 0,
-          last = 0;
+        let left = 0;
+        let last = 0;
         const base = cell * values;
         for (let v = 0; v < values; v += 1)
           if (alive[base + v]) {
@@ -76,8 +76,8 @@ export function regionsModel(
       for (let start = 0; start < cells; start += 1) {
         const v = only[start]!;
         if (!v || label[start]) continue;
-        let count = 0,
-          top = 0;
+        let count = 0;
+        let top = 0;
         stack[top++] = start;
         label[start] = 1;
         while (top) {
@@ -106,9 +106,9 @@ export function regionsModel(
         }
         // Short of its size: grow through squares that can still be v.
         stamp += 1;
-        let reached = count,
-          frontier = 0,
-          lastFrontier = -1;
+        let reached = count;
+        let frontier = 0;
+        let lastFrontier = -1;
         for (let m = 0; m < count; m += 1) seen[members[m]!] = stamp;
         for (let at = 0; at < reached; at += 1) {
           const cell = members[at]!;
@@ -154,8 +154,8 @@ export function regionsModel(
         for (let start = 0; start < cells; start += 1) {
           if (label[start] || !alive[start * values + slot]) continue;
           components += 1;
-          let count = 0,
-            top = 0;
+          let count = 0;
+          let top = 0;
           stack[top++] = start;
           label[start] = components;
           while (top) {

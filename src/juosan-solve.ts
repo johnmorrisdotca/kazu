@@ -1,6 +1,6 @@
 import { JUOSAN_MOST_NODES } from "./juosan.constants.ts";
-import { checkJuosan, isJuosanBoard } from "./juosan-board.ts";
 import type { JuosanBoard, JuosanMark, JuosanSolve } from "./juosan.types.ts";
+import { checkJuosan, isJuosanBoard } from "./juosan-board.ts";
 
 /** Counts labeled solutions up to a limit; `complete` distinguishes exhaustion from cutoff.
  *

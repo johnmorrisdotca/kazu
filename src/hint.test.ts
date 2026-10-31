@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import { decodeCells } from "./cells.ts";
 import { generateKazu } from "./generate.ts";
+import { readGivens } from "./givens.ts";
 import { hintKazu } from "./hint.ts";
 import { KAZU_KINDS, KAZU_SPECS } from "./kinds.ts";
-import { readGivens } from "./givens.ts";
 import { kazuGuessDepth } from "./solve.ts";
 
 describe("a hint", () => {
@@ -76,7 +76,7 @@ describe("a hint", () => {
     const solution = decodeCells(puzzle.solution, size)!;
     const printed = readGivens("number-place", size, puzzle.givens)!.cells;
     const entries = new Array<number>(36).fill(0);
-    const cell = printed.findIndex((value) => value === 0);
+    const cell = printed.indexOf(0);
     entries[cell] = solution[cell] === 1 ? 2 : 1;
     let landed = false;
     for (let guard = 0; guard < 40; guard += 1) {

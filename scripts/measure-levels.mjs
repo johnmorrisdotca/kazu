@@ -12,11 +12,11 @@ import { performance } from "node:perf_hooks";
 import process from "node:process";
 
 import * as akari from "../dist/akari-entry.js";
-import * as regions from "../dist/regions-entry.js";
-import * as hitori from "../dist/hitori-entry.js";
 import * as crossSums from "../dist/cross-sums-entry.js";
-import * as shikaku from "../dist/shikaku-entry.js";
+import * as hitori from "../dist/hitori-entry.js";
 import * as loop from "../dist/loop-entry.js";
+import * as regions from "../dist/regions-entry.js";
+import * as shikaku from "../dist/shikaku-entry.js";
 
 const LEVELS = ["easy", "medium", "hard", "extra-hard"];
 
@@ -140,9 +140,9 @@ if (first === "--show") {
   console.log(`${kind} ${size} ${level} seed ${seed}: ${JSON.stringify(spec.rate(puzzle))}`);
   console.log(draw(kind, puzzle));
 } else {
-  const only = first && KINDS[first] ? first : null,
-    seeds = Number((only ? rest[0] : first) ?? 30) || 30,
-    size = Number((only ? rest[1] : rest[0]) ?? 0) || 0;
+  const only = first && KINDS[first] ? first : null;
+  const seeds = Number((only ? rest[0] : first) ?? 30) || 30;
+  const size = Number((only ? rest[1] : rest[0]) ?? 0) || 0;
   for (const [kind, spec] of Object.entries(KINDS)) {
     if (only && kind !== only) continue;
     console.log(`\n### ${kind}, ${seeds} seeds\n`);
@@ -153,9 +153,9 @@ if (first === "--show") {
     for (const n of spec.sizes) {
       if (size && n !== size) continue;
       for (const level of LEVELS) {
-        const times = [],
-          depths = [0, 0, 0],
-          sums = Object.fromEntries(spec.columns.map((c) => [c, 0]));
+        const times = [];
+        const depths = [0, 0, 0];
+        const sums = Object.fromEntries(spec.columns.map((c) => [c, 0]));
         let made = 0;
         for (let seed = 1; seed <= seeds; seed += 1) {
           const started = performance.now();

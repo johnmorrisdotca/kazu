@@ -1,9 +1,9 @@
+import { countCsp, openSlots } from "./csp.ts";
+import type { HitoriBoard, HitoriLevel } from "./hitori.types.ts";
 import { hitoriNeighbors } from "./hitori-board.ts";
 import { hitoriModel } from "./hitori-logic.ts";
-import { countCsp, openSlots } from "./csp.ts";
-import { shuffled } from "./random.ts";
-import type { HitoriBoard, HitoriLevel } from "./hitori.types.ts";
 import type { Random } from "./random.ts";
+import { shuffled } from "./random.ts";
 
 export const SHARE: Record<HitoriLevel, number> = { easy: 0.26, medium: 0.27, hard: 0.28, "extra-hard": 0.3 };
 
@@ -20,14 +20,14 @@ export function candidateHitori(
   const shaded = Array<boolean>(total).fill(false);
   let count = 0;
   const around = Array.from({ length: total }, (_, cell) => hitoriNeighbors(size, cell));
-  const mark = new Int32Array(total),
-    stack = new Int32Array(total);
+  const mark = new Int32Array(total);
+  const stack = new Int32Array(total);
   let stamp = 0;
   const connected = (): boolean => {
     const first = shaded.indexOf(false);
     stamp += 1;
-    let top = 0,
-      reached = 1;
+    let top = 0;
+    let reached = 1;
     stack[top++] = first;
     mark[first] = stamp;
     while (top)
@@ -56,9 +56,9 @@ export function candidateHitori(
 
   const numbers = isotope(base, size, random).map((n, cell) => (shaded[cell] ? 0 : n));
   const partnersOf = (cell: number): number[] => {
-    const x = cell % size,
-      y = Math.floor(cell / size),
-      found: number[] = [];
+    const x = cell % size;
+    const y = Math.floor(cell / size);
+    const found: number[] = [];
     for (let k = 0; k < size; k += 1) {
       if (k !== x && !shaded[y * size + k]) found.push(y * size + k);
       if (k !== y && !shaded[k * size + x]) found.push(k * size + x);
@@ -76,8 +76,8 @@ export function candidateHitori(
   const { csp } = hitoriModel(board, 2);
   let proof = countCsp(csp, openSlots(csp), 2, 20_000);
   for (let repair = 0; repair < 60 && proof.count > 1 && !proof.exhausted; repair += 1) {
-    const other = proof.solutions[1]!.slice(),
-      mine = (alive: Uint8Array, cell: number) => alive[2 * cell + 1] === 1;
+    const other = proof.solutions[1]!.slice();
+    const mine = (alive: Uint8Array, cell: number) => alive[2 * cell + 1] === 1;
     const candidates = shuffled(
       blacks.filter((cell) => !mine(other, cell)),
       random,
@@ -105,8 +105,8 @@ export function latinSquare(size: number, random: Random): number[] | null {
   const fill = (at: number): boolean => {
     if (at === cells.length) return true;
     if (++steps > 20_000) return false;
-    const x = at % size,
-      y = Math.floor(at / size);
+    const x = at % size;
+    const y = Math.floor(at / size);
     const used = new Set<number>();
     for (let k = 0; k < x; k += 1) used.add(cells[y * size + k]!);
     for (let k = 0; k < y; k += 1) used.add(cells[k * size + x]!);
@@ -126,13 +126,13 @@ export function latinSquare(size: number, random: Random): number[] | null {
 /** The same square with its rows, columns and numbers renamed at random: still one of each in every line. */
 export function isotope(square: readonly number[], size: number, random: Random): number[] {
   const rows = shuffled(
-      Array.from({ length: size }, (_, i) => i),
-      random,
-    ),
-    cols = shuffled(
-      Array.from({ length: size }, (_, i) => i),
-      random,
-    );
+    Array.from({ length: size }, (_, i) => i),
+    random,
+  );
+  const cols = shuffled(
+    Array.from({ length: size }, (_, i) => i),
+    random,
+  );
   const names = shuffled(
     Array.from({ length: size }, (_, i) => i + 1),
     random,

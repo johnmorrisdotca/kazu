@@ -65,10 +65,10 @@ export type CspCount = {
  */
 export function countCsp(csp: Csp, start: Uint8Array, limit: number, budget: number): CspCount {
   const variables = csp.starts.length - 1;
-  let count = 0,
-    nodes = 0,
-    exhausted = false,
-    stopped = false;
+  let count = 0;
+  let nodes = 0;
+  let exhausted = false;
+  let stopped = false;
   let solution: Uint8Array | null = null;
   const solutions: Uint8Array[] = [];
   const visit = (alive: Uint8Array, hint?: number): void => {
@@ -78,8 +78,8 @@ export function countCsp(csp: Csp, start: Uint8Array, limit: number, budget: num
       return;
     }
     if (!csp.propagate(alive, hint)) return;
-    let pick = csp.choose ? csp.choose(alive) : -1,
-      best = 99_999;
+    let pick = csp.choose ? csp.choose(alive) : -1;
+    let best = 99_999;
     if (!csp.choose) {
       for (let v = 0; v < variables; v += 1) {
         const left = slotsLeft(csp, alive, v);

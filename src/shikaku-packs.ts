@@ -1,5 +1,5 @@
-import { generateShikaku } from "./shikaku-generate.ts";
 import type { ShikakuLevel, ShikakuPuzzle } from "./shikaku.types.ts";
+import { generateShikaku } from "./shikaku-generate.ts";
 
 /** One of the square, wide or tall native Shikaku challenge routes.
  *
@@ -113,8 +113,8 @@ export const SHIKAKU_CHALLENGE_PACKS: Readonly<
  * ```
  */
 export function generateShikakuChallenge(pack: ShikakuPackKey, challenge = 1): ShikakuChallengePuzzle {
-  const definition = SHIKAKU_CHALLENGE_PACKS[pack],
-    entry = definition?.challenges[challenge - 1];
+  const definition = SHIKAKU_CHALLENGE_PACKS[pack];
+  const entry = definition?.challenges[challenge - 1];
   if (!definition || !entry) throw new RangeError("Unknown Shikaku challenge");
   return {
     pack,

@@ -1,5 +1,5 @@
-import { isRegionsBoard } from "./regions-board.ts";
 import type { RegionsBoard } from "./regions.types.ts";
+import { isRegionsBoard } from "./regions-board.ts";
 import type { RegionsDrawOptions } from "./regions-play.types.ts";
 import { regionsWords } from "./regions-strings.ts";
 

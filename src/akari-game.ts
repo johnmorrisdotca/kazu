@@ -1,6 +1,6 @@
+import type { AkariBoard, AkariGame } from "./akari.types.ts";
 import { checkAkari, isAkariBoard } from "./akari-board.ts";
 import { solveAkari } from "./akari-solve.ts";
-import type { AkariBoard, AkariGame } from "./akari.types.ts";
 
 /** Starts a game with only its public board data.
  *

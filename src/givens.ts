@@ -1,9 +1,9 @@
 import { decodeCells } from "./cells.ts";
 import { decodeJigsaw } from "./jigsaw.ts";
 import type { KazuKind } from "./kinds.ts";
-import { boxedLayout, cagedLayout, KAZU_BOXES, regionLayout, type Layout } from "./layout.ts";
+import { boxedLayout, cagedLayout, KAZU_BOXES, type Layout, regionLayout } from "./layout.ts";
 import { decodeMoreOrLess, type Mark } from "./more-or-less-code.ts";
-import { decodeKiller, type Cage } from "./sum-cages.ts";
+import { type Cage, decodeKiller } from "./sum-cages.ts";
 import { decodeTowers, type TowerClues } from "./towers-code.ts";
 
 /**

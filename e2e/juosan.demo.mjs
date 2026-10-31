@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { serve, noSidewaysScroll } from "./demo.mjs";
+import { expect, test } from "@playwright/test";
+import { noSidewaysScroll, serve } from "./demo.mjs";
 
 test("Juosan training board, play, undo, hints, language and saved progress", async ({ page }) => {
   const errors = [];

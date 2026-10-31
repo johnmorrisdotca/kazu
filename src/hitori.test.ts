@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { checkHitori, isHitoriBoard } from "./hitori-board.ts";
-import { solveHitori } from "./hitori-solve.ts";
-import { generateHitori } from "./hitori-generate.ts";
-import { decodeHitori, encodeHitori, hintHitori, newHitori, shadeHitori, undoHitori } from "./hitori-game.ts";
 import { drawHitori } from "./hitori-draw.ts";
+import { decodeHitori, encodeHitori, hintHitori, newHitori, shadeHitori, undoHitori } from "./hitori-game.ts";
+import { generateHitori } from "./hitori-generate.ts";
+import { solveHitori } from "./hitori-solve.ts";
 
 describe("Hitori rules", () => {
   it("checks row and column duplicates, adjacent shades, and connected white cells", () => {
@@ -48,8 +48,8 @@ describe("Hitori rules", () => {
   });
 
   it("does not count unnecessary additional shades as a separate answer", () => {
-    const puzzle = generateHitori(5, 3),
-      extra = [...puzzle.solution];
+    const puzzle = generateHitori(5, 3);
+    const extra = [...puzzle.solution];
     const cell = extra.findIndex((value) => !value);
     extra[cell] = true;
     expect(checkHitori(puzzle, extra).ok).toBe(true);
@@ -57,9 +57,9 @@ describe("Hitori rules", () => {
   });
 
   it("keeps game state immutable and progress free of the generated answer", () => {
-    const puzzle = generateHitori(5, 42),
-      game = newHitori(puzzle),
-      next = shadeHitori(game, 1);
+    const puzzle = generateHitori(5, 42);
+    const game = newHitori(puzzle);
+    const next = shadeHitori(game, 1);
     expect(game.shaded[1]).toBe(false);
     expect(next.shaded[1]).toBe(true);
     expect(undoHitori(next).shaded[1]).toBe(false);

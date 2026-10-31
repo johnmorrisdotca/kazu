@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
-
-import fixture from "./site.fixture.json" with { type: "json" };
 import { generateKazu } from "./generate.ts";
 import { KAZU_KIND_OF_SITE_KIND, KAZU_SPECS, type KazuKind, type KazuLevel } from "./kinds.ts";
+import fixture from "./site.fixture.json" with { type: "json" };
 
 /** Every puzzle itsutsu.com made before the move: [site kind, size, level, seed, givens, solution]. */
 export const sitePuzzles = fixture.puzzles as [string, number, string, number, string, string][];

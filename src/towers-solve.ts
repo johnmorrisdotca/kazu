@@ -1,4 +1,4 @@
-import { lineFrom, towersSeen, type TowerClues } from "./towers-code.ts";
+import { lineFrom, type TowerClues, towersSeen } from "./towers-code.ts";
 
 /**
  * The Skyscrapers solver (Towers): counting, the reasoning a person does, and

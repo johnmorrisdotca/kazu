@@ -1,12 +1,13 @@
 import { decodeRipple, encodeRipple, generateRipple } from "./dist/ripple-entry.js";
 import { mountRipple } from "./dist/ripple-play-entry.js";
-const get = (id) => document.getElementById(id),
-  params = new URLSearchParams(location.search);
-let language = params.get("lang") === "ja" ? "ja" : "en",
-  handle,
-  activeSeed = Number(params.get("seed") ?? 42),
-  started = Date.now(),
-  stopped = null;
+
+const get = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let language = params.get("lang") === "ja" ? "ja" : "en";
+let handle;
+let activeSeed = Number(params.get("seed") ?? 42);
+let started = Date.now();
+let stopped = null;
 const words = {
   en: {
     field: "Your board",
@@ -187,4 +188,5 @@ if (!params.has("seed") && saved?.seed && Number.isInteger(saved.seed)) {
 start();
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

@@ -1,6 +1,6 @@
+import type { HeyawakeBoard, HeyawakeGame } from "./heyawake.types.ts";
 import { checkHeyawake, isHeyawakeBoard } from "./heyawake-board.ts";
 import { solveHeyawake } from "./heyawake-solve.ts";
-import type { HeyawakeBoard, HeyawakeGame } from "./heyawake.types.ts";
 
 /** Create the initial immutable Heyawake game from a valid board.
  *
@@ -109,7 +109,7 @@ export function restartHeyawake(game: HeyawakeGame): HeyawakeGame {
 export function hintHeyawake(game: HeyawakeGame): { cell: number; value: boolean } | null {
   const result = solveHeyawake(game.board, game.entries);
   if (!result.complete || result.count !== 1 || !result.solution) return null;
-  const cell = game.entries.findIndex((value) => value === null);
+  const cell = game.entries.indexOf(null);
   return cell < 0 ? null : { cell, value: result.solution[cell]! };
 }
 

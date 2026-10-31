@@ -76,7 +76,7 @@ test("off aliases and reflected properties preserve methods and callbacks", asyn
     const preserved = element.game === game;
     element.check = "show";
     const method = typeof element.check;
-    const at = element.game.printed.cells.findIndex((value) => value === 0);
+    const at = element.game.printed.cells.indexOf(0);
     element.select(at);
     element.mount.enter(1);
     return {
@@ -103,7 +103,7 @@ test("native changes cross shadow boundaries and iframe messages match JSON-safe
   const board = page.frameLocator("iframe").locator("kazu-board");
   await expect(board.locator("svg")).toBeVisible();
   await board.evaluate((element) => {
-    const at = element.game.printed.cells.findIndex((value) => value === 0);
+    const at = element.game.printed.cells.indexOf(0);
     element.select(at);
     element.mount.enter(1);
   });
@@ -130,7 +130,7 @@ test("native changes cross shadow boundaries and iframe messages match JSON-safe
   });
   await expect(board.locator("svg")).toBeVisible();
   await board.evaluate((element) => {
-    const at = element.game.printed.cells.findIndex((value) => value === 0);
+    const at = element.game.printed.cells.indexOf(0);
     element.select(at);
     element.mount.enter(1);
   });

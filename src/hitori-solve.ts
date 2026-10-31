@@ -1,8 +1,8 @@
+import { openSlots, solveCsp } from "./csp.ts";
 import { HITORI_MAX_NODES } from "./hitori.constants.ts";
+import type { HitoriBoard, HitoriSolve } from "./hitori.types.ts";
 import { isHitoriBoard } from "./hitori-board.ts";
 import { hitoriModel } from "./hitori-logic.ts";
-import { openSlots, solveCsp } from "./csp.ts";
-import type { HitoriBoard, HitoriSolve } from "./hitori.types.ts";
 
 /**
  * Counts distinct minimal shade patterns: an answer shades only squares that settle a duplicate, so extra shades

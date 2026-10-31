@@ -93,7 +93,11 @@ function build(size: number, region: number[], regionWord: Layout["regionWord"],
     add(Array.from({ length: size }, (_, i) => i * size + (size - 1 - i)));
   }
   const groupsOf: number[][] = Array.from({ length: size * size }, () => []);
-  groups.forEach((cells, g) => cells.forEach((index) => groupsOf[index]!.push(g)));
+  groups.forEach((cells, g) => {
+    cells.forEach((index) => {
+      groupsOf[index]!.push(g);
+    });
+  });
   return { size, groups, groupsOf, region, regionWord, diagonal };
 }
 
@@ -135,9 +139,17 @@ export function cagedLayout(size: number, cages: readonly { cells: readonly numb
   const boxed = boxedLayout(size);
   const groups = [...boxed.groups, ...cages.map((cage) => [...cage.cells])];
   const groupsOf: number[][] = Array.from({ length: size * size }, () => []);
-  groups.forEach((cells, g) => cells.forEach((index) => groupsOf[index]!.push(g)));
+  groups.forEach((cells, g) => {
+    cells.forEach((index) => {
+      groupsOf[index]!.push(g);
+    });
+  });
   const cageOf = new Array<number>(size * size).fill(-1);
-  cages.forEach((cage, c) => cage.cells.forEach((index) => (cageOf[index] = c)));
+  cages.forEach((cage, c) => {
+    cage.cells.forEach((index) => {
+      cageOf[index] = c;
+    });
+  });
   return {
     ...boxed,
     groups,

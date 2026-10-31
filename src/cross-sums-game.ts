@@ -1,6 +1,6 @@
+import type { CrossSumsBoard, CrossSumsGame } from "./cross-sums.types.ts";
 import { checkCrossSums, isCrossSumsBoard } from "./cross-sums-board.ts";
 import { solveCrossSums } from "./cross-sums-solve.ts";
-import type { CrossSumsBoard, CrossSumsGame } from "./cross-sums.types.ts";
 
 /** Create the initial immutable CrossSums game from a valid board.
  *
@@ -54,8 +54,8 @@ export function enterCrossSums(game: CrossSumsGame, cell: number, digit: number,
     digit > 9
   )
     return game;
-  const values = [...game.values],
-    notes = game.notes.map((mark) => [...mark]);
+  const values = [...game.values];
+  const notes = game.notes.map((mark) => [...mark]);
   if (pencil) {
     if (!digit) return game;
     const index = notes[cell]!.indexOf(digit);

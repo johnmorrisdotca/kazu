@@ -1,5 +1,5 @@
-import { isNurikabeBoard } from "./nurikabe-board.ts";
 import type { NurikabeBoard } from "./nurikabe.types.ts";
+import { isNurikabeBoard } from "./nurikabe-board.ts";
 import type { NurikabeDrawOptions } from "./nurikabe-play.types.ts";
 /** SVG text contains the numbered clues and the player's sea marks only.
  *
@@ -17,22 +17,22 @@ import type { NurikabeDrawOptions } from "./nurikabe-play.types.ts";
  */
 export function drawNurikabe(board: NurikabeBoard, options: NurikabeDrawOptions = {}): string {
   if (!isNurikabeBoard(board)) throw new RangeError("Invalid Nurikabe board");
-  const n = board.size,
-    cell = 52;
+  const n = board.size;
+  const cell = 52;
   const palettes = {
     ivory: ["var(--kz-paper,#fbf8f1)", "var(--kz-ink,#1f2320)", "var(--kz-grid,#cfc6b2)"],
     wood: ["#e5cda6", "#493e2f", "#bca582"],
     slate: ["#333a42", "#f1eee7", "#707984"],
   } as const;
-  const [paper, ink, grid] = palettes[options.material ?? "ivory"],
-    sea = options.sea ?? [];
+  const [paper, ink, grid] = palettes[options.material ?? "ivory"];
+  const sea = options.sea ?? [];
   const cells = board.clues
     .map((clue, c) => {
-      const x = (c % n) * cell,
-        y = Math.floor(c / n) * cell,
-        black = sea[c],
-        selected = options.selected === c,
-        error = options.errors?.includes(c);
+      const x = (c % n) * cell;
+      const y = Math.floor(c / n) * cell;
+      const black = sea[c];
+      const selected = options.selected === c;
+      const error = options.errors?.includes(c);
       const tile =
         options.pieces === "tiles" && clue && !black
           ? `<rect x="${x + 10}" y="${y + 10}" width="32" height="32" rx="6" fill="${paper}" stroke="${grid}"/>`

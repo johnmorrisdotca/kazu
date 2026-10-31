@@ -4,10 +4,10 @@ import {
   CROSS_SUMS_MAX_ATTEMPTS,
   CROSS_SUMS_MAX_NODES,
 } from "./cross-sums.constants.ts";
+import type { CrossSumsBoard, CrossSumsCell, CrossSumsPuzzle } from "./cross-sums.types.ts";
 import { isCrossSumsBoard } from "./cross-sums-board.ts";
 import { solveCrossSums } from "./cross-sums-solve.ts";
 import { isKazuSeed, seededRandom } from "./random.ts";
-import type { CrossSumsBoard, CrossSumsCell, CrossSumsPuzzle } from "./cross-sums.types.ts";
 
 /** The first generator, kept as the fallback that cannot fail on a 10×10: a seeded family of crossing runs, returned only when uniquely proved. */
 export function templateCrossSums(seed = 1): Omit<CrossSumsPuzzle, "level"> {
@@ -97,8 +97,8 @@ function randomRectangle(width: number, height: number, random: () => number): n
 }
 
 function tileBoard(solution: readonly (readonly number[])[]): CrossSumsBoard {
-  const height = solution.length + 1,
-    width = solution[0]!.length + 1;
+  const height = solution.length + 1;
+  const width = solution[0]!.length + 1;
   const cells: CrossSumsCell[] = Array.from({ length: width * height }, () => ({
     kind: "black",
     across: null,

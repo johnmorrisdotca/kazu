@@ -2,7 +2,7 @@ import { decodeCells } from "./cells.ts";
 import { readGivens } from "./givens.ts";
 import { decodeJigsaw } from "./jigsaw.ts";
 import { isKazuSize, type KazuCheck, type KazuKind } from "./kinds.ts";
-import { boxedLayout, regionLayout, regionsAreSound, type Layout } from "./layout.ts";
+import { boxedLayout, type Layout, regionLayout, regionsAreSound } from "./layout.ts";
 import { decodeMoreOrLess } from "./more-or-less-code.ts";
 import { decodeKiller } from "./sum-cages.ts";
 import { decodeTowers, lineFrom, TOWER_SIDES } from "./towers-code.ts";

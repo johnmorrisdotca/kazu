@@ -1,8 +1,8 @@
+import { decide, openSlots, solveCsp } from "./csp.ts";
 import { REGIONS_MOST_NODES } from "./regions.constants.ts";
+import type { RegionsBoard, RegionsSolve } from "./regions.types.ts";
 import { isRegionsBoard } from "./regions-board.ts";
 import { regionsModel } from "./regions-logic.ts";
-import { decide, openSlots, solveCsp } from "./csp.ts";
-import type { RegionsBoard, RegionsSolve } from "./regions.types.ts";
 
 /** Counts completed partitions. `complete` is false when a bound, including the answer limit, stops search.
  *

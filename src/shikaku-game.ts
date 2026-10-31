@@ -1,6 +1,6 @@
+import type { ShikakuBoard, ShikakuGame, ShikakuRectangle } from "./shikaku.types.ts";
 import { checkShikaku, isShikakuBoard, shikakuCells } from "./shikaku-board.ts";
 import { solveShikaku } from "./shikaku-solve.ts";
-import type { ShikakuBoard, ShikakuGame, ShikakuRectangle } from "./shikaku.types.ts";
 
 /** Begin with a copy of just the public clues; a generated answer is never kept in play.
  *

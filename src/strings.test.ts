@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { KAZU_KINDS, KAZU_SPECS } from "./kinds.ts";
 import { KAZU_NAMES, KAZU_SIZE_NAMES } from "./names.ts";
-import { kazuLanguageOf, kazuNameOf, kazuSay, KAZU_STRINGS } from "./strings.ts";
+import { KAZU_STRINGS, kazuLanguageOf, kazuNameOf, kazuSay } from "./strings.ts";
 
 describe("the words", () => {
   it("say every line in both languages, with the same values to fill in", () => {

@@ -1,5 +1,5 @@
-import { rippleRoomSizes } from "./ripple-board.ts";
 import type { RippleBoard } from "./ripple.types.ts";
+import { rippleRoomSizes } from "./ripple-board.ts";
 import type { RippleDrawOptions } from "./ripple-play.types.ts";
 
 /** Render the Ripple board and supplied current state as native SVG text.
@@ -17,10 +17,10 @@ import type { RippleDrawOptions } from "./ripple-play.types.ts";
  * ```
  */
 export function drawRipple(board: RippleBoard, options: RippleDrawOptions = {}): string {
-  const size = 56,
-    margin = 8,
-    width = board.width * size,
-    height = board.height * size;
+  const size = 56;
+  const margin = 8;
+  const width = board.width * size;
+  const height = board.height * size;
   const ink = options.material === "slate" ? "#f1eee5" : options.material === "wood" ? "#382d20" : "#252824";
   const line = options.material === "slate" ? "#899697" : options.material === "wood" ? "#80613c" : "#8b8578";
   const surface = options.material === "slate" ? "#354247" : options.material === "wood" ? "#dfc18f" : "#faf7ef";
@@ -28,8 +28,8 @@ export function drawRipple(board: RippleBoard, options: RippleDrawOptions = {}):
   const notes = options.notes ?? board.rooms.map(() => []);
   const sizes = rippleRoomSizes(board);
   const cells = Array.from({ length: board.rooms.length }, (_, cell) => {
-    const x = (cell % board.width) * size,
-      y = Math.floor(cell / board.width) * size;
+    const x = (cell % board.width) * size;
+    const y = Math.floor(cell / board.width) * size;
     const room = board.rooms[cell]!;
     const clue = board.clues[cell];
     const value = values[cell] ?? 0;
@@ -54,9 +54,9 @@ export function drawRipple(board: RippleBoard, options: RippleDrawOptions = {}):
   }).join("");
   const walls = board.rooms
     .flatMap((room, cell) => {
-      const x = cell % board.width,
-        y = Math.floor(cell / board.width),
-        edges: string[] = [];
+      const x = cell % board.width;
+      const y = Math.floor(cell / board.width);
+      const edges: string[] = [];
       if (x + 1 < board.width && board.rooms[cell + 1] !== room)
         edges.push(`<path d="M${(x + 1) * size} ${y * size}v${size}"/>`);
       if (y + 1 < board.height && board.rooms[cell + board.width] !== room)

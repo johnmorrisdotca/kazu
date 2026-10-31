@@ -1,5 +1,6 @@
-import { generateHeyawake } from "./heyawake-generate.ts";
 import type { HeyawakeLevel } from "./heyawake.types.ts";
+import { generateHeyawake } from "./heyawake-generate.ts";
+
 self.onmessage = (event: MessageEvent<{ width: number; height: number; level: HeyawakeLevel; seed: number }>) => {
   try {
     const { width, height, level, seed } = event.data;

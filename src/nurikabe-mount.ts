@@ -1,4 +1,5 @@
 import { checkNurikabe } from "./nurikabe-board.ts";
+import { drawNurikabe } from "./nurikabe-draw.ts";
 import {
   decodeNurikabe,
   encodeNurikabe,
@@ -8,11 +9,10 @@ import {
   restartNurikabe,
   undoNurikabe,
 } from "./nurikabe-game.ts";
-import { drawNurikabe } from "./nurikabe-draw.ts";
-import { KAZU_STYLE } from "./style.ts";
-import { NURIKABE_PLAY_STYLE } from "./nurikabe-style.ts";
-import { nurikabeWords } from "./nurikabe-strings.ts";
 import type { NurikabeDrawOptions, NurikabeMount, NurikabeMountOptions } from "./nurikabe-play.types.ts";
+import { nurikabeWords } from "./nurikabe-strings.ts";
+import { NURIKABE_PLAY_STYLE } from "./nurikabe-style.ts";
+import { KAZU_STYLE } from "./style.ts";
 /** A keyboard- and touch-friendly Nurikabe player, mounted in any host element.
  *
  * @param host - The DOM host receiving the native player.
@@ -33,20 +33,20 @@ import type { NurikabeDrawOptions, NurikabeMount, NurikabeMountOptions } from ".
  */
 export function mountNurikabe(host: HTMLElement, initial: NurikabeMountOptions): NurikabeMount {
   const doc = host.ownerDocument;
-  let options = { ...initial },
-    game = initial.progress ? decodeNurikabe(initial.progress) : null;
+  let options = { ...initial };
+  let game = initial.progress ? decodeNurikabe(initial.progress) : null;
   game ??= newNurikabe(initial.board);
-  let selected = 0,
-    errors: readonly number[] = [],
-    message = "",
-    finished = checkNurikabe(game.board, game.sea).ok,
-    dead = false;
-  const root = doc.createElement("div"),
-    style = doc.createElement("style"),
-    board = doc.createElement("div"),
-    status = doc.createElement("p"),
-    tools = doc.createElement("div"),
-    help = doc.createElement("p");
+  let selected = 0;
+  let errors: readonly number[] = [];
+  let message = "";
+  let finished = checkNurikabe(game.board, game.sea).ok;
+  let dead = false;
+  const root = doc.createElement("div");
+  const style = doc.createElement("style");
+  const board = doc.createElement("div");
+  const status = doc.createElement("p");
+  const tools = doc.createElement("div");
+  const help = doc.createElement("p");
   root.className = "kn-root";
   style.textContent = KAZU_STYLE.replace(/\.kazu/g, ".ks-palette") + NURIKABE_PLAY_STYLE;
   board.className = "kn-board";
@@ -87,8 +87,8 @@ export function mountNurikabe(host: HTMLElement, initial: NurikabeMountOptions):
   };
   const render = () => {
     if (dead) return;
-    const words = nurikabeWords(options.language),
-      focused = board.contains(doc.activeElement);
+    const words = nurikabeWords(options.language);
+    const focused = board.contains(doc.activeElement);
     board.innerHTML = drawNurikabe(game!.board, { ...options, sea: game!.sea, selected, errors });
     const cells = doc.createElement("div");
     cells.className = "kn-cells";
@@ -105,8 +105,8 @@ export function mountNurikabe(host: HTMLElement, initial: NurikabeMountOptions):
       );
       control.onclick = () => mark(cell);
       control.onkeydown = (event) => {
-        const n = game!.board.size,
-          moves: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -n, ArrowDown: n };
+        const n = game!.board.size;
+        const moves: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -n, ArrowDown: n };
         if (event.key in moves) {
           event.preventDefault();
           selected = Math.max(0, Math.min(game!.sea.length - 1, cell + moves[event.key]!));

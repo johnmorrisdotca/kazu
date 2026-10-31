@@ -1,4 +1,4 @@
-import { decodeRegionsGame, encodeRegionsGame, regionsFinished, newRegions } from "../dist/regions-entry.js";
+import { decodeRegionsGame, encodeRegionsGame, newRegions, regionsFinished } from "../dist/regions-entry.js";
 import { mountRegions } from "../dist/regions-play-entry.js";
 
 const byId = (id) => document.getElementById(id);
@@ -242,4 +242,5 @@ if (restored) {
 }
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

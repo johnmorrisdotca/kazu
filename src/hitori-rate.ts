@@ -1,7 +1,7 @@
-import { checkHitori, isHitoriBoard } from "./hitori-board.ts";
-import { hitoriModel } from "./hitori-logic.ts";
 import { logicCsp, openSlots, solveCsp } from "./csp.ts";
 import type { HitoriBoard, HitoriRating } from "./hitori.types.ts";
+import { checkHitori, isHitoriBoard } from "./hitori-board.ts";
+import { hitoriModel } from "./hitori-logic.ts";
 
 /** Rates a board with one answer by solving it: with the plain rules, with the whites-stay-together rule, then by supposing.
  *
@@ -35,12 +35,12 @@ export function rateHitori(board: HitoriBoard): HitoriRating {
         ).ok,
     };
   };
-  const plain = solvedBy(0, 0),
-    reach = plain.solved ? plain : solvedBy(2, 0);
+  const plain = solvedBy(0, 0);
+  const reach = plain.solved ? plain : solvedBy(2, 0);
   const probing = reach.solved ? reach : solvedBy(2, 1);
   const repeats = board.numbers.filter((_, cell) => {
-    const x = cell % board.size,
-      y = Math.floor(cell / board.size);
+    const x = cell % board.size;
+    const y = Math.floor(cell / board.size);
     return board.numbers.some(
       (other, at) =>
         at !== cell && other === board.numbers[cell] && (at % board.size === x || Math.floor(at / board.size) === y),

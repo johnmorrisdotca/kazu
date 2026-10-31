@@ -6,12 +6,12 @@ import process from "node:process";
 import { describe, expect, it, vi } from "vitest";
 
 import { generateAkari } from "./akari-generate.ts";
-import { generateKazu } from "./generate.ts";
-import { generateRegions } from "./regions-generate.ts";
-import { generateHitori } from "./hitori-generate.ts";
 import { generateCrossSums } from "./cross-sums-generate.ts";
-import { generateShikaku } from "./shikaku-generate.ts";
+import { generateKazu } from "./generate.ts";
+import { generateHitori } from "./hitori-generate.ts";
 import { generateLoop } from "./loop-generate.ts";
+import { generateRegions } from "./regions-generate.ts";
+import { generateShikaku } from "./shikaku-generate.ts";
 
 // These generate and enumerate a lot; a slow runner must not fail them for taking its time.
 vi.setConfig({ testTimeout: 120_000 });

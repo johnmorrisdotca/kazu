@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { checkJuosan, isJuosanBoard } from "./juosan-board.ts";
-import { generateJuosan } from "./juosan-generate.ts";
-import { decodeJuosan, encodeJuosan, newJuosan, setJuosanMark, undoJuosan } from "./juosan-game.ts";
-import { solveJuosan } from "./juosan-solve.ts";
 import type { JuosanBoard } from "./juosan.types.ts";
+import { checkJuosan, isJuosanBoard } from "./juosan-board.ts";
+import { decodeJuosan, encodeJuosan, newJuosan, setJuosanMark, undoJuosan } from "./juosan-game.ts";
+import { generateJuosan } from "./juosan-generate.ts";
+import { solveJuosan } from "./juosan-solve.ts";
 
 describe("Juosan rules", () => {
   it("checks region absolute differences and the direction-specific three-mark limits", () => {
@@ -30,8 +30,8 @@ describe("Juosan rules", () => {
         { cells: [2, 3], difference: 0 },
       ],
     };
-    const started = newJuosan(board),
-      changed = setJuosanMark(started, 0, 1);
+    const started = newJuosan(board);
+    const changed = setJuosanMark(started, 0, 1);
     expect(started.marks[0]).toBe(0);
     expect(undoJuosan(changed).marks[0]).toBe(0);
     const saved = encodeJuosan({ ...changed, helped: true });
@@ -42,8 +42,8 @@ describe("Juosan rules", () => {
       [3, 2, 4],
       [2, 3, 31],
     ]) {
-      const a = generateJuosan(w, h, "easy", seed),
-        b = generateJuosan(w, h, "easy", seed);
+      const a = generateJuosan(w, h, "easy", seed);
+      const b = generateJuosan(w, h, "easy", seed);
       expect(a).toEqual(b);
       expect(checkJuosan(a, a.solution).ok).toBe(true);
       expect(solveJuosan(a, 2).complete).toBe(true);

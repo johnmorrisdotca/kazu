@@ -44,7 +44,7 @@ test("a tag with givens of its own plays them, and a run kept before opens as it
   const puzzle = generateKazu("towers", 5, "easy", 9);
   const answer = decodeCells(puzzle.solution, 5);
   const printed = readGivens("towers", 5, puzzle.givens).cells;
-  const first = printed.findIndex((value) => value === 0);
+  const first = printed.indexOf(0);
   const run = answer
     .map((value, index) => (index === first ? value : 0))
     .map((value) => (value === 0 ? "." : String(value)))

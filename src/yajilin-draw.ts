@@ -1,5 +1,5 @@
-import { isYajilinBoard, yajilinNeighbors } from "./yajilin-board.ts";
 import type { YajilinBoard, YajilinDrawOptions } from "./yajilin.types.ts";
+import { isYajilinBoard, yajilinNeighbors } from "./yajilin-board.ts";
 import { YAJILIN_STRINGS } from "./yajilin-strings.ts";
 
 const arrows = { up: "↑", right: "→", down: "↓", left: "←" } as const;
@@ -19,23 +19,23 @@ const arrows = { up: "↑", right: "→", down: "↓", left: "←" } as const;
  */
 export function drawYajilin(board: YajilinBoard, options: YajilinDrawOptions = {}): string {
   if (!isYajilinBoard(board)) throw new RangeError("Invalid Yajilin board");
-  const words = YAJILIN_STRINGS[options.language ?? "en"],
-    size = 52,
-    pad = 14;
+  const words = YAJILIN_STRINGS[options.language ?? "en"];
+  const size = 52;
+  const pad = 14;
   const palette = {
     ivory: ["var(--kz-paper,#fbf8f1)", "var(--kz-ink,#1f2320)", "var(--kz-grid,#cfc6b2)"],
     wood: ["#e5cda6", "#493e2f", "#bca582"],
     slate: ["#262a27", "#ece8dc", "#454a44"],
   };
-  const [paper, ink, grid] = palette[options.material ?? "ivory"],
-    edges = new Set(options.edges ?? []),
-    parts: string[] = [];
+  const [paper, ink, grid] = palette[options.material ?? "ivory"];
+  const edges = new Set(options.edges ?? []);
+  const parts: string[] = [];
   for (let cell = 0; cell < board.clues.length; cell += 1) {
-    const x = pad + (cell % board.width) * size,
-      y = pad + Math.floor(cell / board.width) * size,
-      clue = board.clues[cell];
-    const bad = options.errors?.includes(cell),
-      active = options.selected === cell;
+    const x = pad + (cell % board.width) * size;
+    const y = pad + Math.floor(cell / board.width) * size;
+    const clue = board.clues[cell];
+    const bad = options.errors?.includes(cell);
+    const active = options.selected === cell;
     parts.push(
       `<rect x="${x - size / 2}" y="${y - size / 2}" width="${size}" height="${size}" fill="${active ? ink : "transparent"}" fill-opacity="${active ? ".08" : "1"}" stroke="${grid}" stroke-width="1"/>`,
     );
@@ -57,8 +57,8 @@ export function drawYajilin(board: YajilinBoard, options: YajilinDrawOptions = {
     }
     for (const next of yajilinNeighbors(board, cell))
       if (cell < next.cell && edges.has(next.edge)) {
-        const nx = pad + (next.cell % board.width) * size,
-          ny = pad + Math.floor(next.cell / board.width) * size;
+        const nx = pad + (next.cell % board.width) * size;
+        const ny = pad + Math.floor(next.cell / board.width) * size;
         parts.push(
           `<line x1="${x}" y1="${y}" x2="${nx}" y2="${ny}" stroke="${bad ? "var(--kz-bad,#b5452c)" : ink}" stroke-width="5" stroke-linecap="round"/>`,
         );

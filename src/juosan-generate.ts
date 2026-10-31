@@ -1,8 +1,8 @@
 import { JUOSAN_LEVELS, JUOSAN_MOST_NODES } from "./juosan.constants.ts";
+import type { JuosanBoard, JuosanLevel, JuosanMark, JuosanPuzzle } from "./juosan.types.ts";
 import { isJuosanBoard } from "./juosan-board.ts";
 import { solveJuosan } from "./juosan-solve.ts";
 import { isKazuSeed } from "./random.ts";
-import type { JuosanBoard, JuosanLevel, JuosanMark, JuosanPuzzle } from "./juosan.types.ts";
 
 /** Makes an original small training puzzle and returns it only after uniqueness is proved.
  *

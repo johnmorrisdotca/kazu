@@ -1,14 +1,13 @@
 // The grid solvers checked against plain enumeration: every possible answer of a small board is tried, and the solver must
 // count exactly the ones that pass the rules as the checkers state them.
 import { describe, expect, it, vi } from "vitest";
-
-import { checkRegions } from "./regions-board.ts";
-import { solveRegions } from "./regions-solve.ts";
-import { checkHitori } from "./hitori-board.ts";
-import { solveHitori } from "./hitori-solve.ts";
 import { checkCrossSums } from "./cross-sums-board.ts";
 import { solveCrossSums } from "./cross-sums-solve.ts";
+import { checkHitori } from "./hitori-board.ts";
+import { solveHitori } from "./hitori-solve.ts";
 import { seededRandom } from "./random.ts";
+import { checkRegions } from "./regions-board.ts";
+import { solveRegions } from "./regions-solve.ts";
 
 // These generate and enumerate a lot; a slow runner must not fail them for taking its time.
 vi.setConfig({ testTimeout: 120_000 });
@@ -43,9 +42,9 @@ describe("Cross Sums' solver", () => {
     let compared = 0;
     for (let round = 0; round < 150; round += 1) {
       // A 3 × 4 board with up to four white squares in the corner block, and totals read from random digits.
-      const width = 4,
-        height = 3,
-        white = [5, 6, 7, 9, 10, 11].filter(() => random() < 0.7);
+      const width = 4;
+      const height = 3;
+      const white = [5, 6, 7, 9, 10, 11].filter(() => random() < 0.7);
       const digits = white.map(() => 1 + Math.floor(random() * 9));
       const cells = Array.from({ length: width * height }, (_, cell) =>
         white.includes(cell)
@@ -98,9 +97,9 @@ describe("Regions's solver", () => {
   it("counts the fillings of small boards exactly", () => {
     const random = seededRandom(9);
     for (let round = 0; round < 25; round += 1) {
-      const width = 3,
-        height = 2,
-        cells = 6;
+      const width = 3;
+      const height = 2;
+      const cells = 6;
       const givens = Array.from({ length: cells }, () => (random() < 0.4 ? 1 + Math.floor(random() * 4) : 0));
       const board = { width, height, givens };
       let brute = 0;

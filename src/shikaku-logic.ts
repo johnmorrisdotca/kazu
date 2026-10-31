@@ -1,6 +1,6 @@
 import type { Csp } from "./csp.ts";
-import { shikakuCandidates, shikakuCells } from "./shikaku-board.ts";
 import type { ShikakuBoard, ShikakuRectangle } from "./shikaku.types.ts";
+import { shikakuCandidates, shikakuCells } from "./shikaku-board.ts";
 
 /**
  * Shikaku as variables: one per numbered square, its slots the rectangles it could be the one number of. A rectangle
@@ -12,10 +12,10 @@ export function shikakuModel(
   strength: 0 | 1 | 2 = 2,
 ): { csp: Csp; clues: readonly number[]; rectangles: readonly ShikakuRectangle[]; owner: Int32Array } {
   const clues = board.clues.flatMap((n, cell) => (n ? [cell] : []));
-  const rectangles: ShikakuRectangle[] = [],
-    owner: number[] = [],
-    covers: Int32Array[] = [],
-    starts: number[] = [0];
+  const rectangles: ShikakuRectangle[] = [];
+  const owner: number[] = [];
+  const covers: Int32Array[] = [];
+  const starts: number[] = [0];
   clues.forEach((cell, variable) => {
     for (const rectangle of shikakuCandidates(board, cell)) {
       rectangles.push(rectangle);
@@ -25,15 +25,19 @@ export function shikakuModel(
     starts.push(rectangles.length);
   });
   const through: number[][] = Array.from({ length: board.clues.length }, () => []);
-  covers.forEach((cells, slot) => cells.forEach((cell) => through[cell]!.push(slot)));
+  covers.forEach((cells, slot) => {
+    cells.forEach((cell) => {
+      through[cell]!.push(slot);
+    });
+  });
 
   const propagate = (alive: Uint8Array): boolean => {
     let changed = true;
     while (changed) {
       changed = false;
       for (let v = 0; v < clues.length; v += 1) {
-        let left = 0,
-          only = -1;
+        let left = 0;
+        let only = -1;
         for (let s = starts[v]!; s < starts[v + 1]!; s += 1)
           if (alive[s]) {
             left += 1;
@@ -56,10 +60,10 @@ export function shikakuModel(
       if (strength < 1) continue;
       for (let cell = 0; cell < through.length; cell += 1) {
         const slots = through[cell]!;
-        let count = 0,
-          only = -1,
-          single = true,
-          first = -1;
+        let count = 0;
+        let only = -1;
+        let single = true;
+        let first = -1;
         for (let k = 0; k < slots.length; k += 1) {
           const s = slots[k]!;
           if (!alive[s]) continue;

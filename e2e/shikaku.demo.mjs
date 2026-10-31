@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { serve, noSidewaysScroll } from "./demo.mjs";
+import { expect, test } from "@playwright/test";
+import { noSidewaysScroll, serve } from "./demo.mjs";
 
 test("Shikaku rectangles, undo, hints, language, materials and restore", async ({ page }) => {
   const errors = [];

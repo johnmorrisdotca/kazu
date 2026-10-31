@@ -1,5 +1,5 @@
-import { heyawakeCells, isHeyawakeBoard } from "./heyawake-board.ts";
 import type { HeyawakeBoard } from "./heyawake.types.ts";
+import { heyawakeCells, isHeyawakeBoard } from "./heyawake-board.ts";
 import type { HeyawakeDrawOptions } from "./heyawake-play.types.ts";
 import { heyawakeWords } from "./heyawake-strings.ts";
 
@@ -19,8 +19,8 @@ import { heyawakeWords } from "./heyawake-strings.ts";
  */
 export function drawHeyawake(board: HeyawakeBoard, options: HeyawakeDrawOptions = {}): string {
   if (!isHeyawakeBoard(board)) throw new RangeError("Invalid Heyawake board");
-  const words = heyawakeWords(options.language),
-    size = 48;
+  const words = heyawakeWords(options.language);
+  const size = 48;
   const palettes = {
     ivory: ["var(--kz-paper,#fbf8f1)", "var(--kz-ink,#1f2320)", "var(--kz-grid,#cfc6b2)"],
     wood: ["#e5cda6", "#493e2f", "#bca582"],
@@ -28,18 +28,18 @@ export function drawHeyawake(board: HeyawakeBoard, options: HeyawakeDrawOptions 
   };
   const [paper, ink, grid] = palettes[options.material ?? "ivory"];
   const roomAt = Array(board.width * board.height).fill(-1) as number[];
-  board.rooms.forEach((room, index) =>
+  board.rooms.forEach((room, index) => {
     heyawakeCells(board, room)!.forEach((cell) => {
       roomAt[cell] = index;
-    }),
-  );
+    });
+  });
   const cells = Array.from({ length: board.width * board.height }, (_, cell) => {
-    const x = (cell % board.width) * size,
-      y = Math.floor(cell / board.width) * size;
-    const entry = options.entries?.[cell],
-      room = board.rooms[roomAt[cell]!]!;
-    const selected = cell === options.selected,
-      error = options.errors?.includes(cell);
+    const x = (cell % board.width) * size;
+    const y = Math.floor(cell / board.width) * size;
+    const entry = options.entries?.[cell];
+    const room = board.rooms[roomAt[cell]!]!;
+    const selected = cell === options.selected;
+    const error = options.errors?.includes(cell);
     const color = error ? "var(--kz-bad,#b5452c)" : ink;
     const top = Math.floor(cell / board.width) === room.y ? 3 : 1;
     const left = cell % board.width === room.x ? 3 : 1;

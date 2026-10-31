@@ -1,8 +1,8 @@
 import { CROSS_SUMS_MAX_NODES } from "./cross-sums.constants.ts";
+import type { CrossSumsBoard, CrossSumsSolve } from "./cross-sums.types.ts";
 import { isCrossSumsBoard } from "./cross-sums-board.ts";
 import { crossSumsModel } from "./cross-sums-logic.ts";
 import { decide, openSlots, solveCsp } from "./csp.ts";
-import type { CrossSumsBoard, CrossSumsSolve } from "./cross-sums.types.ts";
 
 /** Bounded exact counter over across and down runs; an interrupted search never proves uniqueness.
  *
@@ -25,8 +25,8 @@ export function solveCrossSums(
   options: { limit?: number; nodes?: number } = {},
 ): CrossSumsSolve {
   if (!isCrossSumsBoard(board)) throw new RangeError("Invalid Cross Sums board");
-  const limit = options.limit ?? 2,
-    budget = options.nodes ?? CROSS_SUMS_MAX_NODES;
+  const limit = options.limit ?? 2;
+  const budget = options.nodes ?? CROSS_SUMS_MAX_NODES;
   if (!Number.isInteger(limit) || limit < 1 || !Number.isInteger(budget) || budget < 1)
     throw new RangeError("Invalid search bounds");
   if (entries.length && entries.length !== board.cells.length) throw new RangeError("Invalid Cross Sums entries");

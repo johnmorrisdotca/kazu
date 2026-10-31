@@ -1,11 +1,10 @@
-import { FAMILY, familyRepo } from "../scripts/family-template.mjs";
-// The documents and the demo, held to the source. Plain JavaScript, so that reading files needs no Node types.
-import { fullReadme } from "../scripts/full-readme.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
-
 import { describe, expect, it } from "vitest";
+import { FAMILY, familyRepo } from "../scripts/family-template.mjs";
+// The documents and the demo, held to the source. Plain JavaScript, so that reading files needs no Node types.
+import { fullReadme } from "../scripts/full-readme.mjs";
 
 import { KazuBoard } from "./element.ts";
 import { KAZU_KINDS, KAZU_LEVELS, KAZU_SPECS } from "./kinds.ts";
@@ -197,7 +196,8 @@ describe("the README's promises", () => {
     const longest = `Sudoku ${KAZU_SPECS["number-place"].mostCells} characters, Jigsaw ${KAZU_SPECS.jigsaw.mostCells}, Diagonal ${KAZU_SPECS.diagonal.mostCells}, Killer Sudoku ${KAZU_SPECS["sum-cages"].mostCells}, Futoshiki ${KAZU_SPECS["more-or-less"].mostCells}, Skyscrapers ${KAZU_SPECS.towers.mostCells}`;
     expect(limits).toContain(longest);
     const solve = readFileSync("src/solve.ts", "utf8");
-    expect(solve).toContain("limit = 2, budget = Infinity");
+    expect(solve).toContain("limit = 2");
+    expect(solve).toContain("budget = Infinity");
     expect(solve).toContain("budget = 2_000_000");
     expect(limits).toContain("2,000,000 steps");
   });

@@ -1,6 +1,6 @@
 import type { Csp } from "./csp.ts";
-import { edgeVertices, loopCellEdges, loopEdgeCount, loopVertexEdges } from "./loop-board.ts";
 import type { LoopBoard } from "./loop.types.ts";
+import { edgeVertices, loopCellEdges, loopEdgeCount, loopVertexEdges } from "./loop-board.ts";
 
 /**
  * Loop as variables: one per edge, slot 0 for off and slot 1 for on. The pruning rules are the ones
@@ -8,11 +8,11 @@ import type { LoopBoard } from "./loop.types.ts";
  * a loop may not close while any other part of it is still to be drawn or while a number is not yet met.
  */
 export function loopModel(board: LoopBoard): { csp: Csp } {
-  const edges = loopEdgeCount(board),
-    vertexCount = (board.width + 1) * (board.height + 1);
+  const edges = loopEdgeCount(board);
+  const vertexCount = (board.width + 1) * (board.height + 1);
   const at = Array.from({ length: vertexCount }, (_, vertex) => Int32Array.from(loopVertexEdges(board, vertex)));
-  const endA = new Int32Array(edges),
-    endB = new Int32Array(edges);
+  const endA = new Int32Array(edges);
+  const endB = new Int32Array(edges);
   for (let edge = 0; edge < edges; edge += 1) {
     const [a, b] = edgeVertices(board, edge);
     endA[edge] = a;
@@ -22,41 +22,47 @@ export function loopModel(board: LoopBoard): { csp: Csp } {
     clue === null ? [] : [{ need: clue, edges: Int32Array.from(loopCellEdges(board, cell)!) }],
   );
   const cluesOf = Array.from({ length: edges }, () => [] as number[]);
-  clues.forEach((clue, index) => clue.edges.forEach((edge) => cluesOf[edge]!.push(index)));
+  clues.forEach((clue, index) => {
+    clue.edges.forEach((edge) => {
+      cluesOf[edge]!.push(index);
+    });
+  });
   const starts = Int32Array.from({ length: edges + 1 }, (_, i) => i * 2);
-  const endList = new Int32Array(vertexCount),
-    parent = new Int32Array(vertexCount),
-    degree = new Uint8Array(vertexCount),
-    componentEdges = new Int32Array(vertexCount),
-    openEnds = new Int32Array(vertexCount);
-  const vertexQueue = new Int32Array(vertexCount * 8),
-    clueQueue = new Int32Array(clues.length * 8 + 8);
-  const vertexQueued = new Uint8Array(vertexCount),
-    clueQueued = new Uint8Array(clues.length);
+  const endList = new Int32Array(vertexCount);
+  const parent = new Int32Array(vertexCount);
+  const degree = new Uint8Array(vertexCount);
+  const componentEdges = new Int32Array(vertexCount);
+  const openEnds = new Int32Array(vertexCount);
+  const vertexQueue = new Int32Array(vertexCount * 8);
+  const clueQueue = new Int32Array(clues.length * 8 + 8);
+  const vertexQueued = new Uint8Array(vertexCount);
+  const clueQueued = new Uint8Array(clues.length);
   const reachable = new Int32Array(vertexCount);
   const findIn = (table: Int32Array, v: number): number => {
-    while (table[v] !== v) {
-      table[v] = table[table[v]!]!;
-      v = table[v]!;
+    let current = v;
+    while (table[current] !== current) {
+      table[current] = table[table[current]!]!;
+      current = table[current]!;
     }
-    return v;
+    return current;
   };
   const find = (v: number): number => {
-    while (parent[v] !== v) {
-      parent[v] = parent[parent[v]!]!;
-      v = parent[v]!;
+    let current = v;
+    while (parent[current] !== current) {
+      parent[current] = parent[parent[current]!]!;
+      current = parent[current]!;
     }
-    return v;
+    return current;
   };
 
   const propagate = (alive: Uint8Array, decided?: number): boolean => {
-    let vertexHead = 0,
-      vertexTail = 0,
-      clueHead = 0,
-      clueTail = 0;
+    let vertexHead = 0;
+    let vertexTail = 0;
+    let clueHead = 0;
+    let clueTail = 0;
     const touch = (e: number): void => {
-      const a = endA[e]!,
-        b = endB[e]!;
+      const a = endA[e]!;
+      const b = endB[e]!;
       if (!vertexQueued[a]) {
         vertexQueued[a] = 1;
         vertexQueue[vertexTail++ % vertexQueue.length] = a;
@@ -84,13 +90,13 @@ export function loopModel(board: LoopBoard): { csp: Csp } {
           const v = vertexQueue[vertexHead++ % vertexQueue.length]!;
           vertexQueued[v] = 0;
           const around = at[v]!;
-          let on = 0,
-            open = 0,
-            lastOpen = -1;
+          let on = 0;
+          let open = 0;
+          let lastOpen = -1;
           for (let k = 0; k < around.length; k += 1) {
-            const e = around[k]!,
-              off = alive[2 * e],
-              onSlot = alive[2 * e + 1];
+            const e = around[k]!;
+            const off = alive[2 * e];
+            const onSlot = alive[2 * e + 1];
             if (!off && !onSlot) return clear();
             if (onSlot && !off) on += 1;
             else if (off && onSlot) {
@@ -114,11 +120,11 @@ export function loopModel(board: LoopBoard): { csp: Csp } {
           }
         }
         while (clueHead < clueTail) {
-          const index = clueQueue[clueHead++ % clueQueue.length]!,
-            clue = clues[index]!;
+          const index = clueQueue[clueHead++ % clueQueue.length]!;
+          const clue = clues[index]!;
           clueQueued[index] = 0;
-          let on = 0,
-            open = 0;
+          let on = 0;
+          let open = 0;
           for (let k = 0; k < 4; k += 1) {
             const e = clue.edges[k]!;
             if (!alive[2 * e] && !alive[2 * e + 1]) return clear();
@@ -156,8 +162,8 @@ export function loopModel(board: LoopBoard): { csp: Csp } {
       for (let e = 0; e < edges; e += 1) {
         if (!(alive[2 * e + 1] && !alive[2 * e])) continue;
         drawn += 1;
-        const a = endA[e]!,
-          b = endB[e]!;
+        const a = endA[e]!;
+        const b = endB[e]!;
         degree[a] += 1;
         degree[b] += 1;
         parent[find(a)] = find(b);
@@ -199,8 +205,8 @@ export function loopModel(board: LoopBoard): { csp: Csp } {
       }
       // An edge joining the two ends of one piece would close it.
       for (let k = 0; k < ends; k += 1) {
-        const a = endList[k]!,
-          around = at[a]!;
+        const a = endList[k]!;
+        const around = at[a]!;
         for (let j = 0; j < around.length; j += 1) {
           const e = around[j]!;
           if (!(alive[2 * e] && alive[2 * e + 1])) continue;
@@ -234,12 +240,12 @@ export function loopModel(board: LoopBoard): { csp: Csp } {
 
   const choose = (alive: Uint8Array): number => {
     // Branch where the board is most pinned down: next to a loose end of the drawing, else on the numbered square with the fewest edges left.
-    let best = -1,
-      bestScore = 99;
+    let best = -1;
+    let bestScore = 99;
     for (let v = 0; v < vertexCount; v += 1) {
       const around = at[v]!;
-      let on = 0,
-        first = -1;
+      let on = 0;
+      let first = -1;
       for (let k = 0; k < around.length; k += 1) {
         const e = around[k]!;
         if (alive[2 * e + 1] && !alive[2 * e]) on += 1;
@@ -248,8 +254,8 @@ export function loopModel(board: LoopBoard): { csp: Csp } {
       if (first >= 0 && on === 1) return first;
     }
     for (const clue of clues) {
-      let open = 0,
-        first = -1;
+      let open = 0;
+      let first = -1;
       for (let k = 0; k < 4; k += 1) {
         const e = clue.edges[k]!;
         if (alive[2 * e] && alive[2 * e + 1]) {

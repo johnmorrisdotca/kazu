@@ -9,7 +9,7 @@ Sudoku (4×4 to a 25×25 Colossus), Jigsaw, Diagonal and Killer Sudoku, Futoshik
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
-  <a href="https://johnmorrisdotca.github.io/kazu/docs/api/main/index.html"><img alt="64.8 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-64.8%20kB-2f5d4a"></a>
+  <a href="https://johnmorrisdotca.github.io/kazu/docs/api/main/index.html"><img alt="68.5 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-68.5%20kB-2f5d4a"></a>
   <a href="https://www.npmjs.com/package/@johnmorrisdotca/kazu#provenance"><img alt="Published with npm provenance" src="https://img.shields.io/badge/npm-provenance-2f5d4a"></a>
 </p>
 

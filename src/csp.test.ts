@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
-
-import { countCsp, decide, decidedSlot, logicCsp, openSlots, slotsLeft, solveCsp } from "./csp.ts";
 import type { Csp } from "./csp.ts";
+import { countCsp, decide, decidedSlot, logicCsp, openSlots, slotsLeft, solveCsp } from "./csp.ts";
 
 /** Three squares that must hold three different digits of three: six answers. Only a decided square clears its digit from the others. */
 const allDifferent = (size: number, extra?: (alive: Uint8Array) => boolean): Csp => {
@@ -38,8 +37,8 @@ describe("the shared engine", () => {
   });
 
   it("decides a variable to one slot and reads it back", () => {
-    const csp = allDifferent(3),
-      alive = openSlots(csp);
+    const csp = allDifferent(3);
+    const alive = openSlots(csp);
     expect(slotsLeft(csp, alive, 0)).toBe(3);
     decide(csp, alive, 0, 1);
     expect(decidedSlot(csp, alive, 0)).toBe(1);
@@ -49,8 +48,8 @@ describe("the shared engine", () => {
   });
 
   it("solves by reasoning when the rules are enough, and says how much supposing it took", () => {
-    const csp = allDifferent(3),
-      alive = openSlots(csp);
+    const csp = allDifferent(3);
+    const alive = openSlots(csp);
     decide(csp, alive, 0, 0);
     decide(csp, alive, 1, 4);
     const plain = logicCsp(csp, alive, 0);
@@ -71,8 +70,8 @@ describe("the shared engine", () => {
   });
 
   it("proves one answer by reasoning without searching, and none when a rule breaks", () => {
-    const csp = allDifferent(3),
-      alive = openSlots(csp);
+    const csp = allDifferent(3);
+    const alive = openSlots(csp);
     decide(csp, alive, 0, 0);
     decide(csp, alive, 1, 4);
     expect(solveCsp(csp, alive, 2, 1000)).toMatchObject({ count: 1, exhausted: false, nodes: 0 });

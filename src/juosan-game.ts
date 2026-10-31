@@ -1,6 +1,6 @@
+import type { JuosanBoard, JuosanGame, JuosanMark } from "./juosan.types.ts";
 import { checkJuosan, isJuosanBoard } from "./juosan-board.ts";
 import { solveJuosan } from "./juosan-solve.ts";
-import type { JuosanBoard, JuosanGame, JuosanMark } from "./juosan.types.ts";
 
 /** Starts a game with a copy of its public board and no generated answer.
  *

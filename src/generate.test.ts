@@ -1,11 +1,10 @@
 import { describe, expect, it } from "vitest";
-
-import { checkKazu } from "./check.ts";
 import { decodeCells } from "./cells.ts";
+import { checkKazu } from "./check.ts";
 import { generateKazu } from "./generate.ts";
+import { readGivens } from "./givens.ts";
 import { KAZU_KINDS, KAZU_LEVELS, KAZU_SPECS, type KazuKind } from "./kinds.ts";
 import { countKazuSolutions, kazuGuessDepth, solveKazu } from "./solve.ts";
-import { readGivens } from "./givens.ts";
 
 /**
  * A puzzle is a puzzle: one answer, reachable by the level's reasoning, made the same way from the same

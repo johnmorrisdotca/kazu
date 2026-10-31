@@ -8,6 +8,7 @@ import {
   gameConflicts,
   isPrinted,
   isSolved,
+  type KazuGame,
   kazuProgress,
   newKazuGame,
   numberCounts,
@@ -15,14 +16,13 @@ import {
   toggleNote,
   undoKazu,
   valuesOf,
-  type KazuGame,
 } from "./game.ts";
 import { hintKazu, type KazuHint } from "./hint.ts";
 import type { KazuKind, KazuLevel } from "./kinds.ts";
 import { KAZU_PLAY_STYLE } from "./play-style.ts";
 import { decodeNotes, decodeRun, encodeNotes, encodeRun, notesOf } from "./progress.ts";
 import { solveKazu } from "./solve.ts";
-import { kazuLanguageOf, kazuNameOf, kazuSay, type KazuLanguage } from "./strings.ts";
+import { type KazuLanguage, kazuLanguageOf, kazuNameOf, kazuSay } from "./strings.ts";
 
 /**
  * A PLAYABLE KAZU BOARD IN ANY PAGE: `mountKazu(host, options)` draws a puzzle into an element and plays
@@ -755,9 +755,9 @@ export function mountKazu(host: HTMLElement, options: KazuMountOptions): KazuMou
       const wrong: number[] = [];
       const empty = game.entries.filter((value, index) => !isPrinted(game, index) && value === 0).length;
       if (answer !== null)
-        game.entries.forEach((value, index) =>
-          !isPrinted(game, index) && value !== 0 && value !== answer[index] ? wrong.push(index) : undefined,
-        );
+        game.entries.forEach((value, index) => {
+          !isPrinted(game, index) && value !== 0 && value !== answer[index] ? wrong.push(index) : undefined;
+        });
       else wrong.push(...gameConflicts(game).filter((index) => !isPrinted(game, index)));
       wrongCells = settings.check === "show" ? wrong : [];
       hintCell = null;

@@ -17,8 +17,8 @@ describe("solving", () => {
   });
 
   it("counts none for a grid that cannot be finished", () => {
-    expect(countKazuSolutions("number-place", 4, "11" + ".".repeat(14))).toBe(0);
-    expect(solveKazu("number-place", 4, "11" + ".".repeat(14))).toBeNull();
+    expect(countKazuSolutions("number-place", 4, `11${".".repeat(14)}`)).toBe(0);
+    expect(solveKazu("number-place", 4, `11${".".repeat(14)}`)).toBeNull();
   });
 
   it("says null, never a number, for givens that are not a puzzle", () => {

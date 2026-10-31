@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import { checkMasyu, isMasyuBoard, masyuEdgeCount, masyuNeighbors } from "./masyu-board.ts";
-import { generateMasyu } from "./masyu-generate.ts";
 import { decodeMasyu, encodeMasyu, hintMasyu, newMasyu, toggleMasyuEdge, undoMasyu } from "./masyu-game.ts";
+import { generateMasyu } from "./masyu-generate.ts";
 import { solveMasyu } from "./masyu-solve.ts";
 
 describe("Masyu rules", () => {
   it("checks pearl-neighbor turns, straight runs, connectedness and boundaries", () => {
-    const puzzle = generateMasyu(),
-      solution = [...puzzle.solution];
+    const puzzle = generateMasyu();
+    const solution = [...puzzle.solution];
     expect(checkMasyu(puzzle, solution).ok).toBe(true);
     const broken = solution.filter((edge) => edge !== solution[0]);
     expect(checkMasyu(puzzle, broken).ok).toBe(false);
@@ -17,8 +17,8 @@ describe("Masyu rules", () => {
   });
 
   it("rejects branches, repeated edges, and disjoint loops", () => {
-    const puzzle = generateMasyu(),
-      loop = [...puzzle.solution];
+    const puzzle = generateMasyu();
+    const loop = [...puzzle.solution];
     expect(checkMasyu(puzzle, [...loop, loop[0]!]).ok).toBe(false);
     const outer = loop;
     const innerCells = [6, 7, 8, 13, 18, 17, 16, 11];
@@ -54,8 +54,8 @@ describe("Masyu rules", () => {
   });
 
   it("keeps play immutable and progress public", () => {
-    const puzzle = generateMasyu(),
-      game = newMasyu(puzzle);
+    const puzzle = generateMasyu();
+    const game = newMasyu(puzzle);
     const moved = toggleMasyuEdge(game, puzzle.solution[0]!);
     expect(game.edges).toEqual([]);
     expect(undoMasyu(moved).edges).toEqual([]);

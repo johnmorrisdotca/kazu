@@ -1,7 +1,7 @@
-import { isKazuSeed, seededRandom } from "./random.ts";
+import type { MasyuBoard, MasyuPuzzle } from "./masyu.types.ts";
 import { checkMasyu, isMasyuBoard, masyuNeighbors } from "./masyu-board.ts";
 import { solveMasyu } from "./masyu-solve.ts";
-import type { MasyuBoard, MasyuPuzzle } from "./masyu.types.ts";
+import { isKazuSeed, seededRandom } from "./random.ts";
 
 const loops = [
   [12, 17, 18, 19, 14, 9, 8, 7],
@@ -49,13 +49,13 @@ function makeEdges(board: MasyuBoard, path: readonly number[]): number[] | null 
  */
 export function generateMasyu(size: 5 = 5, seed = 1): MasyuPuzzle {
   if (size !== 5 || !isKazuSeed(seed)) throw new RangeError("Invalid Masyu settings");
-  const random = seededRandom(seed),
-    base = loops[Math.floor(random() * loops.length)]!;
-  const turns = Math.floor(random() * 4),
-    reflect = random() < 0.5;
+  const random = seededRandom(seed);
+  const base = loops[Math.floor(random() * loops.length)]!;
+  const turns = Math.floor(random() * 4);
+  const reflect = random() < 0.5;
   const path = base.map((cell) => {
-    let x = cell % 5,
-      y = Math.floor(cell / 5);
+    let x = cell % 5;
+    let y = Math.floor(cell / 5);
     if (reflect) x = 4 - x;
     for (let turn = 0; turn < turns; turn += 1) [x, y] = [4 - y, x];
     return y * 5 + x;

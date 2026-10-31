@@ -1,6 +1,6 @@
 import { NURIKABE_MAX_NODES } from "./nurikabe.constants.ts";
-import { checkNurikabe, isNurikabeBoard, nurikabeNeighbors } from "./nurikabe-board.ts";
 import type { NurikabeBoard, NurikabeSolve } from "./nurikabe.types.ts";
+import { checkNurikabe, isNurikabeBoard, nurikabeNeighbors } from "./nurikabe-board.ts";
 
 type Clue = { cell: number; size: number };
 
@@ -42,16 +42,16 @@ function islandShapes(board: NurikabeBoard, clue: Clue): number[][] {
  */
 export function solveNurikabe(board: NurikabeBoard, options: { limit?: number; nodes?: number } = {}): NurikabeSolve {
   if (!isNurikabeBoard(board)) throw new RangeError("Invalid Nurikabe board");
-  const total = board.size ** 2,
-    limit = Math.max(1, Math.floor(options.limit ?? 2)),
-    budget = Math.max(1, Math.floor(options.nodes ?? NURIKABE_MAX_NODES));
+  const total = board.size ** 2;
+  const limit = Math.max(1, Math.floor(options.limit ?? 2));
+  const budget = Math.max(1, Math.floor(options.nodes ?? NURIKABE_MAX_NODES));
   const clues = board.clues.map((size, cell) => (size ? { cell, size } : null)).filter((clue): clue is Clue => !!clue);
   const choices = clues.map((clue) => islandShapes(board, clue));
   const placed: number[][] = [];
-  let nodes = 0,
-    count = 0,
-    solution: boolean[] | null = null,
-    stopped = false;
+  let nodes = 0;
+  let count = 0;
+  let solution: boolean[] | null = null;
+  let stopped = false;
 
   const visit = (depth: number) => {
     if (count >= limit || stopped) return;
@@ -70,8 +70,8 @@ export function solveNurikabe(board: NurikabeBoard, options: { limit?: number; n
       return;
     }
 
-    let selected = -1,
-      candidates: number[][] | null = null;
+    let selected = -1;
+    let candidates: number[][] | null = null;
     for (let clue = 0; clue < clues.length; clue += 1)
       if (!placed[clue]) {
         const available = choices[clue]!.filter((shape) =>

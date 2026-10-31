@@ -1,10 +1,10 @@
-import { embedDay, dailySeed } from "./embed-day.ts";
-import { KAZU_PLAY_STYLE } from "./play-style.ts";
-import type { KazuMountOptions } from "./mount.ts";
+import { dailySeed, embedDay } from "./embed-day.ts";
 import type { KazuGame } from "./game.ts";
 import { generateKazu } from "./generate.ts";
 import { isKazuKind, isKazuLevel, isKazuSize, KAZU_SPECS, type KazuKind, type KazuLevel } from "./kinds.ts";
-import { mountKazu, type KazuEventDetail, type KazuMount } from "./mount.ts";
+import type { KazuMountOptions } from "./mount.ts";
+import { type KazuEventDetail, type KazuMount, mountKazu } from "./mount.ts";
+import { KAZU_PLAY_STYLE } from "./play-style.ts";
 import { freshKazuSeed, isKazuSeed, KAZU_SEED_MOST } from "./random.ts";
 
 /**
@@ -443,12 +443,13 @@ export class KazuBoard extends ElementBase {
     }
     if (day === null) this.removeAttribute("data-day");
     else this.setAttribute("data-day", day);
-    const seed =
-      day !== null
-        ? (dailySeed(day, `kazu/${kind}/${size}/${level}`) % KAZU_SEED_MOST) + 1
-        : isKazuSeed(Number(seedAttribute)) && seedAttribute !== null
-          ? Number(seedAttribute)
-          : (this.#seed ??= freshKazuSeed());
+    let seed: number;
+    if (day !== null) seed = (dailySeed(day, `kazu/${kind}/${size}/${level}`) % KAZU_SEED_MOST) + 1;
+    else if (isKazuSeed(Number(seedAttribute)) && seedAttribute !== null) seed = Number(seedAttribute);
+    else {
+      this.#seed ??= freshKazuSeed();
+      seed = this.#seed;
+    }
     const run = this.getAttribute("run") ?? undefined;
     const notes = this.getAttribute("notes") ?? undefined;
     const elapsed = this.getAttribute("elapsed") === null ? undefined : Number(this.getAttribute("elapsed"));

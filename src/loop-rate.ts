@@ -1,7 +1,7 @@
-import { isLoopBoard } from "./loop-board.ts";
-import { loopModel } from "./loop-logic.ts";
 import { logicCsp, openSlots, solveCsp } from "./csp.ts";
 import type { LoopBoard, LoopRating } from "./loop.types.ts";
+import { isLoopBoard } from "./loop-board.ts";
+import { loopModel } from "./loop-logic.ts";
 
 /** Rates a board with one answer by solving it as a person would: with the rules, then by supposing one edge at a time.
  *

@@ -1,8 +1,8 @@
 import { HEYAWAKE_GENERATOR_MOST_CELLS, HEYAWAKE_LEVELS, HEYAWAKE_MOST_ATTEMPTS } from "./heyawake.constants.ts";
+import type { HeyawakeBoard, HeyawakeLevel, HeyawakePuzzle, HeyawakeRoom } from "./heyawake.types.ts";
 import { checkHeyawake, heyawakeNeighbours, roomForCell } from "./heyawake-board.ts";
 import { solveHeyawake } from "./heyawake-solve.ts";
 import { isKazuSeed, seededRandom, shuffled } from "./random.ts";
-import type { HeyawakeBoard, HeyawakeLevel, HeyawakePuzzle, HeyawakeRoom } from "./heyawake.types.ts";
 
 /** Generate a seeded Heyawake puzzle with a verified unique answer; unsupported inputs or exhausted attempts throw.
  *
@@ -65,8 +65,8 @@ function partitionRooms(width: number, height: number, random: () => number, max
       rooms.push({ ...area, blacks: null });
       continue;
     }
-    const canVertical = area.width >= 4,
-      canHorizontal = area.height >= 4;
+    const canVertical = area.width >= 4;
+    const canHorizontal = area.height >= 4;
     if (!canVertical && !canHorizontal) {
       rooms.push({ ...area, blacks: null });
       continue;

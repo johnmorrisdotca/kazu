@@ -1,4 +1,5 @@
 import { checkJuosan } from "./juosan-board.ts";
+import { drawJuosan } from "./juosan-draw.ts";
 import {
   decodeJuosan,
   encodeJuosan,
@@ -9,11 +10,10 @@ import {
   setJuosanMark,
   undoJuosan,
 } from "./juosan-game.ts";
-import { drawJuosan } from "./juosan-draw.ts";
-import { KAZU_STYLE } from "./style.ts";
-import { JUOSAN_PLAY_STYLE } from "./juosan-style.ts";
-import { juosanWords } from "./juosan-strings.ts";
 import type { JuosanDrawOptions, JuosanMount, JuosanMountOptions } from "./juosan-play.types.ts";
+import { juosanWords } from "./juosan-strings.ts";
+import { JUOSAN_PLAY_STYLE } from "./juosan-style.ts";
+import { KAZU_STYLE } from "./style.ts";
 
 /** Mounts a touch, mouse, and keyboard player into an existing page element.
  *

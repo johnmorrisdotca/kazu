@@ -1,7 +1,7 @@
-import { regionsNeighbours } from "./regions-board.ts";
+import type { Random } from "./random.ts";
 import { shuffled } from "./random.ts";
 import type { RegionsBoard, RegionsLevel } from "./regions.types.ts";
-import type { Random } from "./random.ts";
+import { regionsNeighbours } from "./regions-board.ts";
 
 /** How likely each region size is, by level: a small board of small regions is easy, long ones with few givens are not. */
 export const REGIONS_SIZES_BY_LEVEL: Record<RegionsLevel, readonly number[]> = {
@@ -21,9 +21,9 @@ export function partitionRegions(width: number, height: number, level: RegionsLe
   const entries = Array<number>(width * height).fill(0);
   const sizes = REGIONS_SIZES_BY_LEVEL[level];
   for (let guard = 0; guard < width * height; guard += 1) {
-    let anchor = -1,
-      fewest = 9,
-      ties = 0;
+    let anchor = -1;
+    let fewest = 9;
+    let ties = 0;
     for (let cell = 0; cell < entries.length; cell += 1) {
       if (entries[cell]) continue;
       const free = regionsNeighbours(board, cell).filter((next) => !entries[next]).length;
@@ -43,8 +43,8 @@ export function partitionRegions(width: number, height: number, level: RegionsLe
       tried.add(area);
       if (regionsNeighbours(board, anchor).some((next) => entries[next] === area)) continue;
       for (let proposal = 0; proposal < 6 && !done; proposal += 1) {
-        const cells = [anchor],
-          members = new Set(cells);
+        const cells = [anchor];
+        const members = new Set(cells);
         while (cells.length < area) {
           const frontier = new Set<number>();
           for (const cell of cells)

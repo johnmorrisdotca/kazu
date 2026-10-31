@@ -1,8 +1,8 @@
-import { shikakuModel } from "./shikaku-logic.ts";
 import { countCsp, openSlots } from "./csp.ts";
+import type { Random } from "./random.ts";
 import { shuffled } from "./random.ts";
 import type { ShikakuBoard, ShikakuLevel, ShikakuRectangle } from "./shikaku.types.ts";
-import type { Random } from "./random.ts";
+import { shikakuModel } from "./shikaku-logic.ts";
 
 /** The smallest and largest rectangle a level cuts the board into. */
 export const SHIKAKU_AREAS: Record<ShikakuLevel, { least: number; most: number }> = {
@@ -24,13 +24,13 @@ export function packRectangles(width: number, height: number, level: ShikakuLeve
   const freeAt = (x: number, y: number) => x >= 0 && y >= 0 && x < width && y < height && free[y * width + x] === 1;
   const rectangles: ShikakuRectangle[] = [];
   for (;;) {
-    let anchor = -1,
-      fewest = 9,
-      ties = 0;
+    let anchor = -1;
+    let fewest = 9;
+    let ties = 0;
     for (let cell = 0; cell < free.length; cell += 1) {
       if (!free[cell]) continue;
-      const x = cell % width,
-        y = Math.floor(cell / width);
+      const x = cell % width;
+      const y = Math.floor(cell / width);
       const around = +freeAt(x - 1, y) + +freeAt(x + 1, y) + +freeAt(x, y - 1) + +freeAt(x, y + 1);
       if (around < fewest) {
         fewest = around;
@@ -39,15 +39,15 @@ export function packRectangles(width: number, height: number, level: ShikakuLeve
       } else if (around === fewest && random() * ++ties < 1) anchor = cell;
     }
     if (anchor < 0) return rectangles;
-    const ax = anchor % width,
-      ay = Math.floor(anchor / width);
+    const ax = anchor % width;
+    const ay = Math.floor(anchor / width);
     const fits: ShikakuRectangle[] = [];
     for (let w = 1; w <= Math.min(width, most); w += 1)
       for (let h = 1; w * h <= most; h += 1) {
         for (let ox = 0; ox < w; ox += 1)
           for (let oy = 0; oy < h; oy += 1) {
-            const x = ax - ox,
-              y = ay - oy;
+            const x = ax - ox;
+            const y = ay - oy;
             let all = x >= 0 && y >= 0 && x + w <= width && y + h <= height;
             for (let k = 0; all && k < w * h; k += 1)
               if (!free[(y + Math.floor(k / w)) * width + x + (k % w)]) all = false;

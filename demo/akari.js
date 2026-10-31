@@ -257,4 +257,5 @@ if (restored) {
 }
 
 import { attachDocsLink } from "./docs-link.js";
+
 attachDocsLink();

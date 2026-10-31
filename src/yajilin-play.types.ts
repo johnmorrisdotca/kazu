@@ -1,5 +1,5 @@
 export type {
-  YajilinDrawOptions as YajilinDrawOptions,
-  YajilinMount as YajilinMount,
-  YajilinMountOptions as YajilinMountOptions,
+  YajilinDrawOptions,
+  YajilinMount,
+  YajilinMountOptions,
 } from "./yajilin.types.ts";

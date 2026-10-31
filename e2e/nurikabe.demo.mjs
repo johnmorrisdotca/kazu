@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { serve } from "./demo.mjs";
 
 test("Nurikabe plays, saves progress and restores the same board", async ({ page }) => {

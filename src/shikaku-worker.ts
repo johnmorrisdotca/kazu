@@ -1,5 +1,6 @@
-import { generateShikaku } from "./shikaku-generate.ts";
 import type { ShikakuLevel } from "./shikaku.types.ts";
+import { generateShikaku } from "./shikaku-generate.ts";
+
 self.onmessage = (event: MessageEvent<{ width: number; height: number; level: ShikakuLevel; seed: number }>) => {
   try {
     const { width, height, level, seed } = event.data;

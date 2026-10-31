@@ -1,6 +1,6 @@
+import type { NurikabeBoard, NurikabeGame } from "./nurikabe.types.ts";
 import { isNurikabeBoard } from "./nurikabe-board.ts";
 import { solveNurikabe } from "./nurikabe-solve.ts";
-import type { NurikabeBoard, NurikabeGame } from "./nurikabe.types.ts";
 /** Create the initial immutable Nurikabe game from a valid board.
  *
  * @param board - The valid native board with its printed clues and dimensions.

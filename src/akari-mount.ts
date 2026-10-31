@@ -1,10 +1,10 @@
 import { akariVisible, checkAkari } from "./akari-board.ts";
-import { akariFinished, decodeAkari, encodeAkari, hintAkari, newAkari, toggleAkari, undoAkari } from "./akari-game.ts";
 import { drawAkari } from "./akari-draw.ts";
-import { KAZU_STYLE } from "./style.ts";
-import { AKARI_PLAY_STYLE } from "./akari-style.ts";
-import { akariWords } from "./akari-strings.ts";
+import { akariFinished, decodeAkari, encodeAkari, hintAkari, newAkari, toggleAkari, undoAkari } from "./akari-game.ts";
 import type { AkariDrawOptions, AkariMount, AkariMountOptions } from "./akari-play.types.ts";
+import { akariWords } from "./akari-strings.ts";
+import { AKARI_PLAY_STYLE } from "./akari-style.ts";
+import { KAZU_STYLE } from "./style.ts";
 
 /** Mounts the player in a host element; call destroy when the host is removed.
  *
@@ -30,7 +30,7 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
   let game = initial.progress ? decodeAkari(initial.progress) : null;
   game ??= newAkari(initial.board);
 
-  let selected = game.board.cells.findIndex((cell) => cell === null);
+  let selected = game.board.cells.indexOf(null);
   let errors: number[] = [];
   let message = "";
   let finished = akariFinished(game);
@@ -94,7 +94,7 @@ export function mountAkari(host: HTMLElement, initial: AkariMountOptions): Akari
   const restart = () => {
     game = newAkari(game!.board);
     finished = false;
-    selected = game.board.cells.findIndex((cell) => cell === null);
+    selected = game.board.cells.indexOf(null);
     changed();
   };
 

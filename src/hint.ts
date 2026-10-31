@@ -1,5 +1,5 @@
 import { decodeCells } from "./cells.ts";
-import { layoutOfGivens, readGivens, type KazuGivens } from "./givens.ts";
+import { type KazuGivens, layoutOfGivens, readGivens } from "./givens.ts";
 import { bitCount, candidatesAt, lowestBit, used } from "./group-solve.ts";
 import type { KazuKind } from "./kinds.ts";
 import { solveKazu } from "./solve.ts";

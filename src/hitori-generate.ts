@@ -1,11 +1,11 @@
+import { logicCsp, openSlots } from "./csp.ts";
 import { HITORI_LEAST_SIDE, HITORI_LEVELS, HITORI_MOST_ATTEMPTS, HITORI_MOST_SIDE } from "./hitori.constants.ts";
+import type { HitoriBoard, HitoriLevel, HitoriPuzzle } from "./hitori.types.ts";
 import { checkHitori } from "./hitori-board.ts";
 import { candidateHitori, latinSquare } from "./hitori-build.ts";
 import { hitoriModel } from "./hitori-logic.ts";
 import { solveHitori } from "./hitori-solve.ts";
-import { logicCsp, openSlots } from "./csp.ts";
 import { isKazuSeed, seededRandom } from "./random.ts";
-import type { HitoriBoard, HitoriLevel, HitoriPuzzle } from "./hitori.types.ts";
 
 /**
  * Makes a seeded puzzle and proves its answer is the only one. The shaded squares are chosen first (never touching,
@@ -42,8 +42,8 @@ export function generateHitori(size = 5, seed = 1, level: HitoriLevel = "medium"
   for (let aim = HITORI_LEVELS.indexOf(level); aim >= 0; aim -= 1) {
     const aimed = HITORI_LEVELS[aim]!;
     const wanted = aimed === "extra-hard" ? 4 : 1;
-    let best: { board: HitoriBoard; shaded: readonly boolean[]; score: number } | null = null,
-      found = 0;
+    let best: { board: HitoriBoard; shaded: readonly boolean[]; score: number } | null = null;
+    let found = 0;
     for (let attempt = 0; attempt < HITORI_MOST_ATTEMPTS && found < wanted; attempt += 1) {
       const built = candidateHitori(size, aimed, random, base);
       const made = built && rated(built.board, built.shaded, aimed);

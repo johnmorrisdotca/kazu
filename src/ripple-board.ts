@@ -32,7 +32,9 @@ export function isRippleBoard(value: unknown): value is RippleBoard {
   )
     return false;
   const members = new Map<number, number[]>();
-  board.rooms.forEach((id, cell) => members.set(id, [...(members.get(id) ?? []), cell]));
+  board.rooms.forEach((id, cell) => {
+    members.set(id, [...(members.get(id) ?? []), cell]);
+  });
   const ids = [...members.keys()].sort((a, b) => a - b);
   if (ids.some((id, index) => id !== index)) return false;
   const sizes = new Map([...members].map(([id, cells]) => [id, cells.length]));
@@ -139,8 +141,8 @@ export function checkRipple(board: RippleBoard, values: readonly number[]): Ripp
   ];
   for (const line of lines)
     for (let a = 0; a < line.length; a += 1) {
-      const cell = line[a]!,
-        value = values[cell]!;
+      const cell = line[a]!;
+      const value = values[cell]!;
       if (!value) continue;
       for (let b = a + 1; b < line.length; b += 1) {
         const other = line[b]!;

@@ -1,5 +1,5 @@
+import type { RegionsGame } from "./regions.types.ts";
 import { checkRegions } from "./regions-board.ts";
-import { regionsMostValue } from "./regions-logic.ts";
 import { drawRegions } from "./regions-draw.ts";
 import {
   decodeRegionsGame,
@@ -10,10 +10,10 @@ import {
   setRegionsCell,
   undoRegions,
 } from "./regions-game.ts";
-import { REGIONS_PLAY_STYLE } from "./regions-style.ts";
-import { regionsWords } from "./regions-strings.ts";
-import type { RegionsGame } from "./regions.types.ts";
+import { regionsMostValue } from "./regions-logic.ts";
 import type { RegionsDrawOptions, RegionsMount, RegionsMountOptions } from "./regions-play.types.ts";
+import { regionsWords } from "./regions-strings.ts";
+import { REGIONS_PLAY_STYLE } from "./regions-style.ts";
 
 /** Mount the native Regions player in a host element and return its cleanup and control handle.
  *

@@ -1,6 +1,6 @@
+import type { HitoriBoard, HitoriGame } from "./hitori.types.ts";
 import { isHitoriBoard } from "./hitori-board.ts";
 import { solveHitori } from "./hitori-solve.ts";
-import type { HitoriBoard, HitoriGame } from "./hitori.types.ts";
 
 /** Create the initial immutable Hitori game from a valid board.
  *
