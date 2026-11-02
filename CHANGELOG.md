@@ -6,6 +6,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-11-02
+
 ### Added
 
 - **`checkKazu` gives its reason as a code and values as well as in English.** A refusal is now `{ ok: false, reason, code, values }`: `reason` is the sentence it has always been, word for word, and `code` (`"row-repeats"`, `"cage-sum-wrong"`, `"clue-sees-wrong"` and the rest) and `values` (`{ n: 3 }`, `{ n: 4, sum: 17 }`, `{ side: "top", clue: 3, seen: 2 }`) let a site say it in its own language. `KAZU_CHECK_REASONS` lists every code with its English clause, `kazuRefusal(code, values)` makes a refusal, and the types are `KazuCheckCode` and `KazuCheckValues`. A test holds every refusal's `reason` to its code's clause filled with its values. Nothing about how a puzzle is made has changed: `src/site.fixture.json` and the pinned levels pass as before.
