@@ -222,6 +222,7 @@ src/
 ├── solve.ts            solving, counting and measuring any puzzle from its givens
 ├── givens.ts           what a puzzle was printed with, read from its code
 ├── check.ts            whether a finished grid is right, in O(cells)
+├── check-reasons.ts    why it is not: a stable code and values beside the English reason
 ├── conflicts.ts        the cells that break a rule right now
 ├── hint.ts             the next cell a person could fill in, and why
 ├── progress.ts         runs, pencil marks and step logs as strings

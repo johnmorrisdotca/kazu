@@ -1,4 +1,5 @@
 import { decodeCells } from "./cells.ts";
+import { kazuRefusal } from "./check-reasons.ts";
 import { readGivens } from "./givens.ts";
 import { decodeJigsaw } from "./jigsaw.ts";
 import { isKazuSize, type KazuCheck, type KazuKind } from "./kinds.ts";
@@ -38,7 +39,7 @@ import { decodeTowers, lineFrom, TOWER_SIDES } from "./towers-code.ts";
  * ```
  */
 export function checkKazu(kind: KazuKind, size: number, givens: string, answer: string): KazuCheck {
-  if (!isKazuSize(kind, size)) return { ok: false, reason: `no ${kind} at ${size}` };
+  if (!isKazuSize(kind, size)) return kazuRefusal("no-kind-at", { kind, size });
   switch (kind) {
     case "number-place":
       return checkOnLayout(boxedLayout(size), decodeCells(givens, size), answer);
@@ -53,7 +54,7 @@ export function checkKazu(kind: KazuKind, size: number, givens: string, answer: 
     case "towers":
       return checkTowers(size, givens, answer);
     default:
-      return { ok: false, reason: `no check for ${String(kind)}` };
+      return kazuRefusal("no-check", { kind: String(kind) });
   }
 }
 
@@ -64,8 +65,8 @@ export function checkKazu(kind: KazuKind, size: number, givens: string, answer: 
  */
 function checkJigsaw(size: number, givens: string, answer: string): KazuCheck {
   const asked = decodeJigsaw(givens, size);
-  if (asked === null) return { ok: false, reason: "the givens are not a grid with regions" };
-  if (!regionsAreSound(size, asked.regions)) return { ok: false, reason: "the regions do not divide the grid" };
+  if (asked === null) return kazuRefusal("givens-not-regions");
+  if (!regionsAreSound(size, asked.regions)) return kazuRefusal("regions-not-sound");
   return checkOnLayout(regionLayout(size, asked.regions), asked.cells, answer);
 }
 
@@ -76,15 +77,15 @@ function checkJigsaw(size: number, givens: string, answer: string): KazuCheck {
  */
 function checkSumCages(size: number, givens: string, answer: string): KazuCheck {
   const asked = decodeKiller(givens, size);
-  if (asked === null) return { ok: false, reason: "the givens are not a grid with cages" };
+  if (asked === null) return kazuRefusal("givens-not-cages");
   const plain = checkOnLayout(boxedLayout(size), asked.cells, answer);
   if (!plain.ok) return plain;
   const filled = decodeCells(answer, size)!;
   for (const [at, cage] of asked.cages.entries()) {
     const values = cage.cells.map((index) => filled[index]!);
-    if (new Set(values).size !== values.length) return { ok: false, reason: `cage ${at + 1} repeats a number` };
+    if (new Set(values).size !== values.length) return kazuRefusal("cage-repeats", { n: at + 1 });
     if (values.reduce((total, value) => total + value, 0) !== cage.sum)
-      return { ok: false, reason: `cage ${at + 1} does not add to ${cage.sum}` };
+      return kazuRefusal("cage-sum-wrong", { n: at + 1, sum: cage.sum });
   }
   return { ok: true };
 }
@@ -93,40 +94,43 @@ function checkSumCages(size: number, givens: string, answer: string): KazuCheck 
 function checkOnLayout(layout: Layout, asked: number[] | null, answer: string): KazuCheck {
   const { size } = layout;
   const filled = decodeCells(answer, size);
-  if (asked === null) return { ok: false, reason: "the givens are not a grid" };
-  if (filled === null) return { ok: false, reason: "the answer is not a grid" };
-  if (filled.some((value) => value === 0)) return { ok: false, reason: "the answer has empty cells" };
+  if (asked === null) return kazuRefusal("givens-not-grid");
+  if (filled === null) return kazuRefusal("answer-not-grid");
+  if (filled.some((value) => value === 0)) return kazuRefusal("answer-has-empty-cells");
   for (let index = 0; index < asked.length; index += 1) {
-    if (asked[index] !== 0 && asked[index] !== filled[index]) return { ok: false, reason: "a given was changed" };
+    if (asked[index] !== 0 && asked[index] !== filled[index]) return kazuRefusal("given-changed");
   }
   const seen = new Array<number>(layout.groups.length).fill(0);
   for (let index = 0; index < filled.length; index += 1) {
     const bit = 1 << filled[index]!;
     for (const group of layout.groupsOf[index]!) {
-      if (seen[group]! & bit) return { ok: false, reason: `${groupName(layout, group)} repeats a number` };
+      if (seen[group]! & bit) return groupRepeats(layout, group);
       seen[group]! |= bit;
     }
   }
   return { ok: true };
 }
 
-/** "row 3", "column 5", "box 2", "region 4", "a diagonal": the groups in `layout.ts`'s order. */
-function groupName(layout: Layout, group: number): string {
+/** The refusal for a group that repeats a number: "row 3", "column 5", "box 2", "region 4" or "a diagonal", in `layout.ts`'s order. */
+function groupRepeats(layout: Layout, group: number): KazuCheck {
   const { size } = layout;
-  if (group < size) return `row ${group + 1}`;
-  if (group < 2 * size) return `column ${group - size + 1}`;
-  if (group < 3 * size) return `${layout.regionWord} ${group - 2 * size + 1}`;
-  return "a diagonal";
+  if (group < size) return kazuRefusal("row-repeats", { n: group + 1 });
+  if (group < 2 * size) return kazuRefusal("column-repeats", { n: group - size + 1 });
+  if (group < 3 * size) {
+    const n = group - 2 * size + 1;
+    return layout.regionWord === "box" ? kazuRefusal("box-repeats", { n }) : kazuRefusal("region-repeats", { n });
+  }
+  return kazuRefusal("diagonal-repeats");
 }
 
 function checkMoreOrLess(size: number, givens: string, answer: string): KazuCheck {
   const asked = decodeMoreOrLess(givens, size);
-  if (asked === null) return { ok: false, reason: "the givens are not a grid with marks" };
+  if (asked === null) return kazuRefusal("givens-not-marks");
   const square = checkLatinSquare(size, asked.cells, answer);
   if (!square.ok) return square;
   const filled = decodeCells(answer, size)!;
   for (const mark of asked.marks) {
-    if (!(filled[mark.less]! < filled[mark.more]!)) return { ok: false, reason: "a mark is not true" };
+    if (!(filled[mark.less]! < filled[mark.more]!)) return kazuRefusal("mark-not-true");
   }
   return { ok: true };
 }
@@ -134,10 +138,10 @@ function checkMoreOrLess(size: number, givens: string, answer: string): KazuChec
 /** Every row and column a permutation of 1..size, nothing empty, and every given where it was: More or Less and Towers alike. */
 function checkLatinSquare(size: number, asked: readonly number[], answer: string): KazuCheck {
   const filled = decodeCells(answer, size);
-  if (filled === null) return { ok: false, reason: "the answer is not a grid" };
-  if (filled.some((value) => value === 0)) return { ok: false, reason: "the answer has empty cells" };
+  if (filled === null) return kazuRefusal("answer-not-grid");
+  if (filled.some((value) => value === 0)) return kazuRefusal("answer-has-empty-cells");
   for (let index = 0; index < asked.length; index += 1) {
-    if (asked[index] !== 0 && asked[index] !== filled[index]) return { ok: false, reason: "a given was changed" };
+    if (asked[index] !== 0 && asked[index] !== filled[index]) return kazuRefusal("given-changed");
   }
   const rows = Array.from({ length: size }, () => 0);
   const cols = Array.from({ length: size }, () => 0);
@@ -145,8 +149,8 @@ function checkLatinSquare(size: number, asked: readonly number[], answer: string
     const bit = 1 << filled[index]!;
     const row = Math.floor(index / size);
     const col = index % size;
-    if (rows[row]! & bit) return { ok: false, reason: `row ${row + 1} repeats a number` };
-    if (cols[col]! & bit) return { ok: false, reason: `column ${col + 1} repeats a number` };
+    if (rows[row]! & bit) return kazuRefusal("row-repeats", { n: row + 1 });
+    if (cols[col]! & bit) return kazuRefusal("column-repeats", { n: col + 1 });
     rows[row]! |= bit;
     cols[col]! |= bit;
   }
@@ -160,7 +164,7 @@ function checkLatinSquare(size: number, asked: readonly number[], answer: string
  */
 function checkTowers(size: number, givens: string, answer: string): KazuCheck {
   const asked = decodeTowers(givens, size);
-  if (asked === null) return { ok: false, reason: "the givens are not a square with clues" };
+  if (asked === null) return kazuRefusal("givens-not-clues");
   const square = checkLatinSquare(size, asked.cells, answer);
   if (!square.ok) return square;
   const filled = decodeCells(answer, size)!;
@@ -176,7 +180,7 @@ function checkTowers(size: number, givens: string, answer: string): KazuCheck {
           seen += 1;
         }
       }
-      if (seen !== clue) return { ok: false, reason: `the ${side} clue ${clue} sees ${seen}` };
+      if (seen !== clue) return kazuRefusal("clue-sees-wrong", { side, clue, seen });
     }
   }
   return { ok: true };

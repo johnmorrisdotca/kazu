@@ -10,6 +10,7 @@
 export * from "./akari-entry.ts";
 export * from "./cells.ts";
 export * from "./check.ts";
+export * from "./check-reasons.ts";
 export { kazuClockText } from "./clock.ts";
 export * from "./conflicts.ts";
 export * from "./cross-sums-entry.ts";

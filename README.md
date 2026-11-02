@@ -268,7 +268,7 @@ It is ES modules only, with its types included, and needs Node 22 or later outsi
 import { checkKazu, generateKazu } from "@johnmorrisdotca/kazu";
 
 const { givens } = generateKazu("number-place", 9, "medium", 42);   // send `givens` to the browser; keep `42` and the answer
-checkKazu("number-place", 9, givens, answerFromThePlayer);          // { ok: true } or { ok: false, reason }, in O(cells)
+checkKazu("number-place", 9, givens, answerFromThePlayer);          // { ok: true } or { ok: false, reason, code, values }, in O(cells)
 ```
 
 Importing the main entry on a server is safe: it touches no page.
@@ -571,9 +571,11 @@ every size and level from sixty seeds, and each is made again here, givens and s
 Changing how any puzzle is made is a new major version, never a fix.
 
 `checkKazu(kind, size, givens, answer)` reads a finished grid in O(cells), with no search: right in every group,
-every given where it was, every cage, mark and clue true. `{ ok: false, reason }` says the first thing
+every given where it was, every cage, mark and clue true. `{ ok: false, reason, code, values }` says the first thing
 wrong (`"row 3 repeats a number"`, `"cage 4 does not add to 17"`, `"the top clue 3 sees 2"`), in the words the site
-has always used. It restates the rules rather than reading the solver's mind, so a server can trust it.
+has always used. `code` and `values` say the same for a site that speaks another language: `{ code: "cage-sum-wrong",
+values: { n: 4, sum: 17 } }` is `"cage 4 does not add to 17"`, and `KAZU_CHECK_REASONS` is the table of every code with
+its English clause (`"cage {n} does not add to {sum}"`) and what its gaps are, for a site to say each in its own words. It restates the rules rather than reading the solver's mind, so a server can trust it.
 A solver and a generator never run on a server unless you ask them to.
 
 A run is kept as short strings the site's own stored runs decode as they are: `encodeRun(entries)` and
@@ -727,7 +729,7 @@ Every function is pure: it returns new values and never changes what it was give
 | Call | What it does |
 | --- | --- |
 | `generateKazu(kind, size, level, seed)` | A puzzle with exactly one answer, the same everywhere |
-| `checkKazu(kind, size, givens, answer)` | `{ ok: true }` or `{ ok: false, reason }`, in O(cells) |
+| `checkKazu(kind, size, givens, answer)` | `{ ok: true }` or `{ ok: false, reason, code, values }`, in O(cells) |
 | `hintKazu(kind, size, givens, entries)` | The next cell, its value and the rule that says so |
 | `drawKazu(kind, size, givens, options)` | The puzzle as SVG text |
 | `mountKazu(element, options)` | The puzzle, played |

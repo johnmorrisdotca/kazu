@@ -1,3 +1,5 @@
+import type { KazuCheckCode, KazuCheckValues } from "./check-reasons.ts";
+
 /**
  * THE SIX PUZZLES, and what each offers: the keys, the sizes and the levels.
  *
@@ -171,7 +173,7 @@ export type KazuPuzzle = {
   solution: string;
 };
 
-/** The verdict on a submitted answer: `{ ok: true }`, or `{ ok: false, reason }` in the words the site has always used.
+/** The verdict on a submitted answer: `{ ok: true }`, or `{ ok: false, reason, code, values }`: `reason` is in the words the site has always used, and `code` and `values` say the same in a form a site can put in its own language (`KAZU_CHECK_REASONS`).
  *
  * @example
  * ```ts
@@ -188,4 +190,4 @@ export type KazuPuzzle = {
  * console.log(value);
  * ```
  */
-export type KazuCheck = { ok: true } | { ok: false; reason: string };
+export type KazuCheck = { ok: true } | { ok: false; reason: string; code: KazuCheckCode; values?: KazuCheckValues };

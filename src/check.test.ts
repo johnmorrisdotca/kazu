@@ -24,28 +24,31 @@ describe("checking a finished grid", () => {
   });
 
   it("refuses a size the puzzle is not made at", () => {
-    expect(checkKazu("number-place", 8, ".".repeat(64), "1".repeat(64))).toEqual({
+    expect(checkKazu("number-place", 8, ".".repeat(64), "1".repeat(64))).toMatchObject({
       ok: false,
       reason: "no number-place at 8",
     });
-    expect(checkKazu("diagonal", 4, ".".repeat(16), "1".repeat(16))).toEqual({ ok: false, reason: "no diagonal at 4" });
+    expect(checkKazu("diagonal", 4, ".".repeat(16), "1".repeat(16))).toMatchObject({
+      ok: false,
+      reason: "no diagonal at 4",
+    });
   });
 
   it("refuses an answer with an empty cell, a wrong length, or a stray character", () => {
     const puzzle = generateKazu("number-place", 4, "easy", 1);
-    expect(checkKazu("number-place", 4, puzzle.givens, `.${puzzle.solution.slice(1)}`)).toEqual({
+    expect(checkKazu("number-place", 4, puzzle.givens, `.${puzzle.solution.slice(1)}`)).toMatchObject({
       ok: false,
       reason: "the answer has empty cells",
     });
-    expect(checkKazu("number-place", 4, puzzle.givens, puzzle.solution.slice(1))).toEqual({
+    expect(checkKazu("number-place", 4, puzzle.givens, puzzle.solution.slice(1))).toMatchObject({
       ok: false,
       reason: "the answer is not a grid",
     });
-    expect(checkKazu("number-place", 4, puzzle.givens, `x${puzzle.solution.slice(1)}`)).toEqual({
+    expect(checkKazu("number-place", 4, puzzle.givens, `x${puzzle.solution.slice(1)}`)).toMatchObject({
       ok: false,
       reason: "the answer is not a grid",
     });
-    expect(checkKazu("number-place", 4, "nonsense", puzzle.solution)).toEqual({
+    expect(checkKazu("number-place", 4, "nonsense", puzzle.solution)).toMatchObject({
       ok: false,
       reason: "the givens are not a grid",
     });
@@ -56,7 +59,7 @@ describe("checking a finished grid", () => {
     const given = [...puzzle.givens].findIndex((c) => c !== ".");
     const moved = [...puzzle.solution];
     moved[given] = moved[given] === "1" ? "2" : "1";
-    expect(checkKazu("number-place", 4, puzzle.givens, moved.join(""))).toEqual({
+    expect(checkKazu("number-place", 4, puzzle.givens, moved.join(""))).toMatchObject({
       ok: false,
       reason: "a given was changed",
     });
@@ -89,11 +92,11 @@ describe("checking a finished grid", () => {
     const read = readGivens("jigsaw", size, puzzle.givens)!;
     // Regions that are not each one joined shape (the cells of a diagonal stripe) would make any grid with sound rows and columns look like an answer.
     const rows = Array.from({ length: 25 }, (_, i) => (Math.floor(i / 5) + (i % 5)) % 5);
-    expect(checkKazu("jigsaw", size, encodeJigsaw(read.cells, rows), puzzle.solution)).toEqual({
+    expect(checkKazu("jigsaw", size, encodeJigsaw(read.cells, rows), puzzle.solution)).toMatchObject({
       ok: false,
       reason: "the regions do not divide the grid",
     });
-    expect(checkKazu("jigsaw", size, "x", puzzle.solution)).toEqual({
+    expect(checkKazu("jigsaw", size, "x", puzzle.solution)).toMatchObject({
       ok: false,
       reason: "the givens are not a grid with regions",
     });
