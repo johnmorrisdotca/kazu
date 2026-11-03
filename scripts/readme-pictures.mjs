@@ -4,6 +4,7 @@
 // its address (a seed), a fixed share of its empty cells is filled in from its answer by tapping, and motion is reduced. It
 // waits on the board's own svg, and on the page saying how many cells are filled, never on a clock.
 // Output: docs/images/<subject>-<desk|phone>-<light|dark>.webp.
+import { drawKazu } from "../dist/draw-entry.js";
 import { decodeCells, generateKazu, readGivens } from "../dist/index.js";
 import { takePictures } from "./readme-pictures-lib.mjs";
 
@@ -53,6 +54,23 @@ const page = (subject, file, query = "seed=42") => ({
   target: "section.panel",
 });
 
+/** A number puzzle as the package draws it, alone (its own style inside), every `every`th empty cell written in from its answer. */
+const drawn = (kind, size, seed, every = 3) => {
+  const puzzle = generateKazu(kind, size, "medium", seed);
+  const answer = decodeCells(puzzle.solution, size);
+  const printed = readGivens(kind, size, puzzle.givens).cells;
+  let empty = 0;
+  const entries = printed.map((value, index) => (value !== 0 ? 0 : empty++ % every === 0 ? answer[index] : 0));
+  return drawKazu(kind, size, puzzle.givens, { entries, style: true, frame: false });
+};
+/** The family's thumbnail: a Sudoku, a Killer Sudoku, a Futoshiki and a Skyscrapers, part filled in; the icon is the Sudoku. */
+const THUMBNAIL_BOARDS = [
+  drawn("number-place", 9, 7),
+  drawn("sum-cages", 6, 7),
+  drawn("more-or-less", 5, 7),
+  drawn("towers", 5, 7),
+];
+
 await takePictures({
   shots: [
     // A Killer Sudoku on a desk, from the top of the page so the header, the choices and the board all show. On a phone, in Japanese: Skyscrapers, scrolled to the board.
@@ -93,4 +111,22 @@ await takePictures({
     page("regions", "regions"),
     page("heyawake", "heyawake"),
   ],
+  // The family's thumbnail, dark thumbnail and icon (scripts/family-thumbnail.mjs), from the package's own drawKazu.
+  thumbnail: {
+    url: address("kind=number-place&size=9&level=medium&seed=7"),
+    ready: READY,
+    target: "#thumbnail-stage",
+    icon: { target: "#thumbnail-icon" },
+    label: "Kazu 数",
+    async prepare(page) {
+      await page.evaluate((boards) => {
+        const cell = (svg, height) =>
+          `<div style="height:${height}px;display:flex">${svg.replace("<svg ", '<svg style="height:100%;width:auto;display:block" ')}</div>`;
+        const stage = `<div id="thumbnail-stage" style="display:flex;gap:26px;align-items:center;padding:12px;width:max-content">${boards.map((svg) => cell(svg, 270)).join("")}</div>`;
+        const icon = `<div id="thumbnail-icon" style="padding:8px;width:max-content">${cell(boards[0], 400)}</div>`;
+        document.body.replaceChildren();
+        document.body.insertAdjacentHTML("beforeend", stage + icon);
+      }, THUMBNAIL_BOARDS);
+    },
+  },
 });

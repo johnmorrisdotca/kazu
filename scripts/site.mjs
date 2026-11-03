@@ -13,6 +13,7 @@ import {
   familyHeader,
   familyUnreviewed,
 } from "./family-template.mjs";
+import { publishThumbnails, thumbnailHead } from "./family-thumbnail.mjs";
 
 const id = "kazu";
 const ICON =
@@ -33,6 +34,9 @@ const escapeHtml = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").r
 const row = (testid, label, help) =>
   `<div class="setup fam-row" data-help-en="${escapeHtml(help[0])}" data-help-ja="${escapeHtml(help[1])}"><span class="fam-label" data-say="${label}"></span><div class="fam-seg" role="group" data-say-label="${label}" id="${testid}" data-testid="${testid}"></div></div>`;
 
+/** What the family's card shows, for a reader who cannot see it (the README's top picture says the same). */
+const ALT = "Kazu: a Sudoku, a Killer Sudoku, a Futoshiki and a Skyscrapers puzzle, each part filled in.";
+
 const page = `<!doctype html>
 <html lang="en">
   <head>
@@ -44,6 +48,7 @@ const page = `<!doctype html>
       ogTitle: "Kazu 数 — Sudoku and grid number puzzles",
       ogDescription: "Sudoku, Killer Sudoku, Futoshiki, Skyscrapers and more. Every puzzle has exactly one answer.",
     })}
+    ${thumbnailHead(JSON.parse(readFileSync("package.json", "utf8")), { alt: ALT })}
     <link rel="icon" href="${ICON}" />
     <link rel="stylesheet" href="family.css" />
     <link rel="stylesheet" href="kazu.css" />
@@ -107,6 +112,8 @@ mkdirSync("site", { recursive: true });
 cpSync("demo", "site", { recursive: true });
 cpSync("dist", "site/dist", { recursive: true });
 writeFileSync("site/index.html", page);
+// The family's card, dark card and icon, at <site>/thumbnail.png, thumbnail-dark.png and icon.png.
+publishThumbnails(".", "site");
 // The API reference, made from the source: every export of every entry point.
 writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kazu", icon: ICON }));

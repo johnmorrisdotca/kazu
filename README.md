@@ -1,3 +1,5 @@
+<p align="center"><a href="https://johnmorrisdotca.github.io/kazu/"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/thumbnail-dark.png"><img src="https://raw.githubusercontent.com/johnmorrisdotca/kazu/main/docs/images/thumbnail.png" alt="Kazu: a Sudoku, a Killer Sudoku, a Futoshiki and a Skyscrapers puzzle, each part filled in." width="1200"></picture></a></p>
+
 <h1 align="center">Kazu <sub>数</sub> — Sudoku and grid number puzzles</h1>
 
 <p align="center"><strong>Grid number and logic puzzles for JavaScript and TypeScript.</strong><br>
